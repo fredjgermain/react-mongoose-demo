@@ -33,6 +33,7 @@ export default function AdminSection() {
   // render 
   const adminTable = selected ? <AdminTable /> : <p>Please choose a collection from the selector above.</p>; 
   return <AdminContext.Provider value={adminContext}> 
+    <p>this is the correct version ... </p>
     <h2>Admin Section</h2> 
     <p>Choose a collection to create/read/update/delete items from it.</p> 
     <InputSelect value={selected} onSendValue={setSelected} options={options} /> 
