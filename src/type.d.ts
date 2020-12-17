@@ -1,5 +1,3 @@
-
-
 type FieldPredicate = (ifield:IField) => boolean; 
 type ReadFunc = (ifield:IField, value:any) => any; 
 type EditFunc = (ifield:IField, value:any, setValue:any) => any; 

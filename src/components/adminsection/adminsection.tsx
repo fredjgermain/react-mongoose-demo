@@ -1,21 +1,21 @@
 import React, {useState, useMemo} from 'react'; 
-import {Dao, LoadCollections, useLoad, InputSelect} from '../custompackages'; 
+import {MongooseDao} from '../custompackages'; 
 import AdminTable from './admintable'; 
 //import "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"; 
 
 
 interface IAdminContext { 
-  dao: Dao; 
+  dao: MongooseDao.Dao; 
   activeCollection: ICollection; 
 } 
 export const AdminContext = React.createContext({} as IAdminContext); 
 // ADMIN SECTION =================================
 export default function AdminSection() { 
-  const dao = useMemo(() => new Dao(), []); 
+  const dao = useMemo(() => new MongooseDao.Dao(), []); 
   const [selected, setSelected] = useState<string>(''); 
   
   const {status, Reload} = useLoad(async () => { 
-    const loadedCollection = await LoadCollections(['responses', 'questions', 'instructions', 'forms']); 
+    const loadedCollection = await MongooseDao.LoadMongooseCollections(['responses', 'questions', 'instructions', 'forms']); 
     dao.iCollections = loadedCollection; 
   }); 
   // RENDER ------------------------------------- 

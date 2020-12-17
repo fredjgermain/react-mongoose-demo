@@ -1,20 +1,7 @@
-import {BuildDefaultFieldRenderings, IForeignValues} from './components/defaultFieldRendering'; 
-import {Collection, Field, Crud, crud, Dao} from '../mongoosedao/common'; 
+import * as FieldRendering from './defaultFieldRendering'; 
+import InputObject, {InputObjectContext} from './object'; 
+import * as Fields from './fields'; 
+import * as Rows from './rows'; 
+import Table, {TableContext} from './table'; 
 
-export {Collection, Field, Crud, crud, Dao} 
-
-export {BuildDefaultFieldRenderings as BuildFieldRendering}; 
-export type {IForeignValues}; 
-
-export type Renderer = (ifield:IField) => (value:any, onSendValue:any) => any; 
-
-export interface IColumnSetting { 
-  ifield: IField; 
-  order?: number;     // < 0 are hidden, > 0 are shown. 
-  //sort?: ; 
-} 
-
-export interface IFieldRendering { 
-  predicate: (ifield:IField, handle:string) => boolean; 
-  renderer: Renderer; 
-} 
+export {FieldRendering, InputObject, InputObjectContext, Fields, Rows, Table, TableContext}; 

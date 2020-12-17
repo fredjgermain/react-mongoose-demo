@@ -1,5 +1,5 @@
 import React, {useState} from 'react'; 
-import {IColumnSetting} from '../common'; 
+import {IColumnSetting} from './defaultFieldRendering'; 
 
 interface IContext { 
   entries:any[]; 

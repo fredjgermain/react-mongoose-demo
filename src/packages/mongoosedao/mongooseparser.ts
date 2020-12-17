@@ -1,6 +1,5 @@
-import Collection from './collection'; 
+//import Collection from './collection'; 
 import { crud } from './crudaxios'; 
-
 
 export interface IMongooseCollection { 
   accessor:string; 
@@ -24,10 +23,10 @@ export interface IMongooseField {
   [key:string]:any; 
 } 
 
-export const collections:Collection[] = new Array<Collection>(); 
+//export const collections:Collection[] = new Array<Collection>(); 
 
 // const collections:IMongooseCollection[] = (await crud.Read('collections')).data; 
-export async function LoadCollections(collectionsToFind:string[]):Promise<ICollection[]> { 
+export async function LoadMongooseCollections(collectionsToFind:string[]):Promise<ICollection[]> { 
   const mongooseCollections = (await crud.Read('collections')).data as IMongooseCollection[]; 
   const foundCollections = mongooseCollections.filter( c => collectionsToFind.includes(c.accessor) ); 
   const loadedCollections = new Array<ICollection>(); 

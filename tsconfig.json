@@ -21,5 +21,5 @@
     "jsx": "react-jsx"
   },
   "include": ["src"],
-  //"exclude": ["src/packages/inputobject/*"]
+  "exclude": ["src/components/*", "src/misctest/testinput/*", "src/misctest/testtable/*"]
 }

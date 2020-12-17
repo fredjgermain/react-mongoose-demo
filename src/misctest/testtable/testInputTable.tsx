@@ -9,7 +9,7 @@ import {useCrud, IDao} from '../../inputtable/hook/useCrud';
 import '../inputtable/table.css'; 
 
 // PAGE 
-import {usePage, IPageHook} from '../../customhooks/customhooks'; 
+import {usePage, IPageHook} from '../../packages/customhooks/customhooks'; 
 
 // MOCK DATA 
 import {dao} from './data'; 
