@@ -1,8 +1,8 @@
 import React from 'react'; 
-import {IColumnSettingRule, IDao}  from '../inputtable/tablecommon'; 
+import {IColumnSettingRule, IDao}  from '../../inputtable/tablecommon'; 
 
-import {InputArray, InputData, InputSelect} from '../input/inputcommon'; 
-import Field from '../mongoosedao/field'; 
+import {InputArray, InputData, InputSelect} from '../../input/inputcommon'; 
+import Field from '../../mongoosedao/field'; 
 
 // IField Predicate ===============================
 const OnePrimitive = (ifield:IField) => !new Field(ifield).IsArray() && new Field(ifield).IsPrimitive(); 

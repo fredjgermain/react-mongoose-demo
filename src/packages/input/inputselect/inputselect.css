@@ -1,0 +1,49 @@
+.inputSelect { 
+  margin: 2px; 
+  cursor: pointer; 
+  min-width: 10ch; 
+  max-width: 30ch; 
+  position: relative; 
+  display: inline-block; 
+  cursor: pointer; 
+} 
+
+.selectHeader { 
+  border: 1px solid #000; 
+  width: 100%; 
+  min-height: fit-content; 
+  text-align: right; 
+} 
+
+.selectHeader span { 
+  display: inline-block; 
+} 
+
+.selectHeader .btn { 
+  /*padding-left: 1ch; 
+  padding-right: 1ch; */ 
+  margin-left: 1ch; 
+  margin-right: 1ch; 
+} 
+
+.selectHeader .element{ 
+  margin-right: 1ch; 
+} 
+
+.selectFold { 
+  border: 1px solid #000; 
+  position: absolute; 
+  background-color: #f6f6f6; 
+  width: 100%; 
+} 
+
+.selectedOption { 
+  color:black; 
+  font-weight: bold; 
+} 
+
+.noSelectedOption { 
+  color: gray; 
+  font-weight: lighter; 
+} 
+

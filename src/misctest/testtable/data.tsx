@@ -1,4 +1,4 @@
-import Dao from '../mongoosedao/dao'; 
+import Dao from '../../mongoosedao/dao'; 
 
 
 const ifieldsCollection1: IField[] = [

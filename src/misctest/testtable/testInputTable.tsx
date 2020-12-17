@@ -4,12 +4,12 @@ import React from 'react';
 import {InputTable, InputHeader, InputHeaderRow, 
   InputRows, InputRow, InputCells, InputCell, 
   CreateBtn, UpdateDeleteBtn, BuildColumnSetting, 
-  IColumnSetting, IColumnSettingRule} from '../inputtable/tablecommon'; 
-import {useCrud, IDao} from '../inputtable/hook/useCrud'; 
+  IColumnSetting, IColumnSettingRule} from '../../inputtable/tablecommon'; 
+import {useCrud, IDao} from '../../inputtable/hook/useCrud'; 
 import '../inputtable/table.css'; 
 
 // PAGE 
-import {usePage, IPageHook} from '../customhooks/customhooks'; 
+import {usePage, IPageHook} from '../../customhooks/customhooks'; 
 
 // MOCK DATA 
 import {dao} from './data'; 
