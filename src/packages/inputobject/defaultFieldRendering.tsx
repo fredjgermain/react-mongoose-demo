@@ -1,26 +1,10 @@
 import React from 'react'; 
-//import {IFieldRendering, Field} from '../common'; 
 import {Package_MongooseDao, Package_Input} from '../../custompackages'; 
+import {IForeignValues, IFieldRendering} from './common'; 
 const Field = Package_MongooseDao.Field; 
 const {InputArray, InputData, InputSelect} = Package_Input; 
 
-export type Renderer = (ifield:IField) => (value:any, onSendValue:any) => any; 
 
-export interface IColumnSetting { 
-  ifield: IField; 
-  order?: number;     // < 0 are hidden, > 0 are shown. 
-  //sort?: ; 
-} 
-
-export interface IFieldRendering { 
-  predicate: (ifield:IField, handle:string) => boolean; 
-  renderer: Renderer; 
-} 
-
-export interface IForeignValues { 
-  GetForeignOptions: (ifield:IField) => IOption[]; 
-  GetForeignValue: (ifield:IField, id:string) => any|undefined; 
-} 
 
 
 // BUILD FIELD RENDERING =================================

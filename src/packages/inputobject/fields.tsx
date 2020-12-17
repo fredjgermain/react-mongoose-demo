@@ -1,6 +1,7 @@
 import React, {useContext} from 'react'; 
 import {InputObjectContext} from './object'; 
-import {IFieldRendering} from './defaultFieldRendering'; 
+import {IFieldRendering} from './common'; 
+//import {IFieldRendering} from './defaultFieldRendering'; 
 
 interface IContext { 
   ifield: IField; 

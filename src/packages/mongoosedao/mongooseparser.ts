@@ -1,4 +1,3 @@
-//import Collection from './collection'; 
 import { crud } from './crudaxios'; 
 
 export interface IMongooseCollection { 

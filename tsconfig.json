@@ -23,5 +23,5 @@
   "include": [
     "src"
   ],
-  "exclude": ["./src/components/*", "./src/packages/customhooks/useKey.tsx", "./src/packages/customhooks/useOutsideClick.tsx"]
+  "exclude": ["./src/components/*"]
 }

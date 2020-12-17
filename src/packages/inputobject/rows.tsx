@@ -1,6 +1,6 @@
 import React, {useContext} from 'react'; 
 import {TableContext} from './table'; 
-import {IFieldRendering} from './defaultFieldRendering'; 
+import {IFieldRendering} from './common'; 
 
 
 interface IProps { 

@@ -1,5 +1,5 @@
 import React from 'react'; 
-import {IColumnSetting} from './defaultFieldRendering'; 
+import {IColumnSetting} from './common'; 
 
 
 interface IProps { 
