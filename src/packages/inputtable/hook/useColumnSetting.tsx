@@ -31,7 +31,7 @@ export function useColumnSetting(defaultColumnSetting:IColumnSetting[]) {
   function GetFields():IField[] { 
     const ifields:IField[] = []; 
     columnSettings.forEach( c => { 
-      if(c.show && ifields.every(f => f.accessor != c.ifield.accessor)) 
+      if(c.show && ifields.every(f => f.accessor !== c.ifield.accessor)) 
         ifields.push(c.ifield); 
     }); 
     return ifields; 

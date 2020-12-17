@@ -1,21 +1,21 @@
 import React, {useState, useMemo} from 'react'; 
-import {MongooseDao} from '../custompackages'; 
+import {Package_MongooseDao, Package_CustomHooks, Package_Input} from '../../custompackages'; 
 import AdminTable from './admintable'; 
 //import "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"; 
 
 
 interface IAdminContext { 
-  dao: MongooseDao.Dao; 
+  dao: Package_MongooseDao.Dao; 
   activeCollection: ICollection; 
 } 
 export const AdminContext = React.createContext({} as IAdminContext); 
 // ADMIN SECTION =================================
 export default function AdminSection() { 
-  const dao = useMemo(() => new MongooseDao.Dao(), []); 
+  const dao = useMemo(() => new Package_MongooseDao.Dao(), []); 
   const [selected, setSelected] = useState<string>(''); 
   
-  const {status, Reload} = useLoad(async () => { 
-    const loadedCollection = await MongooseDao.LoadMongooseCollections(['responses', 'questions', 'instructions', 'forms']); 
+  const {status, Reload} = Package_CustomHooks.useLoad(async () => { 
+    const loadedCollection = await Package_MongooseDao.LoadMongooseCollections(['responses', 'questions', 'instructions', 'forms']); 
     dao.iCollections = loadedCollection; 
   }); 
   // RENDER ------------------------------------- 
@@ -36,7 +36,7 @@ export default function AdminSection() {
     <p>this is the correct version ... </p>
     <h2>Admin Section</h2> 
     <p>Choose a collection to create/read/update/delete items from it.</p> 
-    <InputSelect value={selected} onSendValue={setSelected} options={options} /> 
+    <Package_Input.InputSelect value={selected} onSendValue={setSelected} options={options} /> 
     {adminTable} 
   </AdminContext.Provider> 
 } 

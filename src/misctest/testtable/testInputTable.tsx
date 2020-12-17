@@ -1,11 +1,22 @@
-import React from 'react'; 
-
 // INPUT TABLE
-import {InputTable, InputHeader, InputHeaderRow, 
-  InputRows, InputRow, InputCells, InputCell, 
-  CreateBtn, UpdateDeleteBtn, BuildColumnSetting, 
-  IColumnSetting, IColumnSettingRule} from '../../inputtable/tablecommon'; 
-import {useCrud, IDao} from '../../inputtable/hook/useCrud'; 
+import React from 'react'; 
+import {Package_InputTable} from '../../custompackages'; 
+import {Package_MongooseDao} from '../../custompackages'; 
+const {
+  Header:{InputHeader, InputHeaderRow},
+  Rows:{InputRow, InputRows},
+  Cells:{InputCells},
+  useCrud,
+  Table:{default:InputTable},
+  BuildColumnSetting, 
+  Btn:{CreateBtn, UpdateDeleteBtn} 
+} = Package_InputTable;
+//import {Package_Input} from '../../custompackages'; 
+
+//const {InputArray, InputData, InputSelect} = Package_Input; 
+const Field = Package_MongooseDao.Field; 
+type IDao = Package_InputTable.IDao; 
+type IColumnSettingRule = Package_InputTable.IColumnSettingRule; 
 import '../inputtable/table.css'; 
 
 // PAGE 

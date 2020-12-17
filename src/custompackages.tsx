@@ -1,8 +1,8 @@
-import * as MongooseDao from './packages/mongoosedao/common'; 
-import * as Input from './packages/input/inputcommon'; 
-import * as InputTable from './packages/inputtable/tablecommon'; 
-import * as PackageObject from './packages/inputobject/common'; 
-import * as CustomHooks from './packages/customhooks/customhooks'; 
+import * as Package_MongooseDao from './packages/mongoosedao/common'; 
+import * as Package_Input from './packages/input/inputcommon'; 
+import * as Package_InputTable from './packages/inputtable/common'; 
+import * as Package_Object from './packages/inputobject/common'; 
+import * as Package_CustomHooks from './packages/customhooks/customhooks'; 
 
 // RE-EXPORT 
-export {MongooseDao, Input, PackageObject, InputTable, CustomHooks}; 
+export {Package_MongooseDao, Package_Input, Package_Object, Package_InputTable, Package_CustomHooks}; 

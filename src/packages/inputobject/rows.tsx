@@ -17,7 +17,7 @@ export function Cell({fieldRenderings}:IProps) {
   const Renderer = fieldRendering? fieldRendering.renderer(ifield): defaultRenderer; 
 
   let value; 
-  if(row != undefined && row >=0) 
+  if(row !== undefined && row >=0) 
     value = entries[row][ifield.accessor];  // or default value as given by colsettings 
   value = value ?? ifield.defaultValue; 
 
@@ -69,7 +69,7 @@ interface IRows {
 export function Rows({rows, children}:React.PropsWithChildren<IRows>) { 
   const {entries} = useContext(TableContext); 
   const Rows = (entries === undefined) ? [] : 
-    (rows != undefined) ? rows: entries.map((v,i) => i); 
+    (rows !== undefined) ? rows: entries.map((v,i) => i); 
   
   return <RowsContext.Provider value={{}}>
     {Rows.map((row, i) => {

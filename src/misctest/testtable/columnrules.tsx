@@ -1,8 +1,12 @@
 import React from 'react'; 
-import {IColumnSettingRule, IDao}  from '../../inputtable/tablecommon'; 
+import {Package_InputTable} from '../../custompackages'; 
+import {Package_MongooseDao} from '../../custompackages'; 
+import {Package_Input} from '../../custompackages'; 
 
-import {InputArray, InputData, InputSelect} from '../../input/inputcommon'; 
-import Field from '../../mongoosedao/field'; 
+const {InputArray, InputData, InputSelect} = Package_Input; 
+const Field = Package_MongooseDao.Field; 
+type IDao = Package_InputTable.IDao; 
+type IColumnSettingRule = Package_InputTable.IColumnSettingRule; 
 
 // IField Predicate ===============================
 const OnePrimitive = (ifield:IField) => !new Field(ifield).IsArray() && new Field(ifield).IsPrimitive(); 

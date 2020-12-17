@@ -1,8 +1,8 @@
 import React from 'react'; 
 //import {IFieldRendering, Field} from '../common'; 
-import {MongooseDao, Input} from '../../custompackages'; 
-const Field = MongooseDao.Field; 
-const {InputArray, InputData, InputSelect} = Input; 
+import {Package_MongooseDao, Package_Input} from '../../custompackages'; 
+const Field = Package_MongooseDao.Field; 
+const {InputArray, InputData, InputSelect} = Package_Input; 
 
 export type Renderer = (ifield:IField) => (value:any, onSendValue:any) => any; 
 

@@ -34,7 +34,7 @@ export function useInputHook<T>(props:IInput<T>):IInputHook<T> {
   const [value, setValue] = useState<T>(props.value as T); 
   // To synchronize with parent changes (page changes). 
   useEffect(() => { 
-    if (props.value != value) { 
+    if (props.value !== value) { 
       setValue(props.value); 
   } 
   },[JSON.stringify(props.value)]); 

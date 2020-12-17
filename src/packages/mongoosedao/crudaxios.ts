@@ -5,10 +5,10 @@ export class Crud {
 
   constructor(baseUrl:string) { 
     this.baseUrl = baseUrl; 
-    const axiosInstance = axios.create({
+    /*const axiosInstance = axios.create({
       baseURL: baseUrl,
       timeout: 2000
-    });
+    });*/
   } 
 
   public async Access() { 

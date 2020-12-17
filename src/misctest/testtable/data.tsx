@@ -1,5 +1,5 @@
-import Dao from '../../mongoosedao/dao'; 
-
+import {Package_MongooseDao} from '../../custompackages'; 
+const Dao = Package_MongooseDao.Dao; 
 
 const ifieldsCollection1: IField[] = [
   {

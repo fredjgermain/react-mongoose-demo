@@ -20,6 +20,8 @@
     "noEmit": true,
     "jsx": "react-jsx"
   },
-  "include": ["src"],
-  "exclude": ["src/components/*", "src/misctest/testinput/*", "src/misctest/testtable/*"]
+  "include": [
+    "src"
+  ],
+  "exclude": ["./src/components/*", "./src/packages/customhooks/useKey.tsx", "./src/packages/customhooks/useOutsideClick.tsx"]
 }

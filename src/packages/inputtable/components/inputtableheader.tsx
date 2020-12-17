@@ -16,14 +16,10 @@ export function InputHeaderRow({children}:React.PropsWithChildren<IInputHeaderRo
 }
 
 // INPUT CELLS ==================================
-interface IInputHeaderContext {} 
+//interface IInputHeaderContext {} 
 export const InputHeaderContext = React.createContext({} as IInputHeaderRowContext); 
-interface IInputHeader { 
-  columnSetting?:IColumnSetting; 
-} 
-
 export function InputHeader() { 
-  const {tableHook, columnSettings:{GetColumnSettings}} = useContext(InputTableContext); 
+  const {columnSettings:{GetColumnSettings}} = useContext(InputTableContext); 
   const ColumnSettings:IColumnSetting[] = GetColumnSettings(); 
 
   return <InputHeaderContext.Provider value={{}}> 

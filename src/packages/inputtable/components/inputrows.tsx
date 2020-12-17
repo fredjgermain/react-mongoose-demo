@@ -10,7 +10,7 @@ interface IInputRows {
 export function InputRows({rows, children}: React.PropsWithChildren<IInputRows>) { 
   const {tableHook:{entries}} = useContext(InputTableContext); 
   const Rows = (entries === undefined) ? [] : 
-    (rows != undefined) ? rows: entries.map( (v,i) => i); 
+    (rows !== undefined) ? rows: entries.map( (v,i) => i); 
 
   return <InputRowsContext.Provider value={{}}> 
     {Rows.map( (row, i) => { 

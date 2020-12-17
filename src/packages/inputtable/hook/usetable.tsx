@@ -26,7 +26,7 @@ export function useInputTable(entries:IEntry[]):ITableHook {
   const [activeMode, setActiveMode] = useState('read'); 
 
   useEffect(() => { 
-    if(activeMode != 'read' || activeRow != -1) 
+    if(activeMode !== 'read' || activeRow !== -1) 
     ResetActiveHooks(); 
   },[entries]); 
 
@@ -42,7 +42,7 @@ export function useInputTable(entries:IEntry[]):ITableHook {
   } 
 
   const GetActiveHook = (row?:number) => { 
-    if(row != undefined && activeRow === row) 
+    if(row !== undefined && activeRow === row) 
       return activeMode; 
     return ''; 
   }
