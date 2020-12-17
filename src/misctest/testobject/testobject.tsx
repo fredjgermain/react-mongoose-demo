@@ -1,5 +1,6 @@
 import React, { useState } from 'react'; 
-import {PackageObject} from '../../custompackages'; 
+import {PackageObject, MongooseDao} from '../../custompackages'; 
+
 
 const {InputObject, 
   Fields:{Fields, FieldLabel, FieldRenderer}, 
@@ -7,9 +8,17 @@ const {InputObject,
   FieldRendering:{BuildDefaultFieldRenderings} 
 } = PackageObject; 
 
+
+const ifielda:IField = {accessor:'a', label:'A', type:'number', subtype:'', modeltype:'', options:{}, defaultValue:0, format:''};
+const field = new MongooseDao.Field(ifielda); 
+
+const test = field.OnePrimitive(); 
+console.log(test); 
+
 // colsettings
-const colSettings:{ifield:IField}[] = [
-  {ifield:{accessor:'a', label:'A', type:'', subtype:'', modeltype:'', options:{}, defaultValue:0, format:''}}
+const colSettings:{ifield:IField, order:number}[] = [
+  {ifield:{accessor:'a', label:'A', type:'number', subtype:'', modeltype:'', options:{}, defaultValue:0, format:''}, order:1 },
+  {ifield:{accessor:'b', label:'B', type:'number', subtype:'', modeltype:'', options:{}, defaultValue:0, format:''}, order:2 }
 ]
 // 
 const mockForeignOptions = [
@@ -22,21 +31,21 @@ const GetForeignValue = (ifield:IField, id:string) => mockForeignOptions.find(o=
 const fieldRenderings = BuildDefaultFieldRenderings({GetForeignOptions, GetForeignValue}); 
 
 export default function TestObject () { 
-  const obj = 12
-  //const [obj, setObj] = useState({a:12}); 
-
+  //const obj = 12
+  const [obj, setObj] = useState({a:12, b:14}); 
 
   return <div>
     {JSON.stringify(obj)}
-    
+    <InputObject obj={obj} setObj={setObj} columnSettings={colSettings} >
+      <Fields >
+        <FieldLabel/>
+          <FieldRenderer fieldRenderings={fieldRenderings}/>
+      </Fields>
+    </InputObject>
   </div>;
 }
 
 /*
-<Object obj={obj} setObj={setObj} columnSettings={colSettings} >
-      <Fields >
-        <FieldLabel/><FieldRenderer fieldRenderings={fieldRenderings}/>
-      </Fields>
-    </Object>
+
 
 */

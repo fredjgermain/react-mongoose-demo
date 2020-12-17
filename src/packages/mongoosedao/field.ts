@@ -1,28 +1,19 @@
 // Field class 
-export default class Field implements IField { 
-  public accessor: string = ''; 
-  public label: string = ''; 
-  public type: string = ''; 
-  public subtype: string = ''; 
-  public modeltype: string = ''; 
-  public options: any = {}; 
-  public defaultValue: any = ''; 
-  public format: any = ''; 
-  public sort?: any = ''; 
-  
+export default class Field { 
+  public ifield:IField = {} as IField;
 
-  /*constructor(ifield:IField) { 
+  constructor(ifield:IField) { 
     this.ifield = ifield; 
-  } */
+  } 
 
   public GetEnumOptions() { 
     if(!this.IsEnum()) 
       return []; 
-    return this.options['enum']; 
+    return this.ifield.options['enum']; 
   }
 
   public GetElementType():string { 
-    return this.IsObjectID() ? this.modeltype: this.subtype; 
+    return this.IsObjectID() ? this.ifield.modeltype: this.ifield.subtype; 
   }
 
   // Type Testing ----------------------------
@@ -38,16 +29,16 @@ export default class Field implements IField {
   public IsAbbreviable():boolean { 
       if(this.IsHiddenField()) 
         return false; 
-      return this.options['abbreviate'] 
+      return this.ifield.options['abbreviate'] 
         || (this.IsString() || this.IsNumber() ); 
   } 
 
   public IsSortable():boolean { 
-    return this.options['sort']; 
+    return this.ifield.options['sort']; 
   } 
 
   public IsHiddenField():boolean { 
-    return this.accessor.includes('_'); 
+    return this.ifield.accessor.includes('_'); 
   } 
 
   public IsPrimitive():boolean { 
@@ -55,38 +46,38 @@ export default class Field implements IField {
   }
 
   public IsMixed():boolean { 
-    const toTest = !this.IsArray() ? this.type: this.subtype; 
+    const toTest = !this.IsArray() ? this.ifield.type: this.ifield.subtype; 
     return toTest === 'Mixed' || toTest === 'mixed'; 
   }
 
   public IsBoolean():boolean { 
-    const toTest = !this.IsArray() ? this.type: this.subtype; 
+    const toTest = !this.IsArray() ? this.ifield.type: this.ifield.subtype; 
     return toTest === 'Boolean' || toTest === 'boolean'; 
   } 
 
   public IsNumber():boolean { 
-    const toTest = !this.IsArray() ? this.type: this.subtype; 
+    const toTest = !this.IsArray() ? this.ifield.type: this.ifield.subtype; 
     return toTest === 'Number' || toTest === 'number'; 
   } 
   
   public IsString():boolean { 
     //console.log('toTest'); 
-    const toTest = !this.IsArray() ? this.type: this.subtype; 
+    const toTest = !this.IsArray() ? this.ifield.type: this.ifield.subtype; 
     //console.log([toTest, toTest === 'String' || toTest === 'string']); 
     return toTest === 'String' || toTest === 'string'; 
   } 
 
   public IsObjectID():boolean { 
-    const toTest = !this.IsArray() ? this.type: this.subtype; 
+    const toTest = !this.IsArray() ? this.ifield.type: this.ifield.subtype; 
     return toTest === 'ObjectID'; 
   } 
 
   public IsArray():boolean { 
-    return this.type === 'Array'; 
+    return this.ifield.type === 'Array'; 
   } 
 
   public IsEnum():boolean { 
-    if(!this.options['enum']) 
+    if(!this.ifield.options['enum']) 
       return false; 
     return true; 
   } 

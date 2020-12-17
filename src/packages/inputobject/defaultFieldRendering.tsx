@@ -1,7 +1,7 @@
 import React from 'react'; 
 //import {IFieldRendering, Field} from '../common'; 
 import {MongooseDao, Input} from '../../custompackages'; 
-type Field = MongooseDao.Field; 
+const Field = MongooseDao.Field; 
 const {InputArray, InputData, InputSelect} = Input; 
 
 export type Renderer = (ifield:IField) => (value:any, onSendValue:any) => any; 
@@ -30,29 +30,29 @@ export function BuildDefaultFieldRenderings({GetForeignOptions, GetForeignValue}
   const Edit = (handle:string):boolean => ['update', 'create'].includes(handle); 
 
   // primitives
-  const PredicateReadOnePrimitive = (ifield:IField, handle:string) => (ifield as Field).OnePrimitive() && !Edit(handle); 
-  const PredicateEditOnePrimitive = (ifield:IField, handle:string) => (ifield as Field).OnePrimitive() && Edit(handle); 
-  const PredicateReadManyPrimitive = (ifield:IField, handle:string) => (ifield as Field).ManyPrimitive() && !Edit(handle); 
-  const PredicateEditManyPrimitive = (ifield:IField, handle:string) => (ifield as Field).ManyPrimitive() && Edit(handle); 
+  const PredicateReadOnePrimitive = (ifield:IField, handle:string) => new Field(ifield).OnePrimitive() && !Edit(handle); 
+  const PredicateEditOnePrimitive = (ifield:IField, handle:string) => new Field(ifield).OnePrimitive() && Edit(handle); 
+  const PredicateReadManyPrimitive = (ifield:IField, handle:string) => new Field(ifield).ManyPrimitive() && !Edit(handle); 
+  const PredicateEditManyPrimitive = (ifield:IField, handle:string) => new Field(ifield).ManyPrimitive() && Edit(handle); 
 
   // mixed
 
   // enums
-  const PredicateReadOneEnum = (ifield:IField, handle:string) => (ifield as Field).OneEnum()  && !Edit(handle); 
-  const PredicateEditOneEnum = (ifield:IField, handle:string) => (ifield as Field).OneEnum() && Edit(handle); 
-  const PredicateReadManyEnum = (ifield:IField, handle:string) => (ifield as Field).ManyEnum() && !Edit(handle); 
-  const PredicateEditManyEnum = (ifield:IField, handle:string) => (ifield as Field).ManyEnum() && Edit(handle); 
+  const PredicateReadOneEnum = (ifield:IField, handle:string) => new Field(ifield).OneEnum()  && !Edit(handle); 
+  const PredicateEditOneEnum = (ifield:IField, handle:string) => new Field(ifield).OneEnum() && Edit(handle); 
+  const PredicateReadManyEnum = (ifield:IField, handle:string) => new Field(ifield).ManyEnum() && !Edit(handle); 
+  const PredicateEditManyEnum = (ifield:IField, handle:string) => new Field(ifield).ManyEnum() && Edit(handle); 
 
   // foreigns
-  const PredicateReadOneForeign = (ifield:IField, handle:string) => (ifield as Field).OneForeign() && !Edit(handle); 
-  const PredicateEditOneForeign = (ifield:IField, handle:string) => (ifield as Field).OneForeign() && Edit(handle); 
-  const PredicateReadManyForeign = (ifield:IField, handle:string) => (ifield as Field).ManyForeign() && !Edit(handle); 
-  const PredicateEditManyForeign = (ifield:IField, handle:string) => (ifield as Field).ManyForeign() && Edit(handle); 
+  const PredicateReadOneForeign = (ifield:IField, handle:string) => new Field(ifield).OneForeign() && !Edit(handle); 
+  const PredicateEditOneForeign = (ifield:IField, handle:string) => new Field(ifield).OneForeign() && Edit(handle); 
+  const PredicateReadManyForeign = (ifield:IField, handle:string) => new Field(ifield).ManyForeign() && !Edit(handle); 
+  const PredicateEditManyForeign = (ifield:IField, handle:string) => new Field(ifield).ManyForeign() && Edit(handle); 
 
   // BuildRenderFunc -------------------------------------
   const ReadMany = (ifield:IField, value:any) => { 
     const N = Array.isArray(value) ? value: []; 
-    return <span>{(ifield as Field).GetElementType()} x {N.length}</span> 
+    return <span>{new Field(ifield).GetElementType()} x {N.length}</span> 
   } 
 
   const Display = (ifield:IField, value:any) => { 

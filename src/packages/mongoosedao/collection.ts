@@ -21,7 +21,7 @@ export default class Collection {
     let foundAbvField = this.icollection.ifields.find(c => c.options['abbreviate']); 
     if(foundAbvField) 
       return foundAbvField; 
-    foundAbvField = this.icollection.ifields.find( f => (f as Field).IsAbbreviable() ); 
+    foundAbvField = this.icollection.ifields.find( f => new Field(f).IsAbbreviable() ); 
     return foundAbvField as IField; 
   } 
 
