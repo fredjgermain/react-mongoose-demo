@@ -1,6 +1,6 @@
 import React, {useContext} from 'react'; 
 import {InputObjectContext} from './object'; 
-import {IFieldRendering} from './common'; 
+import {IFieldRendering} from './_common'; 
 //import {IFieldRendering} from './defaultFieldRendering'; 
 
 interface IContext { 
@@ -9,15 +9,12 @@ interface IContext {
 export const FieldContext = React.createContext({} as IContext); 
 
 export function Fields({children}:React.PropsWithChildren<any>) { 
-  const {columnSettings:cs} = useContext(InputObjectContext); 
-
-  const columnSettings = cs.filter( c => c.order && c.order > 0)
-    .sort( (a, b) => (a.order ?? 0) - (b.order ?? 0) ); 
+  const {columnSettings} = useContext(InputObjectContext); 
   
   // RENDER -------------------------------------
   return <div> 
     {columnSettings.map( (col, i) => { 
-      const context:IContext = {ifield:col.ifield} 
+      const context:IContext = {ifield:col} 
       return <FieldContext.Provider key={i} value={context}><div>
         {children} 
       </div></FieldContext.Provider>

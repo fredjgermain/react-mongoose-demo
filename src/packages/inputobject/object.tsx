@@ -1,11 +1,9 @@
 import React from 'react'; 
-import {IColumnSetting} from './common'; 
-
 
 interface IProps { 
   obj:any, 
   setObj: React.Dispatch<any>, 
-  columnSettings:IColumnSetting[], 
+  columnSettings: IField[]
 } 
 export default function InputObject({obj, setObj, columnSettings, children}:React.PropsWithChildren<IProps>) { 
   const context:IContext = {obj, setObj, columnSettings}; 
@@ -18,6 +16,6 @@ export default function InputObject({obj, setObj, columnSettings, children}:Reac
 interface IContext { 
   obj:any, 
   setObj: any, // function ... 
-  columnSettings: IColumnSetting[]; 
+  columnSettings: IField[]
 } 
 export const InputObjectContext = React.createContext({} as IContext); 

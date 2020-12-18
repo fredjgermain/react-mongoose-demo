@@ -1,7 +1,7 @@
 import React, {useContext} from 'react'; 
 import {TableContext} from './table'; 
-import {IFieldRendering} from './common'; 
-
+import {Package_FieldRendering} from '../../custompackages'; 
+type IFieldRendering = Package_FieldRendering.IFieldRendering; 
 
 interface IProps { 
   fieldRenderings:IFieldRendering[]; 
@@ -44,13 +44,11 @@ export const CellContext = React.createContext({} as ICellContext);
 
 const CellsContext = React.createContext({}); 
 export function Cells({children}:React.PropsWithChildren<any>) { 
-  const {columnSettings:cs} = useContext(TableContext); 
-  const columnSettings = cs.filter( c => c.order && c.order > 0)
-    .sort( (a, b) => (a.order ?? 0) - (b.order ?? 0) ); 
-  
+  const {columnSettings} = useContext(TableContext); 
+
   return <CellsContext.Provider value={{}}> 
     {columnSettings.map( (col, i) => { 
-      const context = {ifield:col.ifield}; 
+      const context = {ifield:col}; 
       return <td key={i}> 
         <CellContext.Provider value={context}> 
           {children} 

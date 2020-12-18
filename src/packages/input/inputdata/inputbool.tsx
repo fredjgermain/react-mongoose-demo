@@ -1,5 +1,5 @@
 import React from 'react'; 
-import {IInput, useInputHook, EnumType} from '../inputcommon'; 
+import {IInput, useInputHook, EnumType} from '../_common'; 
 
 
 // InputBool ================================== 

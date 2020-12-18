@@ -1,15 +1,15 @@
 import React from 'react'; 
 import {Package_MongooseDao, Package_Input} from '../../custompackages'; 
-import {IForeignValues, IFieldRendering} from './_common'; 
-
+import {IFieldRendering} from './fieldrendering'; 
 const Field = Package_MongooseDao.Field; 
 const {InputArray, InputData, InputSelect} = Package_Input; 
 
 
-
+type TForeignValue = (ifield:IField, id:string) => any|undefined; 
+type TForeignOptions = (ifield:IField) => IOption[]; 
 
 // BUILD FIELD RENDERING =================================
-export function BuildDefaultFieldRenderings({GetForeignOptions, GetForeignValue}:IForeignValues) { 
+export function BuildDefaultFieldRenderings(GetForeignOptions:TForeignOptions, GetForeignValue:TForeignValue) { 
   
   // Predicate ------------------------------------
   const Edit = (handle:string):boolean => ['update', 'create'].includes(handle); 

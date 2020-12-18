@@ -6,12 +6,6 @@ import Table, {TableContext} from './table';
 
 export {BuildDefaultFieldRenderings, InputObject, InputObjectContext, Fields, Rows, Table, TableContext}; 
 
-export interface IColumnSetting { 
-  ifield: IField; 
-  order?: number;     // < 0 are hidden, > 0 are shown. 
-  //sort?: ; 
-} 
-
 export type Renderer = (ifield:IField) => (value:any, onSendValue:any) => any; 
 
 export interface IFieldRendering { 

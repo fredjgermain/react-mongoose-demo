@@ -1,39 +1,14 @@
 import React from 'react'; 
 import {Package_MongooseDao, Package_Input} from '../../custompackages'; 
-import {IForeignValues, IFieldRendering} from './_common'; 
-
 const Field = Package_MongooseDao.Field; 
 const {InputArray, InputData, InputSelect} = Package_Input; 
 
 
-
+type TForeignValue = (ifield:IField, id:string) => any|undefined; 
+type TForeignOptions = (ifield:IField) => IOption[]; 
 
 // BUILD FIELD RENDERING =================================
-export function BuildDefaultFieldRenderings({GetForeignOptions, GetForeignValue}:IForeignValues) { 
-  
-  // Predicate ------------------------------------
-  const Edit = (handle:string):boolean => ['update', 'create'].includes(handle); 
-
-  // primitives
-  const PredicateReadOnePrimitive = (ifield:IField, handle:string) => new Field(ifield).OnePrimitive() && !Edit(handle); 
-  const PredicateEditOnePrimitive = (ifield:IField, handle:string) => new Field(ifield).OnePrimitive() && Edit(handle); 
-  const PredicateReadManyPrimitive = (ifield:IField, handle:string) => new Field(ifield).ManyPrimitive() && !Edit(handle); 
-  const PredicateEditManyPrimitive = (ifield:IField, handle:string) => new Field(ifield).ManyPrimitive() && Edit(handle); 
-
-  // mixed
-
-  // enums
-  const PredicateReadOneEnum = (ifield:IField, handle:string) => new Field(ifield).OneEnum()  && !Edit(handle); 
-  const PredicateEditOneEnum = (ifield:IField, handle:string) => new Field(ifield).OneEnum() && Edit(handle); 
-  const PredicateReadManyEnum = (ifield:IField, handle:string) => new Field(ifield).ManyEnum() && !Edit(handle); 
-  const PredicateEditManyEnum = (ifield:IField, handle:string) => new Field(ifield).ManyEnum() && Edit(handle); 
-
-  // foreigns
-  const PredicateReadOneForeign = (ifield:IField, handle:string) => new Field(ifield).OneForeign() && !Edit(handle); 
-  const PredicateEditOneForeign = (ifield:IField, handle:string) => new Field(ifield).OneForeign() && Edit(handle); 
-  const PredicateReadManyForeign = (ifield:IField, handle:string) => new Field(ifield).ManyForeign() && !Edit(handle); 
-  const PredicateEditManyForeign = (ifield:IField, handle:string) => new Field(ifield).ManyForeign() && Edit(handle); 
-
+export function GetDefaultRenderer(GetForeignOptions:TForeignOptions, GetForeignValue:TForeignValue) { 
   // BuildRenderFunc -------------------------------------
   const ReadMany = (ifield:IField, value:any) => { 
     const N = Array.isArray(value) ? value: []; 
@@ -45,6 +20,10 @@ export function BuildDefaultFieldRenderings({GetForeignOptions, GetForeignValue}
       return <span>{JSON.stringify(value)}</span>; 
     return <span>{value}</span>; 
   } 
+
+  const DefaultRenderer = (ifield:IField) => (value:any, onSendValue:any) => { 
+    return <span>{JSON.stringify(value)}</span>; 
+  }
 
   // PRIMITIVE --------------------------------------
   const ReadOnePrimitive = (ifield:IField) => (value:any, onSendValue:any) => 
@@ -99,28 +78,8 @@ export function BuildDefaultFieldRenderings({GetForeignOptions, GetForeignValue}
   const EditManyForeign = (ifield:IField) => (value:any, onSendValue:any) => { 
       const options:IOption[] = GetForeignOptions(ifield); 
       return <InputSelect {...{value, onSendValue, options, isMulti:true}} /> 
-    };
-
-  // FieldRendering build ---------------------------------
-  return [ 
-    // primitives
-    {predicate:PredicateReadOnePrimitive, renderer:ReadOnePrimitive}, 
-    {predicate:PredicateEditOnePrimitive, renderer:EditOnePrimitive}, 
-    {predicate:PredicateReadManyPrimitive, renderer:ReadManyPrimitive}, 
-    {predicate:PredicateEditManyPrimitive, renderer:EditManyPrimitive}, 
-
-    // mixeds
-    
-    // enums
-    {predicate:PredicateReadOneEnum, renderer:ReadOneEnum}, 
-    {predicate:PredicateEditOneEnum, renderer:EditOneEnum}, 
-    {predicate:PredicateReadManyEnum, renderer:ReadManyEnum}, 
-    {predicate:PredicateEditManyEnum, renderer:EditManyEnum}, 
-
-    // foreigns
-    {predicate:PredicateReadOneForeign, renderer:ReadOneForeign}, 
-    {predicate:PredicateEditOneForeign, renderer:EditOneForeign}, 
-    {predicate:PredicateReadManyForeign, renderer:ReadManyForeign}, 
-    {predicate:PredicateEditManyForeign, renderer:EditManyForeign}, 
-  ] as IFieldRendering[]; 
+    }; 
+  const read = {ReadOnePrimitive, ReadManyPrimitive, ReadOneEnum, ReadManyEnum, ReadOneForeign, ReadManyForeign}; 
+  const edit = {EditOnePrimitive, EditManyPrimitive, EditOneEnum, EditManyEnum, EditOneForeign, EditManyForeign}; 
+  return {...read, ...edit, DefaultRenderer}; 
 }

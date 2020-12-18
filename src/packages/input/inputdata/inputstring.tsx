@@ -1,5 +1,5 @@
 import React from 'react'; 
-import {IInput, useInputHook, SetSize, EnumType} from '../inputcommon'; 
+import {IInput, useInputHook, SetSize, EnumType} from '../_common'; 
 
 
 // InputString ================================== 

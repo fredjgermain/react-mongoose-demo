@@ -1,5 +1,4 @@
 import React, {useState} from 'react'; 
-import {IColumnSetting} from './common'; 
 
 interface IContext { 
   entries:any[]; 
@@ -7,11 +6,11 @@ interface IContext {
   setActiveEntry: any; 
   activeRow: number; 
   setActiveRow: any; 
-  columnSettings:IColumnSetting[]; 
+  columnSettings:IField[]; 
 } 
 interface IProps { 
   entries:any[]; 
-  columnSettings:IColumnSetting[]; 
+  columnSettings:IField[]; 
 }
 
 export const TableContext = React.createContext({} as IContext); 

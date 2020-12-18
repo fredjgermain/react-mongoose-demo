@@ -1,7 +1,7 @@
-import Package_MongooseDao from './collection'; 
 import Field from './field'; 
+import Collection from './collection';
 import Dao from './dao'; 
 import {crud, Crud} from './crudaxios'; 
 import {LoadMongooseCollections} from './mongooseparser'; 
 
-export {Dao, Crud, crud, Field, Package_MongooseDao as Collection, LoadMongooseCollections}; 
+export {Field, Collection, Dao, Crud, crud, LoadMongooseCollections}; 

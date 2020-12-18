@@ -1,11 +1,11 @@
 import { crud } from './crudaxios'; 
 
-export interface IMongooseCollection { 
+interface IMongooseCollection { 
   accessor:string; 
   label:string; 
 } 
 
-export interface IMongooseField { 
+interface IMongooseField { 
   accessor:string; 
   instance:string; 
   options: { 

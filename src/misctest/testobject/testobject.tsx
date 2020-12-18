@@ -29,16 +29,16 @@ export default function TestObject () {
 
   return <div>
     {JSON.stringify(obj)}
-    <InputObject obj={obj} setObj={setObj} columnSettings={colSettings} >
-      <Fields >
-        <FieldLabel/>
-          <FieldRenderer fieldRenderings={fieldRenderings}/>
-      </Fields>
-    </InputObject>
+    
   </div>;
 }
 
 /*
 
-
+<InputObject obj={obj} setObj={setObj} columnSettings={colSettings} >
+      <Fields >
+        <FieldLabel/>
+          <FieldRenderer fieldRenderings={fieldRenderings}/>
+      </Fields>
+    </InputObject>
 */
