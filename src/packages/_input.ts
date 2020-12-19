@@ -1,10 +1,10 @@
-import InputData from './inputdata/inputdata'; 
-import InputString from './inputdata/inputstring'; 
-import InputNumber from './inputdata/inputnumber'; 
-import InputBool from './inputdata/inputbool'; 
-import InputSelect from './inputselect/inputselect'; 
-import InputArray from './inputarray'; 
-import {useInputHook} from './inputhooks/inputhook'; 
+import InputData from './input/inputdata/inputdata'; 
+import InputString from './input/inputdata/inputstring'; 
+import InputNumber from './input/inputdata/inputnumber'; 
+import InputBool from './input/inputdata/inputbool'; 
+import InputSelect from './input/inputselect/inputselect'; 
+import InputArray from './input/inputarray'; 
+import {useInputHook} from './input/inputhooks/inputhook'; 
 
 export {useInputHook, InputData, InputBool, InputNumber, InputString, InputSelect, InputArray}; 
 export type InputAction = (event:any) => void; 

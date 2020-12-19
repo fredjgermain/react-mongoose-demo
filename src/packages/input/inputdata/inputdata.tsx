@@ -1,5 +1,5 @@
 import React from 'react'; 
-import { IInput, InputNumber, InputString, InputBool } from '../_common'; 
+import { IInput, InputNumber, InputString, InputBool } from '../../_input'; 
 
 // InputData ====================================
 export default function InputData(props:IInput<any>) { 

@@ -1,7 +1,6 @@
 import React from 'react'; 
-import {Package_MongooseDao, Package_Input} from '../../custompackages'; 
-const Field = Package_MongooseDao.Field; 
-const {InputArray, InputData, InputSelect} = Package_Input; 
+import {Field} from '../_mongoosedao'; 
+import {InputArray, InputData, InputSelect} from '../_input'; 
 
 
 type TForeignValue = (ifield:IField, id:string) => any|undefined; 
@@ -21,7 +20,7 @@ export function GetDefaultRenderer(GetForeignOptions:TForeignOptions, GetForeign
     return <span>{value}</span>; 
   } 
 
-  const DefaultRenderer = (ifield:IField) => (value:any, onSendValue:any) => { 
+  const Default = (ifield:IField) => (value:any, onSendValue:any) => { 
     return <span>{JSON.stringify(value)}</span>; 
   }
 
@@ -81,5 +80,5 @@ export function GetDefaultRenderer(GetForeignOptions:TForeignOptions, GetForeign
     }; 
   const read = {ReadOnePrimitive, ReadManyPrimitive, ReadOneEnum, ReadManyEnum, ReadOneForeign, ReadManyForeign}; 
   const edit = {EditOnePrimitive, EditManyPrimitive, EditOneEnum, EditManyEnum, EditOneForeign, EditManyForeign}; 
-  return {...read, ...edit, DefaultRenderer}; 
+  return {...read, ...edit, Default}; 
 }

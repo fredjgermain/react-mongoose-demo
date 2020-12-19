@@ -15,13 +15,15 @@ type TForeignOptions = (ifield:IField) => IOption[];
 export default class FieldRendering { 
   // PROPERTIES ------------------------------------
   public fRenderings:IFieldRendering[] = []; 
-  public defaultRenderer:(ifield: IField) => (value: any, onSendValue: any) => JSX.Element 
-    = (ifield: IField) => (value: any, onSendValue: any) => <div>{JSON.stringify(value)}</div>; 
+  public defaultFieldRendering:IFieldRendering = { 
+    name:'Default', 
+    predicate: (ifield:IField, handle:string) => true, 
+    renderer: (ifield:IField) => (value:any, onSendValue:any) => <span>{JSON.stringify(value)}</span>, 
+  } 
 
   // Build DEFAULT RENDERING ------------------------
   public DefaultFieldRendering(GetForeignOptions:TForeignOptions, GetForeignValue:TForeignValue) { 
-    const {DefaultRenderer, ...renderers} = GetDefaultRenderer(GetForeignOptions, GetForeignValue); 
-    this.defaultRenderer = DefaultRenderer; 
+    const renderers = GetDefaultRenderer(GetForeignOptions, GetForeignValue); 
     this.fRenderings = Object.keys(renderers).map( k => { 
       const name = k; 
       const predicate = (defaultPredicate as any)[k]; 
@@ -35,10 +37,16 @@ export default class FieldRendering {
   /*
   to be called by component needing to render using IFieldRendering rules. 
   */
-  public GetRenderer(ifield:IField, handle:string):(value: any, onSendValue: any) => JSX.Element { 
-    const found = this.fRenderings.find( fr => fr.predicate(ifield, handle)); 
+  public GetFieldRendering(ifield:IField, handle:string = ''):IFieldRendering { 
+    const found = this.fRenderings.find( fr => fr.predicate(ifield, handle));     
     if(found) 
-      return found.renderer(ifield); 
-    return this.defaultRenderer(ifield); 
-  }
+      return found; 
+    return this.defaultFieldRendering; 
+  } 
+
+  public GetRenderer(ifield:IField, handle:string = ''):(value:any, onSendValue:any)=>JSX.Element { 
+    const fr = this.GetFieldRendering(ifield,handle); 
+    console.log(fr.name); 
+    return fr.renderer(ifield); 
+  } 
 }

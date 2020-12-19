@@ -1,18 +1,25 @@
 import React, { useState } from 'react'; 
-import {Package_Object} from '../../custompackages'; 
+import {FieldRendering} from '../../packages/_fieldrendering'; 
+import {Objx, Fields, FieldLabel, FieldRenderer} from '../../packages/_objx'; 
 
 
-
-const {InputObject, 
-  Fields:{Fields, FieldLabel, FieldRenderer}, 
-  BuildDefaultFieldRenderings
-} = Package_Object; 
-
-// colsettings
-const colSettings:{ifield:IField, order:number}[] = [
-  {ifield:{accessor:'a', label:'A', type:'number', subtype:'', modeltype:'', options:{}, defaultValue:0, format:''}, order:1 },
-  {ifield:{accessor:'b', label:'B', type:'number', subtype:'', modeltype:'', options:{}, defaultValue:0, format:''}, order:2 }
-]
+const mockObj = { 
+  string: 'cacaca', 
+  strings: ['cacaca', 'babababa'], 
+  num:12, 
+  nums:[14, 45], 
+  special:13, 
+  c:15, 
+}; 
+// colsettings 
+const columnSettings:IField[] = [ 
+  {accessor:'string', label:'String Var', type:'string', subtype:'', modeltype:'', options:{}, defaultValue:'', format:''}, 
+  {accessor:'strings', label:'StringS', type:'array', subtype:'string', modeltype:'', options:{}, defaultValue:[], format:''}, 
+  {accessor:'num', label:'Num', type:'number', subtype:'', modeltype:'', options:{}, defaultValue:0, format:''}, 
+  {accessor:'nums', label:'NumS', type:'array', subtype:'number', modeltype:'', options:{}, defaultValue:0, format:''}, 
+  {accessor:'special', label:'Spooky !', type:'number', subtype:'', modeltype:'', options:{}, defaultValue:0, format:''}, 
+  {accessor:'c', label:'C', type:'number', subtype:'', modeltype:'', options:{}, defaultValue:0, format:''}, 
+] 
 // 
 const mockForeignOptions = [ 
   {value:'0', label:'mock foreign value 0'}, 
@@ -21,15 +28,27 @@ const mockForeignOptions = [
 ] 
 const GetForeignOptions = (ifield:IField):IOption[] => mockForeignOptions; 
 const GetForeignValue = (ifield:IField, id:string) => mockForeignOptions.find(o=>o.value===id); 
-const fieldRenderings = BuildDefaultFieldRenderings({GetForeignOptions, GetForeignValue}); 
+const fieldRendering = new FieldRendering(); 
+fieldRendering.DefaultFieldRendering(GetForeignOptions, GetForeignValue); 
+const specialFieldRendering = { 
+  name:'special field', 
+  predicate:(ifield:IField, handle:string) => ifield.accessor==='special', 
+  renderer: (ifield:IField) => (value:any, onSendValue:any) => <span>SPECIAL !!! {value}</span> 
+}; 
+fieldRendering.fRenderings = [specialFieldRendering, ...fieldRendering.fRenderings]; 
 
+
+// TEST OBJECT ===================================
 export default function TestObject () { 
-  //const obj = 12
-  const [obj, setObj] = useState({a:12, b:14}); 
+  const [obj, setObj] = useState(mockObj); 
 
   return <div>
-    {JSON.stringify(obj)}
-    
+    {JSON.stringify(obj)} 
+    <Objx {...{obj, setObj, columnSettings, fieldRendering}} > 
+      <Fields> 
+        <FieldLabel /> <FieldRenderer/> 
+      </Fields>
+    </Objx>
   </div>;
 }
 

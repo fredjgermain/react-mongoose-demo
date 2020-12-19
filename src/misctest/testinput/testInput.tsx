@@ -1,6 +1,5 @@
 import React, {useState, useRef} from 'react'; 
-import {Package_Input} from '../../custompackages'
-const {EnumType, InputArray, InputData, InputSelect} = Package_Input;
+import {EnumType, InputArray, InputData, InputSelect} from '../../packages/_input';
 //import InputTable, {IColumnSetting} from './inputtable/inputtable'; 
 /*import InputRows from './inputtable/inputrow'; 
 import InputCells from './inputtable/inputcells'; 

@@ -1,6 +1,5 @@
-import {Package_CustomHooks, Package_FieldRendering} from '../../custompackages'; 
-const {useColumnSetting} = Package_CustomHooks; 
-const {FieldRendering} = Package_FieldRendering; 
+import {useColumnSetting} from '../../packages/_hooks'; 
+import {FieldRendering} from '../../packages/_fieldrendering'; 
 
 const data = [ 
   {a:'test0', b:0, c:1, d:2}, 
@@ -34,8 +33,7 @@ frender.DefaultFieldRendering(GetForeignOptions, GetForeignvalue);
 // TEST COLUMN SETTING ############################
 export default function TestColumnSetting() { 
   const {cols, Order} = useColumnSetting(ifields); 
-  const fr = frender.GetRenderer(ifields[0], 'update'); 
-  console.log(fr); 
+  const fr = frender.GetFieldRendering(ifields[0], 'update'); 
 
   Order(['c', '*', 'a']); 
 

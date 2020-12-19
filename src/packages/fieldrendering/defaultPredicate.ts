@@ -1,5 +1,4 @@
-import {Package_MongooseDao} from '../../custompackages'; 
-const Field = Package_MongooseDao.Field; 
+import {Field} from '../_mongoosedao';
 
 // DEFAULT PREDICATE ###############################
 const Edit = (handle:string):boolean => ['update', 'create'].includes(handle); 
@@ -14,14 +13,16 @@ export const defaultPredicate = {
   // mixed
 
   // enums
-   ReadOneEnum: (ifield:IField, handle:string) => new Field(ifield).OneEnum()  && !Edit(handle), 
-   EditOneEnum: (ifield:IField, handle:string) => new Field(ifield).OneEnum() && Edit(handle), 
-   ReadManyEnum: (ifield:IField, handle:string) => new Field(ifield).ManyEnum() && !Edit(handle), 
-   EditManyEnum: (ifield:IField, handle:string) => new Field(ifield).ManyEnum() && Edit(handle), 
+  ReadOneEnum: (ifield:IField, handle:string) => new Field(ifield).OneEnum()  && !Edit(handle), 
+  EditOneEnum: (ifield:IField, handle:string) => new Field(ifield).OneEnum() && Edit(handle), 
+  ReadManyEnum: (ifield:IField, handle:string) => new Field(ifield).ManyEnum() && !Edit(handle), 
+  EditManyEnum: (ifield:IField, handle:string) => new Field(ifield).ManyEnum() && Edit(handle), 
 
-  // foreigns
-   ReadOneForeign: (ifield:IField, handle:string) => new Field(ifield).OneForeign() && !Edit(handle),
-   EditOneForeign: (ifield:IField, handle:string) => new Field(ifield).OneForeign() && Edit(handle),
-   ReadManyForeign: (ifield:IField, handle:string) => new Field(ifield).ManyForeign() && !Edit(handle), 
-   EditManyForeign: (ifield:IField, handle:string) => new Field(ifield).ManyForeign() && Edit(handle) 
+// foreigns
+  ReadOneForeign: (ifield:IField, handle:string) => new Field(ifield).OneForeign() && !Edit(handle),
+  EditOneForeign: (ifield:IField, handle:string) => new Field(ifield).OneForeign() && Edit(handle),
+  ReadManyForeign: (ifield:IField, handle:string) => new Field(ifield).ManyForeign() && !Edit(handle), 
+  EditManyForeign: (ifield:IField, handle:string) => new Field(ifield).ManyForeign() && Edit(handle), 
+  // default 
+  Default: (ifield:IField, handle:string) => true, 
 }

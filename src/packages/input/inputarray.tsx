@@ -1,5 +1,5 @@
 import React, { useRef } from 'react'; 
-import {IInput, InputData, useInputHook} from './_common'; 
+import {IInput, InputData, useInputHook} from '../_input'; 
 
 // INPUTARRAY =================================== 
 interface IPropsArray<T> extends IInput<T[]> { 

@@ -1,5 +1,5 @@
 import {useState, useEffect} from 'react'; 
-import {IInput, EnumType, InputAction} from '../_common'; 
+import {IInput, EnumType, InputAction} from '../../_input'; 
 
 // IEvent ---------------------------------------
 export interface IEvent { 

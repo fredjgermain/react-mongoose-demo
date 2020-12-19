@@ -10,11 +10,11 @@ export default class Field {
     if(!this.IsEnum()) 
       return []; 
     return this.ifield.options['enum']; 
-  }
+  } 
 
   public GetElementType():string { 
     return this.IsObjectID() ? this.ifield.modeltype: this.ifield.subtype; 
-  }
+  } 
 
   // Type Testing ----------------------------
   public OnePrimitive = ():boolean => !this.IsArray() && this.IsPrimitive(); 
@@ -69,11 +69,11 @@ export default class Field {
 
   public IsObjectID():boolean { 
     const toTest = !this.IsArray() ? this.ifield.type: this.ifield.subtype; 
-    return toTest === 'ObjectID'; 
+    return toTest === 'ObjectID' || toTest === 'objectid'; 
   } 
 
   public IsArray():boolean { 
-    return this.ifield.type === 'Array'; 
+    return this.ifield.type === 'Array' || this.ifield.type === 'array'; 
   } 
 
   public IsEnum():boolean { 
