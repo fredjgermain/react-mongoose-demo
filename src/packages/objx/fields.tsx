@@ -8,7 +8,7 @@ import {FieldRendering} from '../_fieldrendering';
 */
 
 // Context 
-interface IFieldContext { 
+export interface IFieldContext { 
   ifield:IField; 
   obj:any; 
   setObj:any; 

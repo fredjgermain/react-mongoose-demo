@@ -21,7 +21,6 @@ interface IProps {
 export default function Objx({obj, setObj, columnSettings, fieldRendering, children}:React.PropsWithChildren<IProps>) { 
   const context:IContext = {obj, setObj, columnSettings, fieldRendering}; 
   return <ObjxContext.Provider value={context}> 
-    {JSON.stringify(obj)} 
     {children} 
   </ObjxContext.Provider>; 
 }

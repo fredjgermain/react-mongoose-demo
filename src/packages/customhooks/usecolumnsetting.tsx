@@ -1,14 +1,15 @@
 import {useMemo, useState} from 'react'; 
 
 
-interface IReturn { 
+export interface IUseColumnSetting { 
+  ifields:IField[], 
   cols:IField[], 
   Order:(Cols:string[])=>void, 
-  Sort:()=>void, 
+  //Sort:()=>void, 
 } 
-export function useColumnSetting(Cols:IField[], order?:string[]):IReturn { 
-  const colsMemo = useMemo(() => Cols, []); 
-  const ordered = order ? SetOrder(order): Cols; 
+export function useColumnSetting(ifields:IField[], order?:string[]):IUseColumnSetting { 
+  const colsMemo = useMemo(() => ifields, []); 
+  const ordered = order ? SetOrder(order): ifields; 
   const [cols, setCols] = useState(ordered); 
 
   // SetOrder
@@ -41,5 +42,5 @@ export function useColumnSetting(Cols:IField[], order?:string[]):IReturn {
   }
 
 
-  return {cols, Order, Sort}; 
+  return {ifields, cols, Order}; 
 }

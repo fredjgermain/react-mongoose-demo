@@ -38,15 +38,18 @@ export default class FieldRendering {
   to be called by component needing to render using IFieldRendering rules. 
   */
   public GetFieldRendering(ifield:IField, handle:string = ''):IFieldRendering { 
-    const found = this.fRenderings.find( fr => fr.predicate(ifield, handle));     
+
+    const found = this.fRenderings.find( fr => { 
+      //console.log([fr.name, ifield.accessor, handle, fr.predicate(ifield, handle)]);
+      return fr.predicate(ifield, handle); 
+    }); 
     if(found) 
       return found; 
     return this.defaultFieldRendering; 
   } 
 
   public GetRenderer(ifield:IField, handle:string = ''):(value:any, onSendValue:any)=>JSX.Element { 
-    const fr = this.GetFieldRendering(ifield,handle); 
-    console.log(fr.name); 
+    const fr = this.GetFieldRendering(ifield, handle); 
     return fr.renderer(ifield); 
   } 
 }
