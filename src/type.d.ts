@@ -1,4 +1,4 @@
-type FieldPredicate = (ifield:IField) => boolean; 
+/*type FieldPredicate = (ifield:IField) => boolean; 
 type ReadFunc = (ifield:IField, value:any) => any; 
 type EditFunc = (ifield:IField, value:any, setValue:any) => any; 
 interface IFieldFormat { 
@@ -11,26 +11,26 @@ interface ICrudSettings {
   Create:CrudFunc; 
   Update:CrudFunc; 
   Delete:CrudFunc; 
-}
+}*/
 
-interface IRow { 
+/*interface IRow { 
   id:number; 
   entry:IEntry; 
 } 
 
-interface IColumn {} 
+interface IColumn {} */
 
-interface IOption { 
+/*interface IOption { 
   value: any; 
   label: string; 
-} 
+} */
 
-interface ICollection {
+interface ICollection { 
   accessor:string; 
   label: string; 
-  ifields: Array<IField>; 
-  entries: Array<IEntry>; 
-}
+  ifields: IField[]; 
+  entries: IEntry[]; 
+} 
 
 interface IEntry { 
   _id: string; 
@@ -40,13 +40,16 @@ interface IEntry {
 interface IField { 
   accessor: string; 
   label: string; 
-  type: string; 
-  subtype: string; 
-  modeltype: string; 
+  type: string;         // takes type name or modelName or element type if is an array
   options: any; 
   defaultValue: any; 
-  format: any; 
-  sort?: any; 
+
+  format?: any; 
+  isArray?: boolean; 
+  isModel?: boolean; 
+  isEnum?: boolean; 
+  enums?: string[]; 
+  sort?: string; 
 
   /*cellMode:{ 
     read:(value:any) => any, 
@@ -63,7 +66,7 @@ enum EActionType {
 }
 
 interface IResponse { 
-  actionType: EActionType
+  actionType: EActionType; 
   success: boolean; 
   data?: any; 
   err?: any[]; 

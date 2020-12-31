@@ -1,0 +1,54 @@
+.select_box {
+  width: fit-content; 
+  position: relative; 
+} 
+
+.select_header { 
+  width: 100%; 
+  padding: 0.3ch; 
+  padding-left: 0px; 
+  border: 1px solid gray; 
+  height: fit-content; 
+  text-align: right; 
+} 
+
+.select_header .select_header_btn { 
+  /*border: 1px solid gray; */
+  margin-left: 0.3ch; 
+} 
+
+.select_header .select_header_selection { 
+  /*border: 1px solid gray; */
+  display: inline-block; 
+  text-align: left; 
+  /*max-width: 20ch; */
+} 
+
+.select_option_btn {
+  margin-right:0.3ch;
+}
+
+/*.selectHeader span { 
+  display: inline-block; 
+} */
+
+.select_placeholder { 
+  display: inline-block; 
+  text-align: left; 
+  /*max-width:20ch; */
+  color:gray; 
+} 
+
+
+.select_folder { 
+  padding: 2px; 
+  border: 1px solid #ccc; 
+  position: absolute; 
+  background-color: #f6f6f6; 
+  width: 100%; 
+} 
+
+.select_option { 
+  color:black; 
+} 
+
