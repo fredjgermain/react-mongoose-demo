@@ -9,17 +9,33 @@ export function Remove(array:any[], predicate:ArrayPredicate):[any[], any[]] {
 
 export function Union(array:any[], toUnite:any|any[], predicate:ArrayPredicate = () => true):any[] { 
   return [...array, ...ToArray(toUnite).filter(predicate)]; 
-}
+} 
 
 export function ToArray(toArray:any|any[]):any[] { 
-  return toArray ? [toArray].flat() : []; 
-}
+  return toArray !== undefined ? [toArray].flat() : []; 
+} 
 
-export function Select(array:any[], predicate:ArrayPredicate = () => true):any[] { 
-  const selection:any[] = []; 
-  array.forEach( e => { 
-    if(predicate(e)) 
+// Select element by predicate
+interface IFilter<T> { 
+  selection: T[]; 
+  indexes: number[]; 
+  remainder: T[]; 
+  remainderIndexes: number[]; 
+} 
+export function Filter<T>(array:T[] = [], predicate:ArrayPredicate = () => true):IFilter<T> { 
+  const selection:T[] = []; 
+  const remainder:T[] = []; 
+  const indexes:number[] = []; 
+  const remainderIndexes:number[] = []; 
+  array.forEach( (e,i,a) => { 
+    if(predicate(e,i,a)) { 
       selection.push(e); 
-  }); 
-  return selection; 
-}
+      indexes.push(i); 
+    } 
+    else { 
+      remainder.push(e); 
+      remainderIndexes.push(i); 
+    } 
+  }) 
+  return {selection, indexes, remainder, remainderIndexes}; 
+} 

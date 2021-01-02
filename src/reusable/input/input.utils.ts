@@ -12,8 +12,10 @@ export interface IEvent {
     valueAsDate: Date | null, 
     valueAsNumber: number, 
     checked: boolean | null, 
+    [key:string]:any,
   } 
   code?:any, 
+  [key:string]:any,
 } 
 
 // IInput interface ------------------------------
