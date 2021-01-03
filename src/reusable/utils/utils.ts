@@ -1,5 +1,5 @@
 // 
-type ArrayPredicate = (e?:any, i?:number, a?:any[])=>boolean; 
+type ArrayPredicate = (e:any, i:number, a:any[])=>boolean; 
 
 export function Remove(array:any[], predicate:ArrayPredicate):[any[], any[]] { 
   const removed = array.filter(predicate); 
@@ -15,27 +15,20 @@ export function ToArray(toArray:any|any[]):any[] {
   return toArray !== undefined ? [toArray].flat() : []; 
 } 
 
+
 // Select element by predicate
 interface IFilter<T> { 
   selection: T[]; 
   indexes: number[]; 
-  remainder: T[]; 
-  remainderIndexes: number[]; 
 } 
 export function Filter<T>(array:T[] = [], predicate:ArrayPredicate = () => true):IFilter<T> { 
   const selection:T[] = []; 
-  const remainder:T[] = []; 
   const indexes:number[] = []; 
-  const remainderIndexes:number[] = []; 
   array.forEach( (e,i,a) => { 
     if(predicate(e,i,a)) { 
       selection.push(e); 
       indexes.push(i); 
     } 
-    else { 
-      remainder.push(e); 
-      remainderIndexes.push(i); 
-    } 
   }) 
-  return {selection, indexes, remainder, remainderIndexes}; 
+  return {selection, indexes}; 
 } 

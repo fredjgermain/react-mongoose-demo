@@ -1,6 +1,9 @@
 import React, {useContext, useEffect, useState} from 'react'; 
 import {GetValueFromInput, IEvent, IOption, IsPressEnter} from '../../reusable/_input'; 
-import {ToArray, Remove, Union} from '../../reusable/_utils'; 
+import {ToArray, Remove, Union, Filter} from '../../reusable/_utils'; 
+
+import './select.styles.css'; 
+
 
 interface IInput extends React.HTMLAttributes<HTMLInputElement> { 
   type?:string; 
@@ -24,11 +27,13 @@ export function Input({value, type=(typeof value), setValue, ...props}:IInput) {
 // SELECT CONTEXT =======================================
 interface ISelectContext { 
   value: any; 
+  placeholder: string; 
   fold: boolean; 
   Fold: any; 
   Select: any; 
   options:IOption[]; 
   setOptions: any; 
+  GetSelection: () => IOption[]; 
 } 
 const SelectContext = React.createContext({} as ISelectContext); 
 
@@ -38,14 +43,15 @@ interface ISelect {
   type: string; 
   value: any; 
   setValue: any; 
+  placeholder?: string; 
   multiple?:boolean; 
 } 
-export function Select({value, type, setValue, multiple, children}:React.PropsWithChildren<ISelect>) { 
+export function Select({type, value, setValue, placeholder = 'select', multiple, children}:React.PropsWithChildren<ISelect>) { 
   const [fold, setFold] = useState(true); 
-  const Fold = () => {setFold(() => !fold)}; // useCallback ??
-  const [options, setOptions] = useState([]); 
+  const Fold = () => {setFold(() => !fold)}; // replace by a useCallback ??
+  const [options, setOptions] = useState<IOption[]>([]); 
 
-  // Select 
+  // Select --------------------------
   function Select(newValue:any) { 
     const selection = ToArray(value); 
     const newSelection = selection.includes(newValue) ? 
@@ -53,39 +59,12 @@ export function Select({value, type, setValue, multiple, children}:React.PropsWi
       multiple ? 
         Union(selection, newValue) : 
         ToArray(newValue); 
-      
     const newValues = multiple ? newSelection: newSelection.shift(); 
     setValue(() => newValues); 
     if(!multiple) 
       setFold(true); 
   } 
-
-  const context = {value, fold, Fold, Select, options, setOptions}; 
-  return <SelectContext.Provider value={context} > 
-    <SelectHeader /> 
-    {!fold ? children: null} 
-  </SelectContext.Provider> 
-} 
-
-
-
-// SELECT HEADER ================================
-export function SelectHeader() { 
-  const {Fold} = useContext(SelectContext); 
-
-  return <span> 
-    <RemovableItemList /> 
-    <span> 
-      <button onClick={Fold}>V</button> 
-    </span> 
-  </span> 
-} 
-
-
-// REMOVABLE ITEM LIST ===============================
-export function RemovableItemList() { 
-  const {value, options, Select} = useContext(SelectContext); 
-
+  // GetSelection -------------------------------------
   function GetSelection():IOption[] { 
     const values = [value].flat(); 
     const selectedOptions:IOption[] = []; 
@@ -94,8 +73,50 @@ export function RemovableItemList() {
       if(option) 
         selectedOptions.push(option); 
     }); 
+    
     return selectedOptions; 
   } 
+  // --------------------------------------------
+
+
+  const context = {value, placeholder, fold, Fold, Select, options, setOptions, GetSelection}; 
+  return <SelectContext.Provider value={context} > 
+    <div className={'select_main'}> 
+      <SelectHeader /> 
+      <div className={'select_body'}>
+        {children}
+      </div>
+    </div> 
+  </SelectContext.Provider> 
+} 
+
+
+
+// SELECT HEADER ================================
+export function SelectHeader() { 
+  const {placeholder, Fold, GetSelection} = useContext(SelectContext); 
+
+  /*
+  
+  */
+
+  const selection = GetSelection(); 
+  return <div className={'select_header'}> 
+    <div className={'select_header_removable_items'}> 
+      {selection.length > 0 ? 
+        <RemovableItems />: 
+        placeholder} 
+    </div> 
+    <div className={'select_header_foldbtn'}> 
+      <button onClick={Fold}>V</button> 
+    </div> 
+  </div> 
+} 
+
+
+// REMOVABLE ITEM LIST ===============================
+export function RemovableItems() { 
+  const {value, options, Select, GetSelection} = useContext(SelectContext); 
 
   const selection = GetSelection(); 
   return <span> 
@@ -118,21 +139,27 @@ interface IOptions {
 } 
 //const OptionsContext = React.createContext({}); 
 export function Options({label, options:os, ...props}:IOptions) { 
-  const {options, setOptions, Select} = useContext(SelectContext); 
-
+  const {options, fold, setOptions, Select} = useContext(SelectContext); 
+  
   useEffect(() => { 
-    setOptions(() => [...options, ...os]); 
+    setOptions( (prev:any) => [...prev, ...os] ); 
   }, []); 
 
-  return <div > 
-    {options.map( (o,i) => { 
-      return <div key={i} onClick={() => Select(o.value)}> 
-        {o.label} 
-      </div>})} 
+  return <div> 
+    {!fold ? os.map( (o,i) => { 
+      return <Option key={i} option={o} /> 
+    }): 
+    null} 
   </div> 
 } 
 
 
+function Option({option}:{option:IOption}) { 
+  const {options, fold, setOptions, Select} = useContext(SelectContext); 
+  return <div className={'select_body_option'} onClick={() => Select(option.value)}> 
+    {option.label} 
+  </div>
+}
 
 /*
 <option key={i} value={o.value} >{o.label}</option>)} 
