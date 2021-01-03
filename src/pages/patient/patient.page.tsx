@@ -1,10 +1,53 @@
 import React, {useState} from 'react'; 
-import {Input, Select, Options} from '../../components/input/input.component'; 
-import {IOption} from '../../reusable/_input';
+import {Input} from '../../components/input/input.component'; 
+import {InputArray, InputElements, InputElement, InputCreate, DeleteBtn, } from '../../components/inputarray/_inputarray'; 
+import {Select, Options} from '../../components/select/_select'; 
+import {IOption} from '../../reusable/_input'; 
 
-import '../../components/input/select.styles.css'; 
 
 export default function Patient() { 
+  return <TestInputArray />; 
+} 
+
+function TestInputArray() { 
+  const [values, setValues] = useState([]); 
+  const type = 'number'; 
+  const defaultValue = 0; 
+
+  return <div> 
+    {JSON.stringify(values)} 
+    <InputArray {...{type, values, setValues, defaultValue}} > 
+      <InputElements> 
+        <InputElement/> <DeleteBtn>X</DeleteBtn> 
+        <br/> 
+      </InputElements> 
+      <InputCreate/>
+    </InputArray> 
+  </div>
+}
+
+
+function TestInput() { 
+  const [value, setValue] = useState(12); 
+  const type = 'number'; 
+  console.log('TestInput'); 
+
+  return <div> 
+    {value}; 
+    <Input {...{type, value, setValue}} /> 
+  </div> 
+} 
+
+
+
+
+
+
+
+
+
+
+function TestSelect() { 
   const [value, setValue] = useState([]); 
   const type = 'number'; 
   const placeholder = 'test number'; 
@@ -25,40 +68,16 @@ export default function Patient() {
     {value:8, label:'valeur 8'}, 
   ]; 
 
-  /*<div className={'select_main'}> 
-      <div className={'select_header'}> 
-        <div className={'select_header_removable_items'}> 
-          <div className={'placeholder'}>select1</div>
-          <Btn>Select 2 | X </Btn>
-          <Btn>Select 2 | X </Btn>
-          <Btn>Select 2 | X </Btn>
-        </div> 
-        <div className={'select_header_foldbtn'}> 
-          <Btn>V</Btn> 
-        </div> 
-      </div>
-      <div className={'select_body'}> 
-        <div>Options</div> 
-        <div>Options</div> 
-      </div> 
-    </div> 
-  */
-
- //<Btn>Λ</Btn> 
-
   return <div> 
 
     <div> 
-      <Select {...{type, value, setValue, multiple:true}} > 
-        <Options {...{options:options1}} /> 
-        <Options {...{options:options2}} /> 
+      {JSON.stringify(value)}
+      <Select {...{value, setValue, multiple:true, width:10}} > 
+        <Options {...{label:'group 1', options:options1}} /> 
+        <Options {...{label:'group 2', options:options2}} /> 
       </Select> 
     </div> 
     <h1>PATIENT SECTION</h1> 
     
   </div> 
-} 
-
-function Btn({children}:React.PropsWithChildren<any>) { 
-  return <div className={'btn'}>{children}</div> 
 }

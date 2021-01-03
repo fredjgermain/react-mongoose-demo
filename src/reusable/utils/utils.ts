@@ -32,3 +32,13 @@ export function Filter<T>(array:T[] = [], predicate:ArrayPredicate = () => true)
   }) 
   return {selection, indexes}; 
 } 
+
+
+export function SetWidth(value:number):{width:any} {
+  return {width:`${SetSize(value)+2}ch`}; 
+}
+
+export function SetSize(value:any):number { 
+  const w = String(value).length; 
+  return w < 5 ? 5 : w; 
+} 

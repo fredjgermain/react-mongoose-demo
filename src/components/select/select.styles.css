@@ -44,9 +44,17 @@
   padding: 0.2ch; 
   border-radius: 3px; 
   border: 1px solid dimgray; 
-  background-color: white;
+  background-color: white; 
   position: absolute; 
   z-index: 10; 
+}
+
+.select_body_option {
+  text-align: right;
+}
+
+.select_body_label {
+  font-weight: bold;
 }
 
 .select_body_option:hover { 
