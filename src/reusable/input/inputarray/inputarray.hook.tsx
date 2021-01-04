@@ -1,40 +1,39 @@
-export interface IInputArray {
-  values:any[]; 
-  returnValues:any; 
-  defaultValue:any; 
+export interface IInputArray { 
   type:string; 
-}
-
-export interface IUseInputArray { 
+  inputType?:string; 
   values:any[]; 
-  returnValues:any; 
+  setValues:any; 
   defaultValue:any; 
-  type:string; 
+} 
 
-  Create:(newValue:any)=>void;
-  Update:(at:number, newValue:any)=>void;
-  Delete:(at:number, )=>void;
-}
+export interface IUseInputArray extends IInputArray { 
+  Create:(newValue:any)=>void; 
+  Update:(at:number, newValue:any)=>void; 
+  Delete:(at:number)=>void; 
+} 
 
 export function useInputArray(props:IInputArray):IUseInputArray { 
   const values = props.values ?? []; 
-  const {returnValues, type, defaultValue} = props; 
+  const {setValues} = props; 
 
   function Create(newValue:any) { 
-    const newValues = [...values, newValue]; 
-    returnValues(newValues); 
+    setValues((prev:any) => [...prev, newValue]); 
   } 
 
   function Update(at:number, newValue:any) { 
-    const newValues = [...values]; 
-    newValues[at] = newValue; 
-    returnValues(newValues); 
+    setValues((prev:any) => { 
+      const newValues = [...prev]; 
+      newValues[at] = newValue; 
+      return newValues; 
+    }); 
   } 
 
   function Delete(at:number) { 
-    const newValues = [...values]; 
-    newValues.splice(at, 1); 
-    returnValues(newValues); 
+    setValues((prev:any) => { 
+      const newValues = [...prev]; 
+      newValues.splice(at, 1); 
+      return newValues; 
+    }); 
   } 
-  return {values, returnValues, defaultValue, type, Create, Update, Delete};
+  return {...props, values, Create, Update, Delete}; 
 }

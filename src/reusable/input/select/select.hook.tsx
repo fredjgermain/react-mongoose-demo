@@ -1,6 +1,5 @@
 import {useState} from 'react'; 
-import {IOption} from '../../reusable/_input'; 
-import {ToArray, Remove, Union, IsNull} from '../../reusable/_utils'; 
+import {ToArray, Remove, Union} from '../../utils/_utils'; 
 
 // USE SELECT ====================================
 export interface IUseSelect { 

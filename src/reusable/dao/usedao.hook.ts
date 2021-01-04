@@ -1,5 +1,5 @@
 import {useMemo} from 'react'; 
-import {useLoader, IState} from '../_useloader'; 
+import {useLoader, IState} from '../useloader/_useloader'; 
 import {DataAccessObject as IDao} from './dao.class'; 
 
 

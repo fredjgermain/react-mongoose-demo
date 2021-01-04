@@ -1,5 +1,5 @@
 import React, {useContext, useEffect} from 'react'; 
-import {IOption} from '../../reusable/_input'; 
+//import {IOption} from '../../reusable/_input'; 
 import {SelectContext} from './select.component'; 
 
 

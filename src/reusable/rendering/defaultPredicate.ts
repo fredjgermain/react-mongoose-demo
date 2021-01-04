@@ -1,5 +1,5 @@
-import {Field} from '../_field'; 
-
+import {Field} from '../utils/_utils'; 
+/*
 // DEFAULT PREDICATE ###############################
 const Edit = (handle:string):boolean => ['update', 'create'].includes(handle); 
 //const Edit = (handle:string):boolean => handle === 'edit; 
@@ -26,4 +26,4 @@ export const defaultPredicate = {
   EditManyForeign: (ifield:IField, handle:string) => new Field(ifield).ManyForeign() && Edit(handle), 
   // default 
   Default: (ifield:IField, handle:string) => true, 
-}
+}*/

@@ -1,6 +1,7 @@
+import React from 'react'; 
+/*
 import {defaultPredicate} from './defaultPredicate'; 
 import {GetDefaultRenderer, Default} from './defaultRenderer'; 
-import {IOption} from '../_input'; 
 
 export interface IRendering { 
   name:string; 
@@ -31,9 +32,7 @@ export class Rendering {
   } 
 
   // GetRenderer
-  /*
   to be called by component needing to render using IFieldRendering rules. 
-  */
   public GetFieldRendering(ifield:IField, handle:string = ''):IRendering { 
 
     const found = this.fRenderings.find( fr => { 
@@ -48,4 +47,4 @@ export class Rendering {
     const fr = this.GetFieldRendering(ifield, handle); 
     return fr.renderer(ifield); 
   } 
-}
+}*/

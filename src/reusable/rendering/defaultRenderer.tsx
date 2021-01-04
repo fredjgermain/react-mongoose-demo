@@ -1,6 +1,5 @@
 import React from 'react'; 
-import {InputArray, InputData, IOption} from '../_input'; 
-import {Selecter} from '../_input.selecter'; 
+/*import {Input} from '../input/_input'
 
 
 export const Default = (ifield:IField) => (value:any, returnValue:any) => { 
@@ -79,4 +78,4 @@ export function GetDefaultRenderer(GetForeignOptions:(ifield:IField) => IOption[
   const read = {ReadOnePrimitive, ReadManyPrimitive, ReadOneEnum, ReadManyEnum, ReadOneForeign, ReadManyForeign}; 
   const edit = {EditOnePrimitive, EditManyPrimitive, EditOneEnum, EditManyEnum, EditOneForeign, EditManyForeign}; 
   return {...read, ...edit, Default}; 
-}
+}*/

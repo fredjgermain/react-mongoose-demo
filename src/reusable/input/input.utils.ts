@@ -1,9 +1,3 @@
-// IOptions -------------------------------------
-export interface IOption{ 
-  value:any; 
-  label:string; 
-} 
-
 // IEvent interface -----------------------------
 export interface IEvent { 
   target:{ 
@@ -18,27 +12,6 @@ export interface IEvent {
   [key:string]:any,
 } 
 
-// IInput interface ------------------------------
-export interface IInput { 
-  value:any; 
-  type: string; 
-  placeHolder?: any; 
-  useref?: any; 
-
-  returnValue:(value:any) => any; 
-
-  // Event
-  onChange?: (event:any) => void; 
-  onBlur?: (event:any) => void; 
-  onFocus?: (event:any) => void; 
-  onPressEnter?: (event:any) => void; 
-
-  // Validation
-  validation?: (value:any) => boolean; 
-  onValid?: () => void; 
-  [key:string]:any; 
-} 
-
 /* Get Value From Input
   - Get correct value type (string, number, date, or boolean) from input element. */
 export function GetValueFromInput(event:IEvent, type:string):any { 
@@ -49,7 +22,7 @@ export function GetValueFromInput(event:IEvent, type:string):any {
   if(type === 'boolean') 
     return event.target.checked as boolean; 
   return event.target.value; 
-}
+} 
 
 /* SetSize
   - Set adjustable size of input element. 

@@ -1,5 +1,5 @@
-import {IOption} from '../_input'; 
-import {Field} from '../_field'; 
+//import {IOption} from '../input/_input'; 
+import {Field} from '../utils/_utils'; 
 
 
 export interface ICrud { 

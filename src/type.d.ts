@@ -25,6 +25,11 @@ interface IColumn {} */
   label: string; 
 } */
 
+interface IOption{ 
+  value:any; 
+  label:string; 
+} 
+
 interface ICollection { 
   accessor:string; 
   label: string; 
