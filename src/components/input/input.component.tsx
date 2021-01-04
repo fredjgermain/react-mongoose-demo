@@ -1,29 +1,50 @@
 import React from 'react'; 
 import {IEvent} from '../../reusable/_input'; 
+import {IsNull} from '../../reusable/_utils'; 
 
 
 // INPUT ========================================
 export interface IInput extends React.HTMLAttributes<HTMLInputElement> { 
-  type?:string; 
-  inputType?:string; 
   value:any; 
   setValue:any; 
+  defaultValue:any; 
+  type?:string; 
+  inputType?:string; 
   //[key:string]:any; 
 } 
-export function Input({value, setValue, type=(typeof value), inputType, ...props}:IInput) { 
-  const OnChange = (event:IEvent) => setValue(GetValueFromInput(event, type)); 
-  const InputType = GetInputType(type, inputType); 
+export function Input({value, setValue, defaultValue, type=(typeof value), inputType, ...props}:IInput) { 
+  const OnChange = (event:IEvent) => setValue(GetValue(event, type, defaultValue)); 
+  //const InputType = GetInputType(type, inputType); 
+  const Value = IsNull(value) ? defaultValue: value; 
 
   if(type === 'string') 
-    return <input type={'text'} value={value} onChange={OnChange} {...props} /> 
+    return <input type={'text'} value={Value} onChange={OnChange} {...props} /> 
   if(type === 'number') 
-    return <input type={'number'} value={value} onChange={OnChange} {...props} /> 
+    return <input type={'number'} value={Value} onChange={OnChange} {...props} /> 
   if(type === 'boolean') 
-    return <input type={'checkbox'} checked={value} onChange={OnChange} {...props} /> 
+    return <input type={'checkbox'} checked={Value} onChange={OnChange} {...props} /> 
   return <span>{JSON.stringify(value)}</span> 
 } 
 
 
+// GetValue --------------------------------------
+function GetValue (event:IEvent, type:string, defaultValue:any) {
+  const value = GetValueFromInput(event, type); 
+  return IsNull(value) ? defaultValue: value; 
+}
+
+
+/* Get Value From Input
+  - Get correct value type (string, number, date, or boolean) from input element. */
+function GetValueFromInput(event:IEvent, type:string):any { 
+  if(type === 'number') 
+    return event.target.valueAsNumber as number; 
+  if(type === 'date') 
+    return event.target.valueAsDate; 
+  if(type === 'boolean') 
+    return event.target.checked as boolean; 
+  return event.target.value; 
+}
 
 // GetInputType ---------------------------------
 function GetInputType(type:string, inputType?:string) { 
@@ -37,20 +58,6 @@ function GetInputType(type:string, inputType?:string) {
   if(type === 'string') 
     return 'text'; 
   return 'text'; 
-}
-
-
-
-/* Get Value From Input
-  - Get correct value type (string, number, date, or boolean) from input element. */
-function GetValueFromInput(event:IEvent, type:string):any { 
-  if(type === 'number') 
-    return event.target.valueAsNumber as number; 
-  if(type === 'date') 
-    return event.target.valueAsDate; 
-  if(type === 'boolean') 
-    return event.target.checked as boolean; 
-  return event.target.value; 
 }
 
 

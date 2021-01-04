@@ -20,8 +20,23 @@ export function InputArray({children, ...props}:React.PropsWithChildren<IInputAr
   </InputArrayContext.Provider> 
 }
 
-// Element =======================================
-export function InputCreate({...props}:React.PropsWithChildren<React.HTMLAttributes<HTMLInputElement>>) { 
+
+// Read Array ===================================
+export function ReadArray({values=[], maxLength=20}:{values:any[], maxLength?:number}) { 
+  let display = ''; 
+  for(let i = 0; i < values.length; i++) { 
+    const comma = i < values.length-1 ? ', ':''; 
+    display = display + JSON.stringify(values[i]) + comma; 
+    if(display.length > maxLength) { 
+      display += ' ...'; 
+      break; 
+    } 
+  } 
+  return <span>[ {display} ]</span> 
+} 
+
+// Create Element =======================================
+export function CreateElement({...props}:React.PropsWithChildren<React.HTMLAttributes<HTMLInputElement>>) { 
   const {type, defaultValue, Create} = useContext(InputArrayContext); 
   const [value, setValue] = useState(defaultValue); 
 
@@ -29,10 +44,18 @@ export function InputCreate({...props}:React.PropsWithChildren<React.HTMLAttribu
     Create(value); 
     setValue(() => defaultValue); // reset input to defaultValue after creation. 
   }); 
-  return <Input {...{type, value, setValue, ...props}} onKeyUp={CreateOnEnter} /> 
+  return <Input {...{value, setValue, defaultValue, type, ...props}} onKeyUp={CreateOnEnter} /> 
 } 
 
-export function InputElements({children}:React.PropsWithChildren<any>) { 
+// Element Count =======================================
+export function ElementCount() {
+  const {type, values} = useContext(InputArrayContext); 
+  return <span>{values.length} of type {type}</span>; 
+}
+
+
+// Elements =======================================
+export function Elements({children}:React.PropsWithChildren<any>) { 
   const {values} = useContext(InputArrayContext); 
   return <div> 
     {values.map( (v:any, i:number) => { 
@@ -43,14 +66,16 @@ export function InputElements({children}:React.PropsWithChildren<any>) {
   </div>
 }
 
-export function InputElement({...props}:React.PropsWithChildren<React.HTMLAttributes<HTMLInputElement>>) { 
-  const {type, values, Update} = useContext(InputArrayContext); 
+// Element =========================================
+export function Element({...props}:React.PropsWithChildren<React.HTMLAttributes<HTMLInputElement>>) { 
+  const {type, values, defaultValue, Update} = useContext(InputArrayContext); 
   const {index} = useContext(InputElementContext); 
   const value = values[index]; 
   const setValue = (newValue:any) => Update(index, newValue); 
-  return <Input {...{type, value, setValue, ...props}} /> 
+  return <Input {...{type, value, setValue, defaultValue, ...props}} /> 
 } 
 
+// Delete Btn ===================================
 export function DeleteBtn({children, ...props}:React.PropsWithChildren<React.ButtonHTMLAttributes<HTMLButtonElement>>) { 
   const {Delete} = useContext(InputArrayContext); 
   const {index} = useContext(InputElementContext); 

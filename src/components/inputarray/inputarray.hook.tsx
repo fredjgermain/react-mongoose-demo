@@ -1,19 +1,12 @@
-import {useState} from 'react'; 
-
-
-export interface IInputArray {
+export interface IInputArray { 
   type:string; 
+  inputType?:string; 
   values:any[]; 
   setValues:any; 
   defaultValue:any; 
 } 
 
-export interface IUseInputArray { 
-  type:string; 
-  values:any[]; 
-  setValues:any[]; 
-  defaultValue:any; 
-
+export interface IUseInputArray extends IInputArray { 
   Create:(newValue:any)=>void; 
   Update:(at:number, newValue:any)=>void; 
   Delete:(at:number)=>void; 
@@ -21,15 +14,13 @@ export interface IUseInputArray {
 
 export function useInputArray(props:IInputArray):IUseInputArray { 
   const values = props.values ?? []; 
-  const {setValues, type, defaultValue} = props; 
-  //const [value, setValue] = useState(defaultValue); 
+  const {setValues} = props; 
 
   function Create(newValue:any) { 
     setValues((prev:any) => [...prev, newValue]); 
   } 
 
   function Update(at:number, newValue:any) { 
-    //console.log(newValue); 
     setValues((prev:any) => { 
       const newValues = [...prev]; 
       newValues[at] = newValue; 
@@ -44,5 +35,5 @@ export function useInputArray(props:IInputArray):IUseInputArray {
       return newValues; 
     }); 
   } 
-  return {type, values, setValues, defaultValue, Create, Update, Delete};
+  return {...props, values, Create, Update, Delete}; 
 }

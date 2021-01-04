@@ -1,3 +1,3 @@
-import {ToArray, Remove, Union, Filter, SetWidth} from './utils/utils';
+import {ToArray, Remove, Union, Filter, SetWidth, SetSize, IsEmpty, IsNull} from './utils/utils';
 
-export {ToArray, Remove, Union, Filter, SetWidth}; 
+export {ToArray, Remove, Union, Filter, SetWidth, SetSize, IsEmpty, IsNull}; 

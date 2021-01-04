@@ -42,3 +42,17 @@ export function SetSize(value:any):number {
   const w = String(value).length; 
   return w < 5 ? 5 : w; 
 } 
+
+
+export function IsNull(value:any) { 
+  if(value === undefined || value === null) 
+    return true; 
+  return (!value && value !==0 && value !=='' && value !== false); 
+} 
+
+export function IsEmpty(value:any) { 
+  return IsNull(value) || 
+    value === '' || 
+    (Array.isArray(value) && value.length === 0) || 
+    (typeof value === 'object' && JSON.stringify(value) === '{}'); 
+} 

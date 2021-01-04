@@ -1,16 +1,16 @@
-import React, {useContext} from 'react'; 
+import {useContext} from 'react'; 
 import {SelectContext} from './select.component'; 
 
 
 // REMOVABLE ITEM LIST ===============================
 export function RemovableItems() { 
-  const {value, options, Select, Selection} = useContext(SelectContext); 
+  const {SelectValue, selectedOptions} = useContext(SelectContext); 
 
-  const selection = Selection(); 
+  const selection = selectedOptions(); 
   return <span> 
     {selection.map( (o,i) => { 
       return <button key={i} 
-        onClick={() => Select(o.value)}> 
+        onClick={() => SelectValue(o.value)}> 
           {o.label} | X 
         </button> 
     })} 
