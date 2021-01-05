@@ -40,7 +40,7 @@ const init:IState = {
 interface UseLoader { 
   state:IState; 
   Load:(loadfunc:() => Promise<any>) => Promise<void> 
-}
+} 
 export function useLoader():UseLoader { 
   const [state, dispatch] = useReducer<(state: IState, action: Action) => IState>(reducer, init); 
 
@@ -52,5 +52,5 @@ export function useLoader():UseLoader {
       dispatch({type:'LOAD_ERROR', payload:err} ) 
     }) 
   } 
-  return {state, Load}
-}
+  return {state, Load} 
+} 

@@ -2,6 +2,9 @@
 
 
 // Common predicate ----------------------------
+const Compare = (array:any[], comparator:(a:any, b:any) => boolean = () => true) => (b:any, i:number, ar:any[]) => 
+  array.some(a => comparator(a, b)); 
+
 const IsDuplicate = (comparator:(a:any, b:any) => boolean = () => true) => (b:any, i:number, ar:any[]) => 
   ar.some(a => comparator(a, b) && a!==b); 
 
@@ -17,7 +20,7 @@ const Intersect = (array:any[], comparator:(a:any, b:any) => boolean = () => tru
 const Exclusion = (array:any[], comparator:(a:any, b:any) => boolean = () => true) => (b:any) => 
   !array.some(a => comparator(a, b) && a===b); 
 
-export const CommonPredicates = {IsDuplicate, IsUnic, ByIndexes, Intersect, Exclusion}; 
+export const CommonPredicates = {IsDuplicate, IsUnic, ByIndexes, Intersect, Exclusion, Compare}; 
 
 /*=> (b:any, i:number, ar:any[]) => 
   indexes.includes(i); */
@@ -42,7 +45,7 @@ export function Union(array:any[], toUnite:any|any[], predicate:(e:any, i:number
 
 
 // Filter =======================================
-export function Filter<T>(array:T[] = [], predicate:(e:any, i:number, a:any[])=>boolean = () => true) 
+export function Filter<T>(array:T[] = [], predicate:(e:T, i:number, a:T[])=>boolean = () => true) 
 : {selection: T[], indexes: number[]} 
 { 
   const selection:T[] = []; 
@@ -56,6 +59,11 @@ export function Filter<T>(array:T[] = [], predicate:(e:any, i:number, a:any[])=>
   return {selection, indexes}; 
 } 
 
+// Order ========================================
+export function Order<T>(toOrder:T[], ordering:any[], compare:(a:any, b:any)=>boolean = (a:any, b:any) => a === b )
+  : {selection: T[], indexes: number[]}  {
+  return Filter(ordering, Compare(toOrder, compare)); 
+} 
 
 // DUPLICATES ===================================
 export function Duplicates(array:any[], compare:(a:any, b:any)=>boolean = (a:any, b:any) => a === b ):{duplicates:any[], unics:any[]} { 
