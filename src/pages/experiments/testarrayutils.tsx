@@ -13,11 +13,6 @@ export function TestArrayUtils() {
   const exclusions = Filter(ordering, Exclusion(intersect)); 
   const ordered = Order(strings, ordering, (a:any, b:any) => a['name']===b ); 
 
-  /*const ordered = Filter(ordering, Compare(strings, (a:any,b:any) => { 
-    console.log(a,b); 
-    return a['name']===b; 
-  })); */
-
   const combine = Combine(ordering, strings, (a,b) => a===b.name).map(([a,b]) => b); 
 
   const test = Filter(strings, ByIndexes([5,4,1])); 

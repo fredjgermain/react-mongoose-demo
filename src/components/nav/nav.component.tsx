@@ -13,14 +13,13 @@ function Nav({history}:INav) {
   return <div> 
     <div> 
       <Link to='' >Home</Link> 
-    </div>
-    <div>
+    </div> 
+    <div> 
       <Link to='/patient' >Patient</Link> 
-    </div>
-    <div>
-      <Link to='/admin' >Admin</Link>
-    </div>
-    
+    </div> 
+    <div> 
+      <Link to='/admin' >Admin</Link> 
+    </div> 
   </div> 
 } 
 export default withRouter(Nav);
