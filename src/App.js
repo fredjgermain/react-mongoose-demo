@@ -9,15 +9,17 @@ import Experiments from './pages/experiments/experiments';
 
 export default function App() { 
   //type test = Input_Object.; 
+
+  return <Experiments />
   //return <AdminSection/> 
-  return <div> 
+  /*return <div> 
   <Nav/> 
   <Switch> 
     <Route exact path='/' component={Home} /> 
     <Route path='/patient' component={Patient} /> 
     <Route path='/admin' component={Admin} /> 
   </Switch> 
-  </div> 
+  </div> */
 } 
 
 //export default App;

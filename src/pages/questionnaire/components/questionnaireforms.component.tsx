@@ -70,8 +70,8 @@ function QLabel() {
   const {value} = useContext(ElementContext); 
   const {labels, answer} = value as IAnswer; 
 
-  return <span>{labels[0]}:</span>
-}
+  return <span>{labels[0]}:</span> 
+} 
 
 function QValue() { 
   const {value, setValue, index} = useContext(ElementContext); 
@@ -82,8 +82,8 @@ function QValue() {
   </span> 
 } 
 
-function QAnswer() {
-  //console.log('QAnswer');
+function QAnswer() { 
+  //console.log('QAnswer'); 
   const {value, setValue, index} = useContext(ElementContext); 
   const {responseType, answer} = value as IAnswer; 
   //console.log(answer); 
@@ -103,9 +103,9 @@ function QAnswer() {
     return <Select {...{value:answer, setValue:SetValue}} > 
       <Options {...{options}}/> 
     </Select> 
-  }
-  return <span>{JSON.stringify(answer)}</span>
-}
+  } 
+  return <span>{JSON.stringify(answer)}</span> 
+} 
 
 
 
