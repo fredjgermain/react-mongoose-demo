@@ -1,11 +1,12 @@
 import {useContext, useEffect} from 'react'; 
 import {useLoader} from '../../../reusable/useloader/_useloader'; 
 
-import {crud, PatientContext} from '../patient.page'; 
+import {CrudContext, PatientContext} from '../patient.page'; 
 
 
 // PatientsCollectionLoader ===================== 
 export function PatientsLoader() { 
+  const {crud} = useContext(CrudContext); 
   const {setPatients} = useContext(PatientContext); 
   const {state, Load} = useLoader(); 
 

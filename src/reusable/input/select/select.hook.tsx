@@ -30,7 +30,7 @@ export function useSelect(value:any, setValue:any, multiple:boolean, ref:React.R
         Union(selection, newValue) : 
         ToArray(newValue); 
     const newValues = multiple ? newSelection: newSelection.shift(); 
-    setValue(() => newValues); 
+    setValue(newValues); 
     if(!multiple) 
       setFold(true); 
   } 

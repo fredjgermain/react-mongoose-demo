@@ -25,7 +25,7 @@ export default function Fields({children}:React.PropsWithChildren<any>) {
   // RENDER --------------------------------------
   return <div> 
     {ifields.map( (ifield, i) => { 
-      const {value, setValue} = GetValueSetValue(ifield);
+      const {value, setValue} = GetValueSetValue(ifield); 
       const fieldContext = {value, setValue, ifield}; 
       return <FieldContext.Provider key={i} value={fieldContext} > 
         {children} 

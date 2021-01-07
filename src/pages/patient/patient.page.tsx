@@ -6,12 +6,10 @@ import {PatientHeader} from './components/patientheader.component';
 import {PatientsLoader} from './components/patientsloader.component'; 
 import {PatientIdentifier} from './components/patientidentifier.component'; 
 import {PatientInfos} from './components/patientinfos.component'; 
+import QuestionnairePage from '../questionnaire/questionnairepage.page';
 
-import {QuestionnaireLoader} from './components/questionnaireloader.component'; 
-import {Questionnaire} from './components/questionnaire.component'; 
-
-export const crud = new CrudMongoose(`https://fjg-mongoose-heroku.herokuapp.com/api/`); 
-
+/*import {QuestionnaireLoader} from './components/questionnaireloader.component'; 
+import {Questionnaire} from './components/questionnaire.component'; */
 
 interface IPatientContext { 
   patients:ICollection; 
@@ -20,38 +18,42 @@ interface IPatientContext {
   patient:IEntry; 
   setPatient:any; 
 
-  questions:ICollection; 
-  setQuestions:any; 
-
   patientUpdated:boolean; 
   setPatientUpdated:any; 
 } 
 // PATIENT ======================================
 export const PatientContext = React.createContext({} as IPatientContext); 
+export const CrudContext = React.createContext({} as {crud:CrudMongoose});
+
 export default function Patient() { 
-  const [patient, setPatient] = useState({}); 
+  const crud = new CrudMongoose(`https://fjg-mongoose-heroku.herokuapp.com/api/`); 
+  const [patient, setPatient] = useState<IEntry>({} as IEntry); 
   const [patientUpdated, setPatientUpdated] = useState(false); 
   const [patients, setPatients] = useState({} as ICollection); 
-  const [questions, setQuestions] = useState({} as ICollection); 
-
-  //<RamqIdentification/> ?? <PatientInfos/>} 
-
-  const context = {patients, setPatients, 
+  
+  const context = {crud, patients, setPatients, 
     patient, setPatient, 
-    questions, setQuestions, 
     patientUpdated, setPatientUpdated} as IPatientContext; 
 
-  return <div> 
-    <PatientContext.Provider value={context} > 
-      <PatientHeader /> 
-      {!patientUpdated && IsEmpty(patients) && <PatientsLoader/>} 
-      {!patientUpdated && !IsEmpty(patients) && IsEmpty(patient) && <PatientIdentifier/>} 
-      {!patientUpdated && !IsEmpty(patients) && !IsEmpty(patient) && <PatientInfos/>} 
+  if(!patientUpdated) 
+    return <div> 
+      <CrudContext.Provider value={{crud}} >
+        <PatientContext.Provider value={context} > 
+          <PatientHeader /> 
+          {IsEmpty(patients) && <PatientsLoader/>} 
+          {!IsEmpty(patients) && IsEmpty(patient) && <PatientIdentifier/>} 
+          {!IsEmpty(patients) && !IsEmpty(patient) && <PatientInfos/>} 
+        </PatientContext.Provider> 
+      </CrudContext.Provider>
+    </div> 
 
-      {patientUpdated && IsEmpty(questions) && <QuestionnaireLoader/>} 
-      {patientUpdated && !IsEmpty(questions) && <Questionnaire/>} 
-    </PatientContext.Provider> 
-  </div> 
+  return <div> 
+    <CrudContext.Provider value={{crud}} >
+      <PatientContext.Provider value={context} > 
+        <QuestionnairePage/> 
+      </PatientContext.Provider> 
+    </CrudContext.Provider>
+  </div>  
 } 
 
 

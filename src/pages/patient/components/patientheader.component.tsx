@@ -5,7 +5,7 @@ import React from 'react';
 export function PatientHeader () { 
   
   return <div> 
-    <h1>Patient Identification</h1> 
+    <h1>Patient Section</h1> 
     <span>Date du jour ... </span> 
   </div> 
 }

@@ -1,18 +1,26 @@
-import {useContext, useEffect} from 'react'; 
+import {useEffect, useContext} from 'react'; 
 import {useLoader} from '../../../reusable/useloader/_useloader'; 
+import {CrudContext} from '../../patient/patient.page';
+import {QuestionnaireContext} from '../questionnairepage.page';
 
-import {crud, PatientContext} from '../patient.page'; 
 
 
 // PatientsCollectionLoader ===================== 
 export function QuestionnaireLoader() { 
-  const {setQuestions} = useContext(PatientContext); 
+  const {crud} = useContext(CrudContext); 
+
+  const {setQuestions, setResponses} = useContext(QuestionnaireContext); 
   const {state, Load} = useLoader(); 
 
   const loadfunc = async () => { 
-    const response:IResponse = await crud.Collection('questions'); 
-    if(response.success) 
-      setQuestions(() => response.data as ICollection); 
+    const questions:IResponse = await crud.Collection('questions'); 
+    if(questions.success) 
+      setQuestions(() => questions.data as ICollection); 
+    console.log(questions);
+
+    const responses:IResponse = await crud.Collection('responses'); 
+    if(responses.success) 
+      setResponses(() => responses.data as ICollection); 
   }; 
 
   useEffect(() => {Load(loadfunc)}, []); 
