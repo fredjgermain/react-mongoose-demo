@@ -9,7 +9,7 @@ import {QuestionnaireContext} from '../questionnairepage.page';
 export function QuestionnaireLoader() { 
   const {crud} = useContext(CrudContext); 
 
-  const {setQuestions, setResponses} = useContext(QuestionnaireContext); 
+  const {setQuestions, setResponses, setAnswers} = useContext(QuestionnaireContext); 
   const {state, Load} = useLoader(); 
 
   const loadfunc = async () => { 
@@ -21,6 +21,10 @@ export function QuestionnaireLoader() {
     const responses:IResponse = await crud.Collection('responses'); 
     if(responses.success) 
       setResponses(() => responses.data as ICollection); 
+
+    /*const answers:IResponse = await crud.Collection('answers'); 
+    if(answers.success) 
+      setAnswers(() => answers.data as ICollection); */
   }; 
 
   useEffect(() => {Load(loadfunc)}, []); 

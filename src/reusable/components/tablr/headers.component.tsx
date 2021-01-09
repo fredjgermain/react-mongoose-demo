@@ -1,28 +1,30 @@
 import React, {useContext} from 'react'; 
-import {TablrContext} from './tablr.component'; 
 
 
 // HEADER =======================================
 interface IHeader {}
 export function Header({children}:React.PropsWithChildren<IHeader>) { 
-  const Children = children ?? <Heads/>; 
-  // Render -------------------------------------
-  return <thead><tr> 
-    {Children}
-  </tr></thead> 
+  return <thead> 
+    <tr>{children}</tr> 
+  </thead> 
 } 
 
+// HEADS ---------------------------------------
+const HeadsContext = React.createContext({}); 
+export function Heads({ifields, children}:React.PropsWithChildren<{ ifields:IField[] }>) { 
 
-export const HeadsContext = React.createContext({});
-export function Heads() {
-  const {ifields} = useContext(TablrContext); 
   return <HeadsContext.Provider value={{}}> 
-    {ifields.map( (ifield, i) => { 
-      return <Head key={i} label={ifield.label} /> 
+    {ifields.map( (ifield, key) => { 
+      return <Head {...{key, ifield}}>{children}</Head>
     })} 
-  </HeadsContext.Provider>  
+  </HeadsContext.Provider> 
 }
 
-export function Head({label}:{label:string}) { 
-  return <th>{label}</th>; 
-}
+// HEAD ---------------------------------------
+export const HeadContext = React.createContext({} as {ifield:IField}); 
+export function Head({ifield, children}:React.PropsWithChildren<{ ifield:IField }>) { 
+
+  return <HeadContext.Provider value={{ifield}}>
+    <th>{!children && ifield.label || children}</th>
+  </HeadContext.Provider>
+} 

@@ -36,15 +36,17 @@ export function Select({value, setValue, width, placeholder = 'select', multiple
   }*/
 
   // ref={ref} tabIndex={0}
-  return <SelectContext.Provider value={{...context, placeholder, ref}} > 
+  return <span>
+  <SelectContext.Provider value={{...context, placeholder, ref}} > 
     <div className={'select_main'} {...style} > 
       <SelectHeader /> 
       <div className={'select_body'} tabIndex={0} ref={ref} 
         hidden={context.fold} 
-        onFocus={() => console.log('focus !!')} >
+        onFocus={() => {}} >
         {children} 
       </div> 
     </div> 
   </SelectContext.Provider> 
+  </span>
 } 
 

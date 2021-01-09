@@ -46,7 +46,7 @@ export function FieldLabel() {
 export function FieldValue() {
   const {value} = useContext(ObjxContext); 
   const {ifield} = useContext(FieldContext); 
-  return <span>{value[ifield.accessor]}</span> 
+  return <span>{value[ifield.accessor] ?? ifield.defaultValue}</span> 
 }
 
 export function ArrxObjx({ifields, children}:React.PropsWithChildren<{ifields:IField[]}>) { 

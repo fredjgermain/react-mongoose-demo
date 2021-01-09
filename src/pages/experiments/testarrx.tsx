@@ -1,9 +1,8 @@
 import React, {useContext, useState} from 'react'; 
-import {Arrx, ArrxContext, Elements, Element, ElementContext, ElementIndex} from '../../reusable/components/arrx/_arrx'; 
+import {Arrx, ArrxContext, Elements, Element, ElementContext, ElementIndex, ElementValue} from '../../reusable/components/arrx/_arrx'; 
 import {Objx, ObjxContext, Fields, Field, FieldContext, FieldLabel, FieldValue, ArrxObjx} from '../../reusable/components/objx/_objx'; 
 import {Input} from '../../reusable/components/input/_input'; 
 import {OnEnter} from '../../reusable/utils/_utils'; 
-import { ElementValue } from '../../reusable/components/arrx/arrx.component';
 
 
 
@@ -59,8 +58,7 @@ export function TestArrx() {
 }
 
 
-interface IFieldEdit {setValues:any}
-function FieldEdit({setValues}:IFieldEdit) { 
+function FieldEdit({setValues}:{setValues:any}) { 
   const {values} = useContext(ArrxContext); 
   const {index} = useContext(ElementContext); 
   const {ifield} = useContext(FieldContext); 

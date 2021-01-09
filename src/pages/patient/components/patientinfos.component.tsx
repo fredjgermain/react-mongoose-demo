@@ -8,22 +8,19 @@ import {PatientContext} from '../patient.page';
 // PATIENT IDENTIFICATION ==========================
 export function PatientInfos() { 
   const {patient, setPatient, patients:{ifields}, setPatientUpdated} = useContext(PatientContext); 
-  const [value, setValue] = useState(patient); 
+  
 
   const UpdatePatient = () => { 
-    setPatient( (prev:any) => { 
-      return {...prev, ...value}; 
-    }); 
     setPatientUpdated(() => true); 
   }; 
 
   //<EditField {...{setObj}}/> 
   // RENDER ===================================== 
-  return <Objx {...{value, ifields}} > 
+  return <Objx {...{value:patient, ifields}} > 
       {JSON.stringify(patient)} 
       <Fields> 
         <FieldLabel/> 
-        
+        <FieldEdit {...{setObj:setPatient}}/> 
         <br/> 
       </Fields> 
       <button onClick={UpdatePatient}>Save changes</button> 
@@ -33,17 +30,19 @@ export function PatientInfos() {
 
 
 // EDIT FIELD ===================================
-/*function EditField({setObj, rendering}:{setObj: React.Dispatch<any>, rendering?:any}) { 
-  const {obj} = useContext(ObjxContext); 
+function FieldEdit({setObj, rendering}:{setObj: React.Dispatch<any>, rendering?:any}) { 
+  const {value:obj} = useContext(ObjxContext); 
   const {ifield} = useContext(FieldContext); 
-  
-  const value = obj[ifield.accessor] ?? ifield.defaultValue; // carefull if array etc. 
-  const setValue = (newValue:any) => { 
+  const [value, setValue] = useState(obj[ifield.accessor] ?? ifield.defaultValue); 
+  const {type, defaultValue} = ifield; 
+
+  const onEnterUp = () => { 
     setObj((prev:any) => { 
       const newObj = {...prev}; 
-      newObj[ifield.accessor] = newValue; 
-      return newObj}); 
+      newObj[ifield.accessor] = value; 
+      return newObj; 
+    }); 
   } 
-  const {type, defaultValue} = ifield; 
-  return <Input {...{type, defaultValue, value, setValue}} /> 
-} */
+  
+  return <Input {...{value, setValue, type, defaultValue, onEnterUp}} /> 
+} 

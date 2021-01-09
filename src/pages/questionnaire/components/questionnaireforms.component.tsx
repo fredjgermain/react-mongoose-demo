@@ -1,10 +1,112 @@
 import React, {useContext, useState} from 'react'; 
-import {Arrx, Element, ArrxContext, ElementContext} from '../../../reusable/components/arrx/_arrx'; 
-import {Objx, ObjxContext, Fields, FieldLabel, FieldContext, FieldValue} from '../../../reusable/components/objx/_objx'; 
-import {Select, Options, InputArray} from '../../../reusable/components/input/_input'; 
+import {Arrx, Elements, ArrxContext, ElementContext, ElementIndex} from '../../../reusable/components/arrx/_arrx'; 
+import {Input, Select, Options, InputArray} from '../../../reusable/components/input/_input'; 
 import {CrudContext, PatientContext} from '../../patient/patient.page'; 
 import {QuestionnaireContext} from '../questionnairepage.page'; 
 
+import {usePage, IPageHook} from '../../../reusable/hooks/usepage/usePage'; 
+
+
+
+export function Questionnaire() { 
+  const {answers, setAnswers} = useBlankForm(); 
+
+  const {pageIndex, setPageIndex, pageIndexes, from, to} = usePage(answers, 5); 
+  const indexes = answers.map((v,i) => i).filter((i) => i >=from && i<=to); 
+
+  console.log(indexes);
+
+  return <div> 
+    <h3> 
+      FORM ... 
+    </h3> 
+    <Arrx {...{values:answers}} > 
+      <Elements {...{indexes}} > 
+        <QuestionEdit {...{setValues:setAnswers}} /> 
+      </Elements> 
+    </Arrx> 
+    <Paging {...{pageIndex, setPageIndex, pageIndexes, from, to}} />
+  </div> 
+} 
+
+function QuestionEdit({setValues}:{setValues:any}) { 
+  const {values} = useContext(ArrxContext); 
+  const {index} = useContext(ElementContext); 
+  const {labels, optional, answer, responseType} = (values[index] as IAnswer); 
+  
+  const [value, setValue] = useState(answer); 
+  const {type, defaultValue} = {type:'number', defaultValue:0}; 
+
+  const onEnterUp = () => { 
+    setValues((prev:any) => { return value; }); 
+  } 
+
+  const options:IOption[] = responseType.enum ? 
+    responseType.enum.map( (v,i) => {
+      return {value:i, label:v}
+    }) : 
+    []; 
+
+  const input = <Input {...{value, setValue, type, defaultValue, onEnterUp}} />
+  const select = <Select {...{value, setValue, type, defaultValue, onEnterUp}} >
+      <Options {...{options}} />
+    </Select>
+
+  return <div> 
+    [<ElementIndex /><span>{labels[0]}: </span> ] 
+    <span>{!responseType.enum ? input : select} </span> 
+  </div> 
+} 
+
+
+
+function Paging({pageIndex, setPageIndex, pageIndexes}:IPageHook) { 
+  return <div>
+    {pageIndexes.map( (p, i) => { 
+      return <button key={i} onClick={() => setPageIndex(i)} disabled={pageIndex===i} >
+          {i+1}
+        </button> 
+    })} 
+  </div>
+}
+
+//
+
+/*function ResponseType() {
+
+  <Input {...{value, setValue, type, defaultValue, onEnterUp}} />
+}*/
+/*
+
+function QuestionnaireInput({setDatas}:{setDatas:React.Dispatch<any>}) { 
+  const {values} = useContext(ArrxContext); 
+  //const {type, defaultValue} = ifield; 
+
+  const [value, setValue] = useState(_value); 
+  
+  const onEnterUp = () => { 
+    setDatas((prev:any) => { 
+      const newElement = {...prev[row]}; 
+      newElement[ifield.accessor] = value; 
+      prev[row] = newElement; 
+      return [...prev]; 
+    }); 
+  }
+
+  return <Input {...{value, setValue, type, defaultValue, onEnterUp}} /> 
+} 
+
+
+function Paging({pageIndex, setPageIndex, pageIndexes}:IPageHook) { 
+  return <div>
+    {pageIndexes.map( (p, i) => { 
+      return <button key={i} onClick={() => setPageIndex(i)} disabled={pageIndex===i} >
+          {i+1}
+        </button> 
+    })} 
+  </div>
+}
+*/
 
 interface IResponseType { 
   type: string; 
@@ -22,8 +124,7 @@ interface IAnswer {
   answer:any; 
 } 
 
-function useAnswers() { 
-  const {crud} = useContext(CrudContext); 
+function useBlankForm() { 
   const {patient:{_id:pid}} = useContext(PatientContext); 
   const {questions, responses} = useContext(QuestionnaireContext); 
   
@@ -47,7 +148,8 @@ function useAnswers() {
   return {answers, setAnswers}; 
 } 
 
-export const AnswersContext = React.createContext({} as {answers:any[], setAnswers:any}); 
+
+/*
 // QUESTIONNAIRE ================================
 export function Questionnaire() { 
   const {answers:values, setAnswers} = useAnswers(); 

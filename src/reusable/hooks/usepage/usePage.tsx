@@ -39,7 +39,8 @@ export function usePage(data:any[], pageBreak:PageBreakPredicate|number):IPageHo
     const to = pageIndexes[pagei+1] ?? entries.length; 
     return {from:from, to:to}; 
   } 
-
   const pageIndexes = PageBreak(data, pageBreak); 
-  return {pageIndex, setPageIndex, pageIndexes, ...GetPage(data, pageIndexes, pageIndex) }; 
+  const {from, to} = GetPage(data, pageIndexes, pageIndex); 
+  
+  return {pageIndex, setPageIndex, pageIndexes, from, to}; 
 } 

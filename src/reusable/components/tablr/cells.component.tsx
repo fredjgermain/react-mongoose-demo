@@ -1,50 +1,40 @@
 import React, {useContext} from 'react'; 
 import {RowContext} from './rows.component'; 
 import {TablrContext} from './tablr.component'; 
-
-
+import {IsNull} from '../../utils/_utils'; 
 
 // CELLS ========================================
 const CellsContext = React.createContext({}); 
-interface ICells{} 
-export function Cells({children}:React.PropsWithChildren<ICells>) { 
-  const {ifields} = useContext(RowContext); 
+interface ICells{ ifields:IField[]; } 
+export function Cells({ifields, children}:React.PropsWithChildren<ICells>) { 
 
   // Render -------------------------------------
   return <CellsContext.Provider value={{}} > 
-    {ifields.map((ifield,i) => { 
-      return <Cell key={i} {...{ifield, children}} />; 
+    {ifields.map((ifield,key) => { 
+      return <Cell {...{key, ifield}}>{children}</Cell>; 
     })} 
   </CellsContext.Provider> 
 } 
 
 
 // Row --------------------------------------------
-interface ICellContext { 
-  row: number; 
-  ifield: IField; 
-} 
+interface ICell { ifield: IField; } 
+interface ICellContext { value:any, row:number, ifield:IField} 
 export const CellContext = React.createContext({} as ICellContext); 
-interface ICell { 
-  ifield: IField; 
-} 
 export function Cell({ifield, children}:React.PropsWithChildren<ICell>) { 
   const {datas} = useContext(TablrContext); 
   const {row} = useContext(RowContext); 
-  const context = {row, ifield} as ICellContext; 
+
+  const value = GetDefaultValue(datas, ifield, row); 
+  const context = {value, row, ifield} as ICellContext; 
   
   // RENDER -------------------------------------
-  if(!children) { 
-    const value = datas[row][ifield.accessor] ?? ifield.defaultValue; 
-    return <td> 
-      <CellContext.Provider value={context}> 
-        {JSON.stringify(value)} 
-      </CellContext.Provider> 
-    </td> 
-  }
-  return <td> 
-    <CellContext.Provider value={context}> 
-      {children} 
+  return <CellContext.Provider value={context}> 
+      <td>{!children && JSON.stringify(value) || children}</td> 
     </CellContext.Provider> 
-  </td> 
 } 
+
+function GetDefaultValue(datas:any[], ifield:IField, row?:number) { 
+  const data = datas[(row??-1)]; 
+  return data ? data[ifield.accessor] : ifield.defaultValue; 
+}
