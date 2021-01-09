@@ -1,5 +1,5 @@
 import {useState} from 'react'; 
-import {ToArray, Remove, Union} from '../../utils/_utils'; 
+import {ToArray, Remove, Union} from '../../../utils/_utils'; 
 
 // USE SELECT ====================================
 export interface IUseSelect { 

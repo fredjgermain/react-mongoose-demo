@@ -1,0 +1,2 @@
+import {Objx, ObjxContext, Fields, Field, FieldContext, FieldLabel, FieldValue, ArrxObjx} from './objx.component'; 
+export {Objx, ObjxContext, Fields, Field, FieldContext, FieldLabel, FieldValue, ArrxObjx} 

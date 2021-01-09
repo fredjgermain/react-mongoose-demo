@@ -1,5 +1,5 @@
 import {useEffect, useContext} from 'react'; 
-import {useLoader} from '../../../reusable/useloader/_useloader'; 
+import {useLoader} from '../../../reusable/hooks/useloader/_useloader'; 
 import {CrudContext} from '../../patient/patient.page';
 import {QuestionnaireContext} from '../questionnairepage.page';
 

@@ -1,5 +1,5 @@
 import React, {useState, useContext} from 'react'; 
-import {Input} from '../../../reusable/input/_input'; 
+import {Input} from '../../../reusable/components/input/_input'; 
 import {IsEmpty} from '../../../reusable/utils/_utils'; 
 
 import {PatientContext} from '../patient.page'; 

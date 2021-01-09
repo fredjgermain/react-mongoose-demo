@@ -1,6 +1,6 @@
 import React, {useRef} from 'react'; 
 //import {IOption} from '../../reusable/_input'; 
-import {SetWidth} from '../../utils/_utils'; 
+import {SetWidth} from '../../../utils/_utils'; 
 import {SelectHeader} from './selectheader.component'; 
 import {useSelect, IUseSelect} from './select.hook';
 

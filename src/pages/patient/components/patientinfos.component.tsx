@@ -1,6 +1,6 @@
 import React, {useContext, useState} from 'react'; 
-import {FieldContext, FieldLabel, Fields, Objx, ObjxContext} from '../../../reusable/objx/_objx'; 
-import {Input} from '../../../reusable/input/_input'; 
+import {FieldContext, FieldLabel, Fields, Objx, ObjxContext} from '../../../reusable/components/objx/_objx'; 
+import {Input} from '../../../reusable/components/input/_input'; 
 
 import {PatientContext} from '../patient.page'; 
 
@@ -8,21 +8,22 @@ import {PatientContext} from '../patient.page';
 // PATIENT IDENTIFICATION ==========================
 export function PatientInfos() { 
   const {patient, setPatient, patients:{ifields}, setPatientUpdated} = useContext(PatientContext); 
-  const [obj, setObj] = useState(patient); 
+  const [value, setValue] = useState(patient); 
 
   const UpdatePatient = () => { 
     setPatient( (prev:any) => { 
-      return {...prev, ...obj}; 
+      return {...prev, ...value}; 
     }); 
     setPatientUpdated(() => true); 
   }; 
 
+  //<EditField {...{setObj}}/> 
   // RENDER ===================================== 
-  return <Objx {...{obj, setObj, ifields}} > 
+  return <Objx {...{value, ifields}} > 
       {JSON.stringify(patient)} 
       <Fields> 
         <FieldLabel/> 
-        <EditField {...{setObj}}/> 
+        
         <br/> 
       </Fields> 
       <button onClick={UpdatePatient}>Save changes</button> 
@@ -32,7 +33,7 @@ export function PatientInfos() {
 
 
 // EDIT FIELD ===================================
-function EditField({setObj, rendering}:{setObj: React.Dispatch<any>, rendering?:any}) { 
+/*function EditField({setObj, rendering}:{setObj: React.Dispatch<any>, rendering?:any}) { 
   const {obj} = useContext(ObjxContext); 
   const {ifield} = useContext(FieldContext); 
   
@@ -45,4 +46,4 @@ function EditField({setObj, rendering}:{setObj: React.Dispatch<any>, rendering?:
   } 
   const {type, defaultValue} = ifield; 
   return <Input {...{type, defaultValue, value, setValue}} /> 
-} 
+} */

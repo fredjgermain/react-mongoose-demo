@@ -1,12 +1,5 @@
 import React from 'react'; 
-import {TestInputs} from './testinputs'; 
-import {TestInputArrays} from './testinputarrays'; 
-import {TestSelects} from './testselect'; 
-import {TestIsNull} from './testIsNull'; 
-import {TestArrayUtils} from './testarrayutils'; 
 import {TestArrx} from './testarrx'; 
-//import {TestArrx} from './testarrx3'; 
-import {TestInput2} from './testinput2'; 
 
 
 

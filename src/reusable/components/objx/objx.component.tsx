@@ -1,4 +1,5 @@
 import React, { useContext } from 'react'; 
+import {ArrxContext, ElementContext} from '../arrx/_arrx'; 
 
 export interface IObjx { 
   value:any; 
@@ -34,4 +35,24 @@ export function Field({ifield, children}:React.PropsWithChildren<{ifield:IField}
   return <FieldContext.Provider value={{ifield}} > 
     {children} 
   </FieldContext.Provider> 
+}
+
+// Util component ----------------------------
+export function FieldLabel() {
+  const {ifield} = useContext(FieldContext);
+  return <span>{ifield.accessor}:</span>
+}
+
+export function FieldValue() {
+  const {value} = useContext(ObjxContext); 
+  const {ifield} = useContext(FieldContext); 
+  return <span>{value[ifield.accessor]}</span> 
+}
+
+export function ArrxObjx({ifields, children}:React.PropsWithChildren<{ifields:IField[]}>) { 
+  const {values} = useContext(ArrxContext); 
+  const {index} = useContext(ElementContext); 
+  return <Objx {...{value:values[index], ifields}} > 
+    {children} 
+  </Objx>
 }

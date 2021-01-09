@@ -1,9 +1,10 @@
 import React, {useContext, useState} from 'react'; 
-import {Objx, ObjxContext, Fields, FieldLabel, FieldContext, FieldValue} from '../../../reusable/objx/_objx'; 
-import {Select, Options, InputArray} from '../../../reusable/input/_input'; 
+import {Arrx, Element, ArrxContext, ElementContext} from '../../../reusable/components/arrx/_arrx'; 
+import {Objx, ObjxContext, Fields, FieldLabel, FieldContext, FieldValue} from '../../../reusable/components/objx/_objx'; 
+import {Select, Options, InputArray} from '../../../reusable/components/input/_input'; 
 import {CrudContext, PatientContext} from '../../patient/patient.page'; 
 import {QuestionnaireContext} from '../questionnairepage.page'; 
-import {Arrx, Element, ArrxContext, ElementContext} from '../../../reusable/arrx/_arrx'; 
+
 
 interface IResponseType { 
   type: string; 
@@ -67,40 +68,34 @@ export function Questionnaire() {
 } 
 
 function QLabel() { 
-  const {value} = useContext(ElementContext); 
-  const {labels, answer} = value as IAnswer; 
+  const {values} = useContext(ArrxContext); 
+  const {index} = useContext(ElementContext); 
+  const {labels} = values[index] as IAnswer; 
 
   return <span>{labels[0]}:</span> 
 } 
 
 function QValue() { 
-  const {value, setValue, index} = useContext(ElementContext); 
-  const {responseType, answer} = value as IAnswer; 
-
-  return <span> 
-    {JSON.stringify(answer)}; 
-  </span> 
+  const {values} = useContext(ArrxContext); 
+  const {index} = useContext(ElementContext); 
+  const {answer} = values[index] as IAnswer; 
+  return <span> {JSON.stringify(answer)}</span> 
 } 
 
 function QAnswer() { 
   //console.log('QAnswer'); 
-  const {value, setValue, index} = useContext(ElementContext); 
-  const {responseType, answer} = value as IAnswer; 
-  //console.log(answer); 
+  const {values} = useContext(ArrxContext); 
+  const {index} = useContext(ElementContext); 
+  const entry = values[index] as IAnswer 
+  const {responseType, answer} = entry; 
 
-  //const [Answer, SetAnswer] = useState(answer); 
-
-  const SetValue = (newAnswer:any) => { 
-    const newValue = {...(value as IAnswer)}; 
-    newValue.answer = newAnswer; 
-    setValue(newValue); 
-  } 
+  const [value, setValue] = useState(answer); 
   
   if(responseType.enum) { 
     const options:IOption[] = responseType.enum.map( (o,i) => { 
       return {value:i, label:o} as IOption; 
     }); 
-    return <Select {...{value:answer, setValue:SetValue}} > 
+    return <Select {...{value:answer, setValue}} > 
       <Options {...{options}}/> 
     </Select> 
   } 

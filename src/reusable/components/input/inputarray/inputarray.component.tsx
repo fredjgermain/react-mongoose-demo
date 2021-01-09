@@ -1,6 +1,6 @@
 import React, {useState, useContext} from 'react'; 
 import {Input} from '../input/input.component'; 
-import {OnEnter} from '../../utils/_utils'; 
+import {OnEnter} from '../../../utils/_utils'; 
 import {useInputArray, IInputArray, IUseInputArray} from './inputarray.hook'; 
 
 
