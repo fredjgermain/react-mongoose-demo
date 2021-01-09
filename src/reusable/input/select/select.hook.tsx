@@ -60,11 +60,11 @@ export function useSelect(value:any, setValue:any, multiple:boolean, ref:React.R
     if(toFocus) { 
       ref.current.hidden = false; 
       ref.current.focus(); 
-      ref.current.onblur= () => Fold(true);
+      ref.current.onblur= () => Fold(true); 
     } 
-    else {
+    else { 
       ref.current.onblur=() => {}; 
-    }
+    } 
   }
 
   return {value, setValue, multiple, fold, Fold, SelectValue, selectedOptions, options, setOptions, Focus}; 

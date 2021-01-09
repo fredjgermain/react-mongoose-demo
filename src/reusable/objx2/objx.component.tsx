@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react'; 
+import React, {useContext, useEffect, useState} from 'react'; 
 import {IObjx, IUseObjx, useObjx } from './objx.hook';
 import {Input} from '../../reusable/input/_input'; 
 import {OnEnter} from '../../reusable/utils/_utils';
@@ -45,16 +45,26 @@ export function FieldLabel() {
 
 // Field Read
 export function FieldRead() { 
-  const {Read} = useContext(ObjxContext); 
+  const {ReadField: Read} = useContext(ObjxContext); 
   const {ifield} = useContext(FieldContext); 
   return <span>{JSON.stringify(Read(ifield))}</span> 
 }
 
 // Field Edit 
 export function FieldEdit({...props}:React.PropsWithChildren<React.HTMLAttributes<HTMLInputElement>>) { 
-  const {Read, Edit} = useContext(ObjxContext); 
+  console.log('Field');
+  const {ReadField: Read, EditField: Edit} = useContext(ObjxContext); 
   const {ifield} = useContext(FieldContext); 
   const [value, setValue] = useState(Read(ifield)); 
+  
+  //console.log([Read(ifield), value]); 
+  //const ReInitValue = JSON.stringify(Read(ifield)) === JSON.stringify(value); 
+
+  useEffect(() => { 
+    if(Read(ifield) !== value)
+      setValue(Read(ifield)); 
+  }, [Read(ifield)]); 
+
   const {type, defaultValue} = ifield; 
 
   const onKeyUp = (event:any) => OnEnter(event, () => { 

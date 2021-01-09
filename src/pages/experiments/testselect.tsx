@@ -67,11 +67,9 @@ function TestSelect({children,...props}:React.PropsWithChildren<ITest>) {
   const placeholder = 'placeholder'; 
 
   return <div> 
-    <div> 
-      {JSON.stringify(value)} 
-      <Select {...{value, setValue, multiple:false, width:10, placeholder}} > 
-        {children} 
-      </Select> 
-    </div> 
+    {JSON.stringify(value)} 
+    <Select {...{value, setValue, multiple:true, width:10, placeholder}} > 
+      {children} 
+    </Select> 
   </div> 
 }

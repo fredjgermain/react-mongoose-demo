@@ -1,28 +1,34 @@
 import React from 'react'; 
-import {IEvent, IsNull, GetValueFromInput} from '../../utils/_utils'; 
+import {IEvent, IsNull, OnEnter, 
+  GetDefaultValueByType, GetTypeByValue, GetInputType, GetValueFromInput} from '../../utils/_utils'; 
 
 
 // INPUT ========================================
 export interface IInput extends React.HTMLAttributes<HTMLInputElement> { 
   value:any; 
   setValue:any; 
-  defaultValue:any; 
   type?:string; 
+  defaultValue?:any; 
   inputType?:string; 
-  //[key:string]:any; 
+  onEnterUp?:() => void; 
 } 
-export function Input({value, setValue, defaultValue, type=(typeof value), inputType, ...props}:IInput) { 
-  const OnChange = (event:IEvent) => setValue(GetInputValueOrDefault(event, defaultValue)); 
-  //const InputType = GetInputType(type, inputType); 
+export function Input(
+  {
+    value, setValue, 
+    type=GetTypeByValue(value??''), 
+    defaultValue=GetDefaultValueByType(type??'string'), 
+    inputType=GetInputType(type??''), 
+    onEnterUp=() => {}, 
+    ...props
+  }:IInput) 
+{ 
+  const onChange = (event:IEvent) => setValue(GetInputValueOrDefault(event, defaultValue)); 
   const Value = IsNull(value) ? defaultValue: value; 
+  const onKeyUp = (event: React.KeyboardEvent<HTMLInputElement>) => OnEnter(event, onEnterUp); 
 
-  if(type === 'string') 
-    return <input type={'text'} value={Value} onChange={OnChange} {...props} /> 
-  if(type === 'number') 
-    return <input type={'number'} value={Value} onChange={OnChange} {...props} /> 
   if(type === 'boolean') 
-    return <input type={'checkbox'} checked={Value} onChange={OnChange} {...props} /> 
-  return <span>{JSON.stringify(value)}</span> 
+    return <input {...{type:inputType, checked:Value, onChange, onKeyUp,  ...props}} /> 
+  return <input {...{type:inputType, value:Value, onChange, onKeyUp, ...props}} /> 
 } 
 
 
@@ -44,18 +50,4 @@ function GetInputValueOrDefault (event:IEvent, defaultValue:any) {
     return event.target.checked as boolean; 
   return event.target.value; 
 }*/
-
-// GetInputType ---------------------------------
-function GetInputType(type:string, inputType?:string) { 
-  if(!inputType) 
-    return inputType; 
-  
-  if(type === 'number') 
-    return 'number'; 
-  if(type === 'boolean') 
-    return 'checkbox'; 
-  if(type === 'string') 
-    return 'text'; 
-  return 'text'; 
-}
 

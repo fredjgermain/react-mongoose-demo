@@ -35,16 +35,3 @@ function FoldBtn() {
   </div> 
 } 
 
-
-/*
-onMouseDown : 
-  focus 
-  blur // lose focus thus never appears focused. 
-
-onClick : 
-  focus 
-  does not blur 
-
-
-
-*/

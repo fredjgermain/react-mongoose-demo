@@ -13,7 +13,7 @@ interface IResponseType {
 
 interface IAnswer { 
   pid:string; 
-  qId:string; 
+  qid:string; 
   optional:boolean; 
   labels: string[]; 
   responseType: IResponseType; 
@@ -35,7 +35,7 @@ function useAnswers() {
 
   const blankAnswers:IAnswer[] = questions.entries.map( q => { 
     return {pid, 
-      qId:q._id, 
+      qid:q._id, 
       labels:q['labels'], 
       optional: q['optional'], 
       responseType: GetResponseType(q['responseType']), 

@@ -5,8 +5,8 @@ export interface IObjx {
 } 
 
 export interface IUseObjx extends IObjx { 
-  Read:(ifield:IField) => any; 
-  Edit:(newValue:any, ifield:IField) => any; 
+  ReadField:(ifield:IField) => any; 
+  EditField:(newValue:any, ifield:IField) => any; 
 }
 
 export function useObjx({value, setValue, ifields}:IObjx):IUseObjx { 
@@ -15,12 +15,17 @@ export function useObjx({value, setValue, ifields}:IObjx):IUseObjx {
   } 
 
   function Edit(newFieldValue:any, ifield:IField) { 
-    setValue((prev:any) => { 
+    const newValue = {...value}; 
+    newValue[ifield.accessor] = newFieldValue; 
+    setValue(newValue); 
+    //return newValue; 
+    
+    /*setValue((prev:any) => {
       const newValue = {...prev}; 
       newValue[ifield.accessor] = newFieldValue; 
       return newValue; 
-    }); 
+    }) */
   }
 
-  return {value, setValue, ifields, Read, Edit}; 
+  return {value, setValue, ifields, ReadField: Read, EditField: Edit}; 
 }

@@ -1,4 +1,5 @@
 import React from 'react'; 
+import {IsNull} from './_utils'; 
 
 // IEvent #####################################
 export interface IEvent extends React.ChangeEvent<HTMLInputElement> { 
@@ -10,6 +11,7 @@ export function OnEnter(event:any, Func:any) {
   if(IsPressEnter( (event as IEvent).code ) ) 
     Func(); 
 } 
+
 
 
 // Get Value From Input -------------------------
@@ -27,9 +29,7 @@ export function GetValueFromInput(event:IEvent) {
 
 
 // GetInputType ---------------------------------
-export function GetInputType(type:string, inputType?:string) { 
-  if(!inputType) 
-    return inputType; 
+export function GetInputType(type:string) { 
   if(type === 'number') 
     return 'number'; 
   if(type === 'boolean') 
