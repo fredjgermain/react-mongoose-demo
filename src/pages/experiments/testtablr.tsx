@@ -1,14 +1,10 @@
 import React, { useContext, useState } from 'react'; 
-import {Tablr, TablrContext, 
-  Rows, Row, RowContext, 
-  Cells, Cell, CellContext, 
-  Header, Heads, Head, HeadContext} from '../../reusable/components/tablr/_tablr'; 
+import {Tablr, Rows, Cells, CellContext, Header, Heads} 
+  from '../../reusable/components/tablr/_tablr'; 
 
 import {Input} from '../../reusable/components/input/_input';
-import {Arrx, ArrxContext, 
-  Elements, Element, 
-  ElementContext, ElementIndex, ElementValue
-} from '../../reusable/components/arrx/_arrx'; 
+import {Arrx, Elements, ElementIndex, ElementValue} 
+  from '../../reusable/components/arrx/_arrx'; 
 
 import {usePage, IPageHook} from '../../reusable/hooks/usepage/usePage'; 
 

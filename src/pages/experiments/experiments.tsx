@@ -1,6 +1,6 @@
 import React from 'react'; 
 import {TestArrx} from './testarrx'; 
-import {TestTablr} from './testtablr'; 
+import {TestTablr} from './testtablr/testtablr'; 
 
 
 // EXPERIMENTS ==================================

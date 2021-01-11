@@ -1,5 +1,4 @@
 import React, {useRef} from 'react'; 
-//import {IOption} from '../../reusable/_input'; 
 import {SetWidth} from '../../../utils/_utils'; 
 import {SelectHeader} from './selectheader.component'; 
 import {useSelect, IUseSelect} from './select.hook';
@@ -16,6 +15,7 @@ interface ISelectContext extends IUseSelect {
 export const SelectContext = React.createContext({} as ISelectContext); 
 
 
+
 // SELECT =======================================
 interface ISelect { 
   //type: string; 
@@ -30,13 +30,7 @@ export function Select({value, setValue, width, placeholder = 'select', multiple
   const context = useSelect(value, setValue, multiple, ref); 
   const style = width ? SetWidth(width): undefined; 
   
-  /*if(ref.current && !context.fold) { 
-    ref.current.hidden = false; 
-    ref.current.focus(); 
-  }*/
-
-  // ref={ref} tabIndex={0}
-  return <span>
+  return <span className={'select_contain'}> 
   <SelectContext.Provider value={{...context, placeholder, ref}} > 
     <div className={'select_main'} {...style} > 
       <SelectHeader /> 

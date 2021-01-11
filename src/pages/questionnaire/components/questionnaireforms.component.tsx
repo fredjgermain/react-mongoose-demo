@@ -1,76 +1,61 @@
 import React, {useContext, useState} from 'react'; 
-import {Arrx, Elements, ArrxContext, ElementContext, ElementIndex} from '../../../reusable/components/arrx/_arrx'; 
-import {Input, Select, Options, InputArray} from '../../../reusable/components/input/_input'; 
-import {CrudContext, PatientContext} from '../../patient/patient.page'; 
-import {QuestionnaireContext} from '../questionnairepage.page'; 
-
+import {Arrx, Elements, ArrxContext, ElementContext, ElementIndex, ElementValue} from '../../../reusable/components/arrx/_arrx'; 
 import {usePage, IPageHook} from '../../../reusable/hooks/usepage/usePage'; 
+import {QuestionEdit} from './questionedit.component'; 
+import {AnswersAreComplete, useBlankForm} from './useblankform'; 
 
 
 
+// QUESTIONNAIRE =================================
 export function Questionnaire() { 
   const {answers, setAnswers} = useBlankForm(); 
-
   const {pageIndex, setPageIndex, pageIndexes, from, to} = usePage(answers, 5); 
-  const indexes = answers.map((v,i) => i).filter((i) => i >=from && i<=to); 
+  const indexes = answers.map((v,i) => i).filter((i) => i >=from && i<to); 
+  const pageAnswers = answers.filter( (v,i) => indexes.includes(i) ); 
 
-  console.log(indexes);
+  const formsCompleted = AnswersAreComplete(answers); 
+  const pageCompleted = AnswersAreComplete(pageAnswers); 
 
   return <div> 
     <h3> 
       FORM ... 
     </h3> 
+    <div>Form completed {JSON.stringify(formsCompleted)}</div> 
+    <div>Page completed {JSON.stringify(pageCompleted)}</div> 
+    <Arrx {...{values:answers}} > 
+      <Elements {...{}} > 
+        <ElementIndex/> 
+        <ElementAnswer/> 
+      </Elements> 
+    </Arrx> 
+
     <Arrx {...{values:answers}} > 
       <Elements {...{indexes}} > 
         <QuestionEdit {...{setValues:setAnswers}} /> 
       </Elements> 
     </Arrx> 
-    <Paging {...{pageIndex, setPageIndex, pageIndexes, from, to}} />
+    <Paging {...{pageIndex, setPageIndex, pageIndexes, from, to}} /> 
   </div> 
 } 
 
-function QuestionEdit({setValues}:{setValues:any}) { 
-  const {values} = useContext(ArrxContext); 
-  const {index} = useContext(ElementContext); 
-  const {labels, optional, answer, responseType} = (values[index] as IAnswer); 
-  
-  const [value, setValue] = useState(answer); 
-  const {type, defaultValue} = {type:'number', defaultValue:0}; 
-
-  const onEnterUp = () => { 
-    setValues((prev:any) => { return value; }); 
-  } 
-
-  const options:IOption[] = responseType.enum ? 
-    responseType.enum.map( (v,i) => {
-      return {value:i, label:v}
-    }) : 
-    []; 
-
-  const input = <Input {...{value, setValue, type, defaultValue, onEnterUp}} />
-  const select = <Select {...{value, setValue, type, defaultValue, onEnterUp}} >
-      <Options {...{options}} />
-    </Select>
-
-  return <div> 
-    [<ElementIndex /><span>{labels[0]}: </span> ] 
-    <span>{!responseType.enum ? input : select} </span> 
-  </div> 
-} 
-
-
-
+// PAGING --------------------------------------- 
 function Paging({pageIndex, setPageIndex, pageIndexes}:IPageHook) { 
-  return <div>
+  return <div> 
     {pageIndexes.map( (p, i) => { 
-      return <button key={i} onClick={() => setPageIndex(i)} disabled={pageIndex===i} >
-          {i+1}
+      return <button key={i} onClick={() => setPageIndex(i)} disabled={pageIndex===i} > 
+          {i+1} 
         </button> 
     })} 
-  </div>
-}
+  </div> 
+} 
 
-//
+
+export function ElementAnswer() { 
+  const {values} = useContext(ArrxContext); 
+  const {index} = useContext(ElementContext); 
+  return <span>{JSON.stringify(values[index]['answer'])}. </span> 
+} 
+
 
 /*function ResponseType() {
 
@@ -108,45 +93,6 @@ function Paging({pageIndex, setPageIndex, pageIndexes}:IPageHook) {
 }
 */
 
-interface IResponseType { 
-  type: string; 
-  enum?: any[]; 
-  range?: any; 
-} 
-
-interface IAnswer { 
-  pid:string; 
-  qid:string; 
-  optional:boolean; 
-  labels: string[]; 
-  responseType: IResponseType; 
-  //date: ; 
-  answer:any; 
-} 
-
-function useBlankForm() { 
-  const {patient:{_id:pid}} = useContext(PatientContext); 
-  const {questions, responses} = useContext(QuestionnaireContext); 
-  
-  const GetResponseType = (id:string) => { 
-    const response = responses.entries.find(r=>r._id===id); 
-    if(response) 
-      return response['responseType']; 
-    return 'no responses'; 
-  }
-
-  const blankAnswers:IAnswer[] = questions.entries.map( q => { 
-    return {pid, 
-      qid:q._id, 
-      labels:q['labels'], 
-      optional: q['optional'], 
-      responseType: GetResponseType(q['responseType']), 
-      answer:null, 
-    } as IAnswer; 
-  }); 
-  const [answers, setAnswers] = useState<IAnswer[]>(blankAnswers); 
-  return {answers, setAnswers}; 
-} 
 
 
 /*

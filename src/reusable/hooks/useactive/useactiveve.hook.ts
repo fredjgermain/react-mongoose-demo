@@ -1,12 +1,13 @@
 import React, {useState} from 'react'; 
 
 export interface IUseActive { 
-  GetActive: () => IActive; 
+  active :IActive; 
   SetActive: (row?:number, mode?:string) => void; 
+  SetData: (data:any) => void; 
+  /*GetActive: () => IActive; 
   IsActive: (row:number) => boolean; 
   GetMode: (row:number) => string; 
-  GetData: (row:number) => any; 
-  SetData: (data:any) => void; 
+  GetData: (row:number) => any; */
 } 
 interface IActive { 
   data:any; 
@@ -19,21 +20,23 @@ export const ActiveContext = React.createContext({} as IUseActive);
 export function useActive(datas:any[], ifields:IField[]):IUseActive { 
   const [active, setActive] = useState({data:FetchData(datas, ifields)} as IActive); 
   
-  const GetActive = ():IActive => active; 
+  //const GetActive = ():IActive => active; 
   const SetActive = (row?:number, mode?:string) => { 
     setActive(() => {return {data:FetchData(datas, ifields, row), row, mode}} ); 
   } 
-  const IsActive = (row?:number):boolean => row !== undefined && active.row === row; 
-  const GetMode = (row:number):string => IsActive(row) ? active.mode ?? '' : ''; 
+  //const IsActive = (row?:number):boolean => row !== undefined && active.row === row; 
+  //const GetMode = (row:number):string => IsActive(row) ? active.mode ?? '' : ''; 
 
   // returns data with default values if not defined 
-  const GetData = (row?:number):any => { 
+  /*const GetData = (row?:number):any => { 
     return IsActive(row) ? active.data : FetchData(datas, ifields, row); 
-  } 
+  } */
   const SetData = (data:any):void => { 
-    setActive(() => {return {...active, data}} ); 
+    setActive((prev:any) => { 
+      return {...prev, data}} 
+    ); 
   } 
-  return {GetActive, SetActive, IsActive, GetMode, GetData, SetData}; 
+  return {active, SetActive, SetData}; 
 } 
 
 // FetchData from datas if it can find it and complete undefined data with their defaultvalue. 
