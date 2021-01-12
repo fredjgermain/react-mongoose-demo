@@ -7,7 +7,7 @@ export interface IUseActive {
   /*GetActive: () => IActive; 
   IsActive: (row:number) => boolean; 
   GetMode: (row:number) => string; 
-  GetData: (row:number) => any; */
+  GetData: (row:number) => any; */ 
 } 
 interface IActive { 
   data:any; 
