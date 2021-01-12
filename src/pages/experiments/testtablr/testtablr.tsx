@@ -4,7 +4,7 @@ import {Tablr, Rows, Row, RowContext, Cells, CellContext, Header, Heads, Cell}
 import {Arrx, Elements, ElementIndex, ElementValue} 
   from '../../../reusable/components/arrx/_arrx'; 
 import {usePage, IPageHook} from '../../../reusable/hooks/usepage/usePage'; 
-import {ifields, Datas} from './mockdata'; 
+import {ifields, Datas, GetForeignOptions, GetForeignValue} from './mockdata'; 
 
 import './table.css'; 
 import {IUseActive, useActive} from '../../../reusable/hooks/useactive/_useactive'; 
@@ -17,10 +17,6 @@ export const ActiveContext = React.createContext({} as IUseActive);
 // TEST TABLR ====================================
 export function TestTablr() { 
   const [datas, setDatas] = useState(Datas); 
-
-  const GetForeignValue:(ifield:IField, value:any) => any = (ifield:IField, value:any) => {}; 
-  const GetForeignOptions:(ifield:IField) => IOption[] = (ifield:IField) => {return []} 
-
   const renderers:IRenderers = {...BuildDefaultRenderingFunc(), ...BuildDefaultForeignRenderingFunc(GetForeignValue, GetForeignOptions) }; 
   
   // page rows
