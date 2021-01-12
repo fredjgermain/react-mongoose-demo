@@ -1,7 +1,6 @@
 import React, { useContext, useState } from 'react'; 
 import {Tablr, Rows, Row, RowContext, Cells, CellContext, Header, Heads, Cell} 
   from '../../../reusable/components/tablr/_tablr'; 
-import {Input} from '../../../reusable/components/input/_input'; 
 import {Arrx, Elements, ElementIndex, ElementValue} 
   from '../../../reusable/components/arrx/_arrx'; 
 import {usePage, IPageHook} from '../../../reusable/hooks/usepage/usePage'; 
@@ -10,13 +9,19 @@ import {ifields, Datas} from './mockdata';
 import './table.css'; 
 import {IUseActive, useActive} from '../../../reusable/hooks/useactive/_useactive'; 
 import {CreateBtn, UpdateBtn, DeleteBtn} from './crudbtn.component'; 
-
+import {BuildDefaultRenderingFunc, BuildDefaultForeignRenderingFunc, IRenderers} from './rendering/renderers.utils'; 
+import {CellRenderer} from './cellrenderer.component'; 
 
 
 export const ActiveContext = React.createContext({} as IUseActive); 
 // TEST TABLR ====================================
 export function TestTablr() { 
   const [datas, setDatas] = useState(Datas); 
+
+  const GetForeignValue:(ifield:IField, value:any) => any = (ifield:IField, value:any) => {}; 
+  const GetForeignOptions:(ifield:IField) => IOption[] = (ifield:IField) => {return []} 
+
+  const renderers:IRenderers = {...BuildDefaultRenderingFunc(), ...BuildDefaultForeignRenderingFunc(GetForeignValue, GetForeignOptions) }; 
   
   // page rows
   const {pageIndex, setPageIndex, pageIndexes, from, to} = usePage(datas, 5); 
@@ -68,7 +73,7 @@ export function TestTablr() {
     <tbody>
       <Rows {...{rows}} > 
         <Cells {...{ifields}}> 
-          <CellContent {...{setDatas}} /> 
+          <CellRenderer {...{renderers}} /> 
         </Cells> 
         <Cell {...{ifield:colBtn}} >
           <UpdateBtn {...{action:Update}} />
@@ -77,7 +82,7 @@ export function TestTablr() {
       </Rows> 
       <Row {...{row:-1}} > 
         <Cells {...{ifields}}> 
-          <CellContent {...{setDatas}} /> 
+          <CellRenderer {...{renderers}} /> 
         </Cells>
         <Cell {...{ifield:colBtn}} > 
           <CreateBtn {...{action:Create}} /> 
@@ -96,57 +101,6 @@ export function TestTablr() {
     <div><Paging {...{pageIndex, setPageIndex, pageIndexes, from, to}} /></div> 
   </div> 
 }
-
-
-
-export function CellContent({setDatas}:{setDatas:React.Dispatch<any>}) { 
-  const {value, row} = useContext(CellContext); 
-  const {active, SetData} = useContext(ActiveContext); 
-  const isActive = active.row === row; 
-  const isEdit = (active.mode === 'create' || active.mode === 'update') && isActive; 
-
-  // Cell Context -------------------------------
-  return <span>
-    {!isEdit && JSON.stringify(value)} 
-    {isEdit && <CellInput />} 
-  </span>
-}
-
-
-function CellInput() { 
-  const {active:{data}, SetData} = useContext(ActiveContext); 
-  const {ifield:{accessor, type, defaultValue}} = useContext(CellContext); 
-
-  const value = data[accessor]; 
-  const setValue = (newValue:any) => { 
-    const newData = {...data}; 
-    newData[accessor] = newValue; 
-    SetData(newData); 
-  }; 
-
-  return <Input {...{value, setValue, type, defaultValue}} /> 
-}
-
-
-function TablrInput({setDatas}:{setDatas:React.Dispatch<any>}) { 
-  const {value:_value, row, ifield} = useContext(CellContext); 
-  const {SetData} = useContext(ActiveContext); 
-  const {type, defaultValue} = ifield; 
-
-  const [value, setValue] = useState(_value); 
-  
-  const onEnterUp = () => { 
-    setDatas((prev:any) => { 
-      const newElement = {...prev[row]}; 
-      newElement[ifield.accessor] = value; 
-      prev[row] = newElement; 
-      return [...prev]; 
-    }); 
-  }
-
-  return <Input {...{value, setValue, type, defaultValue, onEnterUp}} /> 
-} 
-
 
 
 // PAGING ---------------------------------------
