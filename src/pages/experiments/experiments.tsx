@@ -1,7 +1,7 @@
 import React from 'react'; 
 import {TestArrx} from './testarrx'; 
 import {TestTablr} from './testtablr/testtablr'; 
-
+import {TestDao} from './testdao/testdao'; 
 
 // EXPERIMENTS ==================================
 export default function Experiments() { 
@@ -13,7 +13,7 @@ export default function Experiments() {
 
   return <div> 
     <h1>EXPERIMENTS</h1> 
-    <TestTablr /> 
+    <TestDao /> 
   </div> 
 } 
 

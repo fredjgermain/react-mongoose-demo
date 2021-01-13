@@ -13,16 +13,17 @@ export interface ICrud {
 // DataAcessObject ==============================
 export class DataAccessObject { 
   public collections:Collections = new Collections(); 
-  public errors:any[] = [] as any[]; 
-
   private crud:ICrud = {} as ICrud; 
+  //public errors:any[] = [] as any[]; 
+
+  
   constructor(crud:ICrud) { 
     this.crud = crud; 
   } 
 
-  public GetCollections(accessors?:string[]):ICollection[] { 
+  /*public GetCollections(accessors?:string[]):ICollection[] { 
     return this.collections.GetCollections(accessors); 
-  } 
+  } */
 
   // COLLECTION .................................
   public async Collections(accessors:string[]):Promise<IResponse[]> { 
@@ -31,8 +32,6 @@ export class DataAccessObject {
       const response = await this.crud.Collection(accessors[i]); 
       if(response.success) 
         this.collections.PushCollection(response.data); 
-      else 
-        this.errors.push(response.err); 
       responses.push(response); 
     } 
     return responses; 
@@ -43,8 +42,6 @@ export class DataAccessObject {
     const [response] = (await this.crud.Create(accessor, [entry])).data as IResponse[]; 
     if(response.success) 
       this.collections.Create(accessor, response.data); 
-    else 
-      this.errors = [response.err]; 
     return response; 
   } 
 
@@ -62,8 +59,6 @@ export class DataAccessObject {
     const [response] = (await this.crud.Update(accessor, [entry])).data as IResponse[]; 
     if(response.success) 
       this.collections.Update(accessor, response.data); 
-    else 
-      this.errors = [response.err]; 
     return response; 
   } 
 
@@ -72,8 +67,6 @@ export class DataAccessObject {
     const [response] = (await this.crud.Delete(accessor, entry)).data as IResponse[]; 
     if(response.success) 
       this.collections.Delete(accessor, response.data); 
-    else 
-      this.errors = [response.err]; 
     return response; 
   } 
 
@@ -84,10 +77,6 @@ export class DataAccessObject {
 
   public GetForeignOptions(ifield:IField):IOption[] { 
     return this.collections.GetForeignOptions(ifield); 
-  } 
-
-  public GetErrors () { 
-    return this.errors; 
   } 
 } 
 

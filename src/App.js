@@ -6,7 +6,6 @@ import Patient from './pages/patient/patient.page';
 import Admin from './pages/admin/admin.page'; */
 import Experiments from './pages/experiments/experiments'; 
 
-
 export default function App() { 
   //return <Patient /> 
   return <Experiments />

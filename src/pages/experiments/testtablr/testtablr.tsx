@@ -9,15 +9,20 @@ import {ifields, Datas, GetForeignOptions, GetForeignValue} from './mockdata';
 import './table.css'; 
 import {IUseActive, useActive} from '../../../reusable/hooks/useactive/_useactive'; 
 import {CreateBtn, UpdateBtn, DeleteBtn} from './crudbtn.component'; 
-import {BuildDefaultRenderingFunc, BuildDefaultForeignRenderingFunc, IRenderers} from './rendering/renderers.utils'; 
+import {BuildDefaultRenderingFunc} from './rendering/renderers.utils'; 
 import {CellRenderer} from './cellrenderer.component'; 
+
+/* 
+export const DaoContext = React.createContext({} as ); 
+const daoContext = {, GetForeignOptions, GetForeignValue, Create, Update, Delete} 
+*/ 
 
 
 export const ActiveContext = React.createContext({} as IUseActive); 
 // TEST TABLR ====================================
 export function TestTablr() { 
   const [datas, setDatas] = useState(Datas); 
-  const renderers:IRenderers = {...BuildDefaultRenderingFunc(), ...BuildDefaultForeignRenderingFunc(GetForeignValue, GetForeignOptions) }; 
+  const renderers = BuildDefaultRenderingFunc(GetForeignValue, GetForeignOptions); 
   
   // page rows
   const {pageIndex, setPageIndex, pageIndexes, from, to} = usePage(datas, 5); 
@@ -28,6 +33,7 @@ export function TestTablr() {
 
   // activeContext 
   const activeContext = useActive(datas, ifields); 
+  
 
   // For debug purposes. 
   const displayDatas = <Arrx {...{values:datas}} > 
@@ -66,7 +72,7 @@ export function TestTablr() {
     <Header> 
       <Heads {...{ifields:[...ifields,colBtn, ]}} /> 
     </Header> 
-    <tbody>
+    <tbody> 
       <Rows {...{rows}} > 
         <Cells {...{ifields}}> 
           <CellRenderer {...{renderers}} /> 

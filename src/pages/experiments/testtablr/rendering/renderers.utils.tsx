@@ -49,7 +49,10 @@ function Selector(value:any[], setValue:any, options:IOption[], multiple:boolean
 
 
 // DEFAULT RENDERING FUNCTIONS =======================
-export function BuildDefaultRenderingFunc ():IRenderers {
+export function BuildDefaultRenderingFunc (
+  GetForeignValue:(ifield:IField, value:any) => any, 
+  GetForeignOptions:(ifield:IField) => IOption[]):IRenderers 
+{ 
   // PRIMITIVE --------------------------------------
   const OnePrimitiveRead = (ifield:IField) => (value:any, setValue:any) => 
     Read(ifield, value); 
@@ -80,16 +83,6 @@ export function BuildDefaultRenderingFunc ():IRenderers {
   const ManyEnumEdit = (ifield:IField) => (value:any, setValue:any) => 
     Selector(value, setValue, GetEnumOptions(ifield), true); 
 
-  return {Default, OnePrimitiveRead, OnePrimitiveEdit, ManyPrimitiveRead, ManyPrimitiveEdit, 
-    OneEnumRead, OneEnumEdit, ManyEnumRead, ManyEnumEdit}; 
-}
-
-
-export function BuildDefaultForeignRenderingFunc (
-  GetForeignValue:(ifield:IField, value:any) => any, 
-  GetForeignOptions:(ifield:IField) => IOption[]):IRenderers 
-{ 
-
   // FOREIGN --------------------------------------
   const OneForeignRead = (ifield:IField) => (value:any, setValue:any) => 
     Read(ifield, GetForeignValue(ifield, value)); 
@@ -103,5 +96,8 @@ export function BuildDefaultForeignRenderingFunc (
   const ManyForeignEdit = (ifield:IField) => (value:any, setValue:any) => 
     Selector(value, setValue, GetForeignOptions(ifield), true); 
   
-  return {OneForeignRead, OneForeignEdit, ManyForeignRead, ManyForeignEdit}; 
+
+  return {Default, OnePrimitiveRead, OnePrimitiveEdit, ManyPrimitiveRead, ManyPrimitiveEdit, 
+    OneEnumRead, OneEnumEdit, ManyEnumRead, ManyEnumEdit, 
+    OneForeignRead, OneForeignEdit, ManyForeignRead, ManyForeignEdit}; 
 }
