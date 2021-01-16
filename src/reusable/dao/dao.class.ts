@@ -1,6 +1,4 @@
-//import {IOption} from '../input/_input'; 
-import {Field} from '../utils/_utils'; 
-
+import {IsEmpty} from '../utils/_utils'; 
 
 export interface ICrud { 
   Collection:(accessor:string) => Promise<IResponse>; 
@@ -13,9 +11,8 @@ export interface ICrud {
 // DataAcessObject ==============================
 export class DataAccessObject { 
   public collections:Collections = new Collections(); 
-  private crud:ICrud = {} as ICrud; 
-  //public errors:any[] = [] as any[]; 
 
+  private crud:ICrud = {} as ICrud; 
   
   constructor(crud:ICrud) { 
     this.crud = crud; 
@@ -29,19 +26,26 @@ export class DataAccessObject {
   public async Collections(accessors:string[]):Promise<IResponse[]> { 
     const responses = [] as IResponse[]; 
     for(let i=0; i<accessors.length; i++) { 
-      const response = await this.crud.Collection(accessors[i]); 
-      if(response.success) 
-        this.collections.PushCollection(response.data); 
+      const response = await this.Collection(accessors[i]); 
       responses.push(response); 
     } 
     return responses; 
   } 
 
+  public async Collection(accessors:string):Promise<IResponse> { 
+    const response = await this.crud.Collection(accessors); 
+    if(response.success) 
+      this.collections.collections.push(response.data); 
+    return response; 
+  }
+
   // CREATE .....................................  
   public async Create(accessor:string, entry:IEntry):Promise<IResponse> { 
-    const [response] = (await this.crud.Create(accessor, [entry])).data as IResponse[]; 
-    if(response.success) 
+    const [response] = (await this.crud.Create(accessor, entry)).data as IResponse[]; 
+    if(response.success) { 
+      console.log(response.data); 
       this.collections.Create(accessor, response.data); 
+    }
     return response; 
   } 
 
@@ -57,26 +61,46 @@ export class DataAccessObject {
   // UPDATE .....................................
   public async Update(accessor:string, entry:IEntry):Promise<IResponse> { 
     const [response] = (await this.crud.Update(accessor, [entry])).data as IResponse[]; 
-    if(response.success) 
+    if(response.success) {
+      console.log(response.data); 
       this.collections.Update(accessor, response.data); 
+    }
     return response; 
   } 
 
   // DELETE .....................................
   public async Delete(accessor:string, entry?:IEntry):Promise<IResponse> { 
     const [response] = (await this.crud.Delete(accessor, entry)).data as IResponse[]; 
-    if(response.success) 
+    if(response.success) {
+      console.log(response.data); 
       this.collections.Delete(accessor, response.data); 
+    }
     return response; 
   } 
 
-  // GET FOREIGN INFO -----------------------------
-  public GetForeignValue(ifield:IField, id:string):any|undefined { 
-    return this.collections.GetForeignValue(ifield, id); 
+  // GET FOREIGN ELEMENTS -----------------------------
+  public GetForeignElements(ifield:IField) 
+    : {foreignCollection:ICollection|undefined, abbrevField:IField|undefined} 
+  { 
+    return this.collections.GetForeignElements(ifield); 
   } 
 
-  public GetForeignOptions(ifield:IField):IOption[] { 
-    return this.collections.GetForeignOptions(ifield); 
+  public GetForeignOptions(ifield:IField) : IOption[] { 
+    const {foreignCollection, abbrevField} = this.GetForeignElements(ifield);
+    if(!foreignCollection || !abbrevField)
+      return [] as IOption[]; 
+    return foreignCollection.entries?.map( e => { 
+      return {value:e._id, label:e[abbrevField.accessor]} as IOption; 
+    }); 
+  } 
+
+  public GetForeignValues(ifield:IField, ids:string[]):any[] { 
+    const {foreignCollection, abbrevField} = this.GetForeignElements(ifield); 
+    if(!foreignCollection || !abbrevField) 
+      return [] as IOption[]; 
+    return foreignCollection.entries
+      ?.filter(e => !IsEmpty(ids) && ids.includes(e._id) )
+      ?.map( e => e[abbrevField.accessor] );
   } 
 } 
 
@@ -86,80 +110,85 @@ export class DataAccessObject {
 class Collections { 
   public collections:ICollection[] = [] as ICollection[]; 
 
-  public GetCollections(accessors?:string[]):ICollection[] { 
-    if(!accessors) 
-      return this.collections; 
-    return this.collections.filter(c=> accessors.includes(c.accessor)); 
-  } 
-
-  // replace former collection with the same accessor. 
-  public PushCollection(collection:ICollection) { 
-    const duplicateAt = this.collections.findIndex(c=>c.accessor===collection.accessor); 
-    if(duplicateAt >=0) 
-      this.collections.splice(duplicateAt, 1); 
-    this.collections.push(collection); 
-  } 
-
   public Create(accessor:string, entry:IEntry) { 
-    const collection = this.collections.find(c=> c.accessor===accessor); 
-    if(collection) 
-      collection.entries.push(entry); 
-    return !collection; 
+    const collection = new Collection(this.collections.find(c=> c.accessor===accessor)); 
+    return collection.Create(entry);  
   } 
 
   public Update(accessor:string, entry:IEntry) { 
-    const collection = this.collections.find(c=> c.accessor===accessor); 
-    if(!collection) 
-      return false; 
-    const index = collection.entries.findIndex( e => e._id === entry._id ); 
-    if(index < 0) 
-      return false; 
-    collection.entries[index] = {...entry}; 
+    const collection = new Collection(this.collections.find(c=> c.accessor===accessor)); 
+    return collection.Update(entry); 
   } 
 
   public Delete(accessor:string, entry:IEntry) {
-    const collection = this.collections.find(c => c.accessor === accessor); 
-    if(!collection) 
-      return false;
-    const index = collection.entries.findIndex( e => e._id === entry._id ); 
-    if(index < 0) 
-      return false; 
-      collection.entries.splice(index, 1); 
+    const collection = new Collection(this.collections.find(c=> c.accessor===accessor)); 
+    return collection.Delete(entry); 
+  }
+  
+  // GET FOREIGN INFO -----------------------------
+  public GetForeignElements(ifield:IField) 
+      :{foreignCollection:ICollection|undefined, abbrevField:IField|undefined} { 
+    const foreignCollection = this.collections.find(c => c.accessor === ifield.type); 
+    const abbrevField = new Collection(foreignCollection).GetAbbrevField(); 
+    return {foreignCollection, abbrevField}; 
+  }
+}
+
+
+
+// COLLECTION ===================================
+class Collection { 
+  public collection:ICollection|undefined; 
+
+  constructor(collection:ICollection|undefined) { 
+    if(collection) 
+      this.collection = collection; 
   }
 
-  // GET FOREIGN INFO -----------------------------
-  public GetForeignValue(ifield:IField, id:string):any|undefined { 
-    const [foreignCollection, foreignField] = this.GetForeignElements(ifield); 
-    const foreignEntry = foreignCollection?.entries.find( e => e._id === id); 
-    if(foreignEntry && foreignField) 
-      return foreignEntry[foreignField.accessor]; 
-    return; 
-  } 
+  // Create -------------------------------------
+  public Create(entry:IEntry) { 
+    if(!this.collection?.entries) 
+      return false; 
+    this.collection.entries.push(entry); 
+    return true;
+  }
 
-  public GetForeignOptions(ifield:IField):IOption[] { 
-    const [foreignCollection, foreignField] = this.GetForeignElements(ifield); 
-    if(!foreignCollection || !foreignField) 
-      return [] as IOption[]; 
-    return foreignCollection.entries?.map( e => { 
-      return {value:e._id, label:e[foreignField.accessor]} as IOption; 
-    }); 
-  } 
+  // Read ---------------------------------------
+  public Read(ids?:string[]) { 
+    if(!this.collection?.entries) 
+      return [];
+    if(IsEmpty(ids) ) 
+      return this.collection.entries; 
+    return this.collection.entries.filter(e => ids?.includes(e._id) ); 
+  }
 
-  private GetForeignElements(ifield:IField): [ICollection, IField] | [] { 
-    if(!ifield.isModel) 
-      return []; 
-    const foreignCollection = this.collections.find(c => c.accessor === ifield.type); 
-    const foreignField = foreignCollection? this.GetAbbreviateField(foreignCollection): null; 
-    if(!foreignCollection || !foreignField) 
-      return []; 
-    return [foreignCollection, foreignField]; 
-  } 
-  
-  private GetAbbreviateField(collection:ICollection):IField { 
-    let foundAbvField = collection.ifields.find(c => c.options['abbreviate']); 
-    if(foundAbvField) 
-      return foundAbvField; 
-    foundAbvField = collection.ifields.find( f => new Field(f).IsAbbreviable() ); 
-    return foundAbvField as IField; 
+  // Update 
+  public Update(entry:IEntry) { 
+    if(!this.collection?.entries) 
+      return false; 
+    const index = this.collection.entries?.findIndex( e => e._id === entry._id ); 
+    if(index < 0) 
+      return false; 
+    this.collection.entries[index] = {...entry}; 
+    return true; 
+  }
+
+  // Delete
+  public Delete(entry:IEntry) {
+    if(!this.collection?.entries) 
+      return false;
+    const index = this.collection?.entries.findIndex( e => e._id === entry._id ); 
+    if(index < 0) 
+      return false; 
+    this.collection?.entries.splice(index, 1); 
+    return true; 
+  }
+
+  public GetAbbrevField():IField|undefined { 
+    const abbrevField = this.collection?.ifields.find( f => f.isAbbrev) 
+      ?? this.collection?.ifields.find( f => (f.type === 'string' || f.type === 'number') && !f.isArray); 
+    return abbrevField; 
   } 
 }
+
+

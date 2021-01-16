@@ -14,9 +14,14 @@ export interface IUseDao{
   Read: (accessor:string, id?:string[]) => Promise<void>; 
   Update: (accessor:string, toUpdate:IEntry) => Promise<void>; 
   Delete: (accessor:string, toDelete?:IEntry) => Promise<void>; 
-  GetForeignValue: (ifield:IField, value:any) => any; 
+
+  GetForeignElements: (ifield:IField) => {foreignCollection:ICollection|undefined, abbrevField:IField|undefined}, 
   GetForeignOptions: (ifield:IField) => IOption[]; 
+  GetForeignValues: (ifield:IField, value:any[]) => any[]; 
 } 
+
+
+
 // USE DAO ======================================
 export function useDao(dao:IDao):IUseDao { 
   const Dao = useMemo(() => dao, []); 
@@ -30,8 +35,12 @@ export function useDao(dao:IDao):IUseDao {
   const Update = async (accessor:string, toUpdate:IEntry) => Load(() => Dao.Update(accessor, toUpdate)); 
   const Delete = async (accessor:string, toDelete?:IEntry) => Load(() => Dao.Delete(accessor, toDelete)); 
 
-  const GetForeignValue = (ifield:IField, value:any) => Dao.GetForeignValue(ifield, value); 
+  const GetForeignElements = (ifield:IField) => Dao.GetForeignElements(ifield); 
   const GetForeignOptions = (ifield:IField) => Dao.GetForeignOptions(ifield); 
+  const GetForeignValues = (ifield:IField, ids:any[]) => Dao.GetForeignValues(ifield, ids); 
 
-  return {state, activeCollection, setActiveCollection, collections, Collections, Create, Read, Update, Delete, GetForeignValue, GetForeignOptions}; 
+  return {state, activeCollection, setActiveCollection, 
+    collections, Collections, 
+    Create, Read, Update, Delete, 
+    GetForeignElements, GetForeignOptions, GetForeignValues}; 
 }

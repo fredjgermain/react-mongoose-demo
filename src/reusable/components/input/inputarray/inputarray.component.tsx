@@ -1,64 +1,58 @@
-import React, {useState, useContext} from 'react'; 
-import {Input} from '../input/input.component'; 
-import {OnEnter} from '../../../utils/_utils'; 
-import {useInputArray, IInputArray, IUseInputArray} from './inputarray.hook'; 
+import React, { useContext, useEffect, useState } from 'react'; 
+import {Arrx, ArrxContext, Elements, Element, ElementContext, ElementIndex, ElementValue} from '../../arrx/_arrx'; 
+import {Input} from '../_input'; 
+import {IInputArray, IUseInputArray, useInputArray} from './inputarray.hook';
 
 
-// InputArray ===================================
 export const InputArrayContext = React.createContext({} as IUseInputArray); 
-export const InputElementContext = React.createContext({} as {index:number}); 
 export function InputArray({children, ...props}:React.PropsWithChildren<IInputArray>) { 
   const context = useInputArray(props); 
-  return <InputArrayContext.Provider value={context}> 
-    {children}
+  const {values} = props; 
+  
+  return <InputArrayContext.Provider value={context} > 
+    <Arrx {...{values}} > 
+      <Elements> 
+        <UpdateElement/> <DeleteBtn/>
+        <br/> 
+      </Elements> 
+      <CreateElement/>
+    </Arrx> 
   </InputArrayContext.Provider> 
-}
+} 
 
-// Create Element =======================================
-export function CreateElement({...props}:React.PropsWithChildren<React.HTMLAttributes<HTMLInputElement>>) { 
+
+// Create element =======================================
+function CreateElement() { 
   const {type, defaultValue, Create} = useContext(InputArrayContext); 
   const [value, setValue] = useState(defaultValue); 
 
-  const CreateOnEnter = (event:any) => OnEnter(event, () => {
+  const onEnterUp = () => {
     Create(value); 
     setValue(() => defaultValue); // reset input to defaultValue after creation. 
-  }); 
-  return <Input {...{value, setValue, defaultValue, type, ...props}} onKeyUp={CreateOnEnter} /> 
+  }; 
+  return <Input {...{value, setValue, defaultValue, type, onEnterUp}}  /> 
 } 
 
-// Element Count =======================================
-export function ElementCount() {
-  const {type, values} = useContext(InputArrayContext); 
-  return <span>{values.length} of type {type}</span>; 
+// Update element =======================================
+function UpdateElement() { 
+  const {values, type, defaultValue, Update} = useContext(InputArrayContext); 
+  const {index} = useContext(ElementContext); 
+
+  const [value, setValue] = useState(values[index]); 
+  useEffect(() => { 
+    setValue(values[index]); 
+  }, [JSON.stringify(values[index])]); 
+
+  const onEnterUp = () => Update(index, value); 
+  return <Input {...{value, setValue, type, defaultValue, onEnterUp}} />
 }
-
-
-// Elements =======================================
-export function Elements({children}:React.PropsWithChildren<any>) { 
-  const {values} = useContext(InputArrayContext); 
-  return <div> 
-    {values.map( (v:any, i:number) => { 
-      return <InputElementContext.Provider key={i} value={{index:i}}> 
-        {children} 
-      </InputElementContext.Provider> 
-    })} 
-  </div>
-}
-
-// Element =========================================
-export function Element({...props}:React.PropsWithChildren<React.HTMLAttributes<HTMLInputElement>>) { 
-  const {type, values, defaultValue, Update} = useContext(InputArrayContext); 
-  const {index} = useContext(InputElementContext); 
-  const value = values[index]; 
-  const setValue = (newValue:any) => Update(index, newValue); 
-  return <Input {...{type, value, setValue, defaultValue, ...props}} /> 
-} 
 
 // Delete Btn ===================================
 export function DeleteBtn({children, ...props}:React.PropsWithChildren<React.ButtonHTMLAttributes<HTMLButtonElement>>) { 
   const {Delete} = useContext(InputArrayContext); 
-  const {index} = useContext(InputElementContext); 
+  const {index} = useContext(ElementContext); 
   return <button onClick={() => Delete(index)} {...props}> 
     {!children ? 'x' : children} 
   </button> 
 }
+

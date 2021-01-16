@@ -15,6 +15,8 @@ export interface IMongooseField {
     sortType?: string; 
     defaultValue?: any; 
     format?: string; 
+    enum?: any[]; 
+    abbrev?: boolean; 
     [key:string]:any; 
   }; 
   $embeddedSchemaType?:{ 
@@ -38,31 +40,29 @@ export function ParseFields(fields:any):IField[] {
 } 
 
 //async function ParseFields() 
-export function ParseField(field:IMongooseField):IField { 
-  const {path, instance, options} = field; 
+export function ParseField(field:IMongooseField):IField {   
+  const {path, instance, options, $embeddedSchemaType} = field; 
   const ifield:IField = {} as IField; 
-  ifield.accessor = path; 
+
+  ifield.accessor = path ?? ''; 
   ifield.label = options.label ?? ''; 
-  ifield.options = options; 
-  ifield.type = GetType(field); 
-  ifield.enums = options['enum'] ?? []; 
+  ifield.options = options ?? {}; 
+  ifield.type = options?.ref ?? $embeddedSchemaType?.instance ?? field.instance.toLowerCase(); 
+  ifield.isMixed = instance.toLowerCase() === 'mixed'; 
+  ifield.isEnum = !!options?.enum; 
+  ifield.isArray = instance.toLowerCase() === 'array'; 
+  ifield.isModel = !!options?.ref; 
+  ifield.isAbbrev = !!options?.abbrev; 
+
+  ifield.enums = options.enum ?? []; 
   ifield.format = options.format ?? "${value}"; 
   ifield.sort = options.sortType ?? ''; 
   ifield.defaultValue = GetDefaultValue(ifield.type, ifield.options); 
   
-  ifield.isEnum = options['enum']? true: false; 
-  ifield.isArray = instance.toLowerCase() === 'array'; 
-  ifield.isModel = instance.toLowerCase() === 'objectid'; 
-  //ifield.isMixed = 
   //ifield.validators = 
   return ifield; 
 } 
 
-function GetType({instance, $embeddedSchemaType}:IMongooseField) { 
-  if(instance.toLocaleLowerCase() === 'array') 
-    return ($embeddedSchemaType?.instance ?? '').toLocaleLowerCase(); 
-  return instance.toLocaleLowerCase(); 
-} 
 
 function GetDefaultValue(type:string, options:any):any { 
   if(options['defaultValue']) 

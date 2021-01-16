@@ -1,3 +1,4 @@
+
 export interface IInputArray { 
   type:string; 
   inputType?:string; 
@@ -13,11 +14,10 @@ export interface IUseInputArray extends IInputArray {
 } 
 
 export function useInputArray(props:IInputArray):IUseInputArray { 
-  const values = props.values ?? []; 
-  const {setValues} = props; 
+  const {values, setValues} = props; 
 
   function Create(newValue:any) { 
-    setValues((prev:any) => [...prev, newValue]); 
+    setValues((prev:any[]) => [...prev, newValue]); 
   } 
 
   function Update(at:number, newValue:any) { 

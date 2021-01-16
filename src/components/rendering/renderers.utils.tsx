@@ -1,13 +1,14 @@
 import React from 'react'; 
-import {Input, InputArray, Select, Options} from '../../../../reusable/components/input/_input'; 
+import {Input, InputArray, Select, Options} from '../../reusable/components/input/_input'; 
 
 
 export interface IRenderers { 
   [key:string]:(ifield:IField) => (value:any, setValue:any) => JSX.Element; 
 } 
 
-const Default = (ifield:IField) => (value:any, setValue:any) => 
-  <span>{JSON.stringify(value)}</span> 
+const Default = (ifield:IField) => (value:any, setValue:any): JSX.Element => { 
+  return <span>{JSON.stringify(value)}</span>; 
+} 
 
 export function GetRenderingFunc(renderers:IRenderers, handler?:string) { 
   return renderers[handler??'Default'] ?? Default; 
@@ -18,8 +19,10 @@ export function IFieldToHandler(ifield:IField) {
   handler += ifield.isArray === true ? 'Many': 'One'; 
   if(ifield.isEnum) 
     handler += 'Enum'; 
-  if(ifield.isModel) 
+  else if(ifield.isModel) 
     handler += 'Foreign'; 
+  else if(ifield.isMixed) 
+    handler += 'Mixed'; 
   else 
     handler += 'Primitive'; 
   return handler; 
@@ -48,10 +51,13 @@ function Selector(value:any[], setValue:any, options:IOption[], multiple:boolean
 }
 
 
+
 // DEFAULT RENDERING FUNCTIONS =======================
-export function BuildDefaultRenderingFunc (
-  GetForeignValue:(ifield:IField, value:any) => any, 
-  GetForeignOptions:(ifield:IField) => IOption[]):IRenderers 
+export function BuildDefaultRenderingFunc ( 
+  GetForeignElements: (ifield:IField) => {foreignCollection:ICollection|undefined, abbrevField:IField|undefined}, 
+  GetForeignOptions: (ifield:IField) => IOption[], 
+  GetForeignValues: (ifield:IField, value:any[]) => any[] 
+): IRenderers
 { 
   // PRIMITIVE --------------------------------------
   const OnePrimitiveRead = (ifield:IField) => (value:any, setValue:any) => 
@@ -67,8 +73,9 @@ export function BuildDefaultRenderingFunc (
 
   const ManyPrimitiveEdit = (ifield:IField) => (value:any, setValue:any) => { 
       const {type, defaultValue} = ifield; 
-      return <InputArray {...{type, values:value, setValues:setValue, defaultValue}} /> 
+      return <InputArray {...{type, values:value, setValues:setValue, defaultValue}} />
     } 
+
 
   // ENUM -----------------------------------------
   const OneEnumRead = (ifield:IField) => (value:any, setValue:any) => 
@@ -83,21 +90,38 @@ export function BuildDefaultRenderingFunc (
   const ManyEnumEdit = (ifield:IField) => (value:any, setValue:any) => 
     Selector(value, setValue, GetEnumOptions(ifield), true); 
 
-  // FOREIGN --------------------------------------
-  const OneForeignRead = (ifield:IField) => (value:any, setValue:any) => 
-    Read(ifield, GetForeignValue(ifield, value)); 
 
-  const OneForeignEdit = (ifield:IField) => (value:any, setValue:any) => 
-    Selector(value, setValue, GetForeignOptions(ifield)); 
+  // MIXED ----------------------------------------
+  const OneMixedRead = Default; 
+
+  const OneMixedEdit = Default; 
+
+  const ManyMixedRead = Default; 
+
+  const ManyMixedEdit = Default; 
+
+
+  // FOREIGN --------------------------------------
+  const OneForeignRead = (ifield:IField) => (value:any, setValue:any) => {
+    const {abbrevField} = GetForeignElements(ifield); 
+    if(abbrevField) 
+      return Read(abbrevField, GetForeignValues(ifield, value)[0] ?? abbrevField.defaultValue); 
+    return Read(ifield, value ?? ''); 
+  } 
+
+  const OneForeignEdit = (ifield:IField) => (value:any, setValue:any) => {
+    return Selector(value, setValue, GetForeignOptions(ifield)); 
+  }
+    
 
   const ManyForeignRead = (ifield:IField) => (value:any, setValue:any) => 
     Read(ifield, value); 
 
   const ManyForeignEdit = (ifield:IField) => (value:any, setValue:any) => 
     Selector(value, setValue, GetForeignOptions(ifield), true); 
-  
 
   return {Default, OnePrimitiveRead, OnePrimitiveEdit, ManyPrimitiveRead, ManyPrimitiveEdit, 
     OneEnumRead, OneEnumEdit, ManyEnumRead, ManyEnumEdit, 
+    OneMixedRead, OneMixedEdit, ManyMixedRead, ManyMixedEdit, 
     OneForeignRead, OneForeignEdit, ManyForeignRead, ManyForeignEdit}; 
 }

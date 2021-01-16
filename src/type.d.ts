@@ -46,13 +46,24 @@ interface IField {
   accessor: string; 
   label: string; 
   type: string;         // takes type name or modelName or element type if is an array
-  options: any; 
+  options: { 
+    ref?: string; 
+    label?: string; 
+    sortType?: string; 
+    defaultValue?: any; 
+    format?: string; 
+    enum?: any[]; 
+    abbrev?: boolean; 
+    [key:string]:any; 
+  }; 
   defaultValue: any; 
 
   format?: any; 
+  isMixed?: boolean; 
   isArray?: boolean; 
   isModel?: boolean; 
   isEnum?: boolean; 
+  isAbbrev?: boolean; 
   enums?: string[]; 
   sort?: string; 
 

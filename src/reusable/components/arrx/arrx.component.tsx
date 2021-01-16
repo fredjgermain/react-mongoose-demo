@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'; 
-
+import {IsEmpty} from '../../utils/_utils'; 
 
 export interface IArrx { 
   values:any[]; 
@@ -10,9 +10,9 @@ const ElementsContext = React.createContext({} as any);
 export const ElementContext = React.createContext({} as {index:number}); 
 
 // ARRX =========================================
-export function Arrx({children, ...props}:React.PropsWithChildren<IArrx>) { 
-  //const context:IUseArrx = useArrx(props); 
-  return <ArrxContext.Provider value={props} > 
+export function Arrx({values, children}:React.PropsWithChildren<IArrx>) { 
+  const context = {values:IsEmpty(values) ? []: values}; 
+  return <ArrxContext.Provider value={context} > 
     {children}
   </ArrxContext.Provider>
 }
@@ -21,7 +21,7 @@ export function Arrx({children, ...props}:React.PropsWithChildren<IArrx>) {
 // ELEMENTS =====================================
 export function Elements({indexes, children}:React.PropsWithChildren<{indexes?:number[]}>) { 
   const {values} = useContext(ArrxContext); 
-  const elements = indexes ? indexes: values.map((v,i) => i ); 
+  const elements = indexes ?? indexes ?? values?.map((v,i) => i ) ?? []; 
 
   return <ElementsContext.Provider value={{}}> 
     {elements.map( (index:any) => { 

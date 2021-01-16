@@ -27,6 +27,16 @@ export function Cell({ifield, children}:React.PropsWithChildren<ICell>) {
 
   const value = GetDefaultValue(datas, ifield, row); 
   const context = {value, row, ifield} as ICellContext; 
+  const data = datas[row];
+  const _value = row >= 0 ? data[ifield.accessor] : ifield.defaultValue; 
+  
+  if(row >= 0) {
+    /*console.log([row, ifield.accessor]); 
+    console.log(['DATAs', datas]); 
+    console.log(['DATA', data]); 
+    console.log(['DATA_field', data[ifield.accessor]]); */
+  }
+    
   
   // RENDER -------------------------------------
   return <CellContext.Provider value={context}> 
@@ -35,6 +45,7 @@ export function Cell({ifield, children}:React.PropsWithChildren<ICell>) {
 } 
 
 function GetDefaultValue(datas:any[], ifield:IField, row?:number) { 
-  const data = datas[(row??-1)]; 
+  const Row = row === undefined ? -1: row; 
+  const data = datas[Row]; 
   return data ? data[ifield.accessor] : ifield.defaultValue; 
 }

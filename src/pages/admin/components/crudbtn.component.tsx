@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'; 
 import {RowContext} from '../../../reusable/components/tablr/_tablr'; 
-import {DaoContext} from './testdao'; 
-import {ActiveContext} from './daotablr'; 
+import {DaoContext} from '../../../reusable/dao/_dao'; 
+import {ActiveContext} from './crudtablr.component'; 
 
 // CRUD BTN -------------------------------------
 export function CreateBtn() { 

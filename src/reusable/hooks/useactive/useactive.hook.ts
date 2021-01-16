@@ -16,7 +16,6 @@ interface IActive {
 } 
 
 // UseActive ====================================
-export const ActiveContext = React.createContext({} as IUseActive); 
 export function useActive(datas:any[], ifields:IField[]):IUseActive { 
   const [active, setActive] = useState({data:FetchData(datas, ifields)} as IActive); 
   

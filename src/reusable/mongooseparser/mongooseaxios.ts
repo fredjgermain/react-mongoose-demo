@@ -27,8 +27,9 @@ export class CrudMongoose {
     return await axios.put(this.baseUrl+'validate/'+modelName, toValidate); 
   } 
 
-  public async Create(modelName:string, toCreate:IEntry|IEntry[]):Promise<IResponse> { 
-    return await axios.put(this.baseUrl+'create/'+modelName, toCreate) as IResponse; 
+  public async Create(modelName:string, toCreate:IEntry):Promise<IResponse> { 
+    const {_id, _v, ...data} = toCreate;
+    return await axios.put(this.baseUrl+'create/'+modelName, data) as IResponse; 
   } 
 
   public async Read(modelName:string, ids?:string[]):Promise<IResponse> { 
@@ -49,3 +50,27 @@ export class CrudMongoose {
   } 
 
 }
+
+
+/*
+Create
+
+[
+    {
+        "success": true,
+        "data": {
+            "titles": [
+                "Title form X",
+                "titre form X"
+            ],
+            "_id": "60010c5840a53500179d0cb3",
+            "fId": "f1",
+            "__v": 0
+        },
+        "err": [],
+        "actionType": "create"
+    }
+]
+
+
+*/
