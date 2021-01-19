@@ -43,15 +43,15 @@ interface CrudBtn {
 } 
 function CrudBtn ({handle, labels, action}:CrudBtn) { 
   const {row} = useContext(RowContext); 
-  const {active, SetActive} = useContext(ActiveContext); 
+  const {active, ResetActive, SetActive} = useContext(ActiveContext); 
   const isActive = active.row === row; 
   const isHandled = active.mode === handle; 
 
   const Affirm = () => SetActive(row, handle); // replace with setActive. 
-  const Cancel = () => SetActive(); // replace with with reset. 
+  const Cancel = () => ResetActive(); // replace with with reset. 
   const Confirm = async () => { 
     await action(active.data); 
-    SetActive(); 
+    ResetActive(); 
   } 
 
   return <span> 

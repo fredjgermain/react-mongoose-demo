@@ -13,5 +13,7 @@ export function CellRenderer({renderers}:{renderers:IRenderers}) {
   const isEdit = (active.mode === 'create' || active.mode === 'update') && isActive; 
   const _value = isActive ? active.data[ifield.accessor]: value; 
 
+  console.log([ifield.accessor, _value]); 
+
   return <ValueRenderer {...{value:_value, data:active.data, setData:SetData, isEdit, ifield, renderers}} />
 }

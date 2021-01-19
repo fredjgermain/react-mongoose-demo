@@ -17,6 +17,16 @@ Read(value, key)
 */
 
 // TYPE VALUE TESTING ###########################
+export function GetDefaultValueFromIField(ifield:IField) { 
+  if(ifield.isArray) 
+    return []; 
+  if(ifield.isModel) 
+    return ''; // return an null id value ?? 
+  if(ifield.isMixed) 
+    return {}; 
+  //console.log([ifield.accessor, ifield.defaultValue]); 
+  return ifield.defaultValue; 
+}
 
 export function Copy(value:any) { 
   if(Array.isArray(value)) 

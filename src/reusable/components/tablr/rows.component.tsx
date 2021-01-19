@@ -10,8 +10,9 @@ export function Rows({rows, children}:React.PropsWithChildren<IRows>) {
 
   // RENDER -------------------------------------
   return <RowsContext.Provider value={{}} > 
-    {Rows.map((row) => { 
-      return <Row {...{key:row, row}}>{children}</Row> 
+    {Rows.map((row, i, arr) => { 
+      const key = JSON.stringify(datas[row]); 
+      return <Row {...{key, row}}>{children}</Row> 
     })} 
   </RowsContext.Provider> 
 } 

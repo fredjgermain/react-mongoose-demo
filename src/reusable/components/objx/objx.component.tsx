@@ -1,6 +1,7 @@
 import React, { useContext } from 'react'; 
 import { IsEmpty } from '../../utils/_utils';
-import {ArrxContext, ElementContext} from '../arrx/_arrx'; 
+//import {ArrxContext, ElementContext} from '../arrx/_arrx'; 
+import {GetDefaultValueFromIField} from '../../utils/_utils';
 
 export interface IObjx { 
   value:any; 
@@ -48,7 +49,8 @@ export function FieldLabel() {
 export function FieldValue() {
   const {value} = useContext(ObjxContext); 
   const {ifield} = useContext(FieldContext); 
-  return <span>{JSON.stringify(value[ifield.accessor] ?? ifield.defaultValue)}</span> 
+  const _value = value[ifield.accessor] ?? GetDefaultValueFromIField(ifield); 
+  return <span>{JSON.stringify(_value)}</span> 
 }
 
 export function DisplayObjx({value, ifields}:{value:any, ifields:IField[]}) { 

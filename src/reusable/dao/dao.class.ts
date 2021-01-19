@@ -96,13 +96,16 @@ export class DataAccessObject {
 
   public GetForeignValues(ifield:IField, ids:string[]):any[] { 
     const {foreignCollection, abbrevField} = this.GetForeignElements(ifield); 
+    if(!ids || IsEmpty(ids)) 
+      return []; 
     if(!foreignCollection || !abbrevField) 
       return [] as IOption[]; 
     return foreignCollection.entries
-      ?.filter(e => !IsEmpty(ids) && ids.includes(e._id) )
+      ?.filter(e => ids.includes(e._id) )
       ?.map( e => e[abbrevField.accessor] );
   } 
 } 
+
 
 
 

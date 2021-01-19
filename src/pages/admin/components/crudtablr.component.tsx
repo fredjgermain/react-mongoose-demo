@@ -13,6 +13,7 @@ import {CreateBtn, UpdateBtn, DeleteBtn} from './crudbtn.component';
 import '../../../css/table.css'; 
 
 
+// CRUD TABLR ####################################
 export const ActiveContext = React.createContext({} as IUseActive); 
 export function CrudTablr() { 
   const {activeCollection, GetForeignElements, GetForeignOptions, GetForeignValues} = useContext(DaoContext); 
@@ -20,18 +21,23 @@ export function CrudTablr() {
   const {entries, ifields} = activeCollection; 
 
   const activeContext = useActive(entries, ifields); 
+  useEffect(() => { 
+    activeContext.ResetActive(); 
+  }, [activeCollection.accessor]); 
+
   const cols = ifields.filter(f=>f.label); 
   const colBtn = {label:'Btn', accessor:'', defaultValue:'', options:{}, type:''} as IField; 
 
   return <ActiveContext.Provider value={activeContext}> 
-    <Tablr {...{datas: entries}}> 
+    <DisplayActiveData/> 
+    <Tablr {...{datas: entries}} key={activeCollection.accessor}> 
       <Header><Heads {...{ifields:[...cols,colBtn]}}/></Header> 
       <tbody> 
         <InlineDataEdit {...{cols, colBtn, renderers}} /> 
         <InlineDataCreation {...{cols, colBtn, renderers}} /> 
-      </tbody>
+      </tbody> 
   </Tablr></ActiveContext.Provider> 
-}
+} 
 
 // Inline Data Creation ============================
 function InlineDataCreation({cols, colBtn, renderers}:{ cols:IField[], colBtn:IField, renderers:IRenderers}) { 
@@ -49,11 +55,18 @@ return <Row {...{row:-1}} >
 function InlineDataEdit({cols, colBtn, renderers}:{ cols:IField[], colBtn:IField, renderers:IRenderers}) { 
 return <Rows> 
     <Cells {...{ifields:cols}}> 
-      <CellRenderer {...{renderers}} />
+      <CellRenderer {...{renderers}} /> 
     </Cells> 
-    <Cell {...{ifield:colBtn}} >
-      <UpdateBtn />
-      <DeleteBtn />
-    </Cell>
+    <Cell {...{ifield:colBtn}} > 
+      <UpdateBtn /> 
+      <DeleteBtn /> 
+    </Cell> 
   </Rows> 
+} 
+
+
+function DisplayActiveData() { 
+  const {activeCollection:{ifields}} = useContext(DaoContext); 
+  const {active} = useContext(ActiveContext); 
+  return <div><DisplayObjx {...{value:active.data, ifields}} /></div>
 }

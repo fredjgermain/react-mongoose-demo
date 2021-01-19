@@ -51,7 +51,6 @@ function Selector(value:any[], setValue:any, options:IOption[], multiple:boolean
 }
 
 
-
 // DEFAULT RENDERING FUNCTIONS =======================
 export function BuildDefaultRenderingFunc ( 
   GetForeignElements: (ifield:IField) => {foreignCollection:ICollection|undefined, abbrevField:IField|undefined}, 
