@@ -9,7 +9,7 @@ type PageBreakPredicate = {
 export interface IPageHook { 
   pageIndex:number, 
   setPageIndex:any, 
-  pages:any[], 
+  pages:Array<number[]>, 
 }
 
 export function usePage(datas:any[], pageBreak:PageBreakPredicate|number):IPageHook { 
