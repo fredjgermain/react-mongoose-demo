@@ -6,13 +6,12 @@ const RowsContext = React.createContext({});
 interface IRows { rows?: number[]; } 
 export function Rows({rows, children}:React.PropsWithChildren<IRows>) { 
   const {datas} = useContext(TablrContext); 
-  const Rows = rows ?? datas.map( (v,i) => i) ?? []; 
+  const Rows = rows ?? datas?.map( (v,i) => i) ?? []; 
 
   // RENDER -------------------------------------
   return <RowsContext.Provider value={{}} > 
-    {Rows.map((row, i, arr) => { 
-      const key = JSON.stringify(datas[row]); 
-      return <Row {...{key, row}}>{children}</Row> 
+    {Rows.map((row) => { 
+      return <Row key={row} {...{row}}>{children}</Row> 
     })} 
   </RowsContext.Provider> 
 } 

@@ -1,46 +1,31 @@
-import React, { useEffect, useState, useContext } from 'react'; 
-/*import {DataAccessObject, ICrud, IUseDao, useDao} from '../../reusable/dao/_dao'; 
-import {CrudMongoose} from '../../reusable/mongooseparser/mongooseaxios'; 
-import {IsEmpty, IsNull} from '../../reusable/utils/_utils'; 
+import React, {useEffect} from 'react'; 
+import {useDao, DaoContexter, ICrud, DataAccessObject} from '../../reusable/_dao'; 
+import {CrudMongoose} from '../../reusable/_mongooseparser'; 
+import {FeedBack} from '../../components/feedback.component'; 
+import {IsEmpty} from '../../reusable/_utils'; 
 
-import {SelectCollection} from './components/selectcollection.component'; 
-import {AdminTablr} from './components/admintablr.component'; 
+import {CollectionSelector} from './collectionselector.component'; 
+import {AdminTablr} from './admintablr.component'; 
+
+import '../../css/table.css'; 
 
 const crud = new CrudMongoose(`https://fjg-mongoose-heroku.herokuapp.com/api/`); 
 
-
-
-// Test DAO ===================================== 
-export const DaoContext = React.createContext({} as IUseDao); 
-export default function Admin() { 
-  const context = useDao(new DataAccessObject(crud as ICrud)); 
-  const {state, activeCollection, Collections} = context; 
+export function Admin() { 
+  const UseDao = useDao( new DataAccessObject(crud as ICrud) ); 
+  const {state, activeCollection, Collections} = UseDao; 
 
   useEffect(() => { 
-    Collections(['questions', 'responses', 'forms', 'instructions', 'patients', 'answers']); 
+    Collections(['questions','responses', 'forms', 'instructions', 'patients', 'answers']); 
   }, []); 
 
-  // Render -------------------------------------
-  return <div> 
-    <h1>ADMIN PAGE</h1> 
-    <div> 
-    <DaoContext.Provider value={context} > 
-      <FeedBack /> 
-      {state.ready && <SelectCollection />} 
-      {!IsEmpty(activeCollection) && <AdminTablr />} 
-    </DaoContext.Provider> 
-    </div> 
-  </div> 
+  return <DaoContexter {...{UseDao}} > 
+    <h1>Admin</h1> 
+    <FeedBack/> 
+    {state.ready && state.success && <CollectionSelector /> } 
+    {!IsEmpty(activeCollection) && <AdminTablr/>} 
+  </DaoContexter> 
 }
 
 
-function FeedBack() { 
-  const {state} = useContext(DaoContext); 
 
-  return <div> 
-    {!state.ready && 'Loading'} 
-    {state.ready && 'Ready'} 
-    {state.success && JSON.stringify(state.response['success'])} 
-    {!state.success && 'an errors occured'} 
-  </div> 
-}*/

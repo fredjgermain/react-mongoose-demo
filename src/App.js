@@ -1,16 +1,14 @@
 import React from 'react'; 
-/*import {Switch, Route} from 'react-router-dom'; 
-import Nav from './components/nav/nav.component'; 
-import Home from './pages/home.page'; 
-import Patient from './pages/patient/patient.page'; */
-import {AdminSection} from './pages/admin/adminsection.page'; 
-import {TestRenderer} from './experiments/testrenderer.experiment';
-//import {TestDataRenderer} from './experiments/testdatarenderer/testdatarenderer.tsx';
-//import Experiments from './experiments/experiments'; 
+import {Admin} from './pages/admin/admin.page'; 
+//import {TestToggle} from './reusable/components/toggle/toggle.component'; 
+import {TestSelect} from './reusable/components/select/select.component';
+
+
 
 export default function App() { 
-  //return <Patient /> 
-  return <TestRenderer />
+  //return <TestToggle/> 
+  //return <TestSelect/> 
+  return <Admin/> 
 } 
 
 //export default App;

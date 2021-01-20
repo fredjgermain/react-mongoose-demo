@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'; 
-import {IsEmpty} from '../../utils/_utils'; 
+import {IsEmpty} from '../../_utils'; 
 
 export interface IArrx { 
   values:any[]; 
@@ -33,7 +33,7 @@ export function Elements({indexes, children}:React.PropsWithChildren<{indexes?:n
 
 // ELEMENT ======================================
 export function Element({index, children}:React.PropsWithChildren<{index:number}>) {
-  return <ElementContext.Provider key={index} value={{index}}> 
+  return <ElementContext.Provider value={{index}}> 
     {children} 
   </ElementContext.Provider> 
 }
@@ -45,8 +45,8 @@ export function ElementIndex() {
   return <span>{index}. </span> 
 }
 
-export function ElementValue() {
+export function ElementValue() { 
   const {values} = useContext(ArrxContext); 
   const {index} = useContext(ElementContext); 
-  return <span>{JSON.stringify(values[index])}. </span> 
+  return <span>{JSON.stringify(values[index])}</span> 
 }

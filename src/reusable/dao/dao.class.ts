@@ -1,4 +1,4 @@
-import {IsEmpty} from '../utils/_utils'; 
+import {IsEmpty} from '../_utils'; 
 
 export interface ICrud { 
   Collection:(accessor:string) => Promise<IResponse>; 

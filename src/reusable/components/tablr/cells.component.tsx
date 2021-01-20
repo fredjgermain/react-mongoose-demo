@@ -1,7 +1,7 @@
 import React, {useContext} from 'react'; 
 import {RowContext} from './rows.component'; 
 import {TablrContext} from './tablr.component'; 
-import {IsNull, GetDefaultValueFromIField, IsEmpty} from '../../utils/_utils'; 
+import {IsNull, GetDefaultValueFromIField, IsEmpty} from '../../_utils'; 
 
 // CELLS ========================================
 const CellsContext = React.createContext({}); 
@@ -11,8 +11,7 @@ export function Cells({ifields, children}:React.PropsWithChildren<ICells>) {
   // Render -------------------------------------
   return <CellsContext.Provider value={{}} > 
     {ifields.map((ifield) => { 
-      const key = ifield.accessor; 
-      return <Cell {...{key, ifield}}>{children}</Cell>; 
+      return <Cell key={ifield.accessor} {...{ifield}}>{children}</Cell>; 
     })} 
   </CellsContext.Provider> 
 } 

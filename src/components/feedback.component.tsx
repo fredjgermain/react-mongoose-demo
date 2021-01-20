@@ -1,5 +1,5 @@
 import React, {useContext} from 'react'; 
-import {DaoContext} from '../reusable/dao/_dao'; 
+import {DaoContext} from '../reusable/_dao'; 
 
 
 // Feedback =====================================

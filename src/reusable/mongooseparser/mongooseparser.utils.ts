@@ -1,4 +1,4 @@
-export interface IMongooseModel { 
+export interface IMongooseCollection { 
   accessor:string; 
   label:string; 
   fields: IMongooseField[]; 

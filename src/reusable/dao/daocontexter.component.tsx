@@ -1,20 +1,15 @@
 import React from 'react'; 
-import {DataAccessObject, IUseDao, useDao, ICrud} from './_dao'; 
-import {CrudMongoose} from '../mongooseparser/_mongooseparser'; 
-
+import {IUseDao} from '../_dao'; 
 
 
 // DAO Contexter ================================ 
 export const DaoContext = React.createContext({} as IUseDao); 
 
 interface IDaoContexter { 
-  baseUrl:string; 
+  UseDao:IUseDao; 
 } 
-export function DaoContexter({baseUrl, children}:React.PropsWithChildren<IDaoContexter>) { 
-  const context = useDao( new DataAccessObject( new CrudMongoose(baseUrl) as ICrud ) ); 
-
-  return <DaoContext.Provider value={context} > 
+export function DaoContexter({UseDao, children}:React.PropsWithChildren<IDaoContexter>) { 
+  return <DaoContext.Provider value={UseDao} > 
     {children} 
   </DaoContext.Provider> 
-  //const crud = new CrudMongoose(`https://fjg-mongoose-heroku.herokuapp.com/api/`); 
 } 
