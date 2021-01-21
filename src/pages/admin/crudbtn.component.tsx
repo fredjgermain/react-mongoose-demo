@@ -67,12 +67,10 @@ function CrudBtn ({mode, labels, action}:CrudBtn) {
     await action(activeEntry); 
     Cancel(); 
   } 
-
-  console.log([!isId, activeEntry._id, id]); 
-
+  
   return <span> 
     {isId && isMode && <button onClick={Confirm}>{labels.confirm}</button>} 
     {isId && isMode && <button onClick={Cancel}>{labels.cancel}</button>} 
-    {!(isId && isMode) && <button onClick={Affirm}>{labels.affirm}</button>} 
+    {(id ==='' || !isId) && !isMode && <button onClick={Affirm}>{labels.affirm}</button>} 
   </span> 
 }

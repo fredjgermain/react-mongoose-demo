@@ -1,5 +1,5 @@
 import React, {useContext} from 'react'; 
-import {DaoContext} from '../../reusable/_dao'; 
+import {DaoContext, EActionType} from '../../reusable/_dao'; 
 import {Tablr, TablrContext, 
   Header, Heads, 
   Rows, Row, RowContext, 
@@ -24,8 +24,9 @@ export function AdminTablr() {
   const colBtn = {label:'Btn', accessor:'', defaultValue:'', options:{}, type:''} as IField; 
 
   return <div>
-    {JSON.stringify(activeEntry)}
-    <Tablr {...{datas:entries}}>
+    {JSON.stringify(activeEntry)} 
+    <Paging {...{pageIndex, setPageIndex, pages}} /> 
+    <Tablr {...{datas:entries}}> 
       <Header><Heads {...{ifields:[...cols, colBtn]}} /></Header>
       <tbody>
       <InlineUpdateDelete {...{page, cols, colBtn, renderers}}/> 
@@ -48,9 +49,13 @@ function InlineUpdateDelete({page, cols, colBtn, renderers}:{page:number[], cols
 } 
 
 function InlineCreate({cols, colBtn, renderers}:{cols:IField[], colBtn:IField, renderers:IRenderers}) { 
+  const {activeMode} = useContext(DaoContext); 
+  const isCreate = activeMode === EActionType.CREATE; 
+
   return <Row {...{row:-1}}> 
     <Cells {...{ifields:cols}}> 
-      <CellRenderer {...{renderers}} /> 
+      <span></span>
+      {isCreate && <CellRenderer {...{renderers}} /> } 
     </Cells> 
     <Cell {...{ifield:colBtn}}> 
       <CreateBtn/> 
@@ -58,8 +63,13 @@ function InlineCreate({cols, colBtn, renderers}:{cols:IField[], colBtn:IField, r
   </Row> 
 } 
 
-function Pagin({pageIndex, setPageIndex, pages}:IPageHook) {
+function Paging({pageIndex, setPageIndex, pages}:IPageHook) {
+  const page = pages[pageIndex]; 
+  const [from, to] = [ [...page].shift(), [...page].pop()]; 
+  const [first, last] = [pages.flat().shift(), pages.flat().pop()]; 
+
   return <div>
+    <div>{from} - {to} of {first} - {last}</div>
     {pages.map( (p:number[], i:number) => { 
       const onClick = () => {setPageIndex(i)} 
       const disabled = pageIndex === i; 

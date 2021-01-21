@@ -1,8 +1,9 @@
-import {useState, useEffect, useContext} from 'react'; 
+import {useState, useEffect, useContext, useRef} from 'react'; 
 import {DaoContext} from '../../reusable/_dao'; 
 import {TablrContext, CellContext} from '../../reusable/_tablr'; 
 import {GetDefaultValueFromIField } from '../../reusable/_utils'; 
 import {IRenderers, IFieldToHandler} from '../../reusable/_rendering'; 
+import {useUpdate} from '../../reusable/_useupdate';
 
 
 export function CellRenderer ({renderers}:{renderers:IRenderers}) { 
@@ -13,22 +14,27 @@ export function CellRenderer ({renderers}:{renderers:IRenderers}) {
   const id = data ? data._id: ''; 
 
   const isEdit = activeEntry._id === id; 
-  const _value = isEdit ? activeEntry[ifield.accessor] : (data ? data[ifield.accessor] : GetDefaultValueFromIField(ifield)); 
+  const value = isEdit ? activeEntry[ifield.accessor] : (data ? data[ifield.accessor] : GetDefaultValueFromIField(ifield)); 
 
-  //activeEntry 
-  const [value, setValue] = useState(_value); 
+  const handler = `${IFieldToHandler(ifield)}${isEdit?'Edit':'Read'}`; 
+  const renderer = (renderers[handler] ?? renderers['Default'])(ifield); 
+  //const isMode = activeMode === mode; 
+  return <ValueRenderer {...{value, renderer}} /> 
+}
 
-  useEffect(() => { 
-    setActiveEntry((prev:any) => {
+
+function ValueRenderer({...props}:{value:any, renderer:(value: any, setValue: any) => JSX.Element}) { 
+  const {setActiveEntry} = useContext(DaoContext); 
+  const {row, ifield} = useContext(CellContext); 
+  const [value, setValue] = useState(props.value); 
+
+  useUpdate(() => {
+    setActiveEntry((prev:any) => { 
       const copy = {...prev}; 
       copy[ifield.accessor] = value; 
       return copy; 
-    }); 
-  }, [value]); 
-
-  //const isMode = activeMode === mode; 
-  const handler = `${IFieldToHandler(ifield)}${isEdit?'Edit':'Read'}`; 
-  const renderer = renderers[handler] ?? renderers['Default']; 
-
-  return <span>{renderer(ifield)(value, setValue)}</span> 
+    })
+  }, value); 
+  
+  return <span>{props.renderer(value, setValue)}</span> 
 }
