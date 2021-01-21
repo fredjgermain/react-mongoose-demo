@@ -1,6 +1,7 @@
 import React, { useContext, useState } from 'react'; 
 import {IsEmpty} from '../../_utils'; 
 import {useSelect, IUseSelect} from './select.hook'; 
+//import CSS from 'csstype'; 
 
 import './select.style.css'; 
 
@@ -17,7 +18,9 @@ export function TestSelect() {
   return <div> 
     <span>{JSON.stringify(value)}</span> 
     <span>Label:</span> 
-    <Select {...{value, setValue, options, multiple:false, placeholder:'Empty selection'}} /> 
+    <Select {...{value, setValue, options, multiple:false}} /> 
+    <span>asdasdasdsa:</span> 
+    <Select {...{value, setValue, options, multiple:true}} /> 
     <span>asdasdasdsa:</span> 
   </div> 
 } 
@@ -37,8 +40,16 @@ interface ISelect {
 
 
 export const SelectContext = React.createContext({} as IUseSelect); 
-export function Select({value, setValue, options, placeholder='Empty selection', multiple=false}:ISelect) { 
-  const context = useSelect(value, setValue, options, placeholder, multiple); 
+export function Select({value, setValue, options, placeholder, multiple=false}:ISelect) { 
+  const _placeholder = placeholder ?? (multiple ? 'Select 1+ item-s': 'Select 1 item'); 
+  const context = useSelect(value, setValue, options, _placeholder, multiple); 
+
+  // Necessary styles for Select component proper functionning. 
+  /*const style: CSS.Properties = { 
+    width: '20ch', 
+    position : 'relative', 
+    display: 'inline-block', 
+  }; */
 
   return <SelectContext.Provider value={context}> 
     <div className={'select-main'}> 
@@ -72,7 +83,14 @@ function Options() {
   const selection = GetSelection(); 
   const IsSelected = (option:IOption) => selection.some(o => o?.value === option?.value); 
 
-  return <div className={'select-options'}> 
+  /*const style: CSS.Properties = { 
+    display: 'none', 
+    position: 'absolute', 
+    width: '100%', 
+    zIndex: 1, 
+  }*/
+
+  return <div className={'select-options'}  > 
     {options.map( option => { 
       const key = JSON.stringify(option.value); 
       const onClick = () => SelectValue(option.value); 

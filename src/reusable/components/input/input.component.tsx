@@ -1,5 +1,6 @@
 import React from 'react'; 
-import {IEvent, IsNull, OnEnter, 
+//import CSS from ''
+import {IEvent, IsNull, OnEnter, SetSize, SetWidth, 
   GetDefaultValueByType, GetTypeByValue, GetInputType, GetValueFromInput} from '../../_utils'; 
 
 
@@ -11,6 +12,8 @@ export interface IInput extends React.HTMLAttributes<HTMLInputElement> {
   defaultValue?:any; 
   inputType?:string; 
   onEnterUp?:() => void; 
+  width?: number; 
+  [key:string]:any; 
 } 
 export function Input(
   {
@@ -26,9 +29,12 @@ export function Input(
   const Value = IsNull(value) ? defaultValue: value; 
   const onKeyUp = (event: React.KeyboardEvent<HTMLInputElement>) => OnEnter(event, onEnterUp); 
 
+  const width = props.width ?? SetSize(value); 
+  const style = {width: `${width+2}ch`}; 
+
   if(type === 'boolean') 
     return <input {...{type:inputType, checked:Value, onChange, onKeyUp,  ...props}} /> 
-  return <input {...{type:inputType, value:Value, onChange, onKeyUp, ...props}} /> 
+  return <input {...{type:inputType, value:Value, onChange, onKeyUp, ...props}} style={style} /> 
 } 
 
 
@@ -37,17 +43,4 @@ function GetInputValueOrDefault (event:IEvent, defaultValue:any) {
   const value = GetValueFromInput(event); 
   return IsNull(value) ? defaultValue: value; 
 }
-
-
-/* Get Value From Input
-  - Get correct value type (string, number, date, or boolean) from input element. */
-/*function GetValueFromInput(event:IEvent, type:string):any { 
-  if(type === 'number') 
-    return event.target.valueAsNumber as number; 
-  if(type === 'date') 
-    return event.target.valueAsDate; 
-  if(type === 'boolean') 
-    return event.target.checked as boolean; 
-  return event.target.value; 
-}*/
 

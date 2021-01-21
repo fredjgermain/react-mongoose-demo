@@ -53,6 +53,6 @@ export function SetWidth(value:number):{width:any} {
 
 export function SetSize(value:any):number { 
   const w = String(value).length; 
-  return w < 5 ? 5 : w; 
+  return w < 2 ? 2 : w; 
 } 
 

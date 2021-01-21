@@ -1,13 +1,15 @@
-import {useState, useEffect, useContext, useRef} from 'react'; 
+import {useState, useEffect, useContext} from 'react'; 
 import {DaoContext} from '../../reusable/_dao'; 
 import {TablrContext, CellContext} from '../../reusable/_tablr'; 
 import {GetDefaultValueFromIField } from '../../reusable/_utils'; 
 import {IRenderers, IFieldToHandler} from '../../reusable/_rendering'; 
-import {useUpdate} from '../../reusable/_useupdate';
+import {useUpdate} from '../../reusable/_useupdate'; 
 
 
+
+// Cell Renderer =================================
 export function CellRenderer ({renderers}:{renderers:IRenderers}) { 
-  const {activeEntry, setActiveEntry, activeMode, GetEntry} = useContext(DaoContext); 
+  const {activeEntry} = useContext(DaoContext); 
   const {datas} = useContext(TablrContext); 
   const {row, ifield} = useContext(CellContext); 
   const data = datas[row]; 
@@ -18,16 +20,24 @@ export function CellRenderer ({renderers}:{renderers:IRenderers}) {
 
   const handler = `${IFieldToHandler(ifield)}${isEdit?'Edit':'Read'}`; 
   const renderer = (renderers[handler] ?? renderers['Default'])(ifield); 
-  //const isMode = activeMode === mode; 
-  return <ValueRenderer {...{value, renderer}} /> 
-}
+  return <ValueRenderer {...{value, ifield, renderer}} /> 
+} 
 
 
-function ValueRenderer({...props}:{value:any, renderer:(value: any, setValue: any) => JSX.Element}) { 
+
+// Value Renderer =================================
+function ValueRenderer({...props}:{value:any, ifield:IField, renderer:(value: any, setValue: any) => JSX.Element}) { 
   const {setActiveEntry} = useContext(DaoContext); 
-  const {row, ifield} = useContext(CellContext); 
+  const ifield = props.ifield; 
   const [value, setValue] = useState(props.value); 
 
+  // synchronize hook with "parent value". 
+  useEffect(() => { 
+    if(props.value !== value) 
+      setValue(props.value) 
+  }, [props.value]); 
+
+  // synchronize activeEntry with any changes made to value. 
   useUpdate(() => {
     setActiveEntry((prev:any) => { 
       const copy = {...prev}; 

@@ -25,7 +25,6 @@ export function AdminTablr() {
 
   return <div>
     {JSON.stringify(activeEntry)} 
-    <Paging {...{pageIndex, setPageIndex, pages}} /> 
     <Tablr {...{datas:entries}}> 
       <Header><Heads {...{ifields:[...cols, colBtn]}} /></Header>
       <tbody>
@@ -33,6 +32,7 @@ export function AdminTablr() {
       <InlineCreate {...{cols, colBtn, renderers}}/> 
       </tbody> 
     </Tablr> 
+    <Paging {...{pageIndex, setPageIndex, pages}} /> 
   </div>
 }
 
@@ -40,6 +40,7 @@ export function AdminTablr() {
 function InlineUpdateDelete({page, cols, colBtn, renderers}:{page:number[], cols:IField[], colBtn:IField, renderers:IRenderers}) { 
   return <Rows {...{rows:page}}> 
     <Cells {...{ifields:cols}}> 
+      <DisplayCell />
       <CellRenderer {...{renderers}} /> 
     </Cells> 
     <Cell {...{ifield:colBtn}}> 
@@ -63,17 +64,32 @@ function InlineCreate({cols, colBtn, renderers}:{cols:IField[], colBtn:IField, r
   </Row> 
 } 
 
-function Paging({pageIndex, setPageIndex, pages}:IPageHook) {
+function Paging({pageIndex, setPageIndex, pages}:IPageHook) { 
   const page = pages[pageIndex]; 
   const [from, to] = [ [...page].shift(), [...page].pop()]; 
   const [first, last] = [pages.flat().shift(), pages.flat().pop()]; 
 
   return <div>
-    <div>{from} - {to} of {first} - {last}</div>
+    <span>page : {pageIndex+1} of {pages.length}</span>
+    <div>{(from??0) +1} - {(to??0)+1} of {(first??0)+1} - {(last??0)+1}</div>
     {pages.map( (p:number[], i:number) => { 
       const onClick = () => {setPageIndex(i)} 
       const disabled = pageIndex === i; 
       return <button key={i} {...{onClick, disabled}} >{i+1}</button> 
     })} 
   </div>
+}
+
+function DisplayCell() { 
+  const {value} = useContext(CellContext); 
+  return <span>{JSON.stringify(value)}</span>; 
+}
+
+
+function DisplayCollectionEntries ({datas, ifields}:{datas:IEntry[], ifields:IField[]}) {
+  return <Tablr {...{datas}}>
+    <Rows>
+      <Cells {...{ifields}}/>
+    </Rows>
+  </Tablr>
 }
