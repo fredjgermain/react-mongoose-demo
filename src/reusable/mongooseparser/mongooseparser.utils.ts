@@ -40,8 +40,15 @@ export function ParseFields(fields:any):IField[] {
 } 
 
 //async function ParseFields() 
-export function ParseField(field:IMongooseField):IField {   
+export function ParseField(field:IMongooseField):IField { 
+  
   const {path, instance, options, $embeddedSchemaType} = field; 
+  if(path==='fId')
+    console.log(field); 
+
+  if(path==='titles')
+    console.log(field); 
+
   const ifield:IField = {} as IField; 
 
   ifield.accessor = path ?? ''; 

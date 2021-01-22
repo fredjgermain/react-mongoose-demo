@@ -13,7 +13,7 @@ export const ElementContext = React.createContext({} as {index:number});
 export function Arrx({values, children}:React.PropsWithChildren<IArrx>) { 
   const context = {values:IsEmpty(values) ? []: values}; 
   return <ArrxContext.Provider value={context} > 
-    {children}
+    {children ?? <Elements/>} 
   </ArrxContext.Provider>
 }
 
@@ -34,7 +34,9 @@ export function Elements({indexes, children}:React.PropsWithChildren<{indexes?:n
 // ELEMENT ======================================
 export function Element({index, children}:React.PropsWithChildren<{index:number}>) {
   return <ElementContext.Provider value={{index}}> 
-    {children} 
+    {children ?? <div>
+      <ElementIndex/> <ElementValue/>
+    </div>} 
   </ElementContext.Provider> 
 }
 

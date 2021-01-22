@@ -1,5 +1,5 @@
 import {useState, useEffect, useContext} from 'react'; 
-import {DaoContext} from '../../reusable/_dao'; 
+import {DaoContext, EActionType} from '../../reusable/_dao'; 
 import {TablrContext, CellContext} from '../../reusable/_tablr'; 
 import {GetDefaultValueFromIField } from '../../reusable/_utils'; 
 import {IRenderers, IFieldToHandler} from '../../reusable/_rendering'; 
@@ -9,13 +9,13 @@ import {useUpdate} from '../../reusable/_useupdate';
 
 // Cell Renderer =================================
 export function CellRenderer ({renderers}:{renderers:IRenderers}) { 
-  const {activeEntry} = useContext(DaoContext); 
+  const {activeEntry, activeMode} = useContext(DaoContext); 
   const {datas} = useContext(TablrContext); 
   const {row, ifield} = useContext(CellContext); 
   const data = datas[row]; 
   const id = data ? data._id: ''; 
 
-  const isEdit = activeEntry._id === id; 
+  const isEdit = activeEntry._id === id && (activeMode === EActionType.CREATE || activeMode === EActionType.UPDATE); 
   const value = isEdit ? activeEntry[ifield.accessor] : (data ? data[ifield.accessor] : GetDefaultValueFromIField(ifield)); 
 
   const handler = `${IFieldToHandler(ifield)}${isEdit?'Edit':'Read'}`; 

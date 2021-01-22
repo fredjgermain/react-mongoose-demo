@@ -84,6 +84,6 @@ enum EActionType {
 interface IResponse { 
   actionType: EActionType; 
   success: boolean; 
-  data?: any; 
-  err?: any[]; 
+  data: any; 
+  err: any[]; 
 } 

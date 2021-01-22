@@ -1,18 +1,10 @@
 import React, {useContext} from 'react'; 
-import {DaoContext, EActionType} from '../reusable/_dao'; 
+import {DaoContext} from '../reusable/_dao'; 
+import {Arrx} from '../reusable/_arrx'; 
 
+import '../css/feedback.css'; 
 
 // Feedback =====================================
-// detect if action is crud. 
-
-function GetCrudAction() { 
-  const {state} = useContext(DaoContext); 
-  if(!(state.ready && state.success)) 
-    return ''; 
-  return state.response['actionType']; 
-} 
-
-
 export function FeedBack() { 
   const {state} = useContext(DaoContext); 
 
@@ -40,21 +32,10 @@ function CrudFeedBack() {
     delete:'Deletion failed', 
   } 
 
-  return <span>{successMsg[actionType]}</span>
-  
+  const className = success ? 'success' : 'failure'; 
 
-  /*if(success) { 
-    return <span> 
-      {actionType === 'create' && <span>Successful creation</span>} 
-      {actionType === 'update' && <span>Successful update</span>} 
-      {actionType === 'delete' && <span>Successful deletion</span>} 
-    </span> 
-  } 
-
-  return <span> 
-    {actionType === 'create' && <span>Failed creation</span>} 
-    {actionType === 'update' && <span>Failed update</span>} 
-    {actionType === 'delete' && <span>Failed deletion</span>} 
-    {<div>{JSON.stringify(err)}</div>} 
-  </span> */
+  return <div className={className}> 
+    <div>{success ? successMsg[actionType] : errorMsg[actionType]}</div> 
+    {!success && <Arrx {...{values:(err)}} />} 
+    </div> 
 } 
