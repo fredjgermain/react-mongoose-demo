@@ -1,0 +1,21 @@
+.readmany-short { 
+  position: relative; 
+  display: inline-block; 
+} 
+
+.readmany-long { 
+  display: none; 
+  position: absolute; 
+  z-index: 1; 
+  width: 100%;  
+
+  border-radius: 3px; 
+  border: 1px solid #333; 
+  background-color: white; 
+  padding: 0.5ch; 
+} 
+
+.readmany-short:hover .readmany-long { 
+  /*Necessary*/ 
+  display: block; 
+} 

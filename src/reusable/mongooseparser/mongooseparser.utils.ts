@@ -43,11 +43,11 @@ export function ParseFields(fields:any):IField[] {
 export function ParseField(field:IMongooseField):IField { 
   
   const {path, instance, options, $embeddedSchemaType} = field; 
-  if(path==='fId')
+  /*if(path==='fId')
     console.log(field); 
 
   if(path==='titles')
-    console.log(field); 
+    console.log(field); */
 
   const ifield:IField = {} as IField; 
 

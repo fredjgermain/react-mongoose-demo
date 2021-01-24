@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'; 
+import { useEffect, useState } from 'react'; 
 import {IFieldToHandler, IRenderers} from '../reusable/_rendering'; 
 
 
@@ -43,5 +43,4 @@ export function ValueRenderer({...props}:IValueRenderer) {
 
   
   return <span>{renderer(ifield)(value, setValue)}</span> 
-  //return <span>Dada</span>
 }

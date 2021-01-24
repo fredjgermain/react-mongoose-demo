@@ -101,7 +101,16 @@ export class DataAccessObject {
     if(!foreignCollection || !abbrevField) 
       return [] as IOption[]; 
     return foreignCollection.entries
-      ?.filter(e => ids.includes(e._id) )
+      ?.filter(e => {
+        /*if(ifield.accessor === 'responseType')
+          console.log([ifield.accessor, ids]);*/
+        /*try{
+          ids.includes(e._id)
+        }catch(e){
+          
+        }*/
+        return ids.includes(e._id)
+      } )
       ?.map( e => e[abbrevField.accessor] );
   } 
 } 

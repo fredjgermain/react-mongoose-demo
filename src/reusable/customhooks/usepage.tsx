@@ -41,7 +41,9 @@ export function usePage(datas:any[], pageBreak:PageBreakPredicate|number):IPageH
   } 
 
   const pages = PagesBreak(datas, pageBreak); 
-
+  if(pageIndex >= pages.length) 
+    setPageIndex(0); 
+  
   return {pageIndex, setPageIndex, pages}; 
 }
 
