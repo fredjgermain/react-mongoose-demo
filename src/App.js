@@ -11,7 +11,7 @@ import {TestReader, TestEditors} from './experiments/testReaderEditor';
 export default function App() { 
   //return <TestToggle/> 
   //return <TestSelect/> 
-  return <TestEditors/> 
+  return <Admin/> 
   //return <TestEffect/> 
 } 
 

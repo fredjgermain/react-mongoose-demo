@@ -45,7 +45,7 @@ export function ReadMany({ifield, value=[]}:IRead) {
 
   if(isShort) { 
     return <span>[{value.map( (e, i) => { 
-      return <span>{e}{i<value.length ? ',':''}</span> 
+      return <span key={i}>{e}{i<value.length ? ',':''}</span> 
     })}]</span> 
   } 
   return <span> 
@@ -53,7 +53,7 @@ export function ReadMany({ifield, value=[]}:IRead) {
       {ifield.type} x {value ? (value as any[]).length : 0} <br/> 
       <div className={'readmany-long'}> 
         {value.map( (e, i) => { 
-          return <div>{i}. {e}</div> 
+          return <div key={i}>{i}. {e}</div> 
         })} 
       </div> 
     </div> 

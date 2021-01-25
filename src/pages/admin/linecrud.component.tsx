@@ -1,19 +1,19 @@
 import React, {useContext} from 'react'; 
-import {DaoContext} from '../../reusable/_dao'; 
+import {DaoContext, EActionType} from '../../reusable/_dao'; 
 
 import {Rows, Row, RowContext, Cells, Cell, CellContext} from '../../reusable/_tablr'; 
 
 import {CreateBtn, DeleteBtn, UpdateBtn} from './crudbtn.component'; 
 import {IRenderers} from '../../reusable/_rendering'; 
 
-import {CellRenderer} from './cellrenderer.component';
+import {CellRender} from './cellrenderer.component';
 
 
 
 export function InlineUpdateDelete({page, cols, colBtn, renderers}:{page:number[], cols:IField[], colBtn:IField, renderers:IRenderers}) { 
   return <Rows {...{rows:page}}> 
     <Cells {...{ifields:cols}}> 
-      <CellRenderer {...{renderers}} /> 
+      <CellRender/> 
     </Cells> 
     <Cell {...{ifield:colBtn}}> 
       <UpdateBtn/><DeleteBtn/> 
@@ -28,7 +28,7 @@ export function InlineCreate({cols, colBtn, renderers}:{cols:IField[], colBtn:IF
   return <Row {...{row:-1}}> 
     <Cells {...{ifields:cols}}> 
       <span></span>
-      {isCreate && <CellRenderer {...{renderers}} /> } 
+      {isCreate && <CellRender/> } 
     </Cells> 
     <Cell {...{ifield:colBtn}}> 
       <CreateBtn/> 
