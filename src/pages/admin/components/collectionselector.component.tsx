@@ -1,6 +1,6 @@
 import React, {useContext} from 'react'; 
-import {DaoContext} from '../../reusable/_dao'; 
-import {Select} from '../../reusable/_input'; 
+import {DaoContext} from '../../../reusable/_dao'; 
+import {Select} from '../../../reusable/_input'; 
 
 
 export function CollectionSelector() { 

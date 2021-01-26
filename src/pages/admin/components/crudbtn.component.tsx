@@ -1,6 +1,6 @@
 import React, {useContext} from 'react'; 
-import {RowContext, TablrContext} from '../../reusable/_tablr'; 
-import {DaoContext, EActionType} from '../../reusable/_dao'; 
+import {RowContext, TablrContext} from '../../../reusable/_tablr'; 
+import {DaoContext, EActionType} from '../../../reusable/_dao'; 
 
 
 

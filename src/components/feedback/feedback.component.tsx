@@ -1,8 +1,9 @@
 import React, {useContext} from 'react'; 
-import {DaoContext} from '../reusable/_dao'; 
-import {Arrx} from '../reusable/_arrx'; 
+import {DaoContext} from '../../reusable/_dao'; 
+import {Arrx} from '../../reusable/_arrx'; 
 
-import '../css/feedback.css'; 
+import '../../css/feedback.css'; 
+
 
 // Feedback =====================================
 export function FeedBack() { 

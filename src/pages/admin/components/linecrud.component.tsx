@@ -1,16 +1,13 @@
 import React, {useContext} from 'react'; 
-import {DaoContext, EActionType} from '../../reusable/_dao'; 
+import {DaoContext, EActionType} from '../../../reusable/_dao'; 
 
-import {Rows, Row, RowContext, Cells, Cell, CellContext} from '../../reusable/_tablr'; 
-
+import {Rows, Row, RowContext, Cells, Cell, CellContext} from '../../../reusable/_tablr'; 
 import {CreateBtn, DeleteBtn, UpdateBtn} from './crudbtn.component'; 
-import {IRenderers} from '../../reusable/_rendering'; 
-
 import {CellRender} from './cellrenderer.component';
 
 
 
-export function InlineUpdateDelete({page, cols, colBtn, renderers}:{page:number[], cols:IField[], colBtn:IField, renderers:IRenderers}) { 
+export function InlineUpdateDelete({page, cols, colBtn}:{page:number[], cols:IField[], colBtn:IField}) { 
   return <Rows {...{rows:page}}> 
     <Cells {...{ifields:cols}}> 
       <CellRender/> 
@@ -21,7 +18,7 @@ export function InlineUpdateDelete({page, cols, colBtn, renderers}:{page:number[
   </Rows> 
 } 
 
-export function InlineCreate({cols, colBtn, renderers}:{cols:IField[], colBtn:IField, renderers:IRenderers}) { 
+export function InlineCreate({cols, colBtn}:{cols:IField[], colBtn:IField}) { 
   const {activeMode} = useContext(DaoContext); 
   const isCreate = activeMode === EActionType.CREATE; 
 

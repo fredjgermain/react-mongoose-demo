@@ -1,5 +1,4 @@
 import React from 'react'; 
-import {IsNull} from '../_utils'; 
 
 // IEvent #####################################
 export interface IEvent extends React.ChangeEvent<HTMLInputElement> { 
@@ -7,9 +6,18 @@ export interface IEvent extends React.ChangeEvent<HTMLInputElement> {
   [key:string]:any, 
 } 
 
-export function OnEnter(event:any, Func:any) { 
-  if(IsPressEnter( (event as IEvent).code ) ) 
+export function OnPress(event:any, keys:string[], Func:()=>void)  { 
+  const {code} = (event as IEvent); 
+  if(keys.includes(code)) 
     Func(); 
+} 
+
+export function OnEnter(event:any, Func:()=>void) { 
+  OnPress(event, ['Enter', 'NumpadEnter'], Func); 
+} 
+
+export function OnTab(event:any, Func:()=>void) { 
+  OnPress(event, ['Tab'], Func); 
 } 
 
 
@@ -38,12 +46,6 @@ export function GetInputType(type:string) {
     return 'text'; 
   return 'text'; 
 }
-
-
-// If Code is pressEnter
-export function IsPressEnter(code:string = ''):boolean { 
-  return code === 'Enter' || code === 'NumpadEnter'; 
-} 
 
 
 // TAG UTILS ###################################
