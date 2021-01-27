@@ -22,7 +22,6 @@ export function CellRender() {
     ( data ? data[ifield.accessor] : defaultValue ); 
 
   const setValue = (newValue:any) => { 
-    console.log(newValue); 
     const copy = {...activeEntry}; 
     copy[ifield.accessor] = newValue; 
     setActiveEntry(copy); 

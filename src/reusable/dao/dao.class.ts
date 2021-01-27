@@ -1,11 +1,12 @@
-import {IsEmpty} from '../_utils'; 
+import {IsEmpty, GetDefaultValueFromIField} from '../_utils'; 
+
 
 export interface ICrud { 
-  Collection:(accessor:string) => Promise<IResponse>; 
-  Create: (accessor:string, toCreate?:IEntry|IEntry[]) => Promise<IResponse>; 
-  Read: (accessor:string, id?:string[]) => Promise<IResponse>; 
-  Update: (accessor:string, toUpdate:IEntry|IEntry[]) => Promise<IResponse>; 
-  Delete: (accessor:string, toDelete?:IEntry|IEntry[]) => Promise<IResponse>; 
+  Collection:(accessor:string) => Promise<ICrudResponse>; 
+  Create: (accessor:string, toCreate?:IEntry|IEntry[]) => Promise<ICrudResponse>; 
+  Read: (accessor:string, id?:string[]) => Promise<ICrudResponse>; 
+  Update: (accessor:string, toUpdate:IEntry|IEntry[]) => Promise<ICrudResponse>; 
+  Delete: (accessor:string, toDelete?:IEntry|IEntry[]) => Promise<ICrudResponse>; 
 } 
 
 // DataAcessObject ==============================
@@ -18,13 +19,22 @@ export class DataAccessObject {
     this.crud = crud; 
   } 
 
-  /*public GetCollections(accessors?:string[]):ICollection[] { 
+  public GetCollections(accessors?:string[]):ICollection[] { 
     return this.collections.GetCollections(accessors); 
-  } */
+  } 
+
+  public GetEntry(accessor:string, id?:string) { 
+    return this.collections.GetEntry(accessor, id); 
+  }
+
+  public GetIFields(accessor:string, ifieldAccessors?:string[]):IField[] { 
+    return this.collections.GetIFields(accessor, ifieldAccessors); 
+  }
+
 
   // COLLECTION .................................
-  public async Collections(accessors:string[]):Promise<IResponse[]> { 
-    const responses = [] as IResponse[]; 
+  public async Collections(accessors:string[]):Promise<ICrudResponse[]> { 
+    const responses = [] as ICrudResponse[]; 
     for(let i=0; i<accessors.length; i++) { 
       const response = await this.Collection(accessors[i]); 
       responses.push(response); 
@@ -32,7 +42,7 @@ export class DataAccessObject {
     return responses; 
   } 
 
-  public async Collection(accessors:string):Promise<IResponse> { 
+  public async Collection(accessors:string):Promise<ICrudResponse> { 
     const response = await this.crud.Collection(accessors); 
     if(response.success) 
       this.collections.collections.push(response.data); 
@@ -40,10 +50,9 @@ export class DataAccessObject {
   }
 
   // CREATE .....................................  
-  public async Create(accessor:string, entry:IEntry):Promise<IResponse> { 
-    const [response] = (await this.crud.Create(accessor, entry)).data as IResponse[]; 
+  public async Create(accessor:string, entry:IEntry):Promise<ICrudResponse> { 
+    const [response] = (await this.crud.Create(accessor, entry)).data as ICrudResponse[]; 
     if(response.success) { 
-      console.log(response.data); 
       this.collections.Create(accessor, response.data); 
     }
     return response; 
@@ -59,20 +68,18 @@ export class DataAccessObject {
   } 
 
   // UPDATE .....................................
-  public async Update(accessor:string, entry:IEntry):Promise<IResponse> { 
-    const [response] = (await this.crud.Update(accessor, [entry])).data as IResponse[]; 
+  public async Update(accessor:string, entry:IEntry):Promise<ICrudResponse> { 
+    const [response] = (await this.crud.Update(accessor, [entry])).data as ICrudResponse[]; 
     if(response.success) {
-      console.log(response.data); 
       this.collections.Update(accessor, response.data); 
     }
     return response; 
   } 
 
   // DELETE .....................................
-  public async Delete(accessor:string, entry?:IEntry):Promise<IResponse> { 
-    const [response] = (await this.crud.Delete(accessor, entry)).data as IResponse[]; 
+  public async Delete(accessor:string, entry?:IEntry):Promise<ICrudResponse> { 
+    const [response] = (await this.crud.Delete(accessor, entry)).data as ICrudResponse[]; 
     if(response.success) {
-      console.log(response.data); 
       this.collections.Delete(accessor, response.data); 
     }
     return response; 
@@ -93,26 +100,6 @@ export class DataAccessObject {
       return {value:e._id, label:e[abbrevField.accessor]} as IOption; 
     }); 
   } 
-
-  public GetForeignValues(ifield:IField, ids:string[]):any[] { 
-    const {foreignCollection, abbrevField} = this.GetForeignElements(ifield); 
-    if(!ids || IsEmpty(ids)) 
-      return []; 
-    if(!foreignCollection || !abbrevField) 
-      return [] as IOption[]; 
-    return foreignCollection.entries
-      ?.filter(e => {
-        /*if(ifield.accessor === 'responseType')
-          console.log([ifield.accessor, ids]);*/
-        /*try{
-          ids.includes(e._id)
-        }catch(e){
-          
-        }*/
-        return ids.includes(e._id)
-      } )
-      ?.map( e => e[abbrevField.accessor] );
-  } 
 } 
 
 
@@ -122,9 +109,30 @@ export class DataAccessObject {
 class Collections { 
   public collections:ICollection[] = [] as ICollection[]; 
 
+  public GetEntry(accessor:string, id?:string):IEntry { 
+    const [collection] = this.GetCollections([accessor]).map(c=>new Collection(c)); 
+    return collection?.GetEntry(id) ?? {} as IEntry; 
+  }
+
+  public GetIFields(accessor:string, ifieldAccessors?:string[]) { 
+    const [collection] = this.GetCollections([accessor]).map(c=>new Collection(c)); 
+    return collection.GetIFields(ifieldAccessors); 
+  }
+
+  public GetCollections(accessors?:string[]) { 
+    if(!accessors) 
+      return this.collections; 
+    return this.collections.filter(c=> accessors.includes(c.accessor)) ?? []; 
+  } 
+
   public Create(accessor:string, entry:IEntry) { 
     const collection = new Collection(this.collections.find(c=> c.accessor===accessor)); 
-    return collection.Create(entry);  
+    return collection.Create(entry); 
+  } 
+
+  public Read(accessor:string, ids?:string[]) { 
+    const collection = new Collection(this.collections.find(c=> c.accessor===accessor)); 
+    return collection.Read(ids); 
   } 
 
   public Update(accessor:string, entry:IEntry) { 
@@ -157,6 +165,33 @@ class Collection {
       this.collection = collection; 
   }
 
+  public GetIFields(ifieldAccessors?:string[]):IField[] { 
+    if(!ifieldAccessors) 
+      return this.collection?.ifields ?? [] as IField[]; 
+    const ifields = [] as IField[]; 
+    ifieldAccessors.forEach(accessor => { 
+      const ifield = this.collection?.ifields.find(f=>f.accessor===accessor); 
+      if(ifield) 
+        ifields.push(ifield); 
+    })
+    return ifields; 
+  } 
+
+  public GetEmptyEntry() { 
+    const ifields = this.collection?.ifields; 
+    let entry = {} as IEntry; 
+    ifields?.forEach( f => { 
+      entry[f.accessor] = GetDefaultValueFromIField(f); 
+    }); 
+    return entry; 
+  }
+
+  public GetEntry(id?:string):IEntry { 
+    if(!this.collection?.entries) 
+      return {} as IEntry; 
+    return this.collection?.entries.find(e=>e._id === id) ?? {} as IEntry; 
+  } 
+
   // Create -------------------------------------
   public Create(entry:IEntry) { 
     if(!this.collection?.entries) 
@@ -168,7 +203,7 @@ class Collection {
   // Read ---------------------------------------
   public Read(ids?:string[]) { 
     if(!this.collection?.entries) 
-      return [];
+      return []; 
     if(IsEmpty(ids) ) 
       return this.collection.entries; 
     return this.collection.entries.filter(e => ids?.includes(e._id) ); 

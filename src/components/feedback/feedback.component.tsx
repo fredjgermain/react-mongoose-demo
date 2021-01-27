@@ -20,7 +20,7 @@ export function FeedBack() {
 function CrudFeedBack() { 
   const {state} = useContext(DaoContext); 
   // assumes state is ready and successful
-  const {actionType, success, data, err} = state.response as IResponse; 
+  const {actionType, success, data, err} = state.response as ICrudResponse; 
   
   const successMsg:any = { 
     create:'Creation succeed', 

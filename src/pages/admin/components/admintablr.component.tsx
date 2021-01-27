@@ -3,14 +3,14 @@ import {DaoContext} from '../../../reusable/_dao';
 import {Tablr, Header, Heads, } from '../../../reusable/_tablr'; 
 //import {BuildDefaultRenderingFunc} from '../../../reusable/_rendering'; 
 import {usePage} from '../../../reusable/_usepage'; 
-import {Paging} from './paging.component'; 
+import {Paging} from '../../../components/paging.component'; 
 import {useUpdate} from '../../../reusable/_useupdate'; 
 import {InlineCreate, InlineUpdateDelete} from './linecrud.component'; 
 
 
 // ADMIN TABLR ===================================
 export function AdminTablr() { 
-  const {activeEntry, activeCollection, GetForeignElements, GetForeignOptions, GetForeignValues} = useContext(DaoContext); 
+  const {activeEntry, activeCollection} = useContext(DaoContext); 
   const {entries, ifields} = activeCollection; 
   const {pageIndex, setPageIndex, pages} = usePage(entries, 5); 
   const page = pages[pageIndex]; 

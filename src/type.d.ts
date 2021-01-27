@@ -81,7 +81,7 @@ enum EActionType {
   DELETE = 'delete', 
 }
 
-interface IResponse { 
+interface ICrudResponse { 
   actionType: EActionType; 
   success: boolean; 
   data: any; 

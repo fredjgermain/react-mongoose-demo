@@ -1,38 +1,55 @@
-import React, {useContext, useState} from 'react'; 
+import React, {useContext, useState, useRef} from 'react'; 
 import {DaoContext, EActionType} from '../../../reusable/_dao'; 
 import {IsEmpty} from '../../../reusable/_utils'; 
+import {FeedBack} from '../../../components/feedback/feedback.component'; 
 
 import {Objx, ObjxContext, Fields, Field, 
   FieldContext, FieldLabel, FieldValue} from '../../../reusable/_objx'; 
 import {Reader, Editor} from '../../../reusable/_input'; 
-
+//import {Questionnaire} from '../../questionnaire/questionnaire.page'; 
+import {PatientProfileContext} from '../patient.page'; 
 
 
 // Patient profile ============================== 
 export function PatientProfile() { 
-  const {activeEntry, activeMode, activeCollection, Create, Update} = useContext(DaoContext); 
+  const {activeEntry} = useContext(DaoContext); 
+
+  return <div> 
+    {IsEmpty(activeEntry['ramq']) ? 
+      <IdPatientProfile />: 
+      <UpdateCreatePatientProfile />} 
+  </div> 
+} 
+
+function UpdateCreatePatientProfile() {
+  const {state, activeEntry, activeMode, activeCollection, Create, Update} = useContext(DaoContext); 
   const {ifields} = activeCollection; 
   const ramqField = ifields.find(f => f.accessor==='ramq') as IField; 
   const cols = ifields.filter(f => ['firstName', 'lastName'].includes(f.accessor) ); 
 
-  if(IsEmpty(activeEntry['ramq'])) 
-    return <RamqId /> 
+  const {setPatientProfile} = useContext(PatientProfileContext); 
+
+  async function UpdateCreateProfile(Func:(accessor:string, entry:IEntry) => Promise<void>) { 
+    await Func(activeCollection.accessor, activeEntry); 
+    if(state.ready && state.success) 
+      setPatientProfile(activeEntry); 
+  } 
+
   return <div> 
+    <h1>Patient profile</h1> 
+    <FeedBack/> 
     {activeMode} 
-    <Objx {...{value:activeEntry, ifields}} /> 
-    <br/>
     <Objx {...{value:activeEntry, ifields:cols}} > 
-      <Field {...{ifield:ramqField}} />
+      <Field {...{ifield:ramqField}} /> 
       <Fields><div><FieldLabel/><FieldEditor/></div></Fields> 
     </Objx> 
-    {activeMode === 'update' && <button onClick={() => Update(activeCollection.accessor, activeEntry)}>Update patient profile</button>} 
-    {activeMode === 'create' && <button onClick={() => Create(activeCollection.accessor, activeEntry)}>Create new patient profile</button>} 
+    {activeMode === 'update' && <button onClick={() => UpdateCreateProfile(Update)}>Update patient profile</button>} 
+    {activeMode === 'create' && <button onClick={() => UpdateCreateProfile(Create)}>Create new patient profile</button>} 
   </div> 
-} 
+}
 
 
-
-function RamqId () {
+function IdPatientProfile () {
   const {activeEntry, setActiveEntry, SetActiveMode, activeCollection} = useContext(DaoContext); 
   const {entries, ifields} = activeCollection; 
   const ramqField = ifields.find(f => f.accessor==='ramq') as IField; 
@@ -54,6 +71,7 @@ function RamqId () {
   } 
 
   return <div> 
+    <h1>Patient identification</h1> 
     <div>Ramq: <Editor {...{value, setValue, ifield:ramqField}} /></div> 
     <button onClick={() => IdentifyPatient(value)}>Identify</button> 
   </div> 

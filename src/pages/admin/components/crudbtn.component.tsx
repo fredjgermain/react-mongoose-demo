@@ -47,7 +47,7 @@ interface CrudBtn {
   action:(entry:any)=>Promise<void>; 
 } 
 function CrudBtn ({mode, labels, action}:CrudBtn) { 
-  const {activeEntry, setActiveEntry, activeMode, GetEntry, SetActiveMode} = useContext(DaoContext); 
+  const {activeCollection, activeEntry, setActiveEntry, activeMode, GetEntry, SetActiveMode} = useContext(DaoContext); 
   const {datas} = useContext(TablrContext); 
   const {row} = useContext(RowContext); 
   const id = datas[row] ? datas[row]._id: ''; 
@@ -55,12 +55,13 @@ function CrudBtn ({mode, labels, action}:CrudBtn) {
   const isId = activeEntry._id === id; 
   const isMode = activeMode === mode; 
 
+
   const Affirm = () => { 
-    setActiveEntry(GetEntry(id)); 
+    //setActiveEntry(GetEntry(activeCollection.accessor, id)); 
     SetActiveMode(mode); 
   }
-  const Cancel = () => {
-    setActiveEntry(GetEntry()); 
+  const Cancel = () => { 
+    //setActiveEntry(GetEntry(activeCollection.accessor)); 
     SetActiveMode(); 
   }; 
   const Confirm = async () => { 

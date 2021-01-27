@@ -1,4 +1,4 @@
-import {IPageHook} from '../../../reusable/_usepage'; 
+import {IPageHook} from '../reusable/_usepage'; 
 
 
 
