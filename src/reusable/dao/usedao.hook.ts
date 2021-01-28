@@ -1,8 +1,6 @@
 import {useEffect, useMemo, useState} from 'react'; 
 import {useLoader, IState} from '../_useloader'; 
 import {DataAccessObject as IDao} from './dao.class'; 
-import {IsEmpty, GetDefaultValueFromIField} from '../_utils'; 
-import { access } from 'fs';
 
 
 
@@ -12,6 +10,7 @@ export enum EActionType {
   UPDATE = 'update', 
   DELETE = 'delete', 
 }
+
 
 
 export interface IUseDao{ 
@@ -46,12 +45,7 @@ export interface IUseDao{
   Read: (accessor:string, id?:string[]) => Promise<void>; 
   Update: (accessor:string, toUpdate:IEntry) => Promise<void>; 
   Delete: (accessor:string, toDelete?:IEntry) => Promise<void>; 
-
 } 
-
-
-//EActionType.
-
 
 // USE DAO ======================================
 export function useDao(dao:IDao):IUseDao { 
@@ -60,13 +54,12 @@ export function useDao(dao:IDao):IUseDao {
   
   const GetEntry = (accessor:string, id?:string) => 
     Dao.GetEntry(accessor, id); 
-
+  
   const GetIFields = (accessor:string, ifieldAccessors?:string[]) => 
     Dao.GetIFields(accessor, ifieldAccessors); 
-
+  
   const GetForeignElements = (ifield:IField) => Dao.GetForeignElements(ifield); 
   const GetForeignOptions = (ifield:IField) => Dao.GetForeignOptions(ifield); 
-
 
   // Hooks 
   const Dao = useMemo(() => dao, []); 
@@ -89,7 +82,9 @@ export function useDao(dao:IDao):IUseDao {
     Load(() => Dao.Delete(accessor, toDelete)); 
 
   useEffect(() => { 
-    setActiveEntry(GetEntry(activeCollection.accessor)); 
+    const initEntry = GetEntry(activeCollection.accessor); 
+    //console.log(activeCollection.accessor); 
+    setActiveEntry(initEntry); 
     SetActiveMode(); 
   }, [activeCollection]); 
 

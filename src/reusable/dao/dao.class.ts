@@ -184,12 +184,14 @@ class Collection {
       entry[f.accessor] = GetDefaultValueFromIField(f); 
     }); 
     return entry; 
-  }
+  } 
 
   public GetEntry(id?:string):IEntry { 
-    if(!this.collection?.entries) 
+    if(!this.collection) 
       return {} as IEntry; 
-    return this.collection?.entries.find(e=>e._id === id) ?? {} as IEntry; 
+    if(!id) 
+      return this.GetEmptyEntry(); 
+    return this.collection?.entries.find(e=>e._id === id) ?? this.GetEmptyEntry(); 
   } 
 
   // Create -------------------------------------

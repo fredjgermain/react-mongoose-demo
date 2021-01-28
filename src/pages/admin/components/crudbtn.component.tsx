@@ -55,13 +55,12 @@ function CrudBtn ({mode, labels, action}:CrudBtn) {
   const isId = activeEntry._id === id; 
   const isMode = activeMode === mode; 
 
-
   const Affirm = () => { 
-    //setActiveEntry(GetEntry(activeCollection.accessor, id)); 
+    setActiveEntry(GetEntry(activeCollection.accessor, id)); 
     SetActiveMode(mode); 
-  }
+  } 
   const Cancel = () => { 
-    //setActiveEntry(GetEntry(activeCollection.accessor)); 
+    setActiveEntry(GetEntry(activeCollection.accessor)); 
     SetActiveMode(); 
   }; 
   const Confirm = async () => { 
@@ -69,6 +68,9 @@ function CrudBtn ({mode, labels, action}:CrudBtn) {
     Cancel(); 
   } 
   
+  if(isId)
+    console.log([isId, activeMode, mode]); 
+
   return <span> 
     {isId && isMode && <button onClick={Confirm}>{labels.confirm}</button>} 
     {isId && isMode && <button onClick={Cancel}>{labels.cancel}</button>} 
