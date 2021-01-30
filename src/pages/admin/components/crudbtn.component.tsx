@@ -67,9 +67,6 @@ function CrudBtn ({mode, labels, action}:CrudBtn) {
     await action(activeEntry); 
     Cancel(); 
   } 
-  
-  if(isId)
-    console.log([isId, activeMode, mode]); 
 
   return <span> 
     {isId && isMode && <button onClick={Confirm}>{labels.confirm}</button>} 

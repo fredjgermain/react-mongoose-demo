@@ -46,6 +46,14 @@ export function Read(value:any, key:string|number) {
   return value[key]; 
 } 
 
+export function IsInRange(value:number, min?:number, max?:number) { 
+  if(!value && min) 
+    return false; 
+  const minCondition = min ? (value >= min) : true; 
+  const maxCondition = max ? (value <= max) : true; 
+  return minCondition && maxCondition; 
+} 
+
 export function IsNull(value:any) { 
   return (value ?? null) === null || JSON.stringify(value) === 'null' || value === undefined; 
 } 

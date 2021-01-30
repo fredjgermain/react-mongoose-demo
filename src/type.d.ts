@@ -1,30 +1,3 @@
-/*type FieldPredicate = (ifield:IField) => boolean; 
-type ReadFunc = (ifield:IField, value:any) => any; 
-type EditFunc = (ifield:IField, value:any, setValue:any) => any; 
-interface IFieldFormat { 
-  ifield:IField; 
-  readFunc?:ReadFunc; 
-  editFunc?:EditFunc; 
-} 
-type CrudFunc = (entry:IEntry) => Promise<boolean> 
-interface ICrudSettings { 
-  Create:CrudFunc; 
-  Update:CrudFunc; 
-  Delete:CrudFunc; 
-}*/
-
-/*interface IRow { 
-  id:number; 
-  entry:IEntry; 
-} 
-
-interface IColumn {} */
-
-/*interface IOption { 
-  value: any; 
-  label: string; 
-} */
-
 interface IOption{ 
   value:any; 
   label:string; 
@@ -42,6 +15,8 @@ interface IEntry {
   [key:string]:any; 
 } 
 
+type IValidator = (value:any) => boolean; 
+
 interface IField { 
   accessor: string; 
   label: string; 
@@ -58,6 +33,19 @@ interface IField {
   }; 
   defaultValue: any; 
 
+  validators?: IValidator[]; 
+  isRequired?: boolean; 
+  regex?: string; 
+
+  /*validation: { 
+    required: boolean; 
+    regex: string; 
+    range: { 
+      min: number; 
+      max: number; 
+    }; 
+  }; */ 
+
   format?: any; 
   isMixed?: boolean; 
   isArray?: boolean; 
@@ -66,12 +54,6 @@ interface IField {
   isAbbrev?: boolean; 
   enums?: string[]; 
   sort?: string; 
-
-  /*cellMode:{ 
-    read:(value:any) => any, 
-    edit:(value:any, setValue:any) => any, 
-    //hover: defaultDisplay, 
-  } */
 } 
 
 enum EActionType { 

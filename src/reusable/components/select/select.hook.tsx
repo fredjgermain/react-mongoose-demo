@@ -26,10 +26,16 @@ export function useSelect(value:any, setValue:any, options:IOption[], placeholde
   } 
 
   function GetSelection() { 
+    const selection = [] as IOption[]; 
     if(IsEmpty(value)) 
-      return []; 
+      return selection; 
     const values = ToArray(value); 
-    return values.map( v => options.find(o => o.value === v) as IOption); 
+    values.forEach(v => { 
+      const option = options.find(o => o.value === v); 
+      if(option) 
+        selection.push(option); 
+    }); 
+    return selection; 
   }
 
   return {value, setValue, options, GetSelection, placeholder, multiple, SelectValue}; 

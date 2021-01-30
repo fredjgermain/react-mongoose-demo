@@ -4,7 +4,7 @@ import {SetSize, SetWidth, IEvent,
   OnPress, OnTab, OnEnter, 
   GetInputType, GetValueFromInput} from './utils/htmlelement.utils'; 
 
-import {Copy, Edit, Read, IsEmpty, IsNull, 
+import {Copy, Edit, Read, IsEmpty, IsNull, IsInRange, 
   GetDefaultValueByType, GetTypeByValue, GetDefaultValueFromIField} from './utils/valuetypetesting.utils'; 
 //import {Field} from './utils/field/field.class'; 
 
@@ -16,6 +16,5 @@ export {SetSize, SetWidth,
   OnPress, OnTab, OnEnter, 
   GetInputType, GetValueFromInput} 
 
-export {Copy, Edit, Read, IsEmpty, IsNull, 
+export {Copy, Edit, Read, IsEmpty, IsNull, IsInRange, 
   GetDefaultValueByType, GetTypeByValue, GetDefaultValueFromIField} 
-//export {Field} 

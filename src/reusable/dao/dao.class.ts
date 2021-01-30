@@ -234,8 +234,8 @@ class Collection {
   }
 
   public GetAbbrevField():IField|undefined { 
-    const abbrevField = this.collection?.ifields.find( f => f.isAbbrev) 
-      ?? this.collection?.ifields.find( f => (f.type === 'string' || f.type === 'number') && !f.isArray); 
+    const abbrevField = this.collection?.ifields.find(f => f.isAbbrev) 
+      //?? this.collection?.ifields.find( f => (f.type === 'string' || f.type === 'number') && !f.isArray); 
     return abbrevField; 
   } 
 }

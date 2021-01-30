@@ -49,12 +49,12 @@ export function GetInputType(type:string) {
 
 
 // TAG UTILS ###################################
-export function SetWidth(value:number):{width:any} {
+export function SetWidth(value:number):{width:any} { 
   return {width:`${SetSize(value)+2}ch`}; 
-}
+} 
 
 export function SetSize(value:any):number { 
   const w = String(value).length; 
-  return w < 2 ? 2 : w; 
+  return w < 4 ? 4 : w; 
 } 
 

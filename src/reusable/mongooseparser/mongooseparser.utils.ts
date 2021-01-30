@@ -1,3 +1,5 @@
+import {IsEmpty, IsInRange} from '../_utils';
+
 export interface IMongooseCollection { 
   accessor:string; 
   label:string; 
@@ -26,6 +28,7 @@ export interface IMongooseField {
 } 
 
 
+// Parser functions =============================
 export function ParseCollection(model:any):ICollection { 
   const accessor = model['accessor']; 
   const label = model['label']; 
@@ -39,17 +42,14 @@ export function ParseFields(fields:any):IField[] {
   return mongooseFields.map(f=>ParseField(f)); 
 } 
 
-//async function ParseFields() 
 export function ParseField(field:IMongooseField):IField { 
-  
   const {path, instance, options, $embeddedSchemaType} = field; 
-  /*if(path==='fId')
-    console.log(field); 
-
-  if(path==='titles')
-    console.log(field); */
-
   const ifield:IField = {} as IField; 
+
+  /*if(options['required']) 
+    console.log(field); 
+  if(options['regex']) 
+    console.log(field); */
 
   ifield.accessor = path ?? ''; 
   ifield.label = options.label ?? ''; 
@@ -60,13 +60,15 @@ export function ParseField(field:IMongooseField):IField {
   ifield.isArray = instance.toLowerCase() === 'array'; 
   ifield.isModel = !!options?.ref; 
   ifield.isAbbrev = !!options?.abbrev; 
+  ifield.validators = GetValidators(field); 
+  ifield.isRequired = field.options['required'] ?? false; 
+  ifield.regex = ifield.options['regex']? ifield.options['regex']: undefined; 
 
   ifield.enums = options.enum ?? []; 
   ifield.format = options.format ?? "${value}"; 
   ifield.sort = options.sortType ?? ''; 
   ifield.defaultValue = GetDefaultValue(ifield.type, ifield.options); 
-  
-  //ifield.validators = 
+
   return ifield; 
 } 
 
@@ -82,3 +84,32 @@ function GetDefaultValue(type:string, options:any):any {
     return 0; 
   return ''; 
 } 
+
+
+function GetValidators(field:IMongooseField):IValidator[] { 
+  const required = (value:any) => { 
+    return !IsEmpty(value); 
+  }; 
+
+  const regex = (value:any) => { 
+    if(field.options['regex']) 
+      return new RegExp(field.options['regex']).test(value); 
+    return true; 
+  } 
+
+  const range = (value:any) => { 
+    return IsInRange(value, field.options['min'], field.options['max']); 
+  } 
+
+  let validators:IValidator[] = []; 
+  if(field.options['required']) 
+    validators.push(required); 
+  if(field.options['regex']) 
+    validators.push(regex); 
+  if(field.options['min'] || field.options['max']) 
+    validators.push(range); 
+  return validators; 
+} 
+
+
+

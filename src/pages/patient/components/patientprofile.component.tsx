@@ -70,9 +70,17 @@ function IdPatientProfile () {
     } 
   } 
 
+  function Valid() { 
+    return ramqField.validators?.every( valid => valid(value) ); 
+  } 
+
   return <div> 
     <h1>Patient identification</h1> 
-    <div>Ramq: <Editor {...{value, setValue, ifield:ramqField}} /></div> 
+    <div>
+      <span>Ramq: </span>
+      <Editor {...{value, setValue, ifield:ramqField}} />
+      <span>{Valid() ? '✓' : 'x'}</span>
+    </div> 
     <button onClick={() => IdentifyPatient(value)}>Identify</button> 
   </div> 
 }

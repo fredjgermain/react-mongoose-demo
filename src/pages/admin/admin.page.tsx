@@ -14,6 +14,11 @@ const crud = new CrudMongoose(`https://fjg-mongoose-heroku.herokuapp.com/api/`);
 
 // ADMIN PAGE ====================================
 export function Admin() { 
+  // new RegExp(regex).test(value) 
+  /*console.log(RegexValidation('', '^[a-zA-Z]{4}[0-9]{8}$')); 
+  console.log(RegexValidation('caca', '^[a-zA-Z]{4}[0-9]{8}$')); 
+  console.log(RegexValidation('JEAF23118301', '^[a-zA-Z]{4}[0-9]{8}$')); */
+  
   const UseDao = useDao( new DataAccessObject(crud as ICrud) ); 
   const {state, activeCollection, Collections} = UseDao; 
 
