@@ -1,5 +1,6 @@
 import React, { useState } from 'react'; 
 import {Reader, Editor, Select} from '../reusable/_input'; 
+import {GetValueAt, SetValueAt} from '../reusable/_utils'; 
 
 
 const numField:IField = {accessor:'num', label:'Accessor', type:'number', defaultValue:0, options:{}} as IField; 
@@ -38,7 +39,7 @@ const testRead:{value:any, ifield:IField, options?:IOption[]}[] = [
   {value: [3,2], ifield:{...numField, isArray:true}, options:numOptions }, 
   {value: 'b', ifield:{...strField}, options:strOptions}, 
   {value: ['b', 'c'], ifield:{...strField, isArray:true}, options:strOptions}, 
-  {value: false, ifield:{...boolField, options:strOptions} }, 
+  {value: false, ifield:{...boolField}, options:strOptions}, 
   {value: [false, true], ifield:{...boolField, isArray:true}, options:boolOptions}, 
 ] 
 
@@ -58,6 +59,29 @@ const testRead:{value:any, ifield:IField, options?:IOption[]}[] = [
     {value: false, ifield:{...boolField, options:strOptions} }, 
     {value: [false, true], ifield:{...boolField, isArray:true}, options:boolOptions}, 
   ] */
+
+/*
+function useStateAt(_value:any) { 
+  const [value, setValue] = useState(_value); 
+  const ValueAt = (keys?:any[], newValue?:any) => { 
+    if(newValue && JSON.stringify(ValueAt(keys)) !== newValue) 
+      return SetValueAt(value, newValue, keys); 
+    return GetValueAt(value, keys); 
+  } 
+  return ValueAt; 
+} 
+  
+export function TestValueAt() { 
+  const VALUE = {a:[15,46], b:[96,45]} 
+  const valueAt = useStateAt(VALUE); 
+  const value = valueAt(['a',0]); 
+  const setValue = valueAt(['a',0]); 
+
+  return <div> 
+    <Editor {...{value}} /> 
+  </div> 
+} */
+
 
 // Test select when value is not in the avaible options */ 
 export function TestSelect () { 

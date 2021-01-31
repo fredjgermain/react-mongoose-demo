@@ -28,6 +28,24 @@ export function GetDefaultValueFromIField(ifield:IField) {
   return ifield.defaultValue; 
 }
 
+export function SetValueAt(value:any, newValue:any, keys?:any[]):any { 
+  if(!keys || IsEmpty(keys)) 
+    return value; 
+  const [key, ...remainingKeys] = keys; 
+  const copy = Copy(value); 
+  copy[key] = IsEmpty(remainingKeys) ? 
+    copy[key] = newValue: 
+    copy[key] = SetValueAt(copy[key], newValue, remainingKeys); 
+  return copy; 
+} 
+
+export function GetValueAt(value:any, keys?:any[]):any { 
+  if(!keys || IsEmpty(keys)) 
+    return value; 
+  const [key, ...remainingKeys] = keys; 
+  return GetValueAt(value[key], remainingKeys); 
+} 
+
 export function Copy(value:any) { 
   if(Array.isArray(value)) 
     return [...value] 

@@ -46,14 +46,8 @@ export function ParseField(field:IMongooseField):IField {
   const {path, instance, options, $embeddedSchemaType} = field; 
   const ifield:IField = {} as IField; 
 
-  /*if(options['required']) 
-    console.log(field); 
-  if(options['regex']) 
-    console.log(field); */
-
   ifield.accessor = path ?? ''; 
   ifield.label = options.label ?? ''; 
-  ifield.options = options ?? {}; 
   ifield.type = options?.ref ?? $embeddedSchemaType?.instance ?? field.instance.toLowerCase(); 
   ifield.isMixed = instance.toLowerCase() === 'mixed'; 
   ifield.isEnum = !!options?.enum; 
@@ -62,12 +56,12 @@ export function ParseField(field:IMongooseField):IField {
   ifield.isAbbrev = !!options?.abbrev; 
   ifield.validators = GetValidators(field); 
   ifield.isRequired = field.options['required'] ?? false; 
-  ifield.regex = ifield.options['regex']? ifield.options['regex']: undefined; 
+  ifield.regex = field.options['regex']? field.options['regex']: undefined; 
 
   ifield.enums = options.enum ?? []; 
   ifield.format = options.format ?? "${value}"; 
   ifield.sort = options.sortType ?? ''; 
-  ifield.defaultValue = GetDefaultValue(ifield.type, ifield.options); 
+  ifield.defaultValue = GetDefaultValue(ifield.type, field.options); 
 
   return ifield; 
 } 

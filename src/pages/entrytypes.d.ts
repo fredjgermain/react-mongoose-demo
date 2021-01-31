@@ -1,5 +1,3 @@
-
-
 interface IAnswer extends IEntry { 
   pid: string; 
   qid: string; 

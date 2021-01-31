@@ -1,13 +1,14 @@
 import React, {useContext, useEffect, useState} from 'react'; 
 import {useDao, DaoContexter, ICrud, DataAccessObject, DaoContext} from '../../reusable/_dao'; 
 import {CrudMongoose} from '../../reusable/_mongooseparser'; 
-import {IsEmpty} from '../../reusable/_utils'; 
+import {IsEmpty, GetValueAt, SetValueAt} from '../../reusable/_utils'; 
 import {PatientProfile} from './components/patientprofile.component'; 
 import {Questionnaire} from '../questionnaire/questionnaire.page'; 
 import {LoadPatients } from './components/loadpatient.component'; 
 //import {RamqIdentification} from './components/ramqidentitication.component';
 
 const crud = new CrudMongoose(`https://fjg-mongoose-heroku.herokuapp.com/api/`); 
+
 
 
 

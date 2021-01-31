@@ -51,26 +51,3 @@ export class CrudMongoose {
 
 }
 
-
-/*
-Create
-
-[
-    {
-        "success": true,
-        "data": {
-            "titles": [
-                "Title form X",
-                "titre form X"
-            ],
-            "_id": "60010c5840a53500179d0cb3",
-            "fId": "f1",
-            "__v": 0
-        },
-        "err": [],
-        "actionType": "create"
-    }
-]
-
-
-*/

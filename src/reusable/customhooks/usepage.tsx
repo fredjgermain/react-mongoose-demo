@@ -35,7 +35,6 @@ export function usePage(datas:any[], pageBreak:PageBreakPredicate|number):IPageH
       else if(i===datas.length-1) { 
         pages.push(indexes); 
       } 
-      
     }) 
     return pages; 
   } 

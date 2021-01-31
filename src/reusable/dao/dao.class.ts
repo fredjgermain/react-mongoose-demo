@@ -191,7 +191,7 @@ class Collection {
       return {} as IEntry; 
     if(!id) 
       return this.GetEmptyEntry(); 
-    return this.collection?.entries.find(e=>e._id === id) ?? this.GetEmptyEntry(); 
+    return this.collection?.entries.find(e=> e._id === id) ?? this.GetEmptyEntry(); 
   } 
 
   // Create -------------------------------------
