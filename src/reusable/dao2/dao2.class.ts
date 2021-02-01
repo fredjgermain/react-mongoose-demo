@@ -1,0 +1,157 @@
+import {Order} from '../_utils'; 
+import {Collection} from '../dao/collection.class'; 
+
+
+
+export interface ICrud { 
+  Collections:(accessors?:string[]) => Promise<ICrudResponse>; 
+  Create: (accessor:string, toCreate:IEntry[]) => Promise<ICrudResponse>; 
+  Read: (accessor:string, id?:string[]) => Promise<ICrudResponse>;          /// ??
+  Update: (accessor:string, toUpdate:IEntry[]) => Promise<ICrudResponse>; 
+  Delete: (accessor:string, toDelete:IEntry[]) => Promise<ICrudResponse>; 
+} 
+
+
+//return OrderedPick(collection?.entries ?? [], '_id', ids); 
+/*function OrderedPick(src:any[], key:string, values:string[]):any[] { 
+  const picked = [] as any[]; 
+  values.forEach(v => { 
+    const pick = src.find(s => s[key] === v);
+    if(pick) 
+      picked.push(pick); 
+  })
+  return picked; 
+}*/
+
+
+// DAO #############################################
+export class DAO { 
+  public collections:ICollection[] = [] as ICollection[]; 
+
+  private crud:ICrud = {} as ICrud; 
+
+  constructor(crud:ICrud) { 
+    this.crud = crud; 
+  } 
+
+  // Get ICollections ----------------------------- 
+  public GetICollections(accessors?:string[]):ICollection[] { 
+    if(!accessors) 
+      return this.collections; 
+    const compare = (a:ICollection, b:string) => {return a.accessor === b}; 
+    return Order<ICollection>(this.collections, accessors, compare).selection; 
+  } 
+
+  // Get IFields -----------------------------------
+  public GetIFields(accessor:string, fields?:string[]):IField[] { 
+    const [collection] = this.GetICollections([accessor]); 
+    if(!fields) 
+      return collection?.ifields ?? []; 
+    const compare = (a:IField, b:string) => {return a.accessor === b}; 
+    return Order<IField>(collection?.ifields ?? [], fields, compare).selection; 
+  }
+
+  // GEt Entries --------------------------------------
+  public GetIEntries(accessor:string, ids?:string[]):IEntry[] {
+    const collection = this.collections.find(c => c.accessor === accessor); 
+    if(!ids)
+      return collection?.entries ?? []; 
+    const compare = (a:IEntry, b:string) => {return a._id === b}; 
+    return Order<IEntry>(collection?.entries ?? [], ids, compare).selection; 
+  }
+
+  // Get Default IEntry ----------------------------------
+  public GetDefaultIEntry(accessor:string):IEntry { 
+    const [collection] = this.GetICollections([accessor]); 
+    return new Collection(collection).GetDefaultIEntry(); 
+  } 
+  
+  // GET FOREIGN ELEMENTS -----------------------------
+  public GetForeignElements(ifield:IField) 
+    : {foreignCollection:ICollection|undefined, abbrevField:IField|undefined} 
+  { 
+    const foreignCollection = this.collections.find(c => c.accessor === ifield.type); 
+    const abbrevField = foreignCollection?.ifields.find(f=>f.isAbbrev); 
+    return {foreignCollection, abbrevField}; 
+  } 
+
+  // Get Options ----------------------------------------
+  public GetIOptions(ifield:IField):IOption[] { 
+    if(ifield.enums)
+      return ifield.enums.map(e => {return {value:e, label:e}}); 
+    if(!ifield.isModel)
+      return [] as IOption[]; 
+    const {foreignCollection, abbrevField} = this.GetForeignElements(ifield); 
+    if(!foreignCollection || !abbrevField) 
+      return [] as IOption[]; 
+    return foreignCollection.entries?.map( e => { 
+      return {value:e._id, label:e[abbrevField.accessor]} as IOption; 
+    }); 
+  } 
+
+  // COLLECTIONS -------------------------------------------
+  public async Collections(accessors?:string[]):Promise<ICrudResponse[]> { 
+    const responses = (await this.crud.Collections(accessors)).data as ICrudResponse[]; 
+    const icollections = responses.filter(r => r.success).map(r => r.data as ICollection); 
+    this.PushUpdateCollection(icollections); 
+    return responses; 
+  } 
+
+  private PushUpdateCollection(icollections:ICollection[]) { 
+    icollections.forEach( newCol => { 
+      const index = this.collections.findIndex(col => col.accessor === newCol.accessor); 
+      if(index >=0) 
+        this.collections[index] = newCol; 
+      else 
+        this.collections.push(newCol); 
+    }) 
+  } 
+
+  /* Create -------------------------------------------
+  Local and remote Collection might become inconsistent if 'collection' is not found. 
+  */
+  public async Create(accessor:string, entries:IEntry[]):Promise<ICrudResponse[]> { 
+    const [collection] = this.GetICollections([accessor]); 
+    // risk inconsistencies 
+    const responses = (await this.crud.Create(accessor, entries)).data as ICrudResponse[]; 
+    const created = responses.filter(r=>r.success).map(r=>r.data as IEntry); 
+    new Collection(collection).Create(created); 
+    return responses; 
+  } 
+
+  /* Read -------------------------------------------
+  Local and remote Collection might become inconsistent if 'collection' is not found. 
+  Create/Update read data to local. 
+  */
+  public async Read(accessor:string, ids?:string[]):Promise<IEntry[]> { 
+    const [collection] = this.GetICollections([accessor]); 
+    // risk inconsistencies 
+    const responses = (await this.crud.Read(accessor, ids)).data as ICrudResponse[]; 
+    const read = responses.filter(r=>r.success).map(r=>r.data as IEntry); 
+    return read; 
+  } 
+
+  /* Update -------------------------------------------
+  Local and remote Collection might become inconsistent if 'collection' is not found. 
+  */
+  public async Update(accessor:string, entries:IEntry[]):Promise<ICrudResponse[]> { 
+    const [collection] = this.GetICollections([accessor]); 
+    // risk inconsistencies 
+    const responses = (await this.crud.Update(accessor, entries)).data as ICrudResponse[]; 
+    const updated = responses.filter(r=>r.success).map(r=>r.data as IEntry); 
+    new Collection(collection).Update(updated); 
+    return responses; 
+  } 
+
+  /* Delete -------------------------------------------
+  Local and remote Collection might become inconsistent if 'collection' is not found. 
+  */
+  public async Delete(accessor:string, entries:IEntry[]):Promise<ICrudResponse[]> { 
+    const [collection] = this.GetICollections([accessor]); 
+    // risk inconsistencies 
+    const responses = (await this.crud.Delete(accessor, entries)).data as ICrudResponse[]; 
+    const deleted = responses.filter(r=>r.success).map(r=>r.data as IEntry); 
+    new Collection(collection).Delete(deleted); 
+    return responses; 
+  } 
+} 
