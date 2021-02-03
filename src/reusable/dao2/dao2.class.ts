@@ -1,5 +1,5 @@
 import {Order} from '../_utils'; 
-import {Collection} from '../dao/collection.class'; 
+import {Collection} from './collection.class'; 
 
 
 
@@ -10,18 +10,6 @@ export interface ICrud {
   Update: (accessor:string, toUpdate:IEntry[]) => Promise<ICrudResponse>; 
   Delete: (accessor:string, toDelete:IEntry[]) => Promise<ICrudResponse>; 
 } 
-
-
-//return OrderedPick(collection?.entries ?? [], '_id', ids); 
-/*function OrderedPick(src:any[], key:string, values:string[]):any[] { 
-  const picked = [] as any[]; 
-  values.forEach(v => { 
-    const pick = src.find(s => s[key] === v);
-    if(pick) 
-      picked.push(pick); 
-  })
-  return picked; 
-}*/
 
 
 // DAO #############################################

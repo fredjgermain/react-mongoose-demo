@@ -55,10 +55,12 @@ export function useDao(dao:DAO):IUseDao {
   const GetIOptions = Dao.GetIOptions; 
 
   // Collections 
-  const Collections = async (accessors:string[]) => Load(() => 
-    Dao.Collections(accessors)); 
+  const Collections = async (accessors:string[]) => 
+    Load(() => Dao.Collections(accessors)); 
 
-  // Crud functionalities
+  // Crud functionalities 
+  // async Validate ... 
+  // async Ids ... 
   const Create = async (accessor:string, entries:IEntry[]) => 
     Load(() => Dao.Create(accessor, entries)); 
   const Read = async (accessor:string, ids?:string[]) => 
