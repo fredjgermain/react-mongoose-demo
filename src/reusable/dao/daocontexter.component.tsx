@@ -1,5 +1,5 @@
 import React from 'react'; 
-import {IUseDao} from '../_dao'; 
+import {IUseDao} from './usedao.hook'; 
 
 
 // DAO Contexter ================================ 

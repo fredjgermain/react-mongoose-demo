@@ -1,243 +1,145 @@
-import {IsEmpty, GetDefaultValueFromIField} from '../_utils'; 
+import {Order} from '../_utils'; 
+import {Collection} from './collection.class'; 
+
 
 
 export interface ICrud { 
-  Collection:(accessor:string) => Promise<ICrudResponse>; 
-  Create: (accessor:string, toCreate?:IEntry|IEntry[]) => Promise<ICrudResponse>; 
-  Read: (accessor:string, id?:string[]) => Promise<ICrudResponse>; 
-  Update: (accessor:string, toUpdate:IEntry|IEntry[]) => Promise<ICrudResponse>; 
-  Delete: (accessor:string, toDelete?:IEntry|IEntry[]) => Promise<ICrudResponse>; 
+  Collections:(accessors?:string[]) => Promise<ICrudResponse[]>; 
+  Create: (accessor:string, toCreate:IEntry[]) => Promise<ICrudResponse[]>; 
+  Read: (accessor:string, id?:string[]) => Promise<ICrudResponse[]>;          /// ??
+  Update: (accessor:string, toUpdate:IEntry[]) => Promise<ICrudResponse[]>; 
+  Delete: (accessor:string, toDelete:IEntry[]) => Promise<ICrudResponse[]>; 
 } 
 
-// DataAcessObject ==============================
-export class DataAccessObject { 
-  public collections:Collections = new Collections(); 
+
+// DAO #############################################
+export class DAO { 
+  public collections:ICollection[] = [] as ICollection[]; 
 
   private crud:ICrud = {} as ICrud; 
-  
+
   constructor(crud:ICrud) { 
     this.crud = crud; 
   } 
 
-  public GetCollections(accessors?:string[]):ICollection[] { 
-    return this.collections.GetCollections(accessors); 
+  // Get ICollections ----------------------------- 
+  public GetICollections(accessors?:string[]):ICollection[] { 
+    if(!accessors) 
+      return this.collections; 
+    const compare = (a:ICollection, b:string) => {return a.accessor === b}; 
+    return Order<ICollection>(this.collections, accessors, compare).selection; 
   } 
 
-  public GetEntry(accessor:string, id?:string) { 
-    return this.collections.GetEntry(accessor, id); 
+  // Get IFields -----------------------------------
+  public GetIFields(accessor:string, fields?:string[]):IField[] { 
+    const [collection] = this.GetICollections([accessor]); 
+    if(!fields) 
+      return collection?.ifields ?? []; 
+    const compare = (a:IField, b:string) => {return a.accessor === b}; 
+    return Order<IField>(collection?.ifields ?? [], fields, compare).selection; 
   }
 
-  public GetIFields(accessor:string, ifieldAccessors?:string[]):IField[] { 
-    return this.collections.GetIFields(accessor, ifieldAccessors); 
+  // GEt Entries --------------------------------------
+  public GetIEntries(accessor:string, ids?:string[]):IEntry[] {
+    const collection = this.collections.find(c => c.accessor === accessor); 
+    if(!ids)
+      return collection?.entries ?? []; 
+    const compare = (a:IEntry, b:string) => {return a._id === b}; 
+    return Order<IEntry>(collection?.entries ?? [], ids, compare).selection; 
   }
 
-
-  // COLLECTION .................................
-  public async Collections(accessors:string[]):Promise<ICrudResponse[]> { 
-    const responses = [] as ICrudResponse[]; 
-    for(let i=0; i<accessors.length; i++) { 
-      const response = await this.Collection(accessors[i]); 
-      responses.push(response); 
-    } 
-    return responses; 
+  // Get Default IEntry ----------------------------------
+  public GetDefaultIEntry(accessor:string):IEntry { 
+    const [collection] = this.GetICollections([accessor]); 
+    return new Collection(collection).GetDefaultIEntry(); 
   } 
-
-  public async Collection(accessors:string):Promise<ICrudResponse> { 
-    const response = await this.crud.Collection(accessors); 
-    if(response.success) 
-      this.collections.collections.push(response.data); 
-    return response; 
-  }
-
-  // CREATE .....................................  
-  public async Create(accessor:string, entry:IEntry):Promise<ICrudResponse> { 
-    const [response] = (await this.crud.Create(accessor, entry)).data as ICrudResponse[]; 
-    if(response.success) { 
-      this.collections.Create(accessor, response.data); 
-    }
-    return response; 
-  } 
-
-  // READ .......................................
-  public async Read(accessor:string, entry?:string[]):Promise<IEntry[]> { 
-    //const results = (await crud.Read(accessor, [entry])).data as IResponse[]; 
-    //const selectedCollection = this.GetCollection(accessor); 
-    /*if(selectedCollection) 
-      selectedCollection.Create(response.data); */ 
-    return [] as IEntry[]; 
-  } 
-
-  // UPDATE .....................................
-  public async Update(accessor:string, entry:IEntry):Promise<ICrudResponse> { 
-    const [response] = (await this.crud.Update(accessor, [entry])).data as ICrudResponse[]; 
-    if(response.success) {
-      this.collections.Update(accessor, response.data); 
-    }
-    return response; 
-  } 
-
-  // DELETE .....................................
-  public async Delete(accessor:string, entry?:IEntry):Promise<ICrudResponse> { 
-    const [response] = (await this.crud.Delete(accessor, entry)).data as ICrudResponse[]; 
-    if(response.success) {
-      this.collections.Delete(accessor, response.data); 
-    }
-    return response; 
-  } 
-
+  
   // GET FOREIGN ELEMENTS -----------------------------
   public GetForeignElements(ifield:IField) 
     : {foreignCollection:ICollection|undefined, abbrevField:IField|undefined} 
   { 
-    return this.collections.GetForeignElements(ifield); 
+    const foreignCollection = this.collections.find(c => c.accessor === ifield.type); 
+    const abbrevField = foreignCollection?.ifields.find(f=>f.isAbbrev); 
+    return {foreignCollection, abbrevField}; 
   } 
 
-  public GetForeignOptions(ifield:IField) : IOption[] { 
-    const {foreignCollection, abbrevField} = this.GetForeignElements(ifield);
-    if(!foreignCollection || !abbrevField)
+  // Get Options ----------------------------------------
+  public GetIOptions(ifield:IField):IOption[] { 
+    if(ifield.enums)
+      return ifield.enums.map(e => {return {value:e, label:e}}); 
+    if(!ifield.isModel)
+      return [] as IOption[]; 
+    const {foreignCollection, abbrevField} = this.GetForeignElements(ifield); 
+    if(!foreignCollection || !abbrevField) 
       return [] as IOption[]; 
     return foreignCollection.entries?.map( e => { 
       return {value:e._id, label:e[abbrevField.accessor]} as IOption; 
     }); 
   } 
+
+  // COLLECTIONS -------------------------------------------
+  public async Collections(accessors?:string[]):Promise<ICrudResponse[]> { 
+    const responses = (await this.crud.Collections(accessors)) as ICrudResponse[]; 
+    const icollections = responses.filter(r => r.success).map(r => r.data as ICollection); 
+    this.PushUpdateCollection(icollections); 
+    return responses; 
+  } 
+
+  private PushUpdateCollection(icollections:ICollection[]) { 
+    icollections.forEach( newCol => { 
+      const index = this.collections.findIndex(col => col.accessor === newCol.accessor); 
+      if(index >=0) 
+        this.collections[index] = newCol; 
+      else 
+        this.collections.push(newCol); 
+    }) 
+  } 
+
+  /* Create -------------------------------------------
+  Local and remote Collection might become inconsistent if 'collection' is not found. 
+  */
+  public async Create(accessor:string, entries:IEntry[]):Promise<ICrudResponse[]> { 
+    const [collection] = this.GetICollections([accessor]); 
+    // risk inconsistencies 
+    const responses = (await this.crud.Create(accessor, entries)) as ICrudResponse[]; 
+    const created = responses.filter(r=>r.success).map(r=>r.data as IEntry); 
+    new Collection(collection).Create(created); 
+    return responses; 
+  } 
+
+  /* Read -------------------------------------------
+  Local and remote Collection might become inconsistent if 'collection' is not found. 
+  Create/Update read data to local. 
+  */
+  public async Read(accessor:string, ids?:string[]):Promise<IEntry[]> { 
+    const [collection] = this.GetICollections([accessor]); 
+    // risk inconsistencies 
+    const responses = (await this.crud.Read(accessor, ids)) as ICrudResponse[]; 
+    const read = responses.filter(r=>r.success).map(r=>r.data as IEntry); 
+    return read; 
+  } 
+
+  /* Update -------------------------------------------
+  Local and remote Collection might become inconsistent if 'collection' is not found. 
+  */
+  public async Update(accessor:string, entries:IEntry[]):Promise<ICrudResponse[]> { 
+    const [collection] = this.GetICollections([accessor]); 
+    // risk inconsistencies 
+    const responses = (await this.crud.Update(accessor, entries)) as ICrudResponse[]; 
+    const updated = responses.filter(r=>r.success).map(r=>r.data as IEntry); 
+    new Collection(collection).Update(updated); 
+    return responses; 
+  } 
+
+  /* Delete -------------------------------------------
+  Local and remote Collection might become inconsistent if 'collection' is not found. 
+  */
+  public async Delete(accessor:string, entries:IEntry[]):Promise<ICrudResponse[]> { 
+    const [collection] = this.GetICollections([accessor]); 
+    // risk inconsistencies 
+    const responses = (await this.crud.Delete(accessor, entries)) as ICrudResponse[]; 
+    const deleted = responses.filter(r=>r.success).map(r=>r.data as IEntry); 
+    new Collection(collection).Delete(deleted); 
+    return responses; 
+  } 
 } 
-
-
-
-
-// Collections ===================================
-class Collections { 
-  public collections:ICollection[] = [] as ICollection[]; 
-
-  public GetEntry(accessor:string, id?:string):IEntry { 
-    const [collection] = this.GetCollections([accessor]).map(c=>new Collection(c)); 
-    return collection?.GetEntry(id) ?? {} as IEntry; 
-  }
-
-  public GetIFields(accessor:string, ifieldAccessors?:string[]) { 
-    const [collection] = this.GetCollections([accessor]).map(c=>new Collection(c)); 
-    return collection.GetIFields(ifieldAccessors); 
-  }
-
-  public GetCollections(accessors?:string[]) { 
-    if(!accessors) 
-      return this.collections; 
-    return this.collections.filter(c=> accessors.includes(c.accessor)) ?? []; 
-  } 
-
-  public Create(accessor:string, entry:IEntry) { 
-    const collection = new Collection(this.collections.find(c=> c.accessor===accessor)); 
-    return collection.Create(entry); 
-  } 
-
-  public Read(accessor:string, ids?:string[]) { 
-    const collection = new Collection(this.collections.find(c=> c.accessor===accessor)); 
-    return collection.Read(ids); 
-  } 
-
-  public Update(accessor:string, entry:IEntry) { 
-    const collection = new Collection(this.collections.find(c=> c.accessor===accessor)); 
-    return collection.Update(entry); 
-  } 
-
-  public Delete(accessor:string, entry:IEntry) {
-    const collection = new Collection(this.collections.find(c=> c.accessor===accessor)); 
-    return collection.Delete(entry); 
-  }
-  
-  // GET FOREIGN INFO -----------------------------
-  public GetForeignElements(ifield:IField) 
-      :{foreignCollection:ICollection|undefined, abbrevField:IField|undefined} { 
-    const foreignCollection = this.collections.find(c => c.accessor === ifield.type); 
-    const abbrevField = new Collection(foreignCollection).GetAbbrevField(); 
-    return {foreignCollection, abbrevField}; 
-  }
-}
-
-
-
-// COLLECTION ===================================
-class Collection { 
-  public collection:ICollection|undefined; 
-
-  constructor(collection:ICollection|undefined) { 
-    if(collection) 
-      this.collection = collection; 
-  }
-
-  public GetIFields(ifieldAccessors?:string[]):IField[] { 
-    if(!ifieldAccessors) 
-      return this.collection?.ifields ?? [] as IField[]; 
-    const ifields = [] as IField[]; 
-    ifieldAccessors.forEach(accessor => { 
-      const ifield = this.collection?.ifields.find(f=>f.accessor===accessor); 
-      if(ifield) 
-        ifields.push(ifield); 
-    })
-    return ifields; 
-  } 
-
-  public GetEmptyEntry() { 
-    const ifields = this.collection?.ifields; 
-    let entry = {} as IEntry; 
-    ifields?.forEach( f => { 
-      entry[f.accessor] = GetDefaultValueFromIField(f); 
-    }); 
-    return entry; 
-  } 
-
-  public GetEntry(id?:string):IEntry { 
-    if(!this.collection) 
-      return {} as IEntry; 
-    if(!id) 
-      return this.GetEmptyEntry(); 
-    return this.collection?.entries.find(e=> e._id === id) ?? this.GetEmptyEntry(); 
-  } 
-
-  // Create -------------------------------------
-  public Create(entry:IEntry) { 
-    if(!this.collection?.entries) 
-      return false; 
-    this.collection.entries.push(entry); 
-    return true;
-  }
-
-  // Read ---------------------------------------
-  public Read(ids?:string[]) { 
-    if(!this.collection?.entries) 
-      return []; 
-    if(IsEmpty(ids) ) 
-      return this.collection.entries; 
-    return this.collection.entries.filter(e => ids?.includes(e._id) ); 
-  }
-
-  // Update 
-  public Update(entry:IEntry) { 
-    if(!this.collection?.entries) 
-      return false; 
-    const index = this.collection.entries?.findIndex( e => e._id === entry._id ); 
-    if(index < 0) 
-      return false; 
-    this.collection.entries[index] = {...entry}; 
-    return true; 
-  }
-
-  // Delete
-  public Delete(entry:IEntry) {
-    if(!this.collection?.entries) 
-      return false;
-    const index = this.collection?.entries.findIndex( e => e._id === entry._id ); 
-    if(index < 0) 
-      return false; 
-    this.collection?.entries.splice(index, 1); 
-    return true; 
-  }
-
-  public GetAbbrevField():IField|undefined { 
-    const abbrevField = this.collection?.ifields.find(f => f.isAbbrev) 
-      //?? this.collection?.ifields.find( f => (f.type === 'string' || f.type === 'number') && !f.isArray); 
-    return abbrevField; 
-  } 
-}
-
-

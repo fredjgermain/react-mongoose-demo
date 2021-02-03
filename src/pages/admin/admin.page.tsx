@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react'; 
-import {useDao, DaoContexter, ICrud, DataAccessObject} from '../../reusable/_dao'; 
+import {useDao, DaoContexter, ICrud, DAO} from '../../reusable/_dao'; 
 import {CrudMongoose} from '../../reusable/_mongooseparser'; 
 import {FeedBack} from '../../components/feedback/feedback.component'; 
 import {IsEmpty} from '../../reusable/_utils'; 
@@ -19,7 +19,7 @@ export function Admin() {
   console.log(RegexValidation('caca', '^[a-zA-Z]{4}[0-9]{8}$')); 
   console.log(RegexValidation('JEAF23118301', '^[a-zA-Z]{4}[0-9]{8}$')); */
   
-  const UseDao = useDao( new DataAccessObject(crud as ICrud) ); 
+  const UseDao = useDao( new DAO(crud as ICrud) ); 
   const {state, activeCollection, Collections} = UseDao; 
 
   useEffect(() => { 
