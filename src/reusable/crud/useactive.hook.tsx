@@ -1,16 +1,20 @@
-import React, {useState} from 'react'; 
-import {IUseDao, useDao, ICrud, DAO} from '../_dao'; 
+import React, {useContext, useEffect, useState} from 'react'; 
+import {IUseDao, useDao, ICrud, DAO, DaoContext} from '../_dao'; 
 import {CrudMongoose} from '../_mongooseparser'; 
+
 
 
 // ICrudContext ------------------------------------------- 
 interface ICrudContext extends IUseDao { 
-  collection: ICollection; 
-  setCollection: React.Dispatch<ICollection>; 
-  entry: IEntry; 
-  setEntry: React.Dispatch<IEntry>; 
-  mode: string; 
-  setMode: React.Dispatch<string>; 
+  activeCollection: ICollection; 
+  setActiveCollection: React.Dispatch<ICollection>; 
+  activeEntry: IEntry; 
+  setActiveEntry: React.Dispatch<IEntry>; 
+  activeMode: string; 
+  setActiveMode: React.Dispatch<string>; 
+  ResetActive: () => void, 
+  SetActive: (id:string, mode:string) => void, 
+  IsActive: (id:string) => boolean; 
 } 
 export const CrudContext = React.createContext({} as ICrudContext); 
 
@@ -19,7 +23,9 @@ export const CrudContext = React.createContext({} as ICrudContext);
 // CrudContexter ========================================== 
 export function CrudContexter({baseUrl, children}:React.PropsWithChildren<{baseUrl:string}>) { 
   const dao = new DAO(new CrudMongoose(baseUrl) as ICrud); 
-  const context = {...useDao(dao), ...useCrud()}; 
+  const usedao = useDao(dao); 
+  const useactive = useActive(usedao); 
+  const context = {...usedao, ...useactive}; 
   return <CrudContext.Provider value={context} > 
     {children} 
   </CrudContext.Provider> 
@@ -28,10 +34,35 @@ export function CrudContexter({baseUrl, children}:React.PropsWithChildren<{baseU
 
 
 // UseCrud ================================================ 
-export function useCrud() { 
-  const [collection, setCollection] = useState({} as ICollection); 
-  const [entry, setEntry] = useState({} as IEntry); 
-  const [mode, setMode] = useState(''); 
+export function useActive(useDao:IUseDao) { 
+  const [activeCollection, setActiveCollection] = useState({} as ICollection); 
 
-  return {collection, setCollection, entry, setEntry, mode, setMode}; 
+  const [activeEntry, setActiveEntry] = useState({} as IEntry); 
+  const [activeMode, setActiveMode] = useState('read'); 
+
+  useEffect(() => { 
+    ResetActive(); 
+  }, [activeCollection]); 
+
+  function ResetActive() { 
+    setActiveEntry({} as IEntry); 
+    setActiveMode('read'); 
+  } 
+
+  function SetActive(id:string, mode:string) { 
+    const [entry] = useDao.GetIEntries(activeCollection?.accessor, [id]); 
+    const defaultEntry = useDao.GetDefaultIEntry(activeCollection?.accessor); 
+    setActiveEntry(entry ?? defaultEntry); 
+    setActiveMode(mode); 
+  }
+
+  function IsActive(id:string):boolean { 
+    return id === activeEntry?._id; 
+  } 
+
+  return {activeCollection, setActiveCollection, 
+    activeEntry, setActiveEntry, 
+    activeMode, setActiveMode, 
+    ResetActive, SetActive, IsActive 
+  }; 
 } 

@@ -26,8 +26,8 @@ export class DAO {
   public GetICollections(accessors?:string[]):ICollection[] { 
     if(!accessors) 
       return this.collections; 
-    const compare = (a:ICollection, b:string) => {return a.accessor === b}; 
-    return Order<ICollection>(this.collections, accessors, compare).selection; 
+    const compare = (a:string, b:ICollection) => {return a === b.accessor}; 
+    return Order<ICollection>(this.collections, accessors, compare); 
   } 
 
   // Get IFields -----------------------------------
@@ -35,17 +35,17 @@ export class DAO {
     const [collection] = this.GetICollections([accessor]); 
     if(!fields) 
       return collection?.ifields ?? []; 
-    const compare = (a:IField, b:string) => {return a.accessor === b}; 
-    return Order<IField>(collection?.ifields ?? [], fields, compare).selection; 
+    const compare = (a:string, b:IField) => {return a === b.accessor}; 
+    return Order<IField>(collection?.ifields ?? [], fields, compare); 
   }
 
   // GEt Entries --------------------------------------
-  public GetIEntries(accessor:string, ids?:string[]):IEntry[] {
-    const collection = this.collections.find(c => c.accessor === accessor); 
+  public GetIEntries(accessor:string, ids?:string[]):IEntry[] { 
+    const [collection] = this.GetICollections([accessor]); 
     if(!ids)
       return collection?.entries ?? []; 
-    const compare = (a:IEntry, b:string) => {return a._id === b}; 
-    return Order<IEntry>(collection?.entries ?? [], ids, compare).selection; 
+    const compare = (a:string, b:IEntry) => {return a === b._id}; 
+    return Order<IEntry>(collection?.entries ?? [], ids, compare); 
   }
 
   // Get Default IEntry ----------------------------------

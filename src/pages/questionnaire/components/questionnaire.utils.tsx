@@ -11,26 +11,27 @@ export function GetAnswer(_index?:number):IAnswer {
 } 
 
 export function GetQuestion(answer:IAnswer):IQuestion { 
-  const {GetEntry} = useContext(DaoContext); 
-  return GetEntry('questions', answer?.qid) as IQuestion; 
+  const {GetIEntries} = useContext(DaoContext); 
+  const [question] = GetIEntries('questions', [answer?.qid]) as IQuestion[];
+  return question; 
 }
 
 export function GetForm(answer:IAnswer):IForm { 
-  const {GetEntry} = useContext(DaoContext); 
+  const {GetIEntries} = useContext(DaoContext); 
   const question = GetQuestion(answer); 
-  return GetEntry('forms', question.form) as IForm; 
+  const [form] = GetIEntries('forms', [question.form]) as IForm[]; 
+  return form; 
 }
 
 export function GetResponse(answer:IAnswer):IResponse { 
-  const {GetEntry} = useContext(DaoContext); 
+  const {GetIEntries} = useContext(DaoContext); 
   const question = GetQuestion(answer); 
-  return GetEntry('responses', question.responseType) as IResponse; 
+  const [response] = GetIEntries('responses', [question.responseType]) as IResponse[]; 
+  return response; 
 } 
 
-
 export function GetInstructions(answer:IAnswer):IInstruction[] {
-  const {GetEntry} = useContext(DaoContext); 
+  const {GetIEntries} = useContext(DaoContext); 
   const question = GetQuestion(answer); 
-  const iids = question.instructions; 
-  return iids.map(i=> GetEntry('instructions', i) as IInstruction ) as IInstruction[];  
+  return GetIEntries('instructions', question.instructions) as IInstruction[]; 
 }

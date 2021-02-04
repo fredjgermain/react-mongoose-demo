@@ -1,20 +1,21 @@
 import {useContext} from 'react'; 
-import {DaoContext, EActionType} from '../../../reusable/_dao'; 
+import {CrudContext} from '../../../reusable/_crud'; 
 import {TablrContext, CellContext} from '../../../reusable/_tablr'; 
 import {GetDefaultValueFromIField} from '../../../reusable/_utils'; 
 import {Reader, Editor} from '../../../reusable/_input'; 
+import {EActionType} from '../../../reusable/_dao'; 
 
 
 
 // Cell Renderer =================================
 export function CellRender() { 
-  const {activeEntry, activeMode, setActiveEntry, GetForeignOptions} = useContext(DaoContext); 
+  const {activeEntry, activeMode, setActiveEntry, GetIOptions} = useContext(CrudContext); 
   const {datas} = useContext(TablrContext); 
   const {row, ifield} = useContext(CellContext); 
   const data = datas[row]; 
-  const id = data ? data._id: ''; 
+  const id = data ? data?._id: ''; 
 
-  const isEdit = activeEntry._id === id && (activeMode === EActionType.CREATE || activeMode === EActionType.UPDATE); 
+  const isEdit = activeEntry?._id === id && (activeMode === EActionType.CREATE || activeMode === EActionType.UPDATE); 
   const defaultValue = GetDefaultValueFromIField(ifield); 
 
   // value and setValue ---------------
@@ -29,13 +30,13 @@ export function CellRender() {
   } 
 
   if(ifield.validators) 
-    ifield.validators.every( valid => {
+    ifield.validators.every( valid => { 
       console.log(valid(value)); 
       return valid(value); 
     }); 
 
   // options if foreign -------------------------
-  const options = ifield.isModel ? GetForeignOptions(ifield) : undefined; 
+  const options = ifield.isModel ? GetIOptions(ifield) : undefined; 
 
   if(isEdit) 
     return <span>{ifield.isRequired && '!!!'}<Editor {...{value, ifield, setValue, options}} /></span> 

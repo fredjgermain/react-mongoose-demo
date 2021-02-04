@@ -1,5 +1,5 @@
 import React, {useContext} from 'react'; 
-import {DaoContext} from '../../../reusable/_dao'; 
+import {CrudContext} from '../../../reusable/_crud'; 
 import {Tablr, Header, Heads, } from '../../../reusable/_tablr'; 
 //import {BuildDefaultRenderingFunc} from '../../../reusable/_rendering'; 
 import {usePage} from '../../../reusable/_usepage'; 
@@ -10,11 +10,11 @@ import {InlineCreate, InlineUpdateDelete} from './linecrud.component';
 
 // ADMIN TABLR ===================================
 export function AdminTablr() { 
-  const {activeEntry, activeCollection} = useContext(DaoContext); 
+  const {activeEntry, activeCollection} = useContext(CrudContext); 
   const {entries, ifields} = activeCollection; 
   const {pageIndex, setPageIndex, pages} = usePage(entries, 5); 
   const page = pages[pageIndex]; 
-
+  
   useUpdate(() => { 
     setPageIndex(0); 
   }, activeCollection.accessor); 

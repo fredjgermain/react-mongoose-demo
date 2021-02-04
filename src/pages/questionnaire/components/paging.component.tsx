@@ -1,5 +1,5 @@
 import {useContext} from 'react'; 
-import {DaoContext} from '../../../reusable/_dao'; 
+import { CrudContext } from '../../../reusable/_crud';
 import {AnswersContext} from '../questionnaire.page'; 
 import {IPageHook} from '../../../reusable/_usepage'; 
 
@@ -7,13 +7,14 @@ import {IPageHook} from '../../../reusable/_usepage';
 // PAGE BREAKER ==================================
 export function PageBreaker() { 
   const {answers} = useContext(AnswersContext); 
-  const {GetEntry} = useContext(DaoContext); 
+  const {GetIEntries} = useContext(CrudContext); 
 
   function PageBreak(accumulator:Array<any>, value?:any, index?:number):boolean { 
-    const answer = value as IAnswer; 
     const [prevAnswer] = accumulator as IAnswer[]; 
-    const question = GetEntry('questions', answer.qid) as IQuestion; 
-    const prevQuestion = prevAnswer ? GetEntry('questions', prevAnswer.qid) as IQuestion: question; 
+    const answer = value as IAnswer; 
+    const [prevQuestion] = GetIEntries('questions', [prevAnswer.qid]) as IQuestion[]; 
+    const [question] = GetIEntries('questions', [answer.qid]) as IQuestion[]; 
+    //const prevQuestion = prevAnswer ? GetIEntries('questions', [answer.qid]) as IQuestion[]; : question; 
 
     if(accumulator.length >= 4) 
       return true; 
@@ -29,7 +30,7 @@ export function PageBreaker() {
 
 // PAGING =======================================
 export function Paging({pageIndex, setPageIndex, pages}:IPageHook) { 
-  const {activeCollection:{accessor}, Create} = useContext(DaoContext); 
+  const {activeCollection:{accessor}, Create} = useContext(CrudContext); 
   const page = pages[pageIndex] ?? []; 
   const isComplete = IsComplete(page); 
   const [from, to] = [ [...page].shift(), [...page].pop()]; 
@@ -53,12 +54,12 @@ export function Paging({pageIndex, setPageIndex, pages}:IPageHook) {
 
 export function IsComplete(page:number[]) { 
   const {answers} = useContext(AnswersContext); 
-  const {GetEntry} = useContext(DaoContext); 
+  const {GetIEntries} = useContext(CrudContext); 
 
   const indexes = page ? page : answers.map( (e,i) => i); 
   const isIncomplete = indexes.some( i => { 
     const answer = answers[i]; 
-    const question = GetEntry('questions', answer.qid); 
+    const [question] = GetIEntries('questions', [answer.qid]); 
     return answer.answer < 0 && !question.optional; 
   }); 
   return isIncomplete; 

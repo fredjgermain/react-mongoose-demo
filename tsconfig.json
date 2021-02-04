@@ -23,5 +23,5 @@
   "include": [
     "src"
   ],
-  "exclude": ["./src/components/*", "./src/pages/*"] 
+  "exclude": ["./src/components/*"] 
 } 

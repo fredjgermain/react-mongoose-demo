@@ -1,12 +1,13 @@
 import React, {useContext} from 'react'; 
 import {RowContext, TablrContext} from '../../../reusable/_tablr'; 
-import {DaoContext, EActionType} from '../../../reusable/_dao'; 
+import {CrudContext} from '../../../reusable/_crud'; 
+import {EActionType} from '../../../reusable/_dao'; 
 
 
 
 // Create .......................................
 export function CreateBtn() { 
-  const {activeCollection:{accessor}, Create} = useContext(DaoContext); 
+  const {activeCollection:{accessor}, Create} = useContext(CrudContext); 
   const action = (entry:any) => Create(accessor, entry); 
 
   const mode = EActionType.CREATE; 
@@ -16,7 +17,7 @@ export function CreateBtn() {
 
 // Update .......................................
 export function UpdateBtn() { 
-  const {activeCollection:{accessor}, Update} = useContext(DaoContext);
+  const {activeCollection:{accessor}, Update} = useContext(CrudContext);
   const action = (entry:any) => Update(accessor, entry); 
 
   const mode = EActionType.UPDATE; 
@@ -26,7 +27,7 @@ export function UpdateBtn() {
 
 // Delete .......................................
 export function DeleteBtn() { 
-  const {activeCollection:{accessor}, Delete} = useContext(DaoContext);
+  const {activeCollection:{accessor}, Delete} = useContext(CrudContext);
   const action = (entry:any) => Delete(accessor, entry); 
 
   const mode = EActionType.DELETE; 
@@ -47,21 +48,18 @@ interface CrudBtn {
   action:(entry:any)=>Promise<void>; 
 } 
 function CrudBtn ({mode, labels, action}:CrudBtn) { 
-  const {activeCollection, activeEntry, setActiveEntry, activeMode, GetEntry, SetActiveMode} = useContext(DaoContext); 
+  const {activeEntry, activeMode, SetActive, ResetActive, IsActive} = useContext(CrudContext); 
   const {datas} = useContext(TablrContext); 
   const {row} = useContext(RowContext); 
-  const id = datas[row] ? datas[row]._id: ''; 
+  const id = datas[row] ? datas[row]?._id: ''; 
 
-  const isId = activeEntry._id === id; 
   const isMode = activeMode === mode; 
 
   const Affirm = () => { 
-    setActiveEntry(GetEntry(activeCollection.accessor, id)); 
-    SetActiveMode(mode); 
+    SetActive(id, mode); 
   } 
   const Cancel = () => { 
-    setActiveEntry(GetEntry(activeCollection.accessor)); 
-    SetActiveMode(); 
+    ResetActive(); 
   }; 
   const Confirm = async () => { 
     await action(activeEntry); 
@@ -69,8 +67,8 @@ function CrudBtn ({mode, labels, action}:CrudBtn) {
   } 
 
   return <span> 
-    {isId && isMode && <button onClick={Confirm}>{labels.confirm}</button>} 
-    {isId && isMode && <button onClick={Cancel}>{labels.cancel}</button>} 
-    {(id ==='' || !isId) && !isMode && <button onClick={Affirm}>{labels.affirm}</button>} 
+    {IsActive(id) && isMode && <button onClick={Confirm}>{labels.confirm}</button>} 
+    {IsActive(id) && isMode && <button onClick={Cancel}>{labels.cancel}</button>} 
+    {!IsActive(id) && <button onClick={Affirm}>{labels.affirm}</button>} 
   </span> 
 }

@@ -22,8 +22,11 @@ export class CrudMongoose {
   */ 
   // Collections ..........................................
   public async Collections(accessors:string[]): Promise<ICrudResponse[]> { 
-    // !!! PARSE response.data = ParseCollection(response.data); !!!
-    return await axios.put(this.baseUrl+'collection/'+accessors); 
+    const axiosResponses = (await axios.put(this.baseUrl+'collections/', accessors)).data as ICrudResponse[]; 
+    return axiosResponses.map( r => { 
+      const parsedCollection = ParseCollection(r.data); 
+      return {...r, data:parsedCollection} as ICrudResponse; 
+    }); 
   } 
 
   // Validate .............................................
@@ -32,8 +35,8 @@ export class CrudMongoose {
   } 
 
   // Ids ..................................................
-  public async Ids(accessor:string): Promise<string[]> { 
-    return await axios.get(this.baseUrl+'ids/'+accessor); 
+  public async Ids(accessor:string): Promise<string[]>{ 
+    return (await axios.get(this.baseUrl+'ids/'+accessor)).data; 
   } 
 
 
@@ -46,18 +49,18 @@ export class CrudMongoose {
       const {_id, _v, ...data} = e; 
       return data; 
     }); 
-    return await axios.put(this.baseUrl+'create/'+accessor, toCreate); 
+    return (await axios.put(this.baseUrl+'create/'+accessor, toCreate)).data; 
   } 
 
   // ICrudResponse ?? or IEntry ??
   // Read .................................................
   public async Read(accessor:string, ids?:string[]): Promise<ICrudResponse[]> {
-    return await axios.put(this.baseUrl+'read/'+accessor, ids); 
+    return (await axios.put(this.baseUrl+'read/'+accessor, ids)).data; 
   }
 
   // Update ...............................................
   public async Update(accessor:string, entries:IEntry[]): Promise<ICrudResponse[]> { 
-    return await axios.put(this.baseUrl+'update/'+accessor, entries); 
+    return (await axios.put(this.baseUrl+'update/'+accessor, entries)).data; 
   }
 
   // Delete ...............................................
@@ -67,6 +70,6 @@ export class CrudMongoose {
       const {_id, ...data} = e; 
       return {_id}; 
     }); 
-    return await axios.put(this.baseUrl+'delete/'+modelName, toDelete) as ICrudResponse[]; 
+    return (await axios.put(this.baseUrl+'delete/'+modelName, toDelete)).data; 
   } 
 } 

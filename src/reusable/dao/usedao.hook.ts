@@ -46,13 +46,14 @@ export function useDao(dao:DAO):IUseDao {
   const Dao = useMemo(() => dao, []); 
   const {state, Load} = useLoader(); 
 
-  const GetICollections = Dao.GetICollections; 
-  const GetIFields = Dao.GetIFields; 
-  const GetIEntries = Dao.GetIEntries; 
-  const GetDefaultIEntry = Dao.GetDefaultIEntry; 
-
-  const GetForeignElements = Dao.GetForeignElements; 
-  const GetIOptions = Dao.GetIOptions; 
+  const GetICollections = (accessors?:string[]) => Dao.GetICollections(accessors); 
+  const GetIFields = (accessor:string, fields?:string[]) => Dao.GetIFields(accessor, fields); 
+  const GetIEntries = (accessor:string, ids?:string[]) => Dao.GetIEntries(accessor, ids); 
+  const GetDefaultIEntry = (accessor:string) => Dao.GetDefaultIEntry(accessor); 
+  // Get foreign elements
+  const GetForeignElements = (ifield:IField) => Dao.GetForeignElements(ifield); 
+  // Get options 
+  const GetIOptions = (ifield:IField) => Dao.GetIOptions(ifield); 
 
   // Collections 
   const Collections = async (accessors:string[]) => 

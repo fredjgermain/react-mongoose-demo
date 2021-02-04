@@ -1,18 +1,18 @@
-import React, {useContext, useEffect, useState} from 'react'; 
-import {DaoContext} from '../../../reusable/_dao'; 
+import {useContext, useEffect} from 'react'; 
+import {CrudContext} from '../../../reusable/_crud'; 
 import {FeedBack} from '../../../components/feedback/feedback.component'; 
 
 
 
 // LOAD PATIENTS ================================
 export function LoadPatients() { 
-  const {setActiveCollection, Collections, GetCollections} = useContext(DaoContext); 
+  const {setActiveCollection, GetICollections} = useContext(CrudContext); 
 
   async function GetPatient() { 
-    await Collections(['patients']); 
-    const collection = GetCollections().find( c => c.accessor==='patients'); 
-    if(collection) 
-      setActiveCollection(collection); 
+    //await Collections(['patients']); 
+    const [patients] = GetICollections(['patients']); 
+    if(patients) 
+      setActiveCollection(patients); 
   } 
   
   useEffect(() => { 
@@ -20,6 +20,6 @@ export function LoadPatients() {
   }, []); 
 
   return <div> 
-    <FeedBack/> 
+    Load Patient ... 
   </div> 
 }

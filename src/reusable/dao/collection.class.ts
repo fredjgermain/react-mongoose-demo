@@ -1,4 +1,4 @@
-import {IsEmpty, GetDefaultValueFromIField, Order} from '../_utils'; 
+import {IsEmpty, GetDefaultValueFromIField} from '../_utils'; 
 
 
 // COLLECTION ===================================
@@ -46,7 +46,7 @@ export class Collection {
     return entries; 
   } 
 
-  // Find Entry index
+  // Find Entry index ---------------------------
   public FindIndex(entry:IEntry):number { 
     return this.collection.entries?.findIndex( e => e._id === entry._id) ?? -1; 
   }
@@ -55,7 +55,7 @@ export class Collection {
   public Create(entries:IEntry[]) { 
     if(!this.collection?.entries) 
       return; 
-    this.collection.entries.concat(entries); 
+    this.collection.entries = [...this.collection.entries, ...entries]; 
   } 
 
   // Read ---------------------------------------

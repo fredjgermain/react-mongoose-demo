@@ -1,5 +1,6 @@
 import React, {useContext} from 'react'; 
-import {DaoContext, EActionType} from '../../../reusable/_dao'; 
+import {CrudContext} from '../../../reusable/_crud'; 
+import {EActionType} from '../../../reusable/_dao'; 
 
 import {Rows, Row, RowContext, Cells, Cell, CellContext} from '../../../reusable/_tablr'; 
 import {CreateBtn, DeleteBtn, UpdateBtn} from './crudbtn.component'; 
@@ -19,7 +20,7 @@ export function InlineUpdateDelete({page, cols, colBtn}:{page:number[], cols:IFi
 } 
 
 export function InlineCreate({cols, colBtn}:{cols:IField[], colBtn:IField}) { 
-  const {activeMode} = useContext(DaoContext); 
+  const {activeMode} = useContext(CrudContext); 
   const isCreate = activeMode === EActionType.CREATE; 
 
   return <Row {...{row:-1}}> 

@@ -1,5 +1,5 @@
 import React, {useContext} from 'react'; 
-import {DaoContext} from '../../reusable/_dao'; 
+import {CrudContext} from '../../reusable/_crud'; 
 import {Arrx} from '../../reusable/_arrx'; 
 
 import '../../css/feedback.css'; 
@@ -7,20 +7,24 @@ import '../../css/feedback.css';
 
 // Feedback =====================================
 export function FeedBack() { 
-  const {state} = useContext(DaoContext); 
+  const {state} = useContext(CrudContext); 
 
   return <div> 
     {!state.ready && <span>LOADING ... </span>} 
     {state.ready && <span>Ready </span>} 
-    {state.ready && state.success && <CrudFeedBack />} 
     {state.ready && !state.success && 'an errors occured'} 
   </div> 
 } 
 
 function CrudFeedBack() { 
-  const {state} = useContext(DaoContext); 
-  // assumes state is ready and successful
-  const {actionType, success, data, err} = state.response as ICrudResponse; // ICrudResponse[]
+  const {state} = useContext(CrudContext); 
+  // assumes state is ready and successful 
+  const responses = state.response as ICrudResponse[]; // ICrudResponse[] 
+  
+  return <div> 
+    #Responses : {responses.length} 
+  </div> 
+  /*{actionType, success, data, err} 
   
   const successMsg:any = { 
     create:'Creation succeed', 
@@ -38,5 +42,5 @@ function CrudFeedBack() {
   return <div className={className}> 
     <div>{success ? successMsg[actionType] : errorMsg[actionType]}</div> 
     {!success && <Arrx {...{values:(err)}} />} 
-    </div> 
+    </div> */
 } 

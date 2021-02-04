@@ -1,6 +1,5 @@
-import React, {useEffect} from 'react'; 
-import {useDao, DaoContexter, ICrud, DAO} from '../../reusable/_dao'; 
-import {CrudMongoose} from '../../reusable/_mongooseparser'; 
+import React, {useContext, useEffect} from 'react'; 
+import {CrudContext} from '../../reusable/_crud'; 
 import {FeedBack} from '../../components/feedback/feedback.component'; 
 import {IsEmpty} from '../../reusable/_utils'; 
 
@@ -9,29 +8,24 @@ import {AdminTablr} from './components/admintablr.component';
 
 import '../../css/table.css'; 
 
-const crud = new CrudMongoose(`https://fjg-mongoose-heroku.herokuapp.com/api/`); 
+
 
 
 // ADMIN PAGE ====================================
-export function Admin() { 
-  // new RegExp(regex).test(value) 
-  /*console.log(RegexValidation('', '^[a-zA-Z]{4}[0-9]{8}$')); 
-  console.log(RegexValidation('caca', '^[a-zA-Z]{4}[0-9]{8}$')); 
-  console.log(RegexValidation('JEAF23118301', '^[a-zA-Z]{4}[0-9]{8}$')); */
-  
-  const UseDao = useDao( new DAO(crud as ICrud) ); 
-  const {state, activeCollection, Collections} = UseDao; 
+export default function Admin() { 
+  const {state, activeCollection, setActiveCollection} = useContext(CrudContext); 
 
   useEffect(() => { 
-    Collections(['questions','responses', 'forms', 'instructions', 'patients', 'answers']); 
+    setActiveCollection({} as ICollection); 
   }, []); 
 
-  return <DaoContexter {...{UseDao}} > 
-    <h1>Admin</h1> 
+  return <div> 
+    <h2>Admin</h2> 
     <FeedBack/> 
     {state.ready && state.success && <CollectionSelector /> } 
     {!IsEmpty(activeCollection) && <AdminTablr/>} 
-  </DaoContexter> 
+  </div> 
 }
 
+//{!IsEmpty(activeCollection) && <AdminTablr/>} 
 

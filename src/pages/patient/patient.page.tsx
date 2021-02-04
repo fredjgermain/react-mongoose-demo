@@ -1,15 +1,10 @@
 import React, {useContext, useEffect, useState} from 'react'; 
-import {useDao, DaoContexter, ICrud, DataAccessObject, DaoContext} from '../../reusable/_dao'; 
-import {CrudMongoose} from '../../reusable/_mongooseparser'; 
 import {IsEmpty, GetValueAt, SetValueAt} from '../../reusable/_utils'; 
 import {PatientProfile} from './components/patientprofile.component'; 
 import {Questionnaire} from '../questionnaire/questionnaire.page'; 
 import {LoadPatients } from './components/loadpatient.component'; 
+import { CrudContext } from '../../reusable/_crud';
 //import {RamqIdentification} from './components/ramqidentitication.component';
-
-const crud = new CrudMongoose(`https://fjg-mongoose-heroku.herokuapp.com/api/`); 
-
-
 
 
 
@@ -19,17 +14,27 @@ interface IPatientProfileContext {
   setPatientProfile: React.Dispatch<IEntry>; 
 } 
 export const PatientProfileContext = React.createContext({} as IPatientProfileContext); 
-export function Patient() { 
-  const UseDao = useDao( new DataAccessObject(crud as ICrud) ); 
-  const {activeCollection} = UseDao; 
+export default function Patient() { 
+  const {activeCollection, setActiveCollection, GetICollections} = useContext(CrudContext); 
   const [patientProfile, setPatientProfile] = useState({} as IEntry); 
 
+
+  useEffect(() => {
+    if(activeCollection.accessor !== 'patients') { 
+      const [patients] = GetICollections(['patients']); 
+      if(patients) 
+        setActiveCollection(patients); 
+    } 
+  }, [activeCollection]); 
+
   const context = {patientProfile, setPatientProfile}; 
-  return <DaoContexter {...{UseDao}} > 
-    <PatientProfileContext.Provider value={context} > 
-      {IsEmpty(activeCollection) && <LoadPatients/>} 
-      {!IsEmpty(activeCollection) && IsEmpty(patientProfile) && <PatientProfile/>} 
-      {!IsEmpty(patientProfile) && <Questionnaire/>} 
-    </PatientProfileContext.Provider> 
-  </DaoContexter> 
+  return <PatientProfileContext.Provider value={context} > 
+    <h2>Patient</h2>
+    {activeCollection.accessor}
+  </PatientProfileContext.Provider> 
 } 
+
+/*
+{!IsEmpty(activeCollection) && IsEmpty(patientProfile) && <PatientProfile/>} 
+      {!IsEmpty(patientProfile) && <Questionnaire/>} 
+*/

@@ -1,5 +1,6 @@
 import React, {useContext, useState} from 'react'; 
-import {DaoContext, EActionType} from '../../../reusable/_dao'; 
+import {CrudContext} from '../../../reusable/_crud'; 
+import {EActionType} from '../../../reusable/_dao'; 
 import {IsEmpty} from '../../../reusable/_utils'; 
 import {FeedBack} from '../../../components/feedback/feedback.component'; 
 
@@ -12,7 +13,7 @@ import {PatientProfileContext} from '../patient.page';
 
 // Patient profile ============================== 
 export function PatientProfile() { 
-  const {activeEntry} = useContext(DaoContext); 
+  const {activeEntry} = useContext(CrudContext); 
 
   return <div> 
     {IsEmpty(activeEntry['ramq']) ? 
@@ -22,15 +23,15 @@ export function PatientProfile() {
 } 
 
 function UpdateCreatePatientProfile() {
-  const {state, activeEntry, activeMode, activeCollection, Create, Update} = useContext(DaoContext); 
+  const {state, activeEntry, activeMode, activeCollection, Create, Update} = useContext(CrudContext); 
   const {ifields} = activeCollection; 
   const ramqField = ifields.find(f => f.accessor==='ramq') as IField; 
   const cols = ifields.filter(f => ['firstName', 'lastName'].includes(f.accessor) ); 
 
   const {setPatientProfile} = useContext(PatientProfileContext); 
 
-  async function UpdateCreateProfile(Func:(accessor:string, entry:IEntry) => Promise<void>) { 
-    await Func(activeCollection.accessor, activeEntry); 
+  async function UpdateCreateProfile(Func:(accessor:string, entries:IEntry[]) => Promise<void>) { 
+    await Func(activeCollection.accessor, [activeEntry]); 
     if(state.ready && state.success) 
       setPatientProfile(activeEntry); 
   } 
@@ -46,11 +47,11 @@ function UpdateCreatePatientProfile() {
     {activeMode === 'update' && <button onClick={() => UpdateCreateProfile(Update)}>Update patient profile</button>} 
     {activeMode === 'create' && <button onClick={() => UpdateCreateProfile(Create)}>Create new patient profile</button>} 
   </div> 
-}
+} 
 
 
 function IdPatientProfile () {
-  const {activeEntry, setActiveEntry, SetActiveMode, activeCollection} = useContext(DaoContext); 
+  const {activeEntry, setActiveEntry, setActiveMode, activeCollection} = useContext(CrudContext); 
   const {entries, ifields} = activeCollection; 
   const ramqField = ifields.find(f => f.accessor==='ramq') as IField; 
   const [value, setValue] = useState(''); 
@@ -62,11 +63,11 @@ function IdPatientProfile () {
     }); 
     if(found) { 
       setActiveEntry(found); 
-      SetActiveMode(EActionType.UPDATE); 
+      setActiveMode(EActionType.UPDATE); 
     } 
     else { 
       setActiveEntry({...activeEntry, ramq}); 
-      SetActiveMode(EActionType.CREATE); 
+      setActiveMode(EActionType.CREATE); 
     } 
   } 
 
@@ -88,7 +89,7 @@ function IdPatientProfile () {
 
 
 function FieldEditor() { 
-  const {activeEntry, setActiveEntry} = useContext(DaoContext); 
+  const {activeEntry, setActiveEntry} = useContext(CrudContext); 
   const {ifield} = useContext(FieldContext); 
 
   const value = activeEntry[ifield.accessor]; 

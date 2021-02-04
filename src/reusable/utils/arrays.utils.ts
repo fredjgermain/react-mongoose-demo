@@ -60,9 +60,11 @@ export function Filter<T>(array:T[] = [], predicate:(e:T, i:number, a:T[])=>bool
 } 
 
 // Order ========================================
-export function Order<T>(toOrder:T[], ordering:any[], compare:(a:any, b:any)=>boolean = (a:any, b:any) => a === b ) 
-  : {selection: T[], indexes: number[]}  { 
-  return Filter(ordering, Compare(toOrder, compare)); 
+export function Order<T>(toOrder:T[], ordering:any[], compare:(a:any, b:any)=>boolean = (a:any, b:any) => a === b ) { 
+  return Combine(ordering, toOrder, compare).map(combine => { 
+    const [a, b] = combine; 
+    return b; 
+  }); 
 } 
 
 // DUPLICATES ===================================
