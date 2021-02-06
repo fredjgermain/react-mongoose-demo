@@ -27,11 +27,11 @@ function CreateElement() {
   const {defaultValue} = ifield; 
   const [value, setValue] = useState(defaultValue); 
 
-  const onEnterUp = () => {
+  const onPressEnter = () => { 
     Create(value); 
-    setValue(() => defaultValue); // reset input to defaultValue after creation. 
+    setValue(defaultValue); // reset input to defaultValue after creation. 
   }; 
-  return <Input {...{value, setValue, ifield, onEnterUp}}  /> 
+  return <Input {...{value, setValue, ifield, onPressEnter}}  /> 
 } 
 
 // Update element =======================================
@@ -44,8 +44,8 @@ function UpdateElement() {
     setValue(values[index]); 
   }, [JSON.stringify(values[index])]); 
 
-  const onEnterUp = () => Update(index, value); 
-  return <Input {...{value, setValue, ifield, onEnterUp}}  /> 
+  const onPressEnter = () => Update(index, value); 
+  return <Input {...{value, setValue, ifield, onPressEnter}}  /> 
 }
 
 // Delete Btn ===================================

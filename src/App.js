@@ -1,5 +1,6 @@
 import React from 'react'; 
 
+import {TestArrayUtil} from './experiments/testarray/testarrayutils.experiment';
 import {TestRenderer} from './experiments/renderer/testrender';
 
 import {CrudContexter} from './reusable/_crud'; 
@@ -15,7 +16,7 @@ import Patient from './pages/patient/patient.page.tsx';
 const baseUrl = `https://fjg-mongoose-heroku.herokuapp.com/api/`; 
 
 export default function App() { 
-  return <TestRenderer/>
+  return <TestArrayUtil/>
 
 
   return <CrudContexter {...{baseUrl}}> 

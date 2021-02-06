@@ -79,7 +79,7 @@ export function Duplicates(array:any[], compare:(a:any, b:any)=>boolean = (a:any
 export function Combine(As:any[], Bs:any[], compare:(a:any, b:any)=>boolean = () => true ) { 
   const combines:any[] = []; 
   As.forEach( a => { 
-    Bs.forEach( b => compare(a,b) ? combines.push([a,b]): null)
+    Bs.forEach( b => compare(a,b) ? combines.push([a,b]): null) 
   }) 
   return combines; 
 } 

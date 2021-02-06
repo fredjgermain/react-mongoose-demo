@@ -1,21 +1,3 @@
-/*
-
-Copy(value) { 
-  if(Array.IsArray(value)) 
-    return [...value] 
-  if(typeof value === 'object') 
-    return {...value} 
-} 
-
-Update(prev, newValue, key) 
-  const updated = Copy(value) 
-  updated[key] = newValue 
-  return updated 
-
-Read(value, key) 
-  return value[key] ?? defaultValue ??? 
-*/
-
 // TYPE VALUE TESTING ###########################
 export function GetDefaultValueFromIField(ifield:IField) { 
   if(ifield.isArray) 
@@ -24,7 +6,6 @@ export function GetDefaultValueFromIField(ifield:IField) {
     return ''; // return an null id value ?? 
   if(ifield.isMixed) 
     return {}; 
-  //console.log([ifield.accessor, ifield.defaultValue]); 
   return ifield.defaultValue; 
 }
 
@@ -53,7 +34,7 @@ export function Copy(value:any) {
     return {...value} 
   return value; 
 } 
-
+/*
 export function Edit(prev:any, newValue:any, key:string|number) { 
   const edited = Copy(prev); 
   edited[key] = newValue; 
@@ -62,7 +43,7 @@ export function Edit(prev:any, newValue:any, key:string|number) {
 
 export function Read(value:any, key:string|number) { 
   return value[key]; 
-} 
+} */
 
 export function IsInRange(value:number, min?:number, max?:number) { 
   if(!value && min) 

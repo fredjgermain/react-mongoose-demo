@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import {Renderer, Reader, Editor} from './renderer.component';
 
-
 export function TestRenderer() { 
   const [value, setValue] = useState(12); 
   const options = [] as IOption[]; 

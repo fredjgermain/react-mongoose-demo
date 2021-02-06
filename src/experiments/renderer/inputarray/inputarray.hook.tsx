@@ -1,7 +1,10 @@
+import {SetValueAt} from '../../../reusable/_utils'; 
 
+
+// useInputArray ==========================================
 export interface IInputArray { 
   values:any[]; 
-  setValues:React.Dispatch<any[]>; 
+  setValues:React.Dispatch<React.SetStateAction<any[]>> 
   ifield:IField; 
 
   inputType?:string; 
@@ -17,23 +20,29 @@ export interface IUseInputArray extends IInputArray {
   Delete:(at:number)=>void; 
 } 
 
-export function useInputArray(props:IInputArray):IUseInputArray { 
+
+// useInputArray ==========================================
+export function useInputArray({...props}:IInputArray):IUseInputArray { 
   const {values, setValues} = props; 
 
   function Create(newValue:any) { 
-    setValues([...values, newValue]); 
+    setValues((prev:any[]) => [...prev, newValue]); 
   } 
 
   function Update(at:number, newValue:any) { 
-    const newValues = [...values]; 
-    newValues[at] = newValue; 
-    setValues(newValues); 
+    setValues((prev:any[]) => {
+      const copy = [...prev]; 
+      copy[at] = newValue; 
+      return copy; 
+    })
   } 
 
   function Delete(at:number) { 
-    const newValues = [...values]; 
-    newValues.splice(at, 1); 
-    setValues(newValues); 
+    setValues((prev:any[]) => { 
+      const copy = [...prev]; 
+      copy.splice(at, 1); 
+      return copy; 
+    }); 
   } 
-  return {...props, values, Create, Update, Delete}; 
+  return {...props, Create, Update, Delete}; 
 }

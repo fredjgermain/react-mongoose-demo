@@ -8,7 +8,7 @@ import {IEvent, IsNull, OnEnter, SetSize,
 // IInput =================================================
 export interface IInput { 
   value:any; 
-  setValue:React.Dispatch<any>; 
+  setValue:React.Dispatch<React.SetStateAction<any>>; 
   ifield:IField; 
 
   inputType?:string; 
@@ -37,7 +37,7 @@ export function Input({value, setValue, ifield,
     const valueFromInput = GetValueFromInput(event); 
     const newValue = IsNull(valueFromInput) ? defaultValue: valueFromInput; 
     if(validator(newValue)) 
-      setValue(newValue); 
+      setValue((prev:any) => newValue); 
   } 
 
   // on PressEnter
