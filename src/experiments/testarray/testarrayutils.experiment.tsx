@@ -1,7 +1,8 @@
 import React from 'react'; 
-import {ToArray, Filter, Indexes, Compare, Pick, Union} from '../../reusable/_utils2'; 
+import {ToArray, Filter, Indexes, Compare, Union, Group, Sort} from '../../reusable/_utils2'; 
 import {Comparator, Predicate} from '../../reusable/_utils2'; 
 import {IsEmpty, IsNull} from '../../reusable/_utils2'; 
+
 
 
 
@@ -23,10 +24,12 @@ export function TestArrayUtil() {
   
 
   return <div> 
+    <TestGroup /> <br/>
     <TestCompare /> <br/>
     <TestUnion  /> <br/>
     <TestFilter {...{testArgs}} /> <br/>
     <TestIndexes {...{testArgs}} /> <br/>
+    <TestSort />
   </div> 
 
   return <div> 
@@ -40,15 +43,35 @@ export function TestArrayUtil() {
 } 
 
 
+function TestGroup() { 
+  const ts = [{id:11}, {id:2}, {id:1}, {id:5}, {id:4}, {id:7}]; 
+  const grouped = Group(ts, [(t => t.id > 5), (t => t.id % 2 === 0)]); 
+
+  return <div>
+    <div>Group</div> 
+    {JSON.stringify([ts])} : 
+      <br/> -- grouped: {JSON.stringify(grouped)} 
+  </div> 
+} 
+
+function TestSort() { 
+  const ts = [{id:11}, {id:2}, {id:1}, {id:5}, {id:4}, {id:7}]; 
+  const sorted = Sort(ts, (t, pivot) => t.id > pivot.id); 
+  
+  return <div> 
+    <div>Sort</div> 
+    {JSON.stringify([ts])} : 
+      <br/> -- sorted: {JSON.stringify(sorted)} 
+  </div> 
+} 
+
+
 // TestCompare ============================================
 function TestCompare() { 
-  const T = [{id:'d'}, {id:'e'}, {id:'b'}, {id:'a'}, {id:'c'}]; 
+  const T = [{id:'d'}, {id:'e'}, {id:'b'}, {id:'a'}, {id:'c'}, {id:'a'}]; 
   const U = ['a', 'b', 'c', 'd']; 
-  const compare = (t:{id:string}, u:string) => { 
-    return t.id === u; 
-  }; 
 
-  const {comparable, remainder} = Compare(T, U, compare); 
+  const {comparable, remainder} = Compare(T, U, (t,u) => t.id === u); 
   return <div> 
     <div>Compare</div> 
     {JSON.stringify([T, U])} : 
@@ -66,7 +89,9 @@ function TestUnion() {
 
   return <div> 
     <div>Union</div> 
-    {JSON.stringify(A)} : {JSON.stringify(predicate)} : {JSON.stringify(Union(A, B, predicate))} 
+    {JSON.stringify(A)} : 
+    {JSON.stringify(B)} : 
+    {JSON.stringify(Union(A, B, predicate))} 
   </div> 
 } 
 
@@ -76,7 +101,10 @@ function TestIndexes({testArgs}:{testArgs:{array:any[], predicate:Predicate<any>
     <span>Indexes</span>
     {testArgs.map( ({array, predicate},i) => { 
       return <div key={i}> 
-        {JSON.stringify(array)} : {JSON.stringify(predicate)} : {JSON.stringify(Indexes(array, predicate))}</div> 
+        {JSON.stringify(array)} : 
+        {JSON.stringify(predicate)} : 
+        {JSON.stringify(Indexes(array, predicate))} 
+      </div> 
     })} 
   </div> 
 } 
@@ -87,7 +115,10 @@ function TestFilter({testArgs}:{testArgs:{array:any[], predicate:Predicate<any>}
     <span>Filter</span>
     {testArgs.map( ({array, predicate},i) => { 
       return <div key={i}> 
-        {JSON.stringify(array)} : {JSON.stringify(predicate)} : {JSON.stringify(Filter(array, predicate))}</div> 
+        {JSON.stringify(array)} : 
+        {JSON.stringify(predicate)} : 
+        {JSON.stringify(Filter(array, predicate))} 
+      </div> 
     })} 
   </div> 
 } 
@@ -97,7 +128,10 @@ function Tester({values, func}:{values:any[], func:(value:any)=>any}) {
   return <div> 
     {values.map( (value,i) => { 
       return <div key={i}> 
-        {JSON.stringify(value)} : {func.name} : {JSON.stringify(func(value))}</div> 
+        {JSON.stringify(value)} : 
+        {func.name} : 
+        {JSON.stringify(func(value))} 
+      </div> 
     })} 
   </div> 
 } 

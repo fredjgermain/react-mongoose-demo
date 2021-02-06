@@ -1,3 +1,4 @@
+import { IsEmpty } from "../_utils2";
 
 
 /* ToArray ======================================
@@ -8,19 +9,19 @@ export function ToArray(toArray:any|any[]):any[] {
   return toArray !== undefined ? [toArray].flat() : [] as any[]; 
 } 
 
-
-
 export type Predicate<T> = (value:T, i:number, array:T[]) => boolean; 
 export type Comparator<T, U> = (t:T, u:U) => boolean; 
+export type Sorter<T> = (t:T, pivot:T) => boolean; 
 
 // export 
 
-// Useful predicate
+// Useful predicate 
 export function HasDuplicates<T> (value:T, i:number, array:T[]):boolean { 
   const accumulator = [...array].splice(i,1); 
   return accumulator.includes(value); 
 } 
 
+// IsADuplicate 
 export function IsADuplicate<T> (value:T, i:number, array:T[]):boolean { 
   const accumulator = [...array].splice(0,i); 
   console.log(accumulator); 
@@ -28,19 +29,9 @@ export function IsADuplicate<T> (value:T, i:number, array:T[]):boolean {
 } 
 
 
-/* PICK ==========================================
-
-*/
-export function Pick<T>(array:T[] = [], predicate:Predicate<T>): T[] { 
-  /*if(Array.isArray(predicate)) { 
-    const indexPredicate = (value:T, i:number) => predicate.includes(i); 
-    return Pick(); 
-  } */
-
-  return Filter(array, predicate).inclusion; 
-} 
-
-
+/* COMPARE ====================================== 
+  Compare each element of 'toCompare' with the 'array' 
+*/ 
 export function Compare<T, U>(array:T[] = [], toCompare:U[] = [], compare:Comparator<T,U>):
   {comparable:T[], remainder:T[]} { 
   let comparable = [] as T[]; 
@@ -57,8 +48,34 @@ export function Compare<T, U>(array:T[] = [], toCompare:U[] = [], compare:Compar
 } 
 
 
-/* INDEXES =======================================
+/* Group ======================================== 
+*/ 
+export function Group<T>(array:T[] = [], predicates:Predicate<T>[] = []):Array<T[]> { 
+  const [predicate, ...remainder] = predicates; 
+  if(!predicate || IsEmpty(array) ) 
+    return []; 
+  const {inclusion, exclusion} = Filter(array, predicate); 
+  if(IsEmpty(remainder)) 
+    return [inclusion, exclusion]; 
+  const groups = Group(exclusion, remainder); 
+  return [inclusion, ...groups]; 
+} 
 
+/* Sort =========================================
+Quick sort using a predicate (sorter) 
+*/ 
+export function Sort<T>(array:T[] = [], sorter:Sorter<T>):T[] { 
+  const [pivot, ...remainder] = [...array]; 
+  if(remainder && remainder?.length <= 1) 
+    return pivot ? [pivot] : []; 
+  const {exclusion, inclusion} = Filter(remainder, (t:T) => sorter(t, pivot)); 
+  const left = Sort<T>(exclusion, sorter); 
+  const right = Sort<T>(inclusion, sorter); 
+  return [...left, pivot, ...right]; 
+} 
+
+/* INDEXES ======================================= 
+Returns indexes of each element matching predicate
 */
 export function Indexes<T>(array:T[] = [], predicate:Predicate<T>): number[] {
   const indexes = [] as number[]; 
@@ -71,7 +88,9 @@ export function Indexes<T>(array:T[] = [], predicate:Predicate<T>): number[] {
 
 
 /* FILTER ======================================= 
-
+Return 2 lists, 
+  - 'inclusion' the list of elements matching predicate. 
+  - 'exclusion' the list of all remaining elements. 
 */ 
 export function Filter<T>(array:T[] = [], predicate:Predicate<T>): 
   {inclusion:T[], exclusion:T[]} { 
@@ -84,16 +103,15 @@ export function Filter<T>(array:T[] = [], predicate:Predicate<T>):
     else 
       exclusion.push(value); 
   })
-  
   return {inclusion, exclusion}; 
-}
+} 
 
 
 /* UNION ================================================== 
-
-*/
+Unite 2 lists. 
+Optional; exclude element not matching predicate. 
+*/ 
 export function Union<T>(A:T|T[] = [], B:T|T[] = [], predicate?:Predicate<T>): T[] { 
   const union = [...ToArray(A), ...ToArray(B)]; 
   return predicate ? union.filter(predicate) : union; 
 } 
-
