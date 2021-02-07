@@ -59,17 +59,17 @@ Groups will follow the order of values specified in 'values'
 
 --- If 'values' is NOT specified, groups element from 'array' by their element[key] values. 
 */
-export function Group<T, U>(array:T[] = [], compare:Comparator<T, any>, us?:U[]): 
+export function Group<T, U>(array:T[] = [], compare:Comparator<T, any>, us:U[] = []): 
     Array<T[]> { 
-  const [u, ...remainder] = us ?? []; 
+  const [u, ...remainder] = us; 
   const predicate = (t:T, i:number, ts:T[]) => { 
     if(u) 
       return compare(t, u as U); 
     return ts[0] ? compare(t, ts[0] as T): false; 
   } 
   const {inclusion, exclusion} = Filter(array, predicate); 
-  if(!IsEmpty(inclusion) && !IsEmpty(exclusion) && ((u && !IsEmpty(remainder)) || !us) ) { 
-    const groups = Group(exclusion, compare, us ? remainder: undefined); 
+  if(!IsEmpty(exclusion) &&  (IsEmpty(us) || u && !IsEmpty(remainder)) ) { 
+    const groups = Group(exclusion, compare, remainder); 
     return [inclusion, ...groups]; 
   } 
   return [inclusion]; 

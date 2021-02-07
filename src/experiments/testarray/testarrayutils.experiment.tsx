@@ -71,9 +71,8 @@ function TestGroup() {
   return <div> 
     <div>Group</div> 
     {JSON.stringify([array])} : 
-      <br/> -- grouped: {JSON.stringify(grouped)}  
+      <br/> -- grouped: {JSON.stringify(grouped)} 
       <br/> -- grouped: {JSON.stringify(grouped2)} 
-      
   </div> 
 } 
 
