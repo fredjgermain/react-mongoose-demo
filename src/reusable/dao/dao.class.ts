@@ -6,7 +6,7 @@ import {Collection} from './collection.class';
 export interface ICrud { 
   Collections:(accessors?:string[]) => Promise<ICrudResponse[]>; 
   Create: (accessor:string, toCreate:IEntry[]) => Promise<ICrudResponse[]>; 
-  Read: (accessor:string, id?:string[]) => Promise<ICrudResponse[]>;          /// ??
+  Read: (accessor:string, id?:string[]) => Promise<ICrudResponse[]>; 
   Update: (accessor:string, toUpdate:IEntry[]) => Promise<ICrudResponse[]>; 
   Delete: (accessor:string, toDelete:IEntry[]) => Promise<ICrudResponse[]>; 
 } 
@@ -39,7 +39,7 @@ export class DAO {
     return Order<IField>(collection?.ifields ?? [], fields, compare); 
   }
 
-  // GEt Entries --------------------------------------
+  // Get Entries --------------------------------------
   public GetIEntries(accessor:string, ids?:string[]):IEntry[] { 
     const [collection] = this.GetICollections([accessor]); 
     if(!ids)
@@ -65,7 +65,6 @@ export class DAO {
 
   // Get Options ----------------------------------------
   public GetIOptions(ifield:IField):IOption[] { 
-    
     if(ifield.isEnum)
       return ifield.enums?.map(e => {return {value:e, label:e}}) ?? [] as IOption[];  
     if(!ifield.isModel) 

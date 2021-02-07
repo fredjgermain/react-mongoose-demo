@@ -1,4 +1,8 @@
-//import { IsEmpty } from "../_utils2";
+import { IsEmpty } from "../_utils2";
+
+export type Predicate<T> = (value:T, i:number, array:T[]) => boolean; 
+export type Comparator<T, U> = (t:T, u:U) => boolean; 
+export type Sorter<T> = (t:T, pivot:T) => boolean; 
 
 
 /* ToArray ======================================
@@ -7,25 +11,6 @@ If object is undefined, returns an empty array.
 */
 export function ToArray(toArray:any|any[]):any[] { 
   return toArray !== undefined ? [toArray].flat() : [] as any[]; 
-} 
-
-export type Predicate<T> = (value:T, i:number, array:T[]) => boolean; 
-export type Comparator<T, U> = (t:T, u:U) => boolean; 
-export type Sorter<T> = (t:T, pivot:T) => boolean; 
-
-// export 
-
-// Useful predicate 
-export function HasDuplicates<T> (value:T, i:number, array:T[]):boolean { 
-  const accumulator = [...array].splice(i,1); 
-  return accumulator.includes(value); 
-} 
-
-// IsADuplicate 
-export function IsADuplicate<T> (value:T, i:number, array:T[]):boolean { 
-  const accumulator = [...array].splice(0,i); 
-  console.log(accumulator); 
-  return accumulator.includes(value); 
 } 
 
 
@@ -39,18 +24,33 @@ export function Duplicates<T>(array:T[] = [], compare?:Comparator<T, T>):
   let unics = [] as T[]; 
 
   array.forEach( (t:T, ti:number, array:T[]) => { 
-    const predicate = (a:T, ai:number) => { 
+    const predicate = (a:T, ai:number, array:T[]) => { 
       if(ti===ai) 
         return false; 
       return compare ? compare(t,a): t === a; 
-    } 
+    }; 
     if(array.some(predicate)) 
       duplicates.push(t); 
-    else 
+    else
       unics.push(t); 
-  }) 
+  }); 
   return {duplicates, unics}; 
 }
+
+
+/* INTERSECT ==================================== 
+Return 2 lists, 
+  - 'inclusion' the list of elements from 'ts' that intersect 'us'. 
+  - 'exclusion' the list of all remaining elements. 
+
+2 elements intersect if the predicate 'compare' return true for these 2 elements. 
+*/ 
+export function Intersection<T, U>(ts:T[] = [], us:U[] = [], compare:Comparator<T,U>): 
+    {inclusion:T[], exclusion:T[]} { 
+  
+  const predicate = (t:T) => us.some(u => compare(t,u)); 
+  return Filter(ts, predicate); 
+} 
 
 
 /* GROUP ========================================
@@ -59,19 +59,20 @@ Groups will follow the order of values specified in 'values'
 
 --- If 'values' is NOT specified, groups element from 'array' by their element[key] values. 
 */
-export function Group<T>(array:T[] = [], key:string, values?:any[]):Array<T[]> { 
-  const [value, ...remainder] = values ?? []; 
-  if(!value) 
-    return []; 
-  const predicate = (t:any, i:number, ts:any[]) => { 
-    if(value) 
-      return t[key] === value; 
-    const [a] = ts; 
-    return t[key] === a[key]; 
+export function Group<T, U>(array:T[] = [], compare:Comparator<T, any>, us?:U[]): 
+    Array<T[]> { 
+  const [u, ...remainder] = us ?? []; 
+  const predicate = (t:T, i:number, ts:T[]) => { 
+    if(u) 
+      return compare(t, u as U); 
+    return ts[0] ? compare(t, ts[0] as T): false; 
   } 
   const {inclusion, exclusion} = Filter(array, predicate); 
-  const groups = Group(exclusion, key, remainder); 
-  return [inclusion, ...groups]; 
+  if(!IsEmpty(inclusion) && !IsEmpty(exclusion) && ((u && !IsEmpty(remainder)) || !us) ) { 
+    const groups = Group(exclusion, compare, us ? remainder: undefined); 
+    return [inclusion, ...groups]; 
+  } 
+  return [inclusion]; 
 }
 
 
@@ -102,21 +103,6 @@ export function Indexes<T>(array:T[] = [], predicate:Predicate<T>): number[] {
 } 
 
 
-/* INTERSECT ==================================== 
-Return 2 lists, 
-  - 'inclusion' the list of elements from 'ts' that intersect 'us'. 
-  - 'exclusion' the list of all remaining elements. 
-
-2 elements intersect if the predicate 'compare' return true for these 2 elements. 
-*/ 
-export function Intersection<T, U>(ts:T[] = [], us:U[] = [], compare:Comparator<T,U>): 
-    {inclusion:T[], exclusion:T[]} { 
-  
-  const predicate = (t:T) => us.some(u => compare(t,u)); 
-  return Filter(ts, predicate); 
-} 
-
-
 /* FILTER ======================================= 
 Return 2 lists, 
   - 'inclusion' the list of elements matching predicate. 
@@ -133,7 +119,7 @@ export function Filter<T>(array:T[] = [], predicate:Predicate<T>):
       inclusion.push(value); 
     else 
       exclusion.push(value); 
-  })
+  }) 
   return {inclusion, exclusion}; 
 } 
 

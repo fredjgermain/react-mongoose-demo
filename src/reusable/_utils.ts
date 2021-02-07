@@ -1,4 +1,4 @@
-import {Filter, Remove, ToArray, Union, Combine, Duplicates, Order, CommonPredicates} from './utils/arrays.utils'; 
+import {Filter, Remove, ToArray, Union, Order, CommonPredicates} from './utils/arrays.utils'; 
 
 import {SetSize, SetWidth, IEvent, 
   OnPress, OnTab, OnEnter, 
@@ -10,7 +10,7 @@ import {Copy, IsEmpty, IsNull, IsInRange, GetValueAt, SetValueAt,
 
 
 export type {IEvent} 
-export {Filter, Remove, ToArray, Union, Combine, Duplicates, Order, CommonPredicates} 
+export {Filter, Remove, ToArray, Union, Order, CommonPredicates} 
 
 export {SetSize, SetWidth, 
   OnPress, OnTab, OnEnter, 

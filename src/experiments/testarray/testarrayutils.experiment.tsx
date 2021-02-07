@@ -4,8 +4,6 @@ import {Comparator, Predicate} from '../../reusable/_utils2';
 import {IsEmpty, IsNull} from '../../reusable/_utils2'; 
 
 
-
-
 // Test Util ====================================
 export function TestArrayUtil() { 
   const values:any[] = [
@@ -27,10 +25,11 @@ export function TestArrayUtil() {
     <TestDuplicates /> <br/>
     <TestGroup /> <br/>
     <TestUnion  /> <br/>
-    <TestFilter {...{testArgs}} /> <br/>
-    <TestIndexes {...{testArgs}} /> <br/>
-    <TestSort />
+    <TestFilter {...{testArgs}} /> <br/> 
+    <TestIndexes {...{testArgs}} /> <br/> 
+    <TestSort /> 
   </div> 
+
 
   return <div> 
     <h1>ArrayTest</h1> 
@@ -61,13 +60,20 @@ function TestDuplicates() {
 
 // GROUP ===============================================
 function TestGroup() { 
-  const us = [{id:'b'}, {id:'b'}, {id:'a'}, {id:'d'}, {id:'a'}, {id:'c'}]; 
-  const grouped2 = Group(us, 'id', ['a']); 
+  type T = {id:string}; 
+  const array = [{id:'b'}, {id:'b'}, {id:'a'}, {id:'d'}, {id:'a'}, {id:'c'}]; 
+  const comparator = (t:T,u:string) => t.id === (u as string); 
+  const comparator2 = (t:T,u:T) => t.id === (u as T).id; 
+
+  const grouped = Group<T, string>(array,  comparator, ['a']); 
+  const grouped2 = Group<T, T>(array,  comparator2); 
 
   return <div> 
     <div>Group</div> 
-    {JSON.stringify([us])} : 
+    {JSON.stringify([array])} : 
+      <br/> -- grouped: {JSON.stringify(grouped)}  
       <br/> -- grouped: {JSON.stringify(grouped2)} 
+      
   </div> 
 } 
 

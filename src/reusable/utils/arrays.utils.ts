@@ -83,6 +83,4 @@ export function Combine(As:any[], Bs:any[], compare:(a:any, b:any)=>boolean = ()
   }) 
   return combines; 
 } 
-
-export const ArrayMethods = {}; 
 //const combine = Combine(ordering, strings, (a,b) => a===b.name).map(([a,b]) => b); 
