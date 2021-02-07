@@ -1,4 +1,4 @@
-import { IsEmpty } from "../_utils2";
+//import { IsEmpty } from "../_utils2";
 
 
 /* ToArray ======================================
@@ -29,39 +29,53 @@ export function IsADuplicate<T> (value:T, i:number, array:T[]):boolean {
 } 
 
 
-/* COMPARE ====================================== 
-  Compare each element of 'toCompare' with the 'array' 
-*/ 
-export function Compare<T, U>(array:T[] = [], toCompare:U[] = [], compare:Comparator<T,U>):
-  {comparable:T[], remainder:T[]} { 
-  let comparable = [] as T[]; 
-  let remainder = [...array]; 
+/* DUPLICATES ===========================================
 
-  const copy = []; 
-  toCompare?.forEach( u => { 
-    const predicate = (t:T) => compare(t,u); 
-    const {inclusion, exclusion} = Filter(remainder, predicate); 
-    comparable = [...comparable, ...inclusion]; 
-    remainder = [...exclusion]; 
+*/
+export function Duplicates<T>(array:T[] = [], compare?:Comparator<T, T>):
+  {duplicates:T[], unics:T[]} { 
+
+  let duplicates = [] as T[]; 
+  let unics = [] as T[]; 
+
+  array.forEach( (t:T, ti:number, array:T[]) => { 
+    const predicate = (a:T, ai:number) => { 
+      if(ti===ai) 
+        return false; 
+      return compare ? compare(t,a): t === a; 
+    } 
+    if(array.some(predicate)) 
+      duplicates.push(t); 
+    else 
+      unics.push(t); 
   }) 
-  return {comparable, remainder}; 
-} 
+  return {duplicates, unics}; 
+}
 
 
-/* Group ======================================== 
-*/ 
-export function Group<T>(array:T[] = [], predicates:Predicate<T>[] = []):Array<T[]> { 
-  const [predicate, ...remainder] = predicates; 
-  if(!predicate || IsEmpty(array) ) 
+/* GROUP ========================================
+--- If 'values' is specified, groups elements from 'array' by their element[key] values, where element[key] in values. 
+Groups will follow the order of values specified in 'values'
+
+--- If 'values' is NOT specified, groups element from 'array' by their element[key] values. 
+*/
+export function Group<T>(array:T[] = [], key:string, values?:any[]):Array<T[]> { 
+  const [value, ...remainder] = values ?? []; 
+  if(!value) 
     return []; 
+  const predicate = (t:any, i:number, ts:any[]) => { 
+    if(value) 
+      return t[key] === value; 
+    const [a] = ts; 
+    return t[key] === a[key]; 
+  } 
   const {inclusion, exclusion} = Filter(array, predicate); 
-  if(IsEmpty(remainder)) 
-    return [inclusion, exclusion]; 
-  const groups = Group(exclusion, remainder); 
+  const groups = Group(exclusion, key, remainder); 
   return [inclusion, ...groups]; 
-} 
+}
 
-/* Sort =========================================
+
+/* SORT =========================================
 Quick sort using a predicate (sorter) 
 */ 
 export function Sort<T>(array:T[] = [], sorter:Sorter<T>):T[] { 
@@ -74,10 +88,11 @@ export function Sort<T>(array:T[] = [], sorter:Sorter<T>):T[] {
   return [...left, pivot, ...right]; 
 } 
 
+
 /* INDEXES ======================================= 
-Returns indexes of each element matching predicate
-*/
-export function Indexes<T>(array:T[] = [], predicate:Predicate<T>): number[] {
+Returns indexes of each element matching predicate 
+*/ 
+export function Indexes<T>(array:T[] = [], predicate:Predicate<T>): number[] { 
   const indexes = [] as number[]; 
   array?.forEach( (t,i,a) => { 
     if(predicate(t,i,a)) 
@@ -87,13 +102,29 @@ export function Indexes<T>(array:T[] = [], predicate:Predicate<T>): number[] {
 } 
 
 
+/* INTERSECT ==================================== 
+Return 2 lists, 
+  - 'inclusion' the list of elements from 'ts' that intersect 'us'. 
+  - 'exclusion' the list of all remaining elements. 
+
+2 elements intersect if the predicate 'compare' return true for these 2 elements. 
+*/ 
+export function Intersection<T, U>(ts:T[] = [], us:U[] = [], compare:Comparator<T,U>): 
+    {inclusion:T[], exclusion:T[]} { 
+  
+  const predicate = (t:T) => us.some(u => compare(t,u)); 
+  return Filter(ts, predicate); 
+} 
+
+
 /* FILTER ======================================= 
 Return 2 lists, 
   - 'inclusion' the list of elements matching predicate. 
   - 'exclusion' the list of all remaining elements. 
 */ 
 export function Filter<T>(array:T[] = [], predicate:Predicate<T>): 
-  {inclusion:T[], exclusion:T[]} { 
+    {inclusion:T[], exclusion:T[]} { 
+
   const inclusion = [] as T[]; 
   const exclusion = [] as T[]; 
 

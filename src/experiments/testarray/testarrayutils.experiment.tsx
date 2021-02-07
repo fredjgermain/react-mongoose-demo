@@ -1,5 +1,5 @@
 import React from 'react'; 
-import {ToArray, Filter, Indexes, Compare, Union, Group, Sort} from '../../reusable/_utils2'; 
+import {ToArray, Filter, Indexes, Union, Group, Sort, Duplicates} from '../../reusable/_utils2'; 
 import {Comparator, Predicate} from '../../reusable/_utils2'; 
 import {IsEmpty, IsNull} from '../../reusable/_utils2'; 
 
@@ -24,8 +24,8 @@ export function TestArrayUtil() {
   
 
   return <div> 
+    <TestDuplicates /> <br/>
     <TestGroup /> <br/>
-    <TestCompare /> <br/>
     <TestUnion  /> <br/>
     <TestFilter {...{testArgs}} /> <br/>
     <TestIndexes {...{testArgs}} /> <br/>
@@ -43,17 +43,35 @@ export function TestArrayUtil() {
 } 
 
 
-function TestGroup() { 
-  const ts = [{id:11}, {id:2}, {id:1}, {id:5}, {id:4}, {id:7}]; 
-  const grouped = Group(ts, [(t => t.id > 5), (t => t.id % 2 === 0)]); 
 
-  return <div>
-    <div>Group</div> 
+
+// DUPLICATES =========================================
+function TestDuplicates() { 
+  const ts = [{id:'b'}, {id:'b'}, {id:'a'}, {id:'d'}, {id:'a'}, {id:'c'}]; 
+  const {duplicates, unics} = Duplicates(ts, (t,u) => t.id === u.id); 
+
+  return <div> 
+    <div>Duplicates / Unics</div> 
     {JSON.stringify([ts])} : 
-      <br/> -- grouped: {JSON.stringify(grouped)} 
+      <br/> -- duplicates: {JSON.stringify(duplicates)} 
+      <br/> -- unics: {JSON.stringify(unics)} 
   </div> 
 } 
 
+
+// GROUP ===============================================
+function TestGroup() { 
+  const us = [{id:'b'}, {id:'b'}, {id:'a'}, {id:'d'}, {id:'a'}, {id:'c'}]; 
+  const grouped2 = Group(us, 'id', ['a']); 
+
+  return <div> 
+    <div>Group</div> 
+    {JSON.stringify([us])} : 
+      <br/> -- grouped: {JSON.stringify(grouped2)} 
+  </div> 
+} 
+
+// SORT =================================================
 function TestSort() { 
   const ts = [{id:11}, {id:2}, {id:1}, {id:5}, {id:4}, {id:7}]; 
   const sorted = Sort(ts, (t, pivot) => t.id > pivot.id); 
@@ -62,21 +80,6 @@ function TestSort() {
     <div>Sort</div> 
     {JSON.stringify([ts])} : 
       <br/> -- sorted: {JSON.stringify(sorted)} 
-  </div> 
-} 
-
-
-// TestCompare ============================================
-function TestCompare() { 
-  const T = [{id:'d'}, {id:'e'}, {id:'b'}, {id:'a'}, {id:'c'}, {id:'a'}]; 
-  const U = ['a', 'b', 'c', 'd']; 
-
-  const {comparable, remainder} = Compare(T, U, (t,u) => t.id === u); 
-  return <div> 
-    <div>Compare</div> 
-    {JSON.stringify([T, U])} : 
-      <br/> -- comparable: {JSON.stringify(comparable)} 
-      <br/> -- remainder: {JSON.stringify(remainder)} 
   </div> 
 } 
 
