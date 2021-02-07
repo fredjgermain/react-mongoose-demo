@@ -1,7 +1,5 @@
-import {Order} from '../_utils'; 
+import {Group} from '../_utils'; 
 import {Collection} from './collection.class'; 
-
-
 
 export interface ICrud { 
   Collections:(accessors?:string[]) => Promise<ICrudResponse[]>; 
@@ -26,8 +24,8 @@ export class DAO {
   public GetICollections(accessors?:string[]):ICollection[] { 
     if(!accessors) 
       return this.collections; 
-    const compare = (a:string, b:ICollection) => {return a === b.accessor}; 
-    return Order<ICollection>(this.collections, accessors, compare); 
+    const compare = (t:ICollection, accessor:string) => {return t.accessor === accessor}; 
+    return Group(this.collections, compare, accessors).flat(); 
   } 
 
   // Get IFields -----------------------------------
@@ -35,8 +33,8 @@ export class DAO {
     const [collection] = this.GetICollections([accessor]); 
     if(!fields) 
       return collection?.ifields ?? []; 
-    const compare = (a:string, b:IField) => {return a === b.accessor}; 
-    return Order<IField>(collection?.ifields ?? [], fields, compare); 
+    const compare = (f:IField, accessor:string) => {return f.accessor === accessor}; 
+    return Group(collection.ifields, compare, fields).flat(); 
   }
 
   // Get Entries --------------------------------------
@@ -44,8 +42,8 @@ export class DAO {
     const [collection] = this.GetICollections([accessor]); 
     if(!ids)
       return collection?.entries ?? []; 
-    const compare = (a:string, b:IEntry) => {return a === b._id}; 
-    return Order<IEntry>(collection?.entries ?? [], ids, compare); 
+    const compare = (e:IEntry, id:string) => {return e._id === id}; 
+    return Group(collection.entries, compare, ids).flat(); 
   }
 
   // Get Default IEntry ----------------------------------

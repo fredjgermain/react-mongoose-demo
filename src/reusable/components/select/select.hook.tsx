@@ -1,4 +1,4 @@
-import {ToArray, Remove, Union, IsEmpty} from '../../_utils'; 
+import {ToArray, Filter, Union, IsEmpty} from '../../_utils'; 
 //import {useToggle, IUseToggle} from '../../_usetoggle'; 
 
 // USE SELECT ====================================
@@ -15,14 +15,10 @@ export interface IUseSelect {
 export function useSelect(value:any, setValue:any, options:IOption[], placeholder:string, multiple:boolean):IUseSelect { 
   // SelectValue ................................
   function SelectValue (newValue:any) { 
-    const selection = ToArray(value); 
-    const newSelection = selection.includes(newValue) ? 
-      Remove(selection, (e) => e === newValue)[0] : 
-      multiple ? 
-        Union(selection, newValue) : 
-        ToArray(newValue); 
-    const newValues = multiple ? newSelection: newSelection.shift(); 
-    setValue(newValues); 
+    const {inclusion, exclusion} = Filter(ToArray(value), e => e === newValue); 
+    if(IsEmpty(inclusion)) 
+      exclusion.push(newValue); 
+    setValue(multiple ? exclusion: exclusion.shift()); 
   } 
 
   function GetSelection() { 

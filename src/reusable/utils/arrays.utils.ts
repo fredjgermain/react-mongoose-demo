@@ -1,86 +1,134 @@
-// ARRAY METHODS ################################
+import { IsEmpty } from "../_utils2";
+
+export type Predicate<T> = (value:T, i:number, array:T[]) => boolean; 
+export type Comparator<T, U> = (t:T, u:U) => boolean; 
+export type Sorter<T> = (t:T, pivot:T) => boolean; 
 
 
-// Common predicate ----------------------------
-const Compare = (array:any[], comparator:(a:any, b:any) => boolean = () => true) => (b:any, i:number, ar:any[]) => 
-  array.some(a => comparator(a, b)); 
-
-const IsDuplicate = (comparator:(a:any, b:any) => boolean = () => true) => (b:any, i:number, ar:any[]) => 
-  ar.some(a => comparator(a, b) && a!==b); 
-
-const IsUnic = (comparator:(a:any, b:any) => boolean = () => true) => (b:any, i:number, ar:any[]) => 
-  !ar.some(a => comparator(a, b) && a!==b); 
-
-const ByIndexes = (indexes:number[]) => (b:any, i:number, ar:any[]) => 
-  indexes.includes(i); 
-
-const Intersect = (array:any[], comparator:(a:any, b:any) => boolean = () => true) => (b:any) => 
-  array.some(a => comparator(a, b) && a===b); 
-
-const Exclusion = (array:any[], comparator:(a:any, b:any) => boolean = () => true) => (b:any) => 
-  !array.some(a => comparator(a, b) && a===b); 
-
-export const CommonPredicates = {IsDuplicate, IsUnic, ByIndexes, Intersect, Exclusion, Compare}; 
-
-/*=> (b:any, i:number, ar:any[]) => 
-  indexes.includes(i); */
-
-// ToArray ======================================
+/* ToArray ======================================
+"Wrap" an object as an array if not already an array. 
+If object is undefined, returns an empty array. 
+*/
 export function ToArray(toArray:any|any[]):any[] { 
-  return toArray !== undefined ? [toArray].flat() : []; 
+  return toArray !== undefined ? [toArray].flat() : [] as any[]; 
 } 
 
 
-// Remove =======================================
-export function Remove(array:any[], predicate:(e:any, i:number, a:any[])=>boolean ):[any[], any[]] { 
-  const removed = array.filter(predicate); 
-  const kept = array.filter( (e,i,a) => !predicate(e,i,a) ); 
-  return [kept, removed]; 
-} 
+/* DUPLICATES ===========================================
 
-// Union ========================================
-export function Union(array:any[], toUnite:any|any[], predicate:(e:any, i:number, a:any[])=>boolean = () => true):any[] { 
-  return [...array, ...ToArray(toUnite).filter(predicate)]; 
-} 
+*/
+export function Duplicates<T>(array:T[] = [], compare?:Comparator<T, T>):
+  {duplicates:T[], unics:T[]} { 
 
+  let duplicates = [] as T[]; 
+  let unics = [] as T[]; 
 
-// Filter =======================================
-export function Filter<T>(array:T[] = [], predicate:(e:T, i:number, a:T[])=>boolean = () => true) 
-: {selection: T[], indexes: number[]} 
-{ 
-  const selection:T[] = []; 
-  const indexes:number[] = []; 
-  array.forEach( (e,i,a) => { 
-    if(predicate(e,i,a)) { 
-      selection.push(e); 
-      indexes.push(i); 
-    } 
-  }) 
-  return {selection, indexes}; 
-} 
-
-// Order ========================================
-export function Order<T>(toOrder:T[], ordering:any[], compare:(a:any, b:any)=>boolean = (a:any, b:any) => a === b ) { 
-  return Combine(ordering, toOrder, compare).map(combine => { 
-    const [a, b] = combine; 
-    return b; 
+  array.forEach( (t:T, ti:number, array:T[]) => { 
+    const predicate = (a:T, ai:number, array:T[]) => { 
+      if(ti===ai) 
+        return false; 
+      return compare ? compare(t,a): t === a; 
+    }; 
+    if(array.some(predicate)) 
+      duplicates.push(t); 
+    else
+      unics.push(t); 
   }); 
-} 
-
-// DUPLICATES ===================================
-export function Duplicates(array:any[], compare:(a:any, b:any)=>boolean = (a:any, b:any) => a === b ):{duplicates:any[], unics:any[]} { 
-  const {selection:duplicates} = Filter(array, IsDuplicate(compare)); 
-  const {selection:unics} = Filter(array, IsUnic(compare)); 
   return {duplicates, unics}; 
+}
+
+
+/* INTERSECT ==================================== 
+Return 2 lists, 
+  - 'inclusion' the list of elements from 'ts' that intersect 'us'. 
+  - 'exclusion' the list of all remaining elements. 
+
+2 elements intersect if the predicate 'compare' return true for these 2 elements. 
+*/ 
+export function Intersection<T, U>(ts:T[] = [], us:U[] = [], compare:Comparator<T,U>): 
+    {inclusion:T[], exclusion:T[]} { 
+  
+  const predicate = (t:T) => us.some(u => compare(t,u)); 
+  return Filter(ts, predicate); 
 } 
 
 
-// COMBINE =========================================
-export function Combine(As:any[], Bs:any[], compare:(a:any, b:any)=>boolean = () => true ) { 
-  const combines:any[] = []; 
-  As.forEach( a => { 
-    Bs.forEach( b => compare(a,b) ? combines.push([a,b]): null) 
+/* GROUP ========================================
+--- If 'values' is specified, groups elements from 'array' by their element[key] values, where element[key] in values. 
+Groups will follow the order of values specified in 'values'
+
+--- If 'values' is NOT specified, groups element from 'array' by their element[key] values. 
+*/
+export function Group<T, U>(array:T[] = [], compare:Comparator<T, any>, us:U[] = []): 
+    Array<T[]> { 
+  const [u, ...remainder] = us; 
+  const predicate = (t:T, i:number, ts:T[]) => { 
+    if(u) 
+      return compare(t, u as U); 
+    return ts[0] ? compare(t, ts[0] as T): false; 
+  } 
+  const {inclusion, exclusion} = Filter(array, predicate); 
+  if(!IsEmpty(exclusion) &&  (IsEmpty(us) || u && !IsEmpty(remainder)) ) { 
+    const groups = Group(exclusion, compare, remainder); 
+    return [inclusion, ...groups]; 
+  } 
+  return [inclusion]; 
+}
+
+
+/* SORT =========================================
+Quick sort using a predicate (sorter) 
+*/ 
+export function Sort<T>(array:T[] = [], sorter:Sorter<T>):T[] { 
+  const [pivot, ...remainder] = [...array]; 
+  if(remainder && remainder?.length <= 1) 
+    return pivot ? [pivot] : []; 
+  const {exclusion, inclusion} = Filter(remainder, (t:T) => sorter(t, pivot)); 
+  const left = Sort<T>(exclusion, sorter); 
+  const right = Sort<T>(inclusion, sorter); 
+  return [...left, pivot, ...right]; 
+} 
+
+
+/* INDEXES ======================================= 
+Returns indexes of each element matching predicate 
+*/ 
+export function Indexes<T>(array:T[] = [], predicate:Predicate<T>): number[] { 
+  const indexes = [] as number[]; 
+  array?.forEach( (t,i,a) => { 
+    if(predicate(t,i,a)) 
+      indexes.push(i); 
   }) 
-  return combines; 
+  return indexes; 
 } 
-//const combine = Combine(ordering, strings, (a,b) => a===b.name).map(([a,b]) => b); 
+
+
+/* FILTER ======================================= 
+Return 2 lists, 
+  - 'inclusion' the list of elements matching predicate. 
+  - 'exclusion' the list of all remaining elements. 
+*/ 
+export function Filter<T>(array:T[] = [], predicate:Predicate<T>): 
+    {inclusion:T[], exclusion:T[]} { 
+
+  const inclusion = [] as T[]; 
+  const exclusion = [] as T[]; 
+
+  array?.forEach( (value:T, i:number, array:T[]) => { 
+    if(predicate(value, i, array)) 
+      inclusion.push(value); 
+    else 
+      exclusion.push(value); 
+  }) 
+  return {inclusion, exclusion}; 
+} 
+
+
+/* UNION ================================================== 
+Unite 2 lists. 
+Optional; exclude element not matching predicate. 
+*/ 
+export function Union<T>(A:T|T[] = [], B:T|T[] = [], predicate?:Predicate<T>): T[] { 
+  const union = [...ToArray(A), ...ToArray(B)]; 
+  return predicate ? union.filter(predicate) : union; 
+} 
