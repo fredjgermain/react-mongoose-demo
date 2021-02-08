@@ -1,5 +1,5 @@
 import React from 'react'; 
-import {GetDefaultValueFromIField, ToArray, IsEmpty} from '../../reusable/_utils'; 
+import {GetDefaultValueFromIField, ToArray, Pick, IsEmpty} from '../../reusable/_utils'; 
 
 
 export interface IReader {   
@@ -19,12 +19,8 @@ export function Reader({ifield, options=[], ...props}:IReaderComponent) {
     GetSelection(props.value).map(o => o.label); 
 
   function GetSelection (value:any) { 
-    return options; 
+    return Pick(options, ToArray(props.value), (o,u) => o.value === u); 
   } 
-
-  /*function GetSelection (value:any) { 
-    return Group(options, (o,v) => o.value === v, ToArray(value)).flat(); 
-  } */
   
   // Read one
   // Read many

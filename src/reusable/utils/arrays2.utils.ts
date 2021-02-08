@@ -60,13 +60,14 @@ Groups will follow the order of values specified in 'values'
 
 --- If 'values' is NOT specified, groups element from 'array' by their element[key] values. 
 */
-export function Pick<T, U>(array:T[] = [], pickingOrder:U[], compare:Comparator<T,any>): T[] { 
-  const predicate = (t:T, u:any) => compare(t,u); 
+export function Pick<T, U>(array:T[] = [], pickingOrder:U[], compare:Comparator<T,U>): T[] { 
+  const predicate = (t:T) => pickingOrder.findIndex(u => compare(t,u)) >=0; 
   const {inclusion} = Filter(array, predicate); 
+
   const sorter = (t:T, pivot:T) => { 
-    const pivotIndex = pickingOrder.findIndex(u=>compare(pivot,u)); 
-    const index = pickingOrder.findIndex(u=>compare(t,u)); 
-    return index >= 0 && index >= pivotIndex; 
+    const pivotIndex = pickingOrder.findIndex(u => compare(pivot,u)); 
+    const index = pickingOrder.findIndex(u => compare(t,u)); 
+    return index >= pivotIndex; 
   }; 
   return Sort<T>(inclusion,  sorter); 
 } 
