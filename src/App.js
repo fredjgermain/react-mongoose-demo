@@ -16,6 +16,7 @@ import Patient from './pages/patient/patient.page.tsx';
 const baseUrl = `https://fjg-mongoose-heroku.herokuapp.com/api/`; 
 
 export default function App() { 
+  return <TestRenderer/>
   return <TestArrayUtil/>
 
 

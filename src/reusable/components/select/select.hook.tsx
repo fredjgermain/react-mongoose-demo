@@ -16,9 +16,12 @@ export function useSelect(value:any, setValue:any, options:IOption[], placeholde
   // SelectValue ................................
   function SelectValue (newValue:any) { 
     const {inclusion, exclusion} = Filter(ToArray(value), e => e === newValue); 
-    if(IsEmpty(inclusion)) 
+    if(IsEmpty(inclusion) && multiple) 
       exclusion.push(newValue); 
-    setValue(multiple ? exclusion: exclusion.shift()); 
+    if(IsEmpty(inclusion) && !multiple) 
+      exclusion[0] = newValue; 
+    const selection = multiple ? exclusion: exclusion.shift(); 
+    setValue(selection); 
   } 
 
   function GetSelection() { 

@@ -1,10 +1,14 @@
 import { useState } from 'react';
-import {Renderer, Reader, Editor} from './renderer.component';
+import {Reader, Editor} from './renderer.component';
 
 export function TestRenderer() { 
-  const [value, setValue] = useState(12); 
+  const [value, setValue] = useState([12, 15, 96, 66, 788]); 
   const options = [] as IOption[]; 
-  const ifield = {accessor:'', label:'', defaultValue:0, type:'number'} as IField; 
+  const ifield = {accessor:'', label:'', defaultValue:0, type:'number', isArray:true} as IField; 
+  
 
-  return <Renderer {...{value, setValue, options, ifield, editor:Editor, reader:Reader}} />
-}
+  return <div> 
+    <Reader {...{value, ifield}} /> 
+    <Editor {...{value, setValue, ifield}} /> 
+  </div> 
+} 

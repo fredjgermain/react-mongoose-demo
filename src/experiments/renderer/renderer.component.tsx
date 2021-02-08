@@ -1,6 +1,7 @@
 import React from 'react'; 
-
-
+import {Input} from './input/input.component'; 
+import {InputArray} from './inputarray/inputarray.component'; 
+import {GetDefaultValueFromIField, ToArray, IsEmpty, Group} from '../../reusable/_utils'; 
 
 /* 
 Can a context be passed as an argument ?? 
@@ -24,24 +25,30 @@ Editor
 - Single primitive  (input) 
 - Many primitive    (Input array) 
 - Single options    (select, radio) 
-- Many options      (select, radio) 
+- Many options      (select, checkbox set?) 
 - Mixed?
 */
 
-interface IReader { 
+interface IReader {   
+  ifield: IField; 
   value: any; 
   options?: IOption[]; 
-  ifield: IField; 
 } 
 
-interface IEditor { 
-  value: any; 
+interface IReaderComponent extends IReader { 
+  renderFunc?: ({...props}:IReader) => JSX.Element; 
+}
+
+interface IEditor extends IReader { 
   setValue: React.Dispatch<any>; 
-  options?: IOption[]; 
-  ifield: IField; 
 } 
 
-interface IRenderer extends IReader, IEditor{ 
+interface IEditorComponent extends IEditor { 
+  renderFunc?: ({...props}:IEditor) => JSX.Element; 
+} 
+
+
+/*interface IRenderer extends IReader, IEditor{ 
   reader: ({...props}:IReader) => JSX.Element; 
   editor: ({...props}:IEditor) => JSX.Element; 
 } 
@@ -53,16 +60,76 @@ export function Renderer({value, setValue, options, ifield, reader, editor}:IRen
     <br/>
     <Editor {...{value, setValue, options, ifield}} /> 
   </div> 
-}
+}*/
 
-export function Reader({value, options, ifield}:IReader) {
 
-  return <div>
-    Reader ... 
-    </div>
-}
+// READER =================================================
+export function Reader({ifield, options=[], ...props}:IReaderComponent) { 
+  const value = IsEmpty(options) ? 
+    props.value ?? GetDefaultValueFromIField(ifield): 
+    GetSelection(props.value).map(o => o.label); 
 
-export function Editor({value, setValue, options, ifield}:IEditor) { 
+  function GetSelection (value:any) { 
+    return Group(options, (o,v) => o.value === v, ToArray(value)).flat(); 
+  } 
+  
+  // Read one
+  // Read many
+  // Read mixed
+  if(ifield.isArray) 
+    return <ReadMany {...{ifield, value}} /> 
+  if(ifield.isMixed) 
+    return <ReadMixed {...{ifield, value}} /> 
+  return <ReadOne {...{ifield, value}} /> 
+} 
+
+
+// Read one .......................................
+function ReadOne({ifield, value=GetDefaultValueFromIField(ifield)}:IReader) { 
+  if(ifield.type === 'boolean') 
+    return <span>{JSON.stringify(value)}</span> 
+  return <span>{value}</span> 
+} 
+
+
+// Read many ........................................
+function ReadMany({ifield, value=[]}:IReader) { 
+  const isShort = JSON.stringify(value).length < 15; 
+
+  if(!Array.isArray(value)) 
+    return <span>{JSON.stringify(value)}</span> 
+
+  if(isShort) { 
+    return <span>[{value.map( (e, i) => { 
+        return <span key={i}>{i!==0 && ', '}{e}</span> 
+    })}]</span> 
+  } 
+  return <span> 
+    <div className={'readmany-short'}> 
+      {ifield.type} x {value ? (value as any[]).length : 0} <br/> 
+      <div className={'readmany-long'}> 
+        {value.map( (e, i) => { 
+          return <div key={i}>{i}. {e}</div> 
+        })} 
+      </div> 
+    </div> 
+  </span> 
+} 
+
+// Read mixed ..............................................
+function ReadMixed({ifield, value={}}:IReader) { 
+  return <span>{JSON.stringify(value)}</span> 
+} 
+
+
+
+
+export function Editor({
+    ifield, 
+    value=GetDefaultValueFromIField(ifield), 
+    options=[], 
+    setValue}:IEditorComponent) { 
+
   return <div> 
     Editor ... 
   </div> 

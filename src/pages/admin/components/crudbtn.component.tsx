@@ -8,7 +8,7 @@ import {EActionType} from '../../../reusable/_dao';
 // Create .......................................
 export function CreateBtn() { 
   const {activeCollection:{accessor}, Create} = useContext(CrudContext); 
-  const action = (entry:any) => Create(accessor, entry); 
+  const action = (entries:IEntry[]) => Create(accessor, entries); 
 
   const mode = EActionType.CREATE; 
   const labels = {affirm:'Create', confirm:'Confirm creation', cancel:'Cancel creation'}; 
@@ -18,7 +18,7 @@ export function CreateBtn() {
 // Update .......................................
 export function UpdateBtn() { 
   const {activeCollection:{accessor}, Update} = useContext(CrudContext);
-  const action = (entry:any) => Update(accessor, entry); 
+  const action = (entries:IEntry[]) => Update(accessor, entries); 
 
   const mode = EActionType.UPDATE; 
   const labels = {affirm:'Update', confirm:'Confirm update', cancel:'Cancel update'}; 
@@ -27,8 +27,8 @@ export function UpdateBtn() {
 
 // Delete .......................................
 export function DeleteBtn() { 
-  const {activeCollection:{accessor}, Delete} = useContext(CrudContext);
-  const action = (entry:any) => Delete(accessor, entry); 
+  const {activeCollection:{accessor}, Delete} = useContext(CrudContext); 
+  const action = (entries:IEntry[]) => Delete(accessor, entries); 
 
   const mode = EActionType.DELETE; 
   const labels = {affirm:'Delete', confirm:'Confirm deletion', cancel:'Cancel deletion'}; 
@@ -45,7 +45,7 @@ interface CrudBtn {
     confirm:string, 
     cancel:string, 
   }; 
-  action:(entry:any)=>Promise<void>; 
+  action:(entries:IEntry[])=>Promise<void>; 
 } 
 function CrudBtn ({mode, labels, action}:CrudBtn) { 
   const {activeEntry, activeMode, SetActive, ResetActive, IsActive} = useContext(CrudContext); 
@@ -62,7 +62,7 @@ function CrudBtn ({mode, labels, action}:CrudBtn) {
     ResetActive(); 
   }; 
   const Confirm = async () => { 
-    await action(activeEntry); 
+    await action([activeEntry]); 
     Cancel(); 
   } 
 

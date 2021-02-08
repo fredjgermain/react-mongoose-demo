@@ -8,6 +8,7 @@ import {CellRender} from './cellrenderer.component';
 
 
 
+
 export function InlineUpdateDelete({page, cols, colBtn}:{page:number[], cols:IField[], colBtn:IField}) { 
   return <Rows {...{rows:page}}> 
     <Cells {...{ifields:cols}}> 
