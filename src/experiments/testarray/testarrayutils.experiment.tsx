@@ -58,33 +58,44 @@ function TestDuplicates() {
 } 
 
 
+
 // GROUP ===============================================
 function TestGroup() { 
   type T = {id:string}; 
   const array = [{id:'b'}, {id:'b'}, {id:'a'}, {id:'d'}, {id:'a'}, {id:'c'}]; 
-  const comparator = (t:T,u:string) => t.id === (u as string); 
+  //const comparator = (t:T,u:string) => t.id === (u as string); 
   const comparator2 = (t:T,u:T) => t.id === (u as T).id; 
 
-  const grouped = Group<T, string>(array,  comparator, ['a']); 
+  //const grouped = Group<T, string>(array,  comparator); 
   const grouped2 = Group<T, T>(array,  comparator2); 
 
   return <div> 
     <div>Group</div> 
     {JSON.stringify([array])} : 
-      <br/> -- grouped: {JSON.stringify(grouped)} 
       <br/> -- grouped: {JSON.stringify(grouped2)} 
   </div> 
 } 
 
 // SORT =================================================
 function TestSort() { 
-  const ts = [{id:11}, {id:2}, {id:1}, {id:5}, {id:4}, {id:7}]; 
-  const sorted = Sort(ts, (t, pivot) => t.id > pivot.id); 
+  /*const array = [{id:11}, {id:2}, {id:1}, {id:5}, {id:4}, {id:7}]; 
+  const sorted = Sort(array, (t, pivot) => t.id > pivot.id); 
+
+  const sort1 = <div><br/> {JSON.stringify(array)} : 
+    <br/> -- sorted: {JSON.stringify(sorted)} 
+  </div>*/
+
+  
+  const array2 = [{id:'b'}, {id:'b'}, {id:'a'}, {id:'d'}, {id:'a'}, {id:'c'}]; 
+  const sorted2 = Sort(array2, (t, pivot) => t.id > pivot.id); 
+
+  const sort2 = <div><br/> {JSON.stringify(array2)} : 
+  <br/> -- sorted: {JSON.stringify(sorted2)} </div>
   
   return <div> 
     <div>Sort</div> 
-    {JSON.stringify([ts])} : 
-      <br/> -- sorted: {JSON.stringify(sorted)} 
+      
+      {sort2}
   </div> 
 } 
 

@@ -59,7 +59,18 @@ Groups will follow the order of values specified in 'values'
 
 --- If 'values' is NOT specified, groups element from 'array' by their element[key] values. 
 */
-export function Group<T, U>(array:T[] = [], compare:Comparator<T, any>, us:U[] = []): 
+export function Group<T, U>(array:T[] = [], compare:Comparator<T, T>): T[] { 
+  const predicate = (t:T, i:number, ts:T[]) => { 
+    return ts[0] ? compare(t, ts[0]): false; 
+  } 
+  const {inclusion, exclusion} = Filter(array, predicate); 
+  
+  //if(!IsEmpty(exclusion) 
+  const grouped = inclusion; 
+  return array;
+}
+
+/*export function Group<T, U>(array:T[] = [], compare:Comparator<T, any>, us:U[] = []): 
     Array<T[]> { 
   const [u, ...remainder] = us; 
   const predicate = (t:T, i:number, ts:T[]) => { 
@@ -73,7 +84,7 @@ export function Group<T, U>(array:T[] = [], compare:Comparator<T, any>, us:U[] =
     return [inclusion, ...groups]; 
   } 
   return [inclusion]; 
-}
+}*/
 
 
 /* SORT =========================================
@@ -81,7 +92,7 @@ Quick sort using a predicate (sorter)
 */ 
 export function Sort<T>(array:T[] = [], sorter:Sorter<T>):T[] { 
   const [pivot, ...remainder] = [...array]; 
-  if(remainder && remainder?.length <= 1) 
+  if(IsEmpty(remainder)) 
     return pivot ? [pivot] : []; 
   const {exclusion, inclusion} = Filter(remainder, (t:T) => sorter(t, pivot)); 
   const left = Sort<T>(exclusion, sorter); 

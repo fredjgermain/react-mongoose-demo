@@ -25,7 +25,8 @@ export class DAO {
     if(!accessors) 
       return this.collections; 
     const compare = (t:ICollection, accessor:string) => {return t.accessor === accessor}; 
-    return Group(this.collections, compare, accessors).flat(); 
+    return this.collections; 
+    //return Group(this.collections, compare, accessors).flat(); 
   } 
 
   // Get IFields -----------------------------------
@@ -34,7 +35,8 @@ export class DAO {
     if(!fields) 
       return collection?.ifields ?? []; 
     const compare = (f:IField, accessor:string) => {return f.accessor === accessor}; 
-    return Group(collection.ifields, compare, fields).flat(); 
+    return collection?.ifields ?? []; 
+    //return Group(collection.ifields, compare, fields).flat(); 
   }
 
   // Get Entries --------------------------------------
@@ -43,7 +45,8 @@ export class DAO {
     if(!ids)
       return collection?.entries ?? []; 
     const compare = (e:IEntry, id:string) => {return e._id === id}; 
-    return Group(collection.entries, compare, ids).flat(); 
+    return collection?.entries ?? []; 
+    //return Group(collection.entries, compare, ids).flat(); 
   }
 
   // Get Default IEntry ----------------------------------
