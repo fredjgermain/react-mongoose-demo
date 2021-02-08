@@ -1,5 +1,5 @@
 import React from 'react'; 
-import {ToArray, Filter, Indexes, Union, Group, Sort, Duplicates} from '../../reusable/_utils2'; 
+import {ToArray, Filter, Indexes, Union, Sort, Duplicates} from '../../reusable/_utils2'; 
 import {Comparator, Predicate} from '../../reusable/_utils2'; 
 import {IsEmpty, IsNull} from '../../reusable/_utils2'; 
 
@@ -23,7 +23,7 @@ export function TestArrayUtil() {
 
   return <div> 
     <TestDuplicates /> <br/>
-    <TestGroup /> <br/>
+    <TestPicker /> <br/>
     <TestUnion  /> <br/>
     <TestFilter {...{testArgs}} /> <br/> 
     <TestIndexes {...{testArgs}} /> <br/> 
@@ -60,32 +60,41 @@ function TestDuplicates() {
 
 
 // GROUP ===============================================
-function TestGroup() { 
+function TestPicker() { 
   type T = {id:string}; 
   const array = [{id:'b'}, {id:'b'}, {id:'a'}, {id:'d'}, {id:'a'}, {id:'c'}]; 
   //const comparator = (t:T,u:string) => t.id === (u as string); 
-  const comparator2 = (t:T,u:T) => t.id === (u as T).id; 
+  const pickingOrder = ['a', 'c']; 
+
+  const predicate = (t:T) => pickingOrder.includes(t.id); 
+
+  const sorter = (t:T,pivot:T) => { 
+    const pivotIndex = pickingOrder.indexOf(pivot.id); 
+    const index = pickingOrder.indexOf(t.id); 
+    return index >= 0 && index >= pivotIndex; 
+  }; 
 
   //const grouped = Group<T, string>(array,  comparator); 
-  const grouped2 = Group<T, T>(array,  comparator2); 
+  const {inclusion, exclusion} = Filter(array, predicate); 
+  const picked = Sort<T>(inclusion,  sorter); 
 
   return <div> 
-    <div>Group</div> 
+    <div>Picker</div> 
     {JSON.stringify([array])} : 
-      <br/> -- grouped: {JSON.stringify(grouped2)} 
+      <br/> -- picked: {JSON.stringify(picked)} 
   </div> 
 } 
 
 // SORT =================================================
 function TestSort() { 
-  /*const array = [{id:11}, {id:2}, {id:1}, {id:5}, {id:4}, {id:7}]; 
+  const array = [{id:11}, {id:2}, {id:1}, {id:5}, {id:4}, {id:7}]; 
   const sorted = Sort(array, (t, pivot) => t.id > pivot.id); 
 
   const sort1 = <div><br/> {JSON.stringify(array)} : 
     <br/> -- sorted: {JSON.stringify(sorted)} 
-  </div>*/
+  </div>
 
-  
+
   const array2 = [{id:'b'}, {id:'b'}, {id:'a'}, {id:'d'}, {id:'a'}, {id:'c'}]; 
   const sorted2 = Sort(array2, (t, pivot) => t.id > pivot.id); 
 
@@ -94,7 +103,7 @@ function TestSort() {
   
   return <div> 
     <div>Sort</div> 
-      
+      {sort1}
       {sort2}
   </div> 
 } 

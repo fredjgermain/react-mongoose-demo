@@ -1,4 +1,4 @@
-import {ToArray, Filter, Indexes, Group, Sort, Union, Duplicates} from './utils/arrays2.utils';
+import {ToArray, Filter, Indexes, Pick, Sort, Union, Duplicates} from './utils/arrays2.utils';
 import {Comparator, Predicate} from './utils/arrays2.utils';
 import {IsNull, IsEmpty} from './utils/value.utils';
 
@@ -12,7 +12,7 @@ import {Copy, IsInRange, GetValueAt, SetValueAt,
 
 
 export type {Comparator, Predicate, IEvent} 
-export {ToArray, Filter, Indexes, Group, Sort, Union, Duplicates} 
+export {ToArray, Filter, Indexes, Pick, Sort, Union, Duplicates} 
 export {IsNull, IsEmpty} 
 
 export {SetSize, SetWidth, 

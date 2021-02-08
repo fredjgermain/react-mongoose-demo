@@ -1,4 +1,4 @@
-import {Group} from '../_utils'; 
+import {Pick} from '../_utils'; 
 import {Collection} from './collection.class'; 
 
 export interface ICrud { 
@@ -25,8 +25,7 @@ export class DAO {
     if(!accessors) 
       return this.collections; 
     const compare = (t:ICollection, accessor:string) => {return t.accessor === accessor}; 
-    return this.collections; 
-    //return Group(this.collections, compare, accessors).flat(); 
+    return Pick(this.collections, accessors, compare); 
   } 
 
   // Get IFields -----------------------------------
@@ -35,8 +34,7 @@ export class DAO {
     if(!fields) 
       return collection?.ifields ?? []; 
     const compare = (f:IField, accessor:string) => {return f.accessor === accessor}; 
-    return collection?.ifields ?? []; 
-    //return Group(collection.ifields, compare, fields).flat(); 
+    return Pick(collection.ifields, fields, compare); 
   }
 
   // Get Entries --------------------------------------
@@ -45,8 +43,7 @@ export class DAO {
     if(!ids)
       return collection?.entries ?? []; 
     const compare = (e:IEntry, id:string) => {return e._id === id}; 
-    return collection?.entries ?? []; 
-    //return Group(collection.entries, compare, ids).flat(); 
+    return Pick(collection.entries, ids, compare); 
   }
 
   // Get Default IEntry ----------------------------------

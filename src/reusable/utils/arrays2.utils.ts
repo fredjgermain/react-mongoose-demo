@@ -53,22 +53,23 @@ export function Intersection<T, U>(ts:T[] = [], us:U[] = [], compare:Comparator<
 } 
 
 
-/* GROUP ========================================
+
+/* Pick ========================================
 --- If 'values' is specified, groups elements from 'array' by their element[key] values, where element[key] in values. 
 Groups will follow the order of values specified in 'values'
 
 --- If 'values' is NOT specified, groups element from 'array' by their element[key] values. 
 */
-export function Group<T, U>(array:T[] = [], compare:Comparator<T, T>): T[] { 
-  const predicate = (t:T, i:number, ts:T[]) => { 
-    return ts[0] ? compare(t, ts[0]): false; 
-  } 
-  const {inclusion, exclusion} = Filter(array, predicate); 
-  
-  //if(!IsEmpty(exclusion) 
-  const grouped = inclusion; 
-  return array;
-}
+export function Pick<T, U>(array:T[] = [], pickingOrder:U[], compare:Comparator<T,any>): T[] { 
+  const predicate = (t:T, u:any) => compare(t,u); 
+  const {inclusion} = Filter(array, predicate); 
+  const sorter = (t:T, pivot:T) => { 
+    const pivotIndex = pickingOrder.findIndex(u=>compare(pivot,u)); 
+    const index = pickingOrder.findIndex(u=>compare(t,u)); 
+    return index >= 0 && index >= pivotIndex; 
+  }; 
+  return Sort<T>(inclusion,  sorter); 
+} 
 
 /*export function Group<T, U>(array:T[] = [], compare:Comparator<T, any>, us:U[] = []): 
     Array<T[]> { 
