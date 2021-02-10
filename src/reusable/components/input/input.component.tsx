@@ -1,46 +1,50 @@
 import React from 'react'; 
 //import CSS from ''
-import {IEvent, IsNull, OnEnter, SetSize, SetWidth, 
-  GetDefaultValueByType, GetTypeByValue, GetInputType, GetValueFromInput} from '../../_utils'; 
+import {IEvent, IsNull, OnEnter, SetSize, 
+  GetDefaultValueFromIField, GetValueFromInput} from '../../../reusable/_utils'; 
 
 
-// INPUT ========================================
-export interface IInput extends React.HTMLAttributes<HTMLInputElement> { 
+
+// IInput =================================================
+export interface IInput { 
   value:any; 
-  setValue:any; 
-  type?:string; 
-  defaultValue?:any; 
+  setValue:React.Dispatch<React.SetStateAction<any>>; 
+  ifield:IField; 
+
   inputType?:string; 
-  onEnterUp?:() => void; 
-  width?: number; 
-  [key:string]:any; 
+  width?: (value:any) => number; 
+  validator?: (value:any) => boolean; 
+  placeholder?: any; 
+  onPressEnter?: () => void; 
 } 
-export function Input(
-  {
-    value, setValue, 
-    type=GetTypeByValue(value??''), 
-    defaultValue=GetDefaultValueByType(type??'string'), 
-    inputType=GetInputType(type??''), 
-    onEnterUp=() => {}, 
-    ...props
-  }:IInput) 
-{ 
-  const onChange = (event:IEvent) => setValue(GetInputValueOrDefault(event, defaultValue)); 
+
+// --------------------------------------------------------
+export function Input({value, setValue, ifield, 
+  inputType, 
+  width = (value:any) => SetSize(value), 
+  validator=(value:any) => true, 
+  onPressEnter=() => {}, 
+  placeholder}:IInput) { 
+
+  // get correct default value
+  const defaultValue = GetDefaultValueFromIField(ifield); 
+
+  // value never null
   const Value = IsNull(value) ? defaultValue: value; 
-  const onKeyUp = (event: React.KeyboardEvent<HTMLInputElement>) => OnEnter(event, onEnterUp); 
+  
+  // onChange 
+  const onChange = (event:IEvent) => { 
+    const valueFromInput = GetValueFromInput(event); 
+    const newValue = IsNull(valueFromInput) ? defaultValue: valueFromInput; 
+    if(validator(newValue)) 
+      setValue((prev:any) => newValue); 
+  } 
 
-  const width = props.width ?? SetSize(value); 
-  const style = {width: `${width+2}ch`}; 
+  // on PressEnter
+  const onKeyUp = (event: React.KeyboardEvent<HTMLInputElement>) => OnEnter(event, onPressEnter); 
+  const style = {width: `${width(Value)+2}ch`}; 
 
-  if(type === 'boolean') 
-    return <input {...{type:inputType, checked:Value, onChange, onKeyUp,  ...props}} /> 
-  return <input {...{type:inputType, value:Value, onChange, onKeyUp, ...props}} style={style} /> 
-} 
-
-
-// GetValue --------------------------------------
-function GetInputValueOrDefault (event:IEvent, defaultValue:any) { 
-  const value = GetValueFromInput(event); 
-  return IsNull(value) ? defaultValue: value; 
+  if(ifield.type === 'boolean') 
+    return <input {...{type:inputType, checked:Value, onChange, onKeyUp}} /> 
+  return <input {...{type:inputType, value:Value, onChange, onKeyUp}} style={style} /> 
 }
-

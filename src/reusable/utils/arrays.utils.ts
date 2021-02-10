@@ -1,4 +1,4 @@
-import { IsEmpty } from "../_utils2";
+import { IsEmpty } from "../_utils";
 
 export type Predicate<T> = (value:T, i:number, array:T[]) => boolean; 
 export type Comparator<T, U> = (t:T, u:U) => boolean; 
@@ -53,27 +53,23 @@ export function Intersection<T, U>(ts:T[] = [], us:U[] = [], compare:Comparator<
 } 
 
 
-/* GROUP ========================================
+/* Pick ========================================
 --- If 'values' is specified, groups elements from 'array' by their element[key] values, where element[key] in values. 
 Groups will follow the order of values specified in 'values'
 
 --- If 'values' is NOT specified, groups element from 'array' by their element[key] values. 
 */
-export function Group<T, U>(array:T[] = [], compare:Comparator<T, any>, us:U[] = []): 
-    Array<T[]> { 
-  const [u, ...remainder] = us; 
-  const predicate = (t:T, i:number, ts:T[]) => { 
-    if(u) 
-      return compare(t, u as U); 
-    return ts[0] ? compare(t, ts[0] as T): false; 
-  } 
-  const {inclusion, exclusion} = Filter(array, predicate); 
-  if(!IsEmpty(exclusion) &&  (IsEmpty(us) || u && !IsEmpty(remainder)) ) { 
-    const groups = Group(exclusion, compare, remainder); 
-    return [inclusion, ...groups]; 
-  } 
-  return [inclusion]; 
-}
+export function Pick<T, U>(array:T[] = [], pickingOrder:U[], compare:Comparator<T,U>): T[] { 
+  const predicate = (t:T) => pickingOrder.findIndex(u => compare(t,u)) >=0; 
+  const {inclusion} = Filter(array, predicate); 
+
+  const sorter = (t:T, pivot:T) => { 
+    const pivotIndex = pickingOrder.findIndex(u => compare(pivot,u)); 
+    const index = pickingOrder.findIndex(u => compare(t,u)); 
+    return index >= pivotIndex; 
+  }; 
+  return Sort<T>(inclusion,  sorter); 
+} 
 
 
 /* SORT =========================================
@@ -81,7 +77,7 @@ Quick sort using a predicate (sorter)
 */ 
 export function Sort<T>(array:T[] = [], sorter:Sorter<T>):T[] { 
   const [pivot, ...remainder] = [...array]; 
-  if(remainder && remainder?.length <= 1) 
+  if(IsEmpty(remainder)) 
     return pivot ? [pivot] : []; 
   const {exclusion, inclusion} = Filter(remainder, (t:T) => sorter(t, pivot)); 
   const left = Sort<T>(exclusion, sorter); 

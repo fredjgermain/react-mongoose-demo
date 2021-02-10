@@ -1,4 +1,4 @@
-import {Pick} from '../_utils'; 
+import {Pick} from '../_arrayutils'; 
 import {Collection} from './collection.class'; 
 
 export interface ICrud { 

@@ -1,10 +1,14 @@
-
+// useInputArray ==========================================
 export interface IInputArray { 
-  type:string; 
-  inputType?:string; 
   values:any[]; 
-  setValues:any; 
-  defaultValue:any; 
+  setValues:React.Dispatch<React.SetStateAction<any[]>> 
+  ifield:IField; 
+
+  inputType?:string; 
+  width?: (value:any) => number; 
+  validator?: (value:any) => boolean; 
+  placeholder?: any; 
+  onPressEnter?: () => void; 
 } 
 
 export interface IUseInputArray extends IInputArray { 
@@ -13,7 +17,9 @@ export interface IUseInputArray extends IInputArray {
   Delete:(at:number)=>void; 
 } 
 
-export function useInputArray(props:IInputArray):IUseInputArray { 
+
+// useInputArray ==========================================
+export function useInputArray({...props}:IInputArray):IUseInputArray { 
   const {values, setValues} = props; 
 
   function Create(newValue:any) { 
@@ -21,19 +27,19 @@ export function useInputArray(props:IInputArray):IUseInputArray {
   } 
 
   function Update(at:number, newValue:any) { 
-    setValues((prev:any) => { 
-      const newValues = [...prev]; 
-      newValues[at] = newValue; 
-      return newValues; 
-    }); 
+    setValues((prev:any[]) => {
+      const copy = [...prev]; 
+      copy[at] = newValue; 
+      return copy; 
+    })
   } 
 
   function Delete(at:number) { 
-    setValues((prev:any) => { 
-      const newValues = [...prev]; 
-      newValues.splice(at, 1); 
-      return newValues; 
+    setValues((prev:any[]) => { 
+      const copy = [...prev]; 
+      copy.splice(at, 1); 
+      return copy; 
     }); 
   } 
-  return {...props, values, Create, Update, Delete}; 
+  return {...props, Create, Update, Delete}; 
 }

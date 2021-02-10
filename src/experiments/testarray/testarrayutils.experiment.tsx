@@ -1,7 +1,6 @@
 import React from 'react'; 
-import {ToArray, Filter, Indexes, Union, Sort, Duplicates} from '../../reusable/_utils2'; 
-import {Comparator, Predicate} from '../../reusable/_utils2'; 
-import {IsEmpty, IsNull} from '../../reusable/_utils2'; 
+import {Comparator, Predicate, ToArray, Filter, Indexes, Union, Sort, Duplicates} from '../../reusable/_arrayutils'; 
+import {IsEmpty, IsNull} from '../../reusable/_utils'; 
 
 
 // Test Util ====================================

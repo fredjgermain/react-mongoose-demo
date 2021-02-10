@@ -1,10 +1,11 @@
-import {ToArray, Filter, Union, IsEmpty} from '../../_utils'; 
+import {ToArray, Filter, Union} from '../../_arrayutils'; 
+import {IsEmpty} from '../../_utils'; 
 //import {useToggle, IUseToggle} from '../../_usetoggle'; 
 
 // USE SELECT ====================================
 export interface IUseSelect { 
   value:any; 
-  setValue:any; 
+  setValue:React.Dispatch<React.SetStateAction<any>>; 
   options:IOption[]; 
   GetSelection: () => IOption[]; 
   placeholder:string; 

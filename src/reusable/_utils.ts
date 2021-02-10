@@ -1,18 +1,13 @@
-import {ToArray, Filter, Indexes, Pick, Sort, Union, Duplicates} from './utils/arrays2.utils';
-import {Comparator, Predicate} from './utils/arrays2.utils';
-import {IsNull, IsEmpty} from './utils/value.utils';
+import {IsNull, IsEmpty, Copy, GetValueAt, SetValueAt} from './utils/value.utils';
 
 import {SetSize, SetWidth, IEvent, 
   OnPress, OnTab, OnEnter, 
   GetInputType, GetValueFromInput} from './utils/htmlelement.utils'; 
 
-import {Copy, IsInRange, GetValueAt, SetValueAt, 
-  GetDefaultValueByType, GetTypeByValue, GetDefaultValueFromIField} from './utils/valuetypetesting.utils'; 
-//import {Field} from './utils/field/field.class'; 
+import {IsInRange, GetDefaultValueByType, GetTypeByValue, GetDefaultValueFromIField} from './utils/valuetypetesting.utils'; 
 
 
-export type {Comparator, Predicate, IEvent} 
-export {ToArray, Filter, Indexes, Pick, Sort, Union, Duplicates} 
+export type {IEvent} 
 export {IsNull, IsEmpty} 
 
 export {SetSize, SetWidth, 

@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'; 
-import {Arrx, ArrxContext, Elements, Element, ElementContext, ElementIndex, ElementValue} from '../../_arrx'; 
-import {Input} from '../../_input'; 
+import {Arrx, ArrxContext, Elements, Element, ElementContext, ElementIndex, ElementValue} from '../../../reusable/_arrx'; 
+import {Input} from '../input/input.component'; 
 import {IInputArray, IUseInputArray, useInputArray} from './inputarray.hook'; 
 
 
@@ -23,28 +23,29 @@ export function InputArray({...props}:React.PropsWithChildren<IInputArray>) {
 
 // Create element =======================================
 function CreateElement() { 
-  const {type, defaultValue, Create} = useContext(InputArrayContext); 
+  const {ifield, Create} = useContext(InputArrayContext); 
+  const {defaultValue} = ifield; 
   const [value, setValue] = useState(defaultValue); 
 
-  const onEnterUp = () => {
+  const onPressEnter = () => { 
     Create(value); 
-    setValue(() => defaultValue); // reset input to defaultValue after creation. 
+    setValue(defaultValue); // reset input to defaultValue after creation. 
   }; 
-  return <Input {...{value, setValue, defaultValue, type, onEnterUp}}  /> 
+  return <Input {...{value, setValue, ifield, onPressEnter}}  /> 
 } 
 
 // Update element =======================================
 function UpdateElement() { 
-  const {values, type, defaultValue, Update} = useContext(InputArrayContext); 
+  const {values, ifield, Update} = useContext(InputArrayContext); 
   const {index} = useContext(ElementContext); 
-
   const [value, setValue] = useState(values[index]); 
+  
   useEffect(() => { 
     setValue(values[index]); 
   }, [JSON.stringify(values[index])]); 
 
-  const onEnterUp = () => Update(index, value); 
-  return <Input {...{value, setValue, type, defaultValue, onEnterUp}} />
+  const onPressEnter = () => Update(index, value); 
+  return <Input {...{value, setValue, ifield, onPressEnter}}  /> 
 }
 
 // Delete Btn ===================================

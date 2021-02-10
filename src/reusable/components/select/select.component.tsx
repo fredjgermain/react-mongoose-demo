@@ -31,7 +31,7 @@ export function TestSelect() {
 interface ISelect { 
   //type: string; 
   value: any; 
-  setValue: any; 
+  setValue: React.Dispatch<React.SetStateAction<any>>;  
   options: IOption[]; 
   width?:number; 
   placeholder?: string; 
