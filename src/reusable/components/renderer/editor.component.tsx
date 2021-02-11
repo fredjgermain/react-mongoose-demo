@@ -110,7 +110,7 @@ function EditMany({value, setValue, ifield}:IEditor) {
 
 function EditOneOptions({ifield, value, setValue, ...props}:IEditor) { 
   const options = props.options ?? [] as IOption[]; 
-  return <Select {...{value, setValue, options}  } /> 
+  return <Select {...{ifield, value, setValue, options}  } /> 
 } 
 
 function EditManyOptions({...props}:IEditor) { 

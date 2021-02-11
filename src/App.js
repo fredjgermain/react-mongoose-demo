@@ -2,6 +2,10 @@ import React from 'react';
 
 import {TestArrayUtil} from './experiments/testarray/testarrayutils.experiment';
 import {TestReader, TestEditors} from './experiments/renderer/testrender';
+import {TestSelect} from './reusable/components/select/select.component'; 
+
+
+
 
 import {CrudContexter} from './reusable/_crud'; 
 import Nav from './components/nav/nav.component'; 
@@ -17,7 +21,9 @@ const baseUrl = `https://fjg-mongoose-heroku.herokuapp.com/api/`;
 
 
 
+
 export default function App() { 
+  return <TestSelect/>
   //return <TestEditors /> 
   return <TestReader/> 
   return <TestArrayUtil/> 

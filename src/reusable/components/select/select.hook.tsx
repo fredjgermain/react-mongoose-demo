@@ -1,19 +1,22 @@
-import {ToArray, Filter, Union} from '../../_arrayutils'; 
+import {ToArray, Filter} from '../../_arrayutils'; 
 import {IsEmpty} from '../../_utils'; 
-//import {useToggle, IUseToggle} from '../../_usetoggle'; 
+import {IEditor} from '../../_input'; 
+
+import {useToggle, IUseToggle} from '../../_usetoggle'; 
 
 // USE SELECT ====================================
-export interface IUseSelect { 
-  value:any; 
-  setValue:React.Dispatch<React.SetStateAction<any>>; 
+export interface IUseSelect extends IEditor { 
   options:IOption[]; 
-  GetSelection: () => IOption[]; 
-  placeholder:string; 
   multiple:boolean; 
-  
+  GetSelection: () => IOption[]; 
   SelectValue:(newValue:any) => void; 
+  Toggle:IUseToggle<HTMLDivElement>; 
 } 
-export function useSelect(value:any, setValue:any, options:IOption[], placeholder:string, multiple:boolean):IUseSelect { 
+export function useSelect({ifield, value, setValue, ...props}:IEditor):IUseSelect { 
+  const Toggle = useToggle<HTMLDivElement>(true); 
+
+  const multiple = ifield.isArray ?? false; 
+  const options = props.options ?? []; 
   // SelectValue ................................
   function SelectValue (newValue:any) { 
     const {inclusion, exclusion} = Filter(ToArray(value), e => e === newValue); 
@@ -38,5 +41,5 @@ export function useSelect(value:any, setValue:any, options:IOption[], placeholde
     return selection; 
   }
 
-  return {value, setValue, options, GetSelection, placeholder, multiple, SelectValue}; 
+  return {ifield, value, setValue, options, multiple, GetSelection, SelectValue, Toggle}; 
 } 

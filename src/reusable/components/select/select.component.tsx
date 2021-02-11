@@ -1,7 +1,9 @@
 import React, { useContext, useState } from 'react'; 
 import {IsEmpty} from '../../_utils'; 
 import {useSelect, IUseSelect} from './select.hook'; 
-//import CSS from 'csstype'; 
+import {IEditor} from '../../_input'; 
+import {useToggle, IUseToggle} from '../../_usetoggle'; 
+
 
 import './select.style.css'; 
 
@@ -13,59 +15,52 @@ export function TestSelect() {
     {value:3, label:'valeur 3'}, 
   ] 
 
-  const [value, setValue] = useState(); 
+  const ifield = {accessor:'', label:'', defaultValue:'', type:'string'} as IField; 
+  const [value, setValue] = useState(0); 
+
+
 
   return <div> 
     <span>{JSON.stringify(value)}</span> 
     <span>Label:</span> 
-    <Select {...{value, setValue, options, multiple:false}} /> 
-    <span>asdasdasdsa:</span> 
-    <Select {...{value, setValue, options, multiple:true}} /> 
+    <Select {...{ifield, value, setValue, options}} /> 
     <span>asdasdasdsa:</span> 
   </div> 
 } 
 
 
-
-// SELECT =======================================
-interface ISelect { 
-  //type: string; 
-  value: any; 
-  setValue: React.Dispatch<React.SetStateAction<any>>;  
-  options: IOption[]; 
-  width?:number; 
-  placeholder?: string; 
-  multiple?:boolean; 
-} 
-
-
 export const SelectContext = React.createContext({} as IUseSelect); 
-export function Select({value, setValue, options, placeholder, multiple=false}:ISelect) { 
-  const _placeholder = placeholder ?? (multiple ? 'Select 1+ item-s': 'Select 1 item'); 
-  const context = useSelect(value, setValue, options, _placeholder, multiple); 
+export function Select({ifield, value, setValue, options}:IEditor) { 
+  const context = useSelect({ifield, value, setValue, options}); 
 
-  // Necessary styles for Select component proper functionning. 
-  /*const style: CSS.Properties = { 
-    width: '20ch', 
-    position : 'relative', 
-    display: 'inline-block', 
-  }; */
+  const {toggle, ToggleBtnAction, toggleTarget, Toggle} = useToggle<HTMLDivElement>(true); 
+
+  const CloseToggle = () => { 
+    if(!context.multiple) 
+      Toggle(); 
+  }
 
   return <SelectContext.Provider value={context}> 
-    <div className={'select-main'}> 
-      <Selection/> 
-      <Options /> 
-    </div>
+    <div className={'select-main'} > 
+      <div  {...ToggleBtnAction()} > 
+        <Selection/> 
+      </div> 
+      <div tabIndex={0} ref={toggleTarget} hidden={toggle} onClick={CloseToggle}> 
+        <Options /> 
+      </div> 
+    </div> 
   </SelectContext.Provider> 
-} 
+}
 
 
-function Selection() { 
-  const {placeholder, SelectValue, GetSelection} = useContext(SelectContext); 
+function Selection() {
+  const {SelectValue, GetSelection} = useContext(SelectContext); 
   const selection = GetSelection(); 
 
   return <div className={'select-header'}> 
-    {IsEmpty(selection) && <span className={'select-placeholder'}>{placeholder}</span>} 
+
+    {IsEmpty(selection) && <span className={'select-placeholder'}> --- Empty --- </span>} 
+
     {selection.map( (option, i) => { 
       const key = JSON.stringify(option.value); 
       const onClick = () => SelectValue(option?.value); 
@@ -75,7 +70,8 @@ function Selection() {
       </span> 
     })} 
   </div> 
-} 
+}
+
 
 
 function Options() { 

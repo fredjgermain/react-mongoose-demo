@@ -83,18 +83,6 @@ export function TestValueAt() {
 } */
 
 
-// Test select when value is not in the avaible options */ 
-export function TestSelect () { 
-  const [value, setValue] = useState(['-1']); 
-  const options = [ 
-    {value:'0', label:'option 0'}, 
-    {value:'1', label:'option 1'}, 
-    {value:'2', label:'option 2'}, 
-    {value:'3', label:'option 3'} 
-  ] 
-
-  return <Select {...{value, setValue, options, multiple:true}} /> 
-} 
 
 export function TestEditors() {
   

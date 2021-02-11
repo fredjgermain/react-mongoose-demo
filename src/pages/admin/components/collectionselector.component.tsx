@@ -1,6 +1,6 @@
 import React, {useContext, useState} from 'react'; 
 import {CrudContext} from '../../../reusable/_crud'; 
-import {Select, Input} from '../../../reusable/_input'; 
+import {Select} from '../../../reusable/_input'; 
 
 
 export function CollectionSelector() { 
@@ -8,8 +8,10 @@ export function CollectionSelector() {
 
   //const [value, setValue] = useState(activeCollection?.accessor); 
   const options:IOption[] = GetICollections().map( ic => { return {value:ic, label:ic.label} }); 
+  const ifield = {accessor:'', label:'', defaultValue:{}, type:''} as IField; 
+
 
   return <div> 
-    <Select {...{value, setValue, options, placeholder:'Choose a collection'}} /> 
+    <Select {...{ifield, value, setValue, options}} /> 
   </div>
 }
