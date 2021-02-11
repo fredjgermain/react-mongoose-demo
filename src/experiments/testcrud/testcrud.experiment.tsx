@@ -17,7 +17,7 @@ function LoadCollections() {
     Collections(['questions','responses', 'forms', 'instructions', 'patients', 'answers']); 
   }, []); 
 
-  const ready = state.ready && state.success; 
+  const ready = state.busy && state.success; 
   const [forms] = GetICollections(['forms']); 
 
   return <div> 

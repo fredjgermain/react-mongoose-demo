@@ -6,7 +6,11 @@ import {FeedBack} from '../../../components/feedback/feedback.component';
 
 // LOAD PATIENTS ================================
 export function LoadPatients() { 
-  const {setActiveCollection, GetICollections} = useContext(CrudContext); 
+  const {state, Collections, setActiveCollection, GetICollections} = useContext(CrudContext); 
+
+  useEffect(() => { 
+    Collections(['patients', 'answers']); 
+  }, []); 
 
   async function GetPatient() { 
     //await Collections(['patients']); 

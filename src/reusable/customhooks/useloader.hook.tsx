@@ -1,8 +1,9 @@
 import {useReducer} from 'react'; 
-//import axios from 'axios'; 
+
+
 
 export interface IState { 
-  ready: boolean, 
+  busy: boolean, 
   success: boolean, 
   response: any, 
 } 
@@ -14,15 +15,23 @@ interface Action {
 
 const reducer = (state:IState, action:Action):IState => {
   switch(action.type) { 
+    case 'IS_BUSY' : { 
+      return { 
+        busy: true, 
+        success: false, 
+        response: action.payload, // query response 
+      } as IState; 
+    } 
+
     case 'LOAD_SUCCESS': 
       return { 
-        ready: true, 
+        busy: false, 
         success: true, 
         response: action.payload, // query response 
       } as IState; 
     case 'LOAD_ERROR': 
       return { 
-        ready: true, 
+        busy: false, 
         success: false, 
         response: action.payload, // error message 
       } as IState; 
@@ -32,7 +41,7 @@ const reducer = (state:IState, action:Action):IState => {
 } 
 
 const init:IState = { 
-  ready: false, 
+  busy: false, 
   success: false, 
   response: {}, 
 }
@@ -45,12 +54,16 @@ export function useLoader():UseLoader {
   const [state, dispatch] = useReducer<(state: IState, action: Action) => IState>(reducer, init); 
 
   const Load = async (loadfunc:() => Promise<void>) => { 
+    // Loader is busy 
+    dispatch({type:'IS_BUSY', payload:undefined}) 
+
+    // Loader has finished
     await loadfunc().then( res => { 
       dispatch({type:'LOAD_SUCCESS', payload:res} ) 
     }) 
     .catch( err => { 
       dispatch({type:'LOAD_ERROR', payload:err} ) 
-    }) 
+    })  
   } 
-  return {state, Load} 
+  return {state, Load}; 
 } 

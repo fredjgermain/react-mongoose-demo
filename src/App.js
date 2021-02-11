@@ -1,11 +1,7 @@
 import React from 'react'; 
 
-import {TestArrayUtil} from './experiments/testarray/testarrayutils.experiment';
-import {TestReader, TestEditors} from './experiments/renderer/testrender';
-import {TestSelect} from './reusable/components/select/select.component'; 
-
-
-
+import {TestLoader} from './experiments/testLoader/testLoader'; 
+//import {TestSelect} from './reusable/components/select/select.component'; 
 
 import {CrudContexter} from './reusable/_crud'; 
 import Nav from './components/nav/nav.component'; 
@@ -23,20 +19,24 @@ const baseUrl = `https://fjg-mongoose-heroku.herokuapp.com/api/`;
 
 
 export default function App() { 
-  return <TestSelect/>
-  //return <TestEditors /> 
-  return <TestReader/> 
-  return <TestArrayUtil/> 
-
+  //return <TestLoader/> 
 
   return <CrudContexter {...{baseUrl}}> 
+    <div> ---- NAV ... </div> 
     <Nav/> 
+    <div> ---- Preloader ... </div> <br/>
     <PreLoader/> 
-    <Switch>
-      <Route exact path={'/'} component={Home} />
-      <Route path={'/admin'} component={Admin} />
-      <Route path={'/patient'} component={Patient} />
-    </Switch>
+    <h1> h1 title ... </h1> 
+    <Switch> 
+      <Route exact path={'/'} component={Home} /> 
+      <Route path={'/admin'} component={Admin} /> 
+      <Route path={'/patient'} component={Patient} /> 
+    </Switch> 
+    <br/> 
+    <div> 
+      Footer 
+    </div> 
+    <br/> 
   </CrudContexter> 
 } 
 

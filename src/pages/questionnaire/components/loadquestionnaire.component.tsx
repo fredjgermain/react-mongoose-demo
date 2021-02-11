@@ -17,14 +17,16 @@ export function LoadQuestionnaire() {
   }
 
   function BuildBlankForm() { 
-    const [questions] = GetICollections(['question'])
+    const [questions] = GetICollections(['questions']) 
     if(!questions) 
       return [] as IAnswer[]; 
+    
     const _answers = questions.entries.map(q=> { 
       return {_id:'', answer:-1, pid:patientProfile._id, qid:q._id} as IAnswer; 
     }); 
+    
     setAnswers(_answers); 
-  }
+  } 
 
   useEffect(() => { 
     GetQuestionnaire(); 
@@ -33,4 +35,4 @@ export function LoadQuestionnaire() {
   return <div> 
     <FeedBack/> 
   </div> 
-}
+} 

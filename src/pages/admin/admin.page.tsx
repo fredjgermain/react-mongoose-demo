@@ -22,7 +22,7 @@ export default function Admin() {
   return <div> 
     <h2>Admin</h2> 
     <FeedBack/> 
-    {state.ready && state.success && <CollectionSelector /> } 
+    {state.busy && state.success && <CollectionSelector /> } 
     {!IsEmpty(activeCollection) && <AdminTablr/>} 
   </div> 
 }

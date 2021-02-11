@@ -33,10 +33,12 @@ export function Paging({pageIndex, setPageIndex, pages}:IPageHook) {
   const {activeCollection:{accessor}, Create} = useContext(CrudContext); 
   const page = pages[pageIndex] ?? []; 
   const isComplete = IsComplete(page); 
+  const allComplete = IsComplete(); 
   const [from, to] = [ [...page].shift(), [...page].pop()]; 
   const [first, last] = [pages.flat().shift(), pages.flat().pop()]; 
 
   const onClickNext = () => {setPageIndex(pageIndex+1)}; 
+  const onClickSubmit = () => {console.log('submit answers')}; 
   //const onClickSubmit = () => {Create(accessor, )}; 
 
   return <div>
@@ -48,11 +50,12 @@ export function Paging({pageIndex, setPageIndex, pages}:IPageHook) {
       return <button key={i} {...{onClick, disabled}} >{i+1}</button> 
     })} 
     <button {...{onClick:onClickNext, disabled:isComplete}} >Next</button> 
+    <button {...{onClick:onClickSubmit, disabled:allComplete}} >Submit</button> 
   </div> 
 } 
 
 
-export function IsComplete(page:number[]) { 
+export function IsComplete(page?:number[]) { 
   const {answers} = useContext(AnswersContext); 
   const {GetIEntries} = useContext(CrudContext); 
 

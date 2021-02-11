@@ -10,9 +10,9 @@ export function FeedBack() {
   const {state} = useContext(CrudContext); 
 
   return <div> 
-    {!state.ready && <span>LOADING ... </span>} 
-    {state.ready && <span>Ready </span>} 
-    {state.ready && !state.success && 'an errors occured'} 
+    {state.busy && <span>LOADING ... </span>} 
+    {!state.busy && <span>Ready </span>} 
+    {!state.busy && !state.success && 'an errors occured'} 
   </div> 
 } 
 

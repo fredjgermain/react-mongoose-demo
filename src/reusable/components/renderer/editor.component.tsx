@@ -44,8 +44,6 @@ interface IEditorComponent extends IEditor {
 - CustomEditOneOptions : if defined is used to display value, otherwise uses 'EditManyOptions' (Select with multiple:true) 
 
 - CustomEditMixed : if defined is use to display value, otherwise uses 'EditMixed' (EditMixed) 
-
-
 */ 
 export function Editor({ifield, options, ...props}:IEditorComponent) { 
   const _value = IsEmpty(options) ? 
@@ -115,7 +113,7 @@ function EditOneOptions({ifield, value, setValue, ...props}:IEditor) {
 
 function EditManyOptions({...props}:IEditor) { 
   const options = props.options ?? [] as IOption[]; 
-  return <Select {...{...props, options, multiple:true} } /> 
+  return <Select {...{...props, options} } /> 
 } 
 
 function EditMixed({ifield, value, options, setValue}:IEditor) {

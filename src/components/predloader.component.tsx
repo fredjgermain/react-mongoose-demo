@@ -2,21 +2,28 @@ import {useContext, useEffect} from 'react';
 import {CrudContext} from '../reusable/_crud'; 
 
 
-// Prelaoder ===============================================
-export function PreLoader() { 
+// Preloader ==============================================
+export function useCollectionLoader(accessors:string[]) { 
   const {state, Collections, GetICollections} = useContext(CrudContext); 
+  const collections = GetICollections(accessors); 
+  const mustFetch = collections.length !== accessors.length; 
 
   useEffect(() => { 
-    Collections(['questions','responses', 'forms', 'instructions', 'patients', 'answers']); 
-  }, []); 
+    Collections(accessors); 
+  }, [mustFetch && !state.busy]); 
 
-  const ready = state.ready && state.success; 
-  const [forms] = GetICollections(['forms']); 
+  return !mustFetch; 
+} 
+
+
+// Pre-loader ==============================================
+export function PreLoader() { 
+  const accessors = ['questions','responses', 'forms', 'instructions']; 
+  const ready = useCollectionLoader(accessors); 
 
   return <div> 
-    <h1>Test Crud</h1> 
-    <div>{forms && forms.entries.length}</div> 
-    {!ready && 'loading ...'} 
-    {ready && 'ready !'} 
+    <span>Pre-loading:</span> 
+    {!ready && ' loading ...'} 
+    {ready && ' ready !'} 
   </div> 
-}
+} 
