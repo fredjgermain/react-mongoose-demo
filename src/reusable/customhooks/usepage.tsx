@@ -7,9 +7,9 @@ type PageBreakPredicate = {
 
 // PAGE HOOK ====================================
 export interface IPageHook { 
-  pageIndex:number, 
-  setPageIndex:any, 
-  pages:Array<number[]>, 
+  pageIndex:number; 
+  setPageIndex:React.Dispatch<React.SetStateAction<number>>; 
+  pages:Array<number[]>; 
 }
 
 export function usePage(datas:any[], pageBreak:PageBreakPredicate|number):IPageHook { 
@@ -40,7 +40,7 @@ export function usePage(datas:any[], pageBreak:PageBreakPredicate|number):IPageH
   } 
 
   const pages = PagesBreak(datas, pageBreak); 
-  if(pageIndex >= pages.length) 
+  if(pageIndex >= pages.length && pages.length > 0) 
     setPageIndex(0); 
   
   return {pageIndex, setPageIndex, pages}; 

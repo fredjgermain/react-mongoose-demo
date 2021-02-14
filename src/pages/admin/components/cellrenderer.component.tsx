@@ -3,14 +3,12 @@ import {CrudContext} from '../../../reusable/_crud';
 import {TablrContext, CellContext} from '../../../reusable/_tablr'; 
 import {GetDefaultValueFromIField} from '../../../reusable/_utils'; 
 import {Reader, Editor} from '../../../reusable/_input'; 
-import {EActionType} from '../../../reusable/_dao'; 
-
+import { EActionType } from '../../../reusable/_dao';
 
 
 // Cell Renderer =================================
 export function CellRender() { 
-  const {activeEntry, activeMode} = useContext(CrudContext); 
-  const {setActiveEntry, GetIOptions} = useContext(CrudContext); 
+  const {activeEntry, activeMode, setActiveEntry, GetIOptions} = useContext(CrudContext); 
   const {datas} = useContext(TablrContext); 
   const {row, ifield} = useContext(CellContext); 
   const data = datas[row]; 

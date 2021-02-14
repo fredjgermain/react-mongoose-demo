@@ -1,13 +1,13 @@
 import {useContext} from 'react'; 
 import {CrudContext} from '../../../reusable/_crud'; 
 import {ElementContext} from '../../../reusable/_arrx'; 
-import {AnswersContext} from '../questionnaire.page'; 
+import {PatientContext} from '../../patient/patient.page'; 
 
 
 export function GetAnswer(_index?:number):IAnswer { 
-  const {answers} = useContext(AnswersContext); 
+  const {questionnaire} = useContext(PatientContext); 
   const {index} = useContext(ElementContext); 
-  return answers[index??_index] as IAnswer; 
+  return questionnaire[index??_index] as IAnswer; 
 } 
 
 export function GetQuestion(answer:IAnswer):IQuestion { 

@@ -1,11 +1,10 @@
 import React, {useContext} from 'react'; 
 import {CrudContext} from '../../../reusable/_crud'; 
-import {EActionType} from '../../../reusable/_dao'; 
 
 import {Rows, Row, RowContext, Cells, Cell, CellContext} from '../../../reusable/_tablr'; 
 import {CreateBtn, DeleteBtn, UpdateBtn} from './crudbtn.component'; 
 import {CellRender} from './cellrenderer.component';
-
+import { EActionType } from '../../../reusable/_dao';
 
 
 

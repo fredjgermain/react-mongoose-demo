@@ -4,4 +4,5 @@ import {DaoContexter, DaoContext} from './dao/daocontexter.component';
 
 export {DAO, useDao, EActionType} 
 export {DaoContexter, DaoContext} 
+
 export type {IUseDao, ICrud} 

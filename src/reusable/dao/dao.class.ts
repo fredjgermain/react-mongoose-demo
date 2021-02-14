@@ -34,7 +34,7 @@ export class DAO {
     if(!fields) 
       return collection?.ifields ?? []; 
     const compare = (f:IField, accessor:string) => {return f.accessor === accessor}; 
-    return Pick(collection.ifields, fields, compare); 
+    return Pick(collection?.ifields, fields, compare); 
   }
 
   // Get Entries --------------------------------------
@@ -43,7 +43,7 @@ export class DAO {
     if(!ids)
       return collection?.entries ?? []; 
     const compare = (e:IEntry, id:string) => {return e._id === id}; 
-    return Pick(collection.entries, ids, compare); 
+    return Pick(collection?.entries, ids, compare); 
   }
 
   // Get Default IEntry ----------------------------------

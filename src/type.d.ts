@@ -36,12 +36,6 @@ interface IField {
   sort?: string; 
 } 
 
-enum EActionType { 
-  CREATE = 'create', 
-  READ = 'read', 
-  UPDATE = 'update', 
-  DELETE = 'delete', 
-}
 
 interface ICrudResponse { 
   actionType: EActionType; 

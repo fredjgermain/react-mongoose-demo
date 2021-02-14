@@ -2,15 +2,12 @@ import {useMemo} from 'react';
 import {useLoader, IState} from '../_useloader'; 
 import {DAO} from './dao.class'; 
 
-
 export enum EActionType { 
   CREATE = 'create', 
   READ = 'read', 
   UPDATE = 'update', 
   DELETE = 'delete', 
 }
-
-
 
 // USE DAO ======================================
 export interface IUseDao{ 
@@ -25,7 +22,7 @@ export interface IUseDao{
   // Get foreign elements
   GetForeignElements: (ifield:IField) => {foreignCollection:ICollection|undefined, abbrevField:IField|undefined}, 
 
-  // Ge options 
+  // Get options 
   GetIOptions: (ifield:IField) => IOption[]; 
 
   // load remote collections. 
@@ -36,6 +33,9 @@ export interface IUseDao{
   Read: (accessor:string, id?:string[]) => Promise<void>; 
   Update: (accessor:string, entries:IEntry[]) => Promise<void>; 
   Delete: (accessor:string, entries:IEntry[]) => Promise<void>; 
+
+  // Validate 
+  Validate: (collectionAccessor:string, ifieldAccessor:string, value:any) => boolean; 
 } 
 
 
@@ -71,11 +71,18 @@ export function useDao(dao:DAO):IUseDao {
   const Delete = async (accessor:string, entries:IEntry[]) => 
     Load(() => Dao.Delete(accessor, entries)); 
 
+  // Validate
+  const Validate = (collectionAccessor:string, ifieldAccessor:string, value:any) => { 
+    const [ifield] = GetIFields(collectionAccessor, [ifieldAccessor]); 
+    return ifield?.validators?.every( valid => valid(value) ) ?? false; 
+  }; 
+
   return { 
     state, 
     GetICollections, GetIFields, GetIEntries, GetDefaultIEntry, 
     GetForeignElements, GetIOptions, 
-    Collections, Create, Read, Update, Delete 
+    Collections, Create, Read, Update, Delete, 
+    Validate
   }; 
 }
 

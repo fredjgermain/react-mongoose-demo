@@ -1,42 +1,32 @@
 import React, {useContext, useState} from 'react'; 
 import {CrudContext} from '../../../reusable/_crud'; 
-import {EActionType} from '../../../reusable/_dao'; 
-import {IsEmpty} from '../../../reusable/_utils'; 
-import {FeedBack} from '../../../components/feedback/feedback.component'; 
+//import {Pick} from '../../../reusable/_arrayutils';
 
 import {Objx, Fields, Field, FieldContext, FieldLabel} 
   from '../../../reusable/_objx'; 
 import {Reader, Editor} from '../../../reusable/_input'; 
 //import {Questionnaire} from '../../questionnaire/questionnaire.page'; 
-import {PatientProfileContext} from '../patient.page'; 
-
+import {PatientContext} from '../patient.page'; 
 
 
 
 // Patient profile ============================== 
 export function PatientProfile() { 
-  const {state, activeEntry, activeMode, activeCollection, Create, Update} = useContext(CrudContext); 
-  const {ifields} = activeCollection; 
-  const ramqField = ifields.find(f => f.accessor==='ramq') as IField; 
-  const cols = ifields.filter(f => ['firstName', 'lastName'].includes(f.accessor) ); 
-
-  const {setPatientProfile} = useContext(PatientProfileContext); 
-
-  async function UpdateCreateProfile(Func:(accessor:string, entries:IEntry[]) => Promise<void>) { 
-    await Func(activeCollection.accessor, [activeEntry]); 
-    if(state.success) 
-      setPatientProfile(activeEntry); 
-  } 
+  const {activeEntry, activeMode, GetIFields} = useContext(CrudContext); 
+  const {UpdateCreatePatientProfile} = useContext(PatientContext); 
+  const [ramqfield, ...ifields] = GetIFields('patients', ['ramq', 'firstName', 'lastName']); 
+  
+  const btnLabel = activeMode === 'update' ? 'Update patient profile': 'Create new patient profile';
 
   return <div> 
     <h2>Patient profile</h2> 
-    {activeMode} 
-    <Objx {...{value:activeEntry, ifields:cols}} > 
-      <Field {...{ifield:ramqField}} /> 
+    <Objx {...{value:activeEntry, ifields}} > 
+      <Field {...{ifield:ramqfield}} /> 
       <Fields><div><FieldLabel/><FieldEditor/></div></Fields> 
     </Objx> 
-    {activeMode === 'update' && <button onClick={() => UpdateCreateProfile(Update)}>Update patient profile</button>} 
-    {activeMode === 'create' && <button onClick={() => UpdateCreateProfile(Create)}>Create new patient profile</button>} 
+    <button onClick={UpdateCreatePatientProfile}> 
+      {btnLabel} 
+    </button> 
   </div> 
 } 
 

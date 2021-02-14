@@ -1,19 +1,20 @@
 import React, {useContext, useEffect, useState} from 'react'; 
 import {IUseDao, useDao, ICrud, DAO, DaoContext} from '../_dao'; 
 import {CrudMongoose} from '../_mongooseparser'; 
+import { IsEmpty } from '../_utils';
 
 
 
 // ICrudContext ------------------------------------------- 
 interface ICrudContext extends IUseDao { 
   activeCollection: ICollection; 
-  setActiveCollection: React.Dispatch<ICollection>; 
+  setActiveCollection: React.Dispatch<React.SetStateAction<ICollection>>; 
   activeEntry: IEntry; 
-  setActiveEntry: React.Dispatch<IEntry>; 
+  setActiveEntry: React.Dispatch<React.SetStateAction<IEntry>>; 
   activeMode: string; 
-  setActiveMode: React.Dispatch<string>; 
+  setActiveMode: React.Dispatch<React.SetStateAction<string>>; 
   ResetActive: () => void, 
-  SetActive: (id:string, mode:string) => void, 
+  SetActive: (mode:string, entry:IEntry) => void, 
   IsActive: (id:string) => boolean; 
 } 
 export const CrudContext = React.createContext({} as ICrudContext); 
@@ -36,7 +37,6 @@ export function CrudContexter({baseUrl, children}:React.PropsWithChildren<{baseU
 // UseCrud ================================================ 
 export function useActive(useDao:IUseDao) { 
   const [activeCollection, setActiveCollection] = useState({} as ICollection); 
-
   const [activeEntry, setActiveEntry] = useState({} as IEntry); 
   const [activeMode, setActiveMode] = useState('read'); 
 
@@ -49,10 +49,10 @@ export function useActive(useDao:IUseDao) {
     setActiveMode('read'); 
   } 
 
-  function SetActive(id:string, mode:string) { 
-    const [entry] = useDao.GetIEntries(activeCollection?.accessor, [id]); 
-    const defaultEntry = useDao.GetDefaultIEntry(activeCollection?.accessor); 
-    setActiveEntry(entry ?? defaultEntry); 
+  function SetActive(mode:string, entry:IEntry = {} as IEntry) { 
+    const [foundEntry] = useDao.GetIEntries(activeCollection?.accessor, [entry._id]);  
+    const defaultEntry = {...useDao.GetDefaultIEntry(activeCollection?.accessor), ...entry}; 
+    setActiveEntry(foundEntry ?? defaultEntry); 
     setActiveMode(mode); 
   }
 

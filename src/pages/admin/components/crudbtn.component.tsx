@@ -1,8 +1,7 @@
 import React, {useContext} from 'react'; 
 import {RowContext, TablrContext} from '../../../reusable/_tablr'; 
 import {CrudContext} from '../../../reusable/_crud'; 
-import {EActionType} from '../../../reusable/_dao'; 
-
+import { EActionType } from '../../../reusable/_dao';
 
 
 // Create .......................................
@@ -56,7 +55,7 @@ function CrudBtn ({mode, labels, action}:CrudBtn) {
   const isMode = activeMode === mode; 
 
   const Affirm = () => { 
-    SetActive(id, mode); 
+    SetActive(mode, {_id:id}); 
   } 
   const Cancel = () => { 
     ResetActive(); 

@@ -10,7 +10,7 @@ import { useUpdate } from '../../_useupdate';
 
 
 export interface IEditor extends IReader { 
-  setValue: React.Dispatch<any>; 
+  setValue: React.Dispatch<React.SetStateAction<any>>; 
 } 
 
 type EditorFunc = ({...props}:IEditor) => JSX.Element; 

@@ -6,7 +6,7 @@ import {TestLoader} from './experiments/testLoader/testLoader';
 import {CrudContexter} from './reusable/_crud'; 
 import Nav from './components/nav/nav.component'; 
 import {Switch, Route} from 'react-router-dom'; 
-import {PreLoader} from './components/predloader.component'; 
+import {PreLoader} from './components/preloader.component'; 
 
 // Pages
 import Home from './pages/home/home.page.tsx'; 
@@ -14,7 +14,6 @@ import Admin from './pages/admin/admin.page.tsx';
 import Patient from './pages/patient/patient.page.tsx'; 
 
 const baseUrl = `https://fjg-mongoose-heroku.herokuapp.com/api/`; 
-
 
 
 

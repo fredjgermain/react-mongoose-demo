@@ -1,12 +1,12 @@
 import {useContext} from 'react'; 
 import { CrudContext } from '../../../reusable/_crud';
-import {AnswersContext} from '../questionnaire.page'; 
+import {PatientContext} from '../../patient/patient.page'; 
 import {IPageHook} from '../../../reusable/_usepage'; 
 
 
 // PAGE BREAKER ==================================
 export function PageBreaker() { 
-  const {answers} = useContext(AnswersContext); 
+  //const {questionnaire} = useContext(PatientContext); 
   const {GetIEntries} = useContext(CrudContext); 
 
   function PageBreak(accumulator:Array<any>, value?:any, index?:number):boolean { 
@@ -56,12 +56,12 @@ export function Paging({pageIndex, setPageIndex, pages}:IPageHook) {
 
 
 export function IsComplete(page?:number[]) { 
-  const {answers} = useContext(AnswersContext); 
+  const {questionnaire} = useContext(PatientContext); 
   const {GetIEntries} = useContext(CrudContext); 
 
-  const indexes = page ? page : answers.map( (e,i) => i); 
+  const indexes = page ? page : questionnaire.map( (e,i) => i); 
   const isIncomplete = indexes.some( i => { 
-    const answer = answers[i]; 
+    const answer = questionnaire[i]; 
     const [question] = GetIEntries('questions', [answer.qid]); 
     return answer.answer < 0 && !question.optional; 
   }); 

@@ -1,26 +1,31 @@
-import React, {useContext, useState} from 'react'; 
-import {PatientProfileContext} from '../patient/patient.page'; 
-import {LoadQuestionnaire} from './components/loadquestionnaire.component'; 
-import {IsEmpty} from '../../reusable/_utils'; 
-import {DisplayQuestions} from './components/displayquestion.component'; 
+import React, {useContext, useEffect, useState} from 'react'; 
+import {PatientContext} from '../patient/patient.page'; 
+import {DisplayFormTitle, DisplayInstructions, 
+  DisplayQuestionLabel, DisplayResponseField} 
+  from './components/displayquestion.component'; 
+  import {Arrx, Elements, ElementContext} from '../../reusable/_arrx'; 
 
+import {usePage} from '../../reusable/_usepage'; 
+import {PageBreaker, Paging} from './components/paging.component'; 
 
-interface IAnswersContext { 
-  answers: IAnswer[]; 
-  setAnswers: React.Dispatch<IAnswer[]>; 
-} 
-export const AnswersContext = React.createContext({} as IAnswersContext); 
 // Questionnaire ================================ 
 export function Questionnaire() { 
-  const {patientProfile} = useContext(PatientProfileContext); 
-  const [answers, setAnswers] = useState([] as IAnswer[]); 
+  const {questionnaire, patientProfile} = useContext(PatientContext); 
+  const {pageIndex, setPageIndex, pages} = usePage(questionnaire, PageBreaker()); 
+  const page = pages[pageIndex] ?? []; 
 
-  const context = {answers, setAnswers}; 
-  return <AnswersContext.Provider value={context}> 
-    <h1>Patient questionnaire</h1> 
+  return <div> 
+    <h2>Patient questionnaire</h2> 
     <div>patient: {JSON.stringify(patientProfile['ramq'])}</div> 
-    <h2>Questionnaire form ...</h2> 
-    {IsEmpty(answers) && <LoadQuestionnaire/>} 
-    {!IsEmpty(answers) && <DisplayQuestions/>} 
-  </AnswersContext.Provider> 
+    <h3>Questionnaire form ...</h3> 
+    <DisplayFormTitle {...{page}} /> 
+    <DisplayInstructions {...{page}} /> 
+    <Arrx {...{values:questionnaire}} > 
+      <Elements {...{indexes:page}}> 
+        <DisplayQuestionLabel/> <DisplayResponseField/><br/> 
+      </Elements> 
+    </Arrx> 
+    <Paging {...{pageIndex, setPageIndex, pages}} />
+  </div> 
 } 
+
