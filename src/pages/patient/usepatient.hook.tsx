@@ -97,8 +97,10 @@ export function usePatient() {
   } 
 
   // SubmitQuestionnaire () => 
-  function SubmitQuestionnaire () { 
-    console.log('Submit questionnaire ...'); 
+  async function SubmitQuestionnaire () { 
+    await Create('answers', questionnaire); 
+    if(state.success) 
+      console.log("answers have been submitted"); 
   } 
 
   return {ready, patientStep, 
