@@ -9,18 +9,21 @@ export function useSession(sessionName:string, value:any) {
   const [session, setSession] = useState(value); 
 
   if(!Session.SessionExists(sessionName)) 
-    Session.StartSession(sessionName, value ?? {}); 
+    Start(value); 
+  else 
+    Set(Get()); 
 
-  const Start = (value:any) => { 
+
+  function Start(value:any) { 
     Session.StartSession(sessionName, value); 
     setSession(value); 
   } 
 
-  const Get = (keys?:string[]) => { 
+  function Get(keys?:string[]) { 
     return GetValueAt(session, keys); 
   } 
 
-  const Set = (newValue:any, keys?:string[]) => { 
+  function Set(newValue:any, keys?:string[]) { 
     setSession((prev:any) => { 
       const newSession = SetValueAt(prev, newValue, keys); 
       Session.Set(sessionName, newSession); 
@@ -28,7 +31,7 @@ export function useSession(sessionName:string, value:any) {
     }) 
   } 
 
-  const End = () => { 
+  function End() { 
     Session.EndSession(sessionName); 
     setSession(undefined); 
   } 
