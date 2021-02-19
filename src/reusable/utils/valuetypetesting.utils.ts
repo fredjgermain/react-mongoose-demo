@@ -1,4 +1,12 @@
 // TYPE VALUE TESTING ###########################
+export function GetDefaultIEntry(ifields:IField[]) { 
+  let entry = {} as IEntry; 
+  ifields?.forEach( f => { 
+    entry[f.accessor] = GetDefaultValueFromIField(f); 
+  }); 
+  return entry; 
+}
+
 export function GetDefaultValueFromIField(ifield:IField) { 
   if(ifield.isArray) 
     return []; 

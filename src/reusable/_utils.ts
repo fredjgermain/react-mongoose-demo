@@ -4,7 +4,7 @@ import {SetSize, SetWidth, IEvent,
   OnPress, OnTab, OnEnter, 
   GetInputType, GetValueFromInput} from './utils/htmlelement.utils'; 
 
-import {IsInRange, GetDefaultValueByType, GetTypeByValue, GetDefaultValueFromIField} from './utils/valuetypetesting.utils'; 
+import {IsInRange, GetDefaultValueByType, GetTypeByValue, GetDefaultValueFromIField, GetDefaultIEntry} from './utils/valuetypetesting.utils'; 
 
 
 export type {IEvent} 
@@ -15,4 +15,4 @@ export {SetSize, SetWidth,
   GetInputType, GetValueFromInput} 
 
 export {Copy, IsInRange, GetValueAt, SetValueAt, 
-  GetDefaultValueByType, GetTypeByValue, GetDefaultValueFromIField} 
+  GetDefaultValueByType, GetTypeByValue, GetDefaultValueFromIField, GetDefaultIEntry} 

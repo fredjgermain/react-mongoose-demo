@@ -51,12 +51,13 @@ export function DisplayQuestionLabel () {
 
 
 export function DisplayResponseField() { 
-  const {questionnaire, setQuestionnaire} = useContext(PatientContext); 
+  const {questionnaire, patientSession} = useContext(PatientContext); 
   const {index} = useContext(ElementContext); 
 
   const value = GetValueAt(questionnaire, [index, 'answer']); 
   const setValue = (newAnswer:number) => { 
-    setQuestionnaire(SetValueAt(questionnaire, newAnswer, [index, 'answer'])); 
+    patientSession.Set(newAnswer, ['questionnaire', index, 'answer'])
+    //setQuestionnaire(SetValueAt(questionnaire, newAnswer, [index, 'answer'])); 
   } 
   const {responseType} = GetResponse(GetAnswer()); 
   const type = (responseType['type'] as string).toLowerCase(); 

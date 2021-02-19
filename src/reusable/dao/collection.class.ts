@@ -1,4 +1,4 @@
-import {IsEmpty, GetDefaultValueFromIField} from '../_utils'; 
+import {IsEmpty, GetDefaultIEntry} from '../_utils'; 
 
 
 // COLLECTION ===================================
@@ -25,12 +25,7 @@ export class Collection {
 
   // GET Default IEntry -----------------------------------
   public GetDefaultIEntry() { 
-    const ifields = this.collection.ifields; 
-    let entry = {} as IEntry; 
-    ifields?.forEach( f => { 
-      entry[f.accessor] = GetDefaultValueFromIField(f); 
-    }); 
-    return entry; 
+    return GetDefaultIEntry(this.collection.ifields); 
   } 
 
   // DOES NOT RETURN EMPTY ENTRY ANYMORE ... 

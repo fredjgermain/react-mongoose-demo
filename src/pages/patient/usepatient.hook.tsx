@@ -1,26 +1,21 @@
-import {useContext, useEffect, useState} from 'react'; 
+import {useContext} from 'react'; 
 import {useCollectionLoader} from '../../components/preloader.component'; 
 import {CrudContext} from '../../reusable/_crud'; 
-import {EActionType} from '../../reusable/_dao'; 
-import {IsEmpty} from '../../reusable/_utils'; 
-import {Session} from '../../reusable/_session'; 
+import {useSession, IUseSession} from '../../reusable/_session'; 
 
-
-export enum EPatientSteps { 
-  IDENTIFICATION = 'identification', 
-  PROFILING = 'profiling', 
-  QUESTIONNAIRE = 'questionnaire', 
-} 
 
 export interface IUsePatient { 
   ready: boolean; 
-  patientStep: EPatientSteps; 
+
+  patientSession: IUseSession; 
 
   questionnaire: IAnswer[]; 
-  setQuestionnaire: React.Dispatch<React.SetStateAction<IAnswer[]>>; 
+  setQuestionnaire: (newAnswer:number, keys:any[]) => void; 
+  //setQuestionnaire: React.Dispatch<React.SetStateAction<IAnswer[]>>; 
   
   patientProfile: IEntry; 
-  setPatientProfile: React.Dispatch<React.SetStateAction<IEntry>>; 
+  setPatientProfile: (newValue:any, keys:any[]) => void; 
+  //setPatientProfile: React.Dispatch<React.SetStateAction<IEntry>>; */
   
   UpdateCreatePatientProfile: () => Promise<void>; 
   IdentifyPatient: (ramq:string) => void; 
@@ -32,50 +27,39 @@ export interface IUsePatient {
 /* Use Patient ============================================
 Load necessary collections 
 */
-export function usePatient() { 
-  const {state, activeEntry, SetActive, Validate, GetICollections, Create, Update} = useContext(CrudContext); 
+export function usePatient():IUsePatient { 
+  const {state, Validate, GetDefaultIEntry, GetICollections, Create, Update} = useContext(CrudContext); 
   const ready = useCollectionLoader(['patients', 'answers', 'questions', 'responses', 'forms', 'instructions']); 
 
-
   // Patient session
-  const patientSession = 'patientSession'
-  if(!Session.SessionExists(patientSession)) 
-    Session.StartSession(patientSession, {patientProfile:{} as IEntry, questionnaire:[] as IAnswer[]}); 
-  const _patientProfile = Session.Get(patientSession, ['patientProfile']) ?? {} as IEntry; 
-  const _questionnaire = Session.Get(patientSession, ['questionnaire']) ?? [] as IAnswer[]; 
-
-  // Patient Profile
-  const [patientProfile, setPatientProfile] = useState(_patientProfile); 
-  // Questionnaire
-  const [questionnaire, setQuestionnaire] = useState(_questionnaire); 
-
-  // Synchronise hooks with Session
-  useEffect(() => { 
-    Session.Set(patientSession, {patientProfile, questionnaire}); 
-    console.log(Session.Get(patientSession)); 
-  }, [patientProfile, questionnaire]); 
+  const sessionInitValue = {patientProfile:{} as IEntry, questionnaire:[] as IAnswer[]}; 
+  const patientSession = useSession('patientSession', sessionInitValue); 
+  if(!patientSession.Get()) 
+    patientSession.Set(sessionInitValue) 
   
-  // PatientStep 
-  let patientStep = EPatientSteps.IDENTIFICATION; 
-  if(!IsEmpty(activeEntry['ramq'])) 
-    patientStep = EPatientSteps.PROFILING; 
-  if(!IsEmpty(questionnaire)) 
-    patientStep = EPatientSteps.QUESTIONNAIRE; 
+  const patientProfile = patientSession.Get(['patientProfile']); 
+  const setPatientProfile = (newValue:any, keys:any[] = []) => patientSession.Set(newValue, ['patientProfile', ...keys]); 
+  const questionnaire = patientSession.Get(['questionnaire']); 
+  const setQuestionnaire = (newValue:any, keys:any[] = []) => patientSession.Set(newValue, ['questionnaire', ...keys]); 
+
 
   // IdentifyPatient() => 
   function IdentifyPatient(ramq:string) { 
     const [patients] = GetICollections(['patients']); 
     const {entries} = patients; 
 
-    const found = entries?.find( e => { 
+    const foundProfile = entries?.find( e => { 
       const e_ramq = (e['ramq'] as string); 
       return e_ramq.toLowerCase() === ramq.toLowerCase(); 
     }); 
-    if(found) { 
-      SetActive(EActionType.UPDATE, found); 
+    if(foundProfile) { 
+      patientSession.Set(foundProfile, ['patientProfile']); 
+      //SetActive(EActionType.UPDATE, foundProfile); 
     } 
     else { 
-      SetActive(EActionType.CREATE, {_id:'', ramq}); 
+      const newProfile = {...GetDefaultIEntry('patients'), ramq}; 
+      patientSession.Set(newProfile, ['patientProfile']);
+      //SetActive(EActionType.CREATE, ); 
     } 
   } 
 
@@ -86,10 +70,10 @@ export function usePatient() {
 
   // UpdateCreatePatientProfile () => 
   async function UpdateCreatePatientProfile() { 
-    const Func = activeEntry._id ? Update: Create; 
-    await Func('patients', [activeEntry]); 
-    if(state.success && JSON.stringify(patientProfile) !== JSON.stringify(activeEntry)) { 
-      setPatientProfile(() => activeEntry); 
+    const Func = patientProfile._id ? Update: Create; 
+    await Func('patients', [patientProfile]); 
+    if(state.success) { 
+      setPatientProfile(patientProfile); 
       BuildBlankForm(); 
     } 
   } 
@@ -104,7 +88,8 @@ export function usePatient() {
     const blankAnswers = questions.entries.map(q=> { 
       return {_id:'', answer:-1, pid:patientProfile._id, qid:q._id} as IAnswer; 
     }); 
-    setQuestionnaire(() => blankAnswers); 
+    setQuestionnaire(blankAnswers); 
+    //patientSession.Set(blankAnswers, ['questionnaire']); 
   } 
 
   // SubmitQuestionnaire () => 
@@ -114,10 +99,9 @@ export function usePatient() {
       console.log("answers have been submitted"); 
   } 
 
-  return {ready, patientStep, 
-    questionnaire, setQuestionnaire, 
+  return {ready, patientSession, 
     patientProfile, setPatientProfile, 
-
+    questionnaire, setQuestionnaire, 
     UpdateCreatePatientProfile, 
     IdentifyPatient, RamqIsValid, 
     BuildBlankForm, SubmitQuestionnaire}; 

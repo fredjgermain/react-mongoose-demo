@@ -3,23 +3,21 @@ import { GetValueAt, SetValueAt } from '../_utils';
 import {Session} from './session.class'; 
 
 
+type Keys = any[]; 
+
+export interface IUseSession { 
+  Get: (keys?:Keys) => any; 
+  Set: (newValue: any, keys?:Keys) => void; 
+  End: () => void; 
+} 
 
 // UseSession =============================================
-export function useSession(sessionName:string, value:any) { 
+export function useSession(sessionName:string, value?:any):IUseSession { 
   const [session, setSession] = useState(value); 
 
-  if(!Session.SessionExists(sessionName)) 
-    Start(value); 
-  else 
-    Set(Get()); 
-
-
-  function Start(value:any) { 
-    Session.StartSession(sessionName, value); 
-    setSession(value); 
-  } 
-
   function Get(keys?:string[]) { 
+    if(!Session.SessionExists(sessionName)) 
+      Session.Set(sessionName, session); 
     return GetValueAt(session, keys); 
   } 
 
@@ -33,8 +31,8 @@ export function useSession(sessionName:string, value:any) {
 
   function End() { 
     Session.EndSession(sessionName); 
-    setSession(undefined); 
+    setSession(undefined) 
   } 
   
-  return {Start, Get, Set, End}; 
+  return {Get, Set, End}; 
 }

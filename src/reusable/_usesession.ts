@@ -1,3 +1,4 @@
-import {useSession} from './session/usesession.hook';
+import {useSession, IUseSession} from './session/usesession.hook';
 
 export {useSession}; 
+export type {IUseSession}; 

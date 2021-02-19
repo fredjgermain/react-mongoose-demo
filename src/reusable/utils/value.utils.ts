@@ -32,7 +32,7 @@ export function SetValueAt(value:any, newValue:any, keys?:any[]):any {
 Return value specified at 'keys' 
 */
 export function GetValueAt(value:any, keys?:any[]):any { 
-  if(!keys || IsEmpty(keys)) 
+  if(IsEmpty(value) || !keys || IsEmpty(keys)) 
     return value; 
   const [key, ...remainingKeys] = keys; 
   return GetValueAt(value[key], remainingKeys); 
