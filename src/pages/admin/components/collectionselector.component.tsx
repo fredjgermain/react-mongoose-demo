@@ -10,7 +10,6 @@ export function CollectionSelector() {
   const options:IOption[] = GetICollections().map( ic => { return {value:ic, label:ic.label} }); 
   const ifield = {accessor:'', label:'', defaultValue:{}, type:''} as IField; 
 
-
   return <div> 
     <Select {...{ifield, value, setValue, options}} /> 
   </div>

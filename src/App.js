@@ -1,7 +1,6 @@
 import React from 'react'; 
 
-import {Session, TimeOut, Timer} from './reusable/session/session.class';
-
+import {Session} from './reusable/session/session.class'; 
 import {TestLoader} from './experiments/testLoader/testLoader'; 
 //import {TestSelect} from './reusable/components/select/select.component'; 
 
@@ -17,20 +16,9 @@ import Patient from './pages/patient/patient.page.tsx';
 
 const baseUrl = `https://fjg-mongoose-heroku.herokuapp.com/api/`; 
 
-//let counter = 0; 
-
-
-function callback() { 
-  console.log('Call back'); 
-}; 
-const duration = 1000; 
 
 export default function App() { 
   
-  const timer = new Timer(); 
-  timer.Run(); 
-  console.log('before timeout'); 
-
   //window.clearTimeout(timeout); 
   /*const timeout = window.setInterval(callback, duration); 
   window.setTimeout(() => window.clearInterval(timeout), duration); */

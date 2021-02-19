@@ -19,7 +19,7 @@ Can assign a newValue to object with multiple levels.
 */
 export function SetValueAt(value:any, newValue:any, keys?:any[]):any { 
   if(!keys || IsEmpty(keys)) 
-    return value; 
+    return newValue; 
   const [key, ...remainingKeys] = keys; 
   const copy = Copy(value); 
   copy[key] = IsEmpty(remainingKeys) ? 

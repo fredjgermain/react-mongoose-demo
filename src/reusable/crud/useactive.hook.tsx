@@ -1,7 +1,6 @@
 import React, {useContext, useEffect, useState} from 'react'; 
 import {IUseDao, useDao, ICrud, DAO, DaoContext} from '../_dao'; 
-import {CrudMongoose} from '../_mongooseparser'; 
-import { IsEmpty } from '../_utils';
+import {Fetcher} from '../_mongooseparser'; 
 
 
 
@@ -23,7 +22,7 @@ export const CrudContext = React.createContext({} as ICrudContext);
 
 // CrudContexter ========================================== 
 export function CrudContexter({baseUrl, children}:React.PropsWithChildren<{baseUrl:string}>) { 
-  const dao = new DAO(new CrudMongoose(baseUrl) as ICrud); 
+  const dao = new DAO(new Fetcher(baseUrl) as ICrud); 
   const usedao = useDao(dao); 
   const useactive = useActive(usedao); 
   const context = {...usedao, ...useactive}; 

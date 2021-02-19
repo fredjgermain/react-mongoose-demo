@@ -29,7 +29,7 @@ export function useGetSet<T>(_value:T, syncIn?:T, syncOut?:React.Dispatch<React.
 
   // Get 
   function Get(keys?:any[]) { 
-    GetValueAt(value, keys); 
+    return GetValueAt(value, keys); 
   } 
 
   return {Get, Set}

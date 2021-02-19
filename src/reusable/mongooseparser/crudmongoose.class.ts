@@ -3,7 +3,7 @@ import {ParseCollection} from './mongooseparser.utils';
 
 
 // Crud Mongoose =======================================
-export class CrudMongoose { 
+export class Fetcher { 
   public baseUrl:string = ''; 
 
   constructor(baseUrl:string) { 
