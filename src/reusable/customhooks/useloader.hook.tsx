@@ -1,4 +1,4 @@
-import {useReducer} from 'react'; 
+import {useReducer, useRef} from 'react'; 
 
 
 
@@ -46,24 +46,27 @@ const init:IState = {
   response: {}, 
 }
 
+
+
 interface UseLoader { 
   state:IState; 
-  Load:(loadfunc:() => Promise<any>) => Promise<void> 
+  Load:(loadfunc:() => Promise<any>, CallBack?:(result:any) => void) => Promise<void>; 
 } 
 export function useLoader():UseLoader { 
   const [state, dispatch] = useReducer<(state: IState, action: Action) => IState>(reducer, init); 
+  //const CallBack = (result:any) => console.log([state, result]); 
 
-  const Load = async (loadfunc:() => Promise<void>) => { 
-    // Loader is busy 
+  const Load = async (loadfunc:() => Promise<void>, CallBack:(result:any) => void = () => {} ) => { 
     dispatch({type:'IS_BUSY', payload:undefined}) 
-
     // Loader has finished
     await loadfunc().then( res => { 
+      CallBack(res); 
       dispatch({type:'LOAD_SUCCESS', payload:res} ) 
     }) 
     .catch( err => { 
+      CallBack(err); 
       dispatch({type:'LOAD_ERROR', payload:err} ) 
-    })  
+    }) 
   } 
   return {state, Load}; 
 } 

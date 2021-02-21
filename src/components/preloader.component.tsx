@@ -10,15 +10,19 @@ export function useCollectionLoader(accessors:string[]) {
 
   useEffect(() => { 
     Collections(accessors); 
-  }, [mustFetch && !state.busy]); 
+  }, []); 
 
-  return !mustFetch; 
+  /*useEffect(() => { 
+    Collections(accessors); 
+  }, [mustFetch && !state.busy]); */ 
+
+  return state.success; 
 } 
 
 
 // Pre-loader ==============================================
 export function PreLoader() { 
-  const accessors = ['questions','responses', 'forms', 'instructions']; 
+  const accessors = ['questions','responses', 'answers', 'forms', 'instructions', 'patients', 'sessions']; 
   const ready = useCollectionLoader(accessors); 
 
   return <div> 

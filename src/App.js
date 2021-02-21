@@ -9,6 +9,7 @@ import Nav from './components/nav/nav.component';
 import {Switch, Route} from 'react-router-dom'; 
 import {PreLoader} from './components/preloader.component'; 
 
+
 // Pages
 import Home from './pages/home/home.page.tsx'; 
 import Admin from './pages/admin/admin.page.tsx'; 
@@ -39,17 +40,19 @@ export default function App() {
   //Session.Set(sessionName, 12); 
   //console.log(Session.Get(sessionName)) 
 
+  // 
 
+  /*
+  <Route path={'/admin'} component={Admin} /> 
+  <Route path={'/patient'} component={Patient} /> 
+  */
   return <CrudContexter {...{baseUrl}}> 
     <div> ---- NAV ... </div> 
     <Nav/> 
     <div> ---- Preloader ... </div> <br/>
-    <PreLoader/> 
     <h1> h1 title ... </h1> 
     <Switch> 
       <Route exact path={'/'} component={Home} /> 
-      <Route path={'/admin'} component={Admin} /> 
-      <Route path={'/patient'} component={Patient} /> 
     </Switch> 
     <br/> 
     <div> 

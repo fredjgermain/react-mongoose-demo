@@ -1,4 +1,4 @@
-import React from 'react'; 
+import React, { useContext } from 'react'; 
 import {PatientId} from './components/patientid.component'; 
 import {PatientProfile} from './components/patientprofile.component'; 
 import {Questionnaire} from '../questionnaire/questionnaire.page'; 
@@ -15,9 +15,11 @@ export default function Patient() {
   const context = usePatient(); 
   const {ready, patientSession, patientProfile, questionnaire} = context; 
 
-
   return <PatientContext.Provider value={context}> 
-    {JSON.stringify(Session.GetSession('patientSession'))} <br/> 
+    {JSON.stringify(Session.Get('patientSession', ['patientProfile']))} <br/> 
+    {JSON.stringify(Session.Get('patientSession', ['questionnaire']))} <br/> 
+
+
     <button onClick={() => patientSession.End()}>Clear Session</button> <br/> 
     {ready && IsEmpty(patientProfile) && <PatientId/>} 
     {ready && !IsEmpty(patientProfile) && IsEmpty(questionnaire) && <PatientProfile/>} 

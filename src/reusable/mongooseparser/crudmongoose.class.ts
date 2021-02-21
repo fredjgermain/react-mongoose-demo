@@ -55,7 +55,8 @@ export class Fetcher {
   // ICrudResponse ?? or IEntry ??
   // Read .................................................
   public async Read(accessor:string, ids?:string[]): Promise<ICrudResponse[]> {
-    return (await axios.put(this.baseUrl+'read/'+accessor, ids)).data; 
+    const responses = await axios.put(this.baseUrl+'read/'+accessor, ids); 
+    return responses.data; 
   }
 
   // Update ...............................................

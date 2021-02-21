@@ -4,6 +4,19 @@ import {CrudContext} from '../../reusable/_crud';
 import {useSession, IUseSession} from '../../reusable/_session'; 
 
 
+/* 
+After Creating/Updating profile 
+- Create session to db 
+  patient: patient 
+  date: Date 
+
+[Answer] 
+  -session: Session 
+  -question: Question 
+  -answer: Number 
+*/ 
+
+
 export interface IUsePatient { 
   ready: boolean; 
 
@@ -17,7 +30,9 @@ export interface IUsePatient {
   setPatientProfile: (newValue:any, keys:any[]) => void; 
   //setPatientProfile: React.Dispatch<React.SetStateAction<IEntry>>; */
   
-  UpdateCreatePatientProfile: () => Promise<void>; 
+  UpdateCreateProfile: (patient: IEntry) => Promise<void>; 
+  UpdateCreateSession: (patient: IEntry) => Promise<void>;  
+
   IdentifyPatient: (ramq:string) => void; 
   RamqIsValid: (value:string) => boolean; 
 
@@ -29,7 +44,8 @@ Load necessary collections
 */
 export function usePatient():IUsePatient { 
   const {state, Validate, GetDefaultIEntry, GetICollections, Create, Update} = useContext(CrudContext); 
-  const ready = useCollectionLoader(['patients', 'answers', 'questions', 'responses', 'forms', 'instructions']); 
+
+  console.log((state.response as ICrudResponse)) 
 
   // Patient session
   const sessionInitValue = {patientProfile:{} as IEntry, questionnaire:[] as IAnswer[]}; 
@@ -52,15 +68,8 @@ export function usePatient():IUsePatient {
       const e_ramq = (e['ramq'] as string); 
       return e_ramq.toLowerCase() === ramq.toLowerCase(); 
     }); 
-    if(foundProfile) { 
-      patientSession.Set(foundProfile, ['patientProfile']); 
-      //SetActive(EActionType.UPDATE, foundProfile); 
-    } 
-    else { 
-      const newProfile = {...GetDefaultIEntry('patients'), ramq}; 
-      patientSession.Set(newProfile, ['patientProfile']);
-      //SetActive(EActionType.CREATE, ); 
-    } 
+    const newProfile = {...GetDefaultIEntry('patients'), ramq}; 
+    setPatientProfile(foundProfile ?? newProfile); 
   } 
 
   // RamqIsValid(ramq:string) => 
@@ -69,16 +78,26 @@ export function usePatient():IUsePatient {
   } 
 
   // UpdateCreatePatientProfile () => 
-  async function UpdateCreatePatientProfile() { 
-    const Func = patientProfile._id ? Update: Create; 
-    await Func('patients', [patientProfile]); 
-    if(state.success) { 
-      setPatientProfile(patientProfile); 
-      BuildBlankForm(); 
-    } 
+  async function UpdateCreateProfile(newPatient:IEntry) { 
+    const Func = newPatient._id ? Update: Create; 
+    await Func('patients', [newPatient]); 
   } 
 
-  // UpdateCreatePatientSession () => 
+  async function UpdateCreateSession(patient:IEntry) { 
+    // Problem with _id when creating profile ?? 
+    const today = new Date(); 
+    const year = today.getFullYear(); // year 
+    const month = today.getUTCMonth()+1; // month 
+    const day = today.getDate(); // today 
+    const date = `${year}/${month}/${day}`; 
+    const session = {_id:'', patient, date}; 
+    await Create('sessions', [session]); 
+    if(state.success) { 
+      //await Read('sessions'); 
+      
+      //BuildBlankForm(); 
+    } 
+  }
 
   // BuildBlankQuestionnaire () => 
   function BuildBlankForm() { 
@@ -99,10 +118,11 @@ export function usePatient():IUsePatient {
       console.log("answers have been submitted"); 
   } 
 
-  return {ready, patientSession, 
+  return {ready:state.success, patientSession, 
     patientProfile, setPatientProfile, 
     questionnaire, setQuestionnaire, 
-    UpdateCreatePatientProfile, 
+    UpdateCreateProfile, 
+    UpdateCreateSession, 
     IdentifyPatient, RamqIsValid, 
     BuildBlankForm, SubmitQuestionnaire}; 
 }

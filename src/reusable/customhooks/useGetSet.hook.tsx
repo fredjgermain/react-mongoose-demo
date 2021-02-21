@@ -1,36 +1,24 @@
 import {useState, useEffect} from 'react'; 
 import {GetValueAt, SetValueAt} from '../_utils'; 
 
-/* 
-To test in 
-  Select 
-*/
-export function useGetSet<T>(_value:T, syncIn?:T, syncOut?:React.Dispatch<React.SetStateAction<T>>) { 
-  const [value, setValue] = useState(_value); 
 
-  // sync in if syncIn is defined and syncIn has changed. 
+interface IUseGetSet {
+  value: any; 
+  setValue: React.Dispatch<React.SetStateAction<any>>; 
+  accessor: string; 
+} 
+
+export function useGetSet(Value:any, SetValue:React.Dispatch<React.SetStateAction<any>>, accessor:string):IUseGetSet { 
+  const [value, setValue] = useState(GetValueAt(Value, [accessor])); 
+
   useEffect(() => { 
-    if(syncIn && JSON.stringify(syncIn) !== JSON.stringify(value) ) 
-      setValue(syncIn); 
-  }, [JSON.stringify(syncIn)]); 
+    const prev = GetValueAt(Value, [accessor]); 
+    if(JSON.stringify(prev) !== JSON.stringify(value)) { 
+      SetValue((prev:any) => { 
+        return SetValueAt(prev, value, [accessor]); 
+      }); 
+    } 
+  }, [value]) 
 
-  // Sync out if syncOut is defined and value has changed
-  useEffect(() => { 
-    if(syncOut) 
-      syncOut((prev:any) => value); 
-  }, [JSON.stringify(value)]); 
-
-  // Set 
-  function Set(newValue:any, keys?:any[]) { 
-    setValue((prev:T) => { 
-      return SetValueAt(prev, newValue, keys); 
-    }) 
-  } 
-
-  // Get 
-  function Get(keys?:any[]) { 
-    return GetValueAt(value, keys); 
-  } 
-
-  return {Get, Set}
+  return {value, setValue, accessor}; 
 }

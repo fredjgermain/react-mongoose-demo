@@ -109,12 +109,12 @@ export class DAO {
   Local and remote Collection might become inconsistent if 'collection' is not found. 
   Create/Update read data to local. 
   */
-  public async Read(accessor:string, ids?:string[]):Promise<IEntry[]> { 
+  public async Read(accessor:string, ids?:string[]):Promise<ICrudResponse[]> { 
     const [collection] = this.GetICollections([accessor]); 
     // risk inconsistencies 
     const responses = (await this.crud.Read(accessor, ids)) as ICrudResponse[]; 
     const read = responses.filter(r=>r.success).map(r=>r.data as IEntry); 
-    return read; 
+    return responses; 
   } 
 
   /* Update -------------------------------------------
