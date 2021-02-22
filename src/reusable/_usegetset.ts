@@ -1,3 +1,3 @@
-import {useGetSet} from './customhooks/useGetSet.hook';
+import {useGetSet, useStateAt} from './customhooks/useGetSet.hook';
 
-export {useGetSet}; 
+export {useGetSet, useStateAt}; 

@@ -7,7 +7,7 @@ import {Objx, Fields, Field, FieldContext, FieldLabel, ObjxContext}
 import {Reader, Editor} from '../../../reusable/_input'; 
 //import {Questionnaire} from '../../questionnaire/questionnaire.page'; 
 import {PatientContext} from '../patient.page'; 
-import { GetValueAt, SetValueAt, IsEmpty } from '../../../reusable/_utils'; 
+import { IsEmpty } from '../../../reusable/_utils'; 
 import {useGetSet} from '../../../reusable/_usegetset'; 
 
 

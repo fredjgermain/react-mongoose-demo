@@ -11,7 +11,7 @@ export interface IReader {
 
 type ReaderFunc = ({...props}:IReader) => JSX.Element; 
 
-interface IReaderComponent extends IReader { 
+export interface IReaderComponent extends IReader { 
   CustomReadDefault?:ReaderFunc; 
   CustomReadOne?:ReaderFunc; 
   CustomReadMany?:ReaderFunc; 

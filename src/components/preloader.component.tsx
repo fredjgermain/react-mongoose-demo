@@ -1,33 +1,29 @@
 import {useContext, useEffect} from 'react'; 
-import {CrudContext} from '../reusable/_crud'; 
+import { DaoContext } from '../reusable/_dao2'; 
+import { useLoader } from '../reusable/_useloader'; 
 
 
 // Preloader ==============================================
-export function useCollectionLoader(accessors:string[]) { 
-  const {state, Collections, GetICollections} = useContext(CrudContext); 
-  const collections = GetICollections(accessors); 
-  const mustFetch = collections.length !== accessors.length; 
+export function PreloadCollection () { 
+  const ready = usePreloadCollections(); 
+  return <div> 
+    Preloading : {JSON.stringify(ready)} 
+  </div> 
+}
+
+
+export function usePreloadCollections() { 
+  const {Collections} = useContext(DaoContext); 
+  const accessors = ['questions','responses', 'answers', 'forms', 'instructions', 'patients', 'sessions']; 
+  const callback = (res:any) => {}; 
+  const {state, Load} = useLoader(); 
 
   useEffect(() => { 
-    Collections(accessors); 
+    Load( () => Collections(accessors), callback); 
   }, []); 
-
-  /*useEffect(() => { 
-    Collections(accessors); 
-  }, [mustFetch && !state.busy]); */ 
 
   return state.success; 
 } 
 
 
-// Pre-loader ==============================================
-export function PreLoader() { 
-  const accessors = ['questions','responses', 'answers', 'forms', 'instructions', 'patients', 'sessions']; 
-  const ready = useCollectionLoader(accessors); 
 
-  return <div> 
-    <span>Pre-loading:</span> 
-    {!ready && ' loading ...'} 
-    {ready && ' ready !'} 
-  </div> 
-} 

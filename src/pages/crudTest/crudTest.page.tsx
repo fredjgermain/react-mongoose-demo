@@ -1,10 +1,11 @@
-import { useState, useContext, useEffect } from 'react'; 
-import { IsEmpty } from '../../reusable/_utils'; 
-import { useLoader } from '../../reusable/_useloader'; 
-import {DAOContext} from '../home/home.page'; 
+import {useState, useContext, useEffect} from 'react'; 
+import {IsEmpty} from '../../reusable/_utils'; 
+import {useLoader} from '../../reusable/_useloader'; 
+import { DaoContext } from '../../reusable/_dao2';
+
 
 export function CrudTest() { 
-  const {GetIEntries, Collections, Create, Read, Update, Delete} = useContext(DAOContext); 
+  const {GetIEntries, Collections, Create, Read, Update, Delete} = useContext(DaoContext); 
   
   const [entries, setEntries] = useState([] as IEntry[]); 
   const [toUpdate, setToUpdate] = useState({} as IEntry); 
