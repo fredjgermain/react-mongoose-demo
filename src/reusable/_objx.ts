@@ -1,6 +1,6 @@
-import { Objx, ObjxContext, Fields, FieldContext } 
+import { Objx, ObjxContext, Fields, FieldContext, Field } 
   from './components/objx/objx.component'; 
-import { Field, FieldLabel, FieldValue, FieldReader, FieldEditor } 
+import { FieldLabel, FieldValue, FieldReader, FieldEditor } 
   from './components/objx/field.component'; 
 
 

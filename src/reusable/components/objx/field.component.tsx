@@ -6,12 +6,6 @@ import { ObjxContext, FieldContext } from './objx.component';
 
 
 // FIELD ========================================
-export function Field({ifield, children}:React.PropsWithChildren<{ifield:IField}>) {
-  return <FieldContext.Provider value={{ifield}} > 
-    {children ?? <div><FieldLabel/> <FieldValue/></div>} 
-  </FieldContext.Provider> 
-}
-
 // Util component ----------------------------
 export function FieldLabel() {
   const {ifield} = useContext(FieldContext);

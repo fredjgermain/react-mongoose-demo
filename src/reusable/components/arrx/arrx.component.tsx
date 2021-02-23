@@ -14,8 +14,8 @@ export function Arrx({values, children}:React.PropsWithChildren<IArrx>) {
   const context = {values:IsEmpty(values) ? []: values}; 
   return <ArrxContext.Provider value={context} > 
     {children ?? <Elements/>} 
-  </ArrxContext.Provider>
-}
+  </ArrxContext.Provider> 
+} 
 
 
 // ELEMENTS =====================================

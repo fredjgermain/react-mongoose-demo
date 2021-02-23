@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'; 
 import { IsEmpty } from '../../_utils'; 
-import { Field } from './field.component'; 
+import { FieldLabel, FieldValue } from './field.component'; 
 
 
 export interface IObjx { 
@@ -15,7 +15,7 @@ export const FieldContext = React.createContext({} as {ifield:IField});
 // ARRX =========================================
 export function Objx({value, ifields, children}:React.PropsWithChildren<IObjx>) { 
   const context = {value:IsEmpty(value)? {}:value, ifields}; 
-  //const context:IUseArrx = useArrx(props); 
+  
   return <ObjxContext.Provider value={context} > 
     {children ?? <Fields/> } 
   </ObjxContext.Provider> 
@@ -31,4 +31,14 @@ export function Fields({ifields, children}:React.PropsWithChildren<{ifields?:IFi
       return <Field key={index} {...{ifield}} >{children}</Field> 
     })} 
   </FieldsContext.Provider> 
+}
+
+export function Field({ifield, children}:React.PropsWithChildren<{ifield:IField}>) {  
+  if(children) {
+    const [child] = (children as any)['props']['children'];
+    console.log(child['type']['name']); 
+  } 
+  return <FieldContext.Provider value={{ifield}} > 
+    {children ?? <div><FieldLabel/> <FieldValue/></div>} 
+  </FieldContext.Provider> 
 }

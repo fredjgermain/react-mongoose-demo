@@ -5,8 +5,8 @@ interface IPatient extends IEntry {
 }
 
 interface IAnswer extends IEntry { 
-  pid: string; 
-  qid: string; 
+  session: string; 
+  question: string; 
   answer: number; 
 } 
 

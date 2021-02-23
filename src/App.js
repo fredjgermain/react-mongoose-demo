@@ -9,12 +9,16 @@ import PatientPage from './pages/patient2/patient.page.tsx';
 import { DaoContexter } from './reusable/_dao2'; 
 import { usePreloadCollections } from './components/preloader.component';
 
+import {Test} from './reusable/components/objset/objset.component';
+
+
 const baseUrl = `https://fjg-mongoose-heroku.herokuapp.com/api/`; 
 
 //<Route path={'/admin'} component={Admin} /> 
 
 export default function App() { 
   return <DaoContexter {...{baseUrl}}> 
+    <Test/> 
     <div> ---- NAV ... </div> 
     <Nav/> 
     <div> ---- Preloader ... </div> <br/> 

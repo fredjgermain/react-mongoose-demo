@@ -104,7 +104,7 @@ export function usePatient():IUsePatient {
     if(!questions) 
       return [] as IAnswer[]; 
     const blankAnswers = questions.entries.map(q=> { 
-      return {_id:'', answer:-1, pid:patientProfile._id, qid:q._id} as IAnswer; 
+      return {_id:'', answer:-1, pid:patientProfile._id, qid:q._id} as IEntry; 
     }); 
     setQuestionnaire(blankAnswers); 
     //patientSession.Set(blankAnswers, ['questionnaire']); 
