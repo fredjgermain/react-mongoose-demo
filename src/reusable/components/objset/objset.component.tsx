@@ -28,11 +28,9 @@ export function Keys({keys, children}:React.PropsWithChildren<{keys:IKeys}>) {
     return <KeysContext.Provider value={{keys:[firstKeys] as IKeys}}> 
       {firstKeys.map( k => { 
         const _value = value[k]; 
-        if(_value) { 
-          return <Objx key={k} value={_value}> 
-            <Keys keys={remaining}>{children}</Keys> 
-          </Objx> 
-        } 
+        return <Objx key={k} value={_value}> 
+          <Keys keys={remaining}>{children}</Keys> 
+        </Objx> 
       })} 
     </KeysContext.Provider> 
   } 

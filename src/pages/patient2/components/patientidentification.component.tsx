@@ -4,7 +4,7 @@ import { IsEmpty, GetValueAt } from '../../../reusable/_utils';
 import { PatientContext } from '../patient.page'; 
 
 import { DaoContext } from '../../../reusable/_dao2'; 
-import { Objx, Field, FieldLabel, FieldEditor} from '../../../reusable/_objx';
+import { Objx, Field, FieldLabel, FieldEditor} from '../../../reusable/_objx'; 
 
 
 export function PatientIdentification() { 
