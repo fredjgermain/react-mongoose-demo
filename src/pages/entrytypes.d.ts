@@ -1,11 +1,9 @@
-
-
-interface IPatient extends IEntry {
+interface IPatient extends IEntry { 
   
 }
 
 interface IAnswer extends IEntry { 
-  session: string; 
+  appointment: string; 
   question: string; 
   answer: number; 
 } 

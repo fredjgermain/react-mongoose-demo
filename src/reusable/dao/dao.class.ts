@@ -1,4 +1,5 @@
-import {Pick} from '../_arrayutils'; 
+import {Pick, Filter} from '../_arrayutils'; 
+import { IsEmpty } from '../_utils';
 import {Collection} from './collection.class'; 
 
 export interface ICrud { 
@@ -91,6 +92,19 @@ export class DAO {
       else 
         this.collections.push(newCol); 
     }) 
+  } 
+
+
+  /*Create Or Update ---------------------------------- 
+  Create entries satisfying a given predicate. 
+  Or else update entries. 
+  */
+  public async CreateUpdate(accessor:string, entries:IEntry[], predicate?:(entry:IEntry)=>boolean):Promise<ICrudResponse[]> { 
+    const defaultPredicate = (entry:IEntry):boolean => IsEmpty(entry._id); 
+    const {inclusion:toCreate, exclusion:toUpdate} = Filter(entries, predicate ?? defaultPredicate); 
+    const createResponses = await this.Create(accessor, toCreate); 
+    const updateResponses = await this.Update(accessor, toUpdate); 
+    return [...createResponses, ...updateResponses]; 
   } 
 
   /* Create -------------------------------------------

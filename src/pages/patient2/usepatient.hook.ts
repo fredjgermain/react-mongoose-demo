@@ -10,20 +10,14 @@ export interface IUsePatient {
   profile: IEntry; 
   setProfile: (newValue:any, keys:any[]) => void; 
 
-  session: IEntry; 
-  setSession: (newValue:any, keys:any[]) => void; 
-
-  questionnaire: IAnswer[]; 
-  setQuestionnaire: (newAnswer:number, keys:any[]) => void; 
+  appointment: IEntry; 
+  setAppointment: (newValue:any, keys:any[]) => void; 
 
   IdentifyPatient: (ramq:string) => void; 
   RamqIsValid: (value:string) => boolean; 
   
   CreateUpdateProfile: (patient: IEntry) => Promise<void>; 
   CreateUpdateSession: (patient: IEntry) => Promise<void>; 
-
-  BuildBlankForm: (session:IEntry) => void; 
-  SubmitQuestionnaire: () => void; 
 } 
 
 
@@ -32,17 +26,15 @@ export function usePatient():IUsePatient {
   const {GetDefaultIEntry, GetIEntries, Create, Update, Validate} = useContext(DaoContext); 
 
   // Patient session --------------------------------------
-  const sessionInitValue = {profile:{} as IEntry, session:{} as IEntry, questionnaire:[] as IAnswer[]}; 
+  const sessionInitValue = {profile:{} as IEntry, appointment:{} as IEntry}; 
   const patientSession = useSession('patient', sessionInitValue); 
   if(!patientSession.Get()) 
     patientSession.Set(sessionInitValue) 
   
   const profile = patientSession.Get(['profile']); 
   const setProfile = (newValue:any, keys:any[] = []) => patientSession.Set(newValue, ['profile', ...keys]); 
-  const session = patientSession.Get(['session']); 
-  const setSession = (newValue:any, keys:any[] = []) => patientSession.Set(newValue, ['session', ...keys]); 
-  const questionnaire = patientSession.Get(['questionnaire']); 
-  const setQuestionnaire = (newValue:any, keys:any[] = []) => patientSession.Set(newValue, ['questionnaire', ...keys]); 
+  const appointment = patientSession.Get(['appointment']); 
+  const setAppointment = (newValue:any, keys:any[] = []) => patientSession.Set(newValue, ['appointment', ...keys]); 
 
 
   // RamqIsValid ------------------------------------------
@@ -66,59 +58,42 @@ export function usePatient():IUsePatient {
     const EditFunc = patient._id ? Update: Create; 
     const [response] = await EditFunc('patients', [patient]); 
     if(response.success) 
-      await CreateUpdateSession(response.data); 
+      await CreateUpdateAppointment(response.data); 
     else 
       console.log(response.err); 
   } 
 
-  // CreateUpdateSession ----------------------------------
-  async function CreateUpdateSession(patient: IEntry) { 
-    let currentSession = FindCurrentSession(patient); 
-    if(!currentSession) { 
-      const newSession = {...GetDefaultIEntry('sessions'), patient:patient._id}; 
-      const [response] = await Create('sessions', [newSession]); 
+  // CreateUpdateappointment ----------------------------------
+  async function CreateUpdateAppointment(patient: IEntry) { 
+    let currentAppointment = FindCurrentAppointment(patient); 
+    if(!currentAppointment) { 
+      const newSession = {...GetDefaultIEntry('appointments'), patient:patient._id}; 
+      const [response] = await Create('appointments', [newSession]); 
       if(response.success) 
-        currentSession = response.data; 
+        currentAppointment = response.data; 
     } 
-    if(!currentSession) { 
+    if(!currentAppointment) { 
       console.log('session failed ...'); 
       return; 
     } 
-    setSession(currentSession); 
-    const questionnaire = BuildBlankForm(currentSession); 
-    setQuestionnaire(questionnaire); 
+    setAppointment(currentAppointment); 
+    // setProfileFlag to true; ?? 
   } 
 
   // FindCurrentSession -----------------------------------
-  function FindCurrentSession(patient: IEntry) { 
-    const entries = GetIEntries('sessions'); 
+  function FindCurrentAppointment(patient: IEntry) { 
+    const entries = GetIEntries('appointments'); 
     return entries.find( e => { 
       const e_patient = (e['patient'] as string); 
       return e_patient === patient._id; 
     }); 
   } 
 
-  // BlankQuestionnaire -----------------------------------
-  function BuildBlankForm(session:IEntry) { 
-    const entries = GetIEntries('questions'); 
-    return entries.map(q=> { 
-      return {_id:'', session:profile._id, question:q._id, answer:-1} as IAnswer; 
-    }); 
-  } 
-
-  // SubmitQuestionnaire ----------------------------------
-  async function SubmitQuestionnaire() { 
-
-  } 
-
   return {patientSession, 
   profile, setProfile, 
-  session, setSession, 
-  questionnaire, setQuestionnaire, 
+  appointment: appointment, setAppointment: setAppointment, 
   RamqIsValid, 
   IdentifyPatient, 
   CreateUpdateProfile, 
-  CreateUpdateSession, 
-  BuildBlankForm, 
-  SubmitQuestionnaire} 
+  CreateUpdateSession: CreateUpdateAppointment} 
 } 

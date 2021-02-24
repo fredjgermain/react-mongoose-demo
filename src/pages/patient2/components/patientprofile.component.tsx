@@ -7,6 +7,8 @@ import { DaoContext } from '../../../reusable/_dao2';
 import { Objx, Field, Fields, FieldLabel, FieldReader, FieldEditor} from '../../../reusable/_objx'; 
 
 
+
+
 export function PatientProfile() { 
   console.log('patient profile'); 
   const {GetIFields} = useContext(DaoContext); 

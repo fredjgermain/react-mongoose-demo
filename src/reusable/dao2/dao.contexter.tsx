@@ -21,6 +21,7 @@ export interface IUseDao {
   Collections:(accessors?:string[]) => Promise<ICrudResponse[]>; 
 
   // Crud functionalities. 
+  CreateUpdate: (accessor:string, entries:IEntry[], predicate?:(entry:IEntry)=>boolean) => Promise<ICrudResponse[]>; 
   Create: (accessor:string, entries:IEntry[]) => Promise<ICrudResponse[]>; 
   Read: (accessor:string, id?:string[]) => Promise<ICrudResponse[]>; 
   Update: (accessor:string, entries:IEntry[]) => Promise<ICrudResponse[]>; 
@@ -48,6 +49,8 @@ export function useDao(baseUrl:string):IUseDao {
   // Crud functionalities 
   // async Validate ... 
   // async Ids ... 
+  const CreateUpdate = async (accessor:string, entries:IEntry[], predicate?:(entry:IEntry)=>boolean) => 
+    Dao.CreateUpdate(accessor, entries, predicate); 
   const Create = async (accessor:string, entries:IEntry[]) => Dao.Create(accessor, entries); 
   const Read = async (accessor:string, ids?:string[]) => Dao.Read(accessor, ids); 
   const Update = async (accessor:string, entries:IEntry[]) => Dao.Update(accessor, entries); 
@@ -62,7 +65,7 @@ export function useDao(baseUrl:string):IUseDao {
   return { 
     GetICollections, GetIFields, GetIEntries, GetDefaultIEntry, 
     GetForeignElements, GetIOptions, 
-    Collections, Create, Read, Update, Delete, 
+    Collections, CreateUpdate, Create, Read, Update, Delete, 
     Validate
   }; 
 } 
