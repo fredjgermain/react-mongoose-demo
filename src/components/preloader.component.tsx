@@ -14,7 +14,7 @@ export function PreloadCollection () {
 
 export function usePreloadCollections() { 
   const {Collections} = useContext(DaoContext); 
-  const accessors = ['questions','responses', 'answers', 'forms', 'instructions', 'patients', 'sessions']; 
+  const accessors = ['questions','responses', 'answers', 'forms', 'instructions', 'patients', 'appointments']; 
   const callback = (res:any) => {}; 
   const {state, Load} = useLoader(); 
 

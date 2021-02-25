@@ -32,11 +32,11 @@ export function useQuestionnaire() {
   // BlankQuestionnaire -----------------------------------
   async function InitQuestionnaire(appointment:IEntry) { 
     const entries = GetIEntries('questions'); 
-    const blankAnswers = entries.map(q=> { 
+    /*const blankAnswers = entries.map(q=> { 
       return {_id:'', appointment:appointment._id, question:q._id, answer:-1} as IAnswer; 
-    }); 
-    const response = await Create('answers', blankAnswers); 
-    console.log(response); 
+    }); */
+    //const response = await Create('answers', blankAnswers); 
+    //console.log(response); 
   } 
 
   // SubmitQuestionnaire ----------------------------------

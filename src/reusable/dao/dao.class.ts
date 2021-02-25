@@ -102,8 +102,8 @@ export class DAO {
   public async CreateUpdate(accessor:string, entries:IEntry[], predicate?:(entry:IEntry)=>boolean):Promise<ICrudResponse[]> { 
     const defaultPredicate = (entry:IEntry):boolean => IsEmpty(entry._id); 
     const {inclusion:toCreate, exclusion:toUpdate} = Filter(entries, predicate ?? defaultPredicate); 
-    const createResponses = await this.Create(accessor, toCreate); 
-    const updateResponses = await this.Update(accessor, toUpdate); 
+    const createResponses = !IsEmpty(toCreate) ? await this.Create(accessor, toCreate) : []; 
+    const updateResponses = !IsEmpty(toUpdate) ? await this.Update(accessor, toUpdate) : []; 
     return [...createResponses, ...updateResponses]; 
   } 
 

@@ -17,13 +17,13 @@ export interface IUsePatient {
   RamqIsValid: (value:string) => boolean; 
   
   CreateUpdateProfile: (patient: IEntry) => Promise<void>; 
-  CreateUpdateSession: (patient: IEntry) => Promise<void>; 
+  //CreateUpdateAppointment: (patient: IEntry) => Promise<void>; 
 } 
 
 
 // UsePatient ============================================= 
 export function usePatient():IUsePatient { 
-  const {GetDefaultIEntry, GetIEntries, Create, Update, Validate} = useContext(DaoContext); 
+  const {GetDefaultIEntry, GetIEntries, CreateUpdate, Validate} = useContext(DaoContext); 
 
   // Patient session --------------------------------------
   const sessionInitValue = {profile:{} as IEntry, appointment:{} as IEntry}; 
@@ -55,45 +55,45 @@ export function usePatient():IUsePatient {
 
   // CreateUpdateProfile ----------------------------------
   async function CreateUpdateProfile(patient: IEntry) { 
-    const EditFunc = patient._id ? Update: Create; 
-    const [response] = await EditFunc('patients', [patient]); 
-    if(response.success) 
+    const [response] = await CreateUpdate('patients', [patient]); 
+    if(response.success) { 
       await CreateUpdateAppointment(response.data); 
+      setProfile(response.data); 
+    } 
     else 
       console.log(response.err); 
   } 
 
   // CreateUpdateappointment ----------------------------------
   async function CreateUpdateAppointment(patient: IEntry) { 
-    let currentAppointment = FindCurrentAppointment(patient); 
-    if(!currentAppointment) { 
-      const newSession = {...GetDefaultIEntry('appointments'), patient:patient._id}; 
-      const [response] = await Create('appointments', [newSession]); 
-      if(response.success) 
-        currentAppointment = response.data; 
+    const appointment = FindAppointment(patient); 
+    const [response] = await CreateUpdate('appointments', [appointment]); 
+    if(response.success) { 
+      console.log(response.data); 
+      setAppointment(response.data); 
+      const date = new Date(response.data['date'] as any); 
+      console.log([date.getFullYear(), date.getDate(), date.getMonth()+1]); 
     } 
-    if(!currentAppointment) { 
-      console.log('session failed ...'); 
-      return; 
-    } 
-    setAppointment(currentAppointment); 
-    // setProfileFlag to true; ?? 
+    else 
+      console.log('appointment failed ...'); 
+    return; 
   } 
 
   // FindCurrentSession -----------------------------------
-  function FindCurrentAppointment(patient: IEntry) { 
+  function FindAppointment(patient: IEntry) { 
     const entries = GetIEntries('appointments'); 
-    return entries.find( e => { 
+    const defaultAppointment = {...GetDefaultIEntry('appointments'), patient:patient._id}; 
+    const foundAppointment = entries.find( e => { 
       const e_patient = (e['patient'] as string); 
       return e_patient === patient._id; 
     }); 
+    return {...defaultAppointment, ...foundAppointment}; 
   } 
 
   return {patientSession, 
   profile, setProfile, 
-  appointment: appointment, setAppointment: setAppointment, 
+  appointment, setAppointment, 
   RamqIsValid, 
   IdentifyPatient, 
-  CreateUpdateProfile, 
-  CreateUpdateSession: CreateUpdateAppointment} 
+  CreateUpdateProfile} 
 } 

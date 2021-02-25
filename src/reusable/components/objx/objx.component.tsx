@@ -34,10 +34,6 @@ export function Fields({ifields, children}:React.PropsWithChildren<{ifields?:IFi
 }
 
 export function Field({ifield, children}:React.PropsWithChildren<{ifield:IField}>) {  
-  if(children) {
-    const [child] = (children as any)['props']['children'];
-    console.log(child['type']['name']); 
-  } 
   return <FieldContext.Provider value={{ifield}} > 
     {children ?? <div><FieldLabel/> <FieldValue/></div>} 
   </FieldContext.Provider> 

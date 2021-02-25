@@ -14,19 +14,10 @@ export function GetDefaultValueFromIField(ifield:IField) {
     return ''; // return an null id value ?? 
   if(ifield.isMixed) 
     return {}; 
-  return ifield.defaultValue; 
+  if(ifield.defaultValue) 
+    return ifield.defaultValue; 
+  return GetDefaultValueByType(ifield.type); 
 }
-
-/*
-export function Edit(prev:any, newValue:any, key:string|number) { 
-  const edited = Copy(prev); 
-  edited[key] = newValue; 
-  return edited; 
-} 
-
-export function Read(value:any, key:string|number) { 
-  return value[key]; 
-} */
 
 export function IsInRange(value:number, min?:number, max?:number) { 
   if(!value && min) 
@@ -35,7 +26,6 @@ export function IsInRange(value:number, min?:number, max?:number) {
   const maxCondition = max ? (value <= max) : true; 
   return minCondition && maxCondition; 
 } 
-
 
 export function GetTypeByValue(value:any) { 
   if(typeof value === 'string') 
@@ -57,7 +47,10 @@ export function GetDefaultValueByType(type:string) {
     return 0; 
   if(type==='array')
     return []; 
-  if(type==='object')
+  if(type==='date') 
+    return new Date(); 
+  if(type==='object') 
     return {}; 
   return null; 
 }
+

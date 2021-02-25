@@ -29,9 +29,11 @@ export default function App() {
   </DaoContexter> 
 } 
 
-
 function MainSection() {
   const ready = usePreloadCollections(); 
+
+  /*const testDate = new Date(); 
+  console.log(testDate); */
 
   return <div> 
     {!ready && <span>Loading ... </span>} 

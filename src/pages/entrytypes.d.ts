@@ -3,7 +3,8 @@ interface IPatient extends IEntry {
 }
 
 interface IAnswer extends IEntry { 
-  appointment: string; 
+  patient: string; 
+  date: Date; 
   question: string; 
   answer: number; 
 } 

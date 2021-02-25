@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react'; 
 import { Editor, Reader } from '../../reusable/_input'; 
-import { IsEmpty, GetValueAt } from '../../reusable/_utils'; 
+import { IsEmpty, ParseDate, DaysPerMonth } from '../../reusable/_utils'; 
 import { usePatient, IUsePatient } from './usepatient.hook'; 
 
 import { DaoContext } from '../../reusable/_dao2'; 
@@ -19,6 +19,8 @@ export default function PatientPage() {
   console.log('patient page'); 
   const context = usePatient(); 
   const {profile, appointment} = context; 
+
+  console.log(DaysPerMonth(2021, 2)); 
 
   
   return <PatientContext.Provider value={context}> 
