@@ -7,7 +7,7 @@ import {SetSize, SetWidth, IEvent,
 import {IsInRange, GetDefaultValueByType, GetTypeByValue, GetDefaultValueFromIField, GetDefaultIEntry} 
   from './utils/valuetypetesting.utils'; 
 
-import {ParseDate, DaysPerMonth, IsLeapYear} from './utils/date.utils'; 
+import {ParseDate, DaysPerMonth, IsLeapYear, IsToday} from './utils/date.utils'; 
 
 
 export type {IEvent} 
@@ -18,4 +18,4 @@ export {SetSize, SetWidth,
   GetInputType, GetValueFromInput} 
 
 export {IsInRange, GetDefaultValueByType, GetTypeByValue, GetDefaultValueFromIField, GetDefaultIEntry} 
-export {ParseDate, DaysPerMonth, IsLeapYear} 
+export {ParseDate, DaysPerMonth, IsLeapYear, IsToday} 

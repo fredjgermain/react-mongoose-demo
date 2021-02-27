@@ -19,7 +19,7 @@ export function PatientIdentification() {
     <h2>Patient identification</h2> 
     {JSON.stringify(value)} 
     <Objx {...{value, ifields:[ramqIField]}} > 
-      <Field {...{ifield:ramqIField}}>
+      <Field {...{ifield:ramqIField}}> 
         <div> 
           <FieldLabel/><FieldEditor {...{setValue, editorFunc:Editor}} /> 
           <span>{RamqIsValid(ramq) ? '✓' : 'x'}</span> 

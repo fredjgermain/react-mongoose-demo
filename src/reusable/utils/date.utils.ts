@@ -21,3 +21,9 @@ export function IsLeapYear(year:number) {
     return false; 
   return true; 
 }
+
+export function IsToday(toTest:any) { 
+  const today = ParseDate(new Date()); 
+  const {year, month, date} = ParseDate(toTest); 
+  return today.year === year && today.month === month && today.date === date; 
+}

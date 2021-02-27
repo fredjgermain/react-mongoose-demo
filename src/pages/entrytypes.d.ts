@@ -1,5 +1,7 @@
 interface IPatient extends IEntry { 
-  
+  ramq: string; 
+  firstName: string; 
+  lastName: string; 
 }
 
 interface IAnswer extends IEntry { 

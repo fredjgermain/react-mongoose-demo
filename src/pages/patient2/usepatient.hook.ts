@@ -1,7 +1,7 @@
-import {useContext} from 'react'; 
-import {DaoContext} from '../../reusable/_dao2'; 
-import {useSession, IUseSession} from '../../reusable/_session'; 
-
+import { useContext } from 'react'; 
+import { DaoContext } from '../../reusable/_dao2'; 
+import { useSession, IUseSession } from '../../reusable/_session'; 
+import { feedback } from '../../components/feedback/feedback2.component'; 
 
 
 export interface IUsePatient { 
@@ -56,6 +56,7 @@ export function usePatient():IUsePatient {
   // CreateUpdateProfile ----------------------------------
   async function CreateUpdateProfile(patient: IEntry) { 
     const [response] = await CreateUpdate('patients', [patient]); 
+    feedback.setValue([response]); 
     if(response.success) { 
       await CreateUpdateAppointment(response.data); 
       setProfile(response.data); 
@@ -76,7 +77,6 @@ export function usePatient():IUsePatient {
     } 
     else 
       console.log('appointment failed ...'); 
-    return; 
   } 
 
   // FindCurrentSession -----------------------------------

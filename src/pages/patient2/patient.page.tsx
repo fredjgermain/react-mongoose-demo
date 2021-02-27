@@ -1,12 +1,12 @@
-import React, { useContext, useState } from 'react'; 
-import { Editor, Reader } from '../../reusable/_input'; 
-import { IsEmpty, ParseDate, DaysPerMonth } from '../../reusable/_utils'; 
+import React from 'react'; 
+import { IsEmpty } from '../../reusable/_utils'; 
 import { usePatient, IUsePatient } from './usepatient.hook'; 
 
-import { DaoContext } from '../../reusable/_dao2'; 
-import { Objx, Fields, Field, FieldLabel, FieldValue, FieldEditor, FieldReader } from '../../reusable/_objx'; 
-import {PatientIdentification} from './components/patientidentification.component'; 
-import {PatientProfile} from './components/patientprofile.component'; 
+import { PatientIdentification } from './components/patientidentification.component'; 
+import { PatientProfile } from './components/patientprofile.component'; 
+import { Questionnaire } from '../questionnaire2/questionnaire.page'; 
+import { EActionType } from '../../reusable/_dao'; 
+
 
 /* 
 if profile and questionnaire are empty; display patientId page. 
@@ -20,14 +20,19 @@ export default function PatientPage() {
   const context = usePatient(); 
   const {profile, appointment} = context; 
 
-  console.log(DaysPerMonth(2021, 2)); 
-
+  const crudResponseTest = [{ 
+    actionType:EActionType.CREATE, 
+    success: true, 
+    data: {}, 
+    err: [] 
+  } as ICrudResponse]; 
   
   return <PatientContext.Provider value={context}> 
     <div>Profile : {JSON.stringify(profile)}</div> 
     <div>Appointment : {JSON.stringify(appointment)}</div> 
     {IsEmpty(profile) && <PatientIdentification/> } 
     {!IsEmpty(profile) && IsEmpty(appointment) && <PatientProfile/> } 
+    {!IsEmpty(profile) && !IsEmpty(appointment) && <Questionnaire/> } 
   </PatientContext.Provider> 
 } 
 
