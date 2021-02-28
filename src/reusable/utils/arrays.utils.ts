@@ -1,6 +1,7 @@
 import { IsEmpty } from "../_utils";
 
-export type Predicate<T> = (value:T, i:number, array:T[]) => boolean; 
+//export type Predicate<T> = (value:T, i:number, array:T[]) => boolean; 
+export type Predicate<T> = (t:T, i:number, accumulator:T[], remainder:T[]) => boolean; 
 export type Comparator<T, U> = (t:T, u:U) => boolean; 
 export type Sorter<T> = (t:T, pivot:T) => boolean; 
 
@@ -82,13 +83,13 @@ export function Group<T>(array:T[], predicate:Predicate<T>):T[][] {
     return []; 
   if(array.length === 1) 
     return [array]; 
-  let [grouped, ungrouped] = Filter(array, predicate); 
+  let [grouped, ungrouped] = Filter([...array], predicate); 
   let groups:T[][] = []; 
 
   let i = 0;
   while( !IsEmpty(grouped) && !IsEmpty(ungrouped) ) { 
     groups.push(grouped); 
-    [grouped, ungrouped] = Filter(ungrouped, predicate); 
+    [grouped, ungrouped] = Filter([...ungrouped], predicate); 
   } 
   if(!IsEmpty(grouped)) 
     groups.push(grouped); 
@@ -114,7 +115,7 @@ export function Sort<T>(array:T[] = [], sorter:Sorter<T>):T[] {
 /* INDEXES ======================================= 
 Returns indexes of each element matching predicate 
 */ 
-export function Indexes<T>(array:T[] = [], predicate:Predicate<T>): [number[], number[]] { 
+/*export function Indexes<T>(array:T[] = [], predicate:Predicate<T>): [number[], number[]] { 
   const filtered = [] as number[]; 
   const remainder = [] as number[]; 
 
@@ -125,20 +126,21 @@ export function Indexes<T>(array:T[] = [], predicate:Predicate<T>): [number[], n
       remainder.push(i); 
   }) 
   return [filtered, remainder]; 
-} 
+} */
 
 
 /* ACCUMULATOR ================================== 
 */
-type AccumulatorPredicate<T> = (t:T, i:number, accumulator:T[], remainder:T[]) => boolean; 
-export function Accumulator<T>(values:T[] = [], predicate:AccumulatorPredicate<T>) { 
+//type AccumulatorPredicate<T> = (t:T, i:number, accumulator:T[], remainder:T[]) => boolean; 
+export function Filter<T>(values:T[] = [], predicate:Predicate<T>):[T[], T[]] { 
   let filtered = [] as T[]; 
   let remainder = [...values]; 
 
   values.forEach( (value:T, i:number) => { 
-    if(predicate(value, i, filtered, remainder)) { 
-      filtered.push(remainder.shift() as T); 
-    } 
+    if(predicate(value, i, filtered, remainder)) {
+      const [spliced] = remainder.splice(i,1); 
+      filtered.push(spliced); 
+    }
   }) 
   return [filtered, remainder]; 
 }
@@ -150,7 +152,7 @@ Return 2 lists,
   - 'filtered' the list of elements matching predicate. 
   - 'remainder' the list of all remaining elements. 
 */ 
-export function Filter<T>(array:T[] = [], predicate:Predicate<T>):[T[], T[]] { 
+/*export function Filter<T>(array:T[] = [], predicate:Predicate<T>):[T[], T[]] { 
   const filtered = [] as T[]; 
   const remainder = [] as T[]; 
   array?.forEach( (value:T, i:number, array:T[]) => { 
@@ -160,7 +162,7 @@ export function Filter<T>(array:T[] = [], predicate:Predicate<T>):[T[], T[]] {
       remainder.push(value); 
   }) 
   return [filtered, remainder]; 
-} 
+} */
 
 
 /* UNION ================================================== 
@@ -169,5 +171,5 @@ Optional; exclude element not matching predicate.
 */ 
 export function Union<T>(A:T|T[] = [], B:T|T[] = [], predicate?:Predicate<T>): T[] { 
   const union = [...ToArray(A), ...ToArray(B)]; 
-  return predicate ? union.filter(predicate) : union; 
+  return predicate ? Filter(union, predicate)[0] : union; 
 } 

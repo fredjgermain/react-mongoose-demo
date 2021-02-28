@@ -23,7 +23,7 @@ export default function App() {
     <div> ---- Preloader ... </div> <br/> 
     <h1> h1 title ... </h1> 
     <TestArrayUtil/> 
-    <MainSection/> 
+    
     <br/> 
     <div> 
       Footer 

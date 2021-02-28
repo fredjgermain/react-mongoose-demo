@@ -1,5 +1,5 @@
 import React from 'react'; 
-import {Comparator, Predicate, ToArray, Intersect, Filter, Indexes, Union, Group, Sort, Duplicates, Accumulator} 
+import {Comparator, Predicate, ToArray, Intersect, Filter, Union, Group, Sort, Duplicates} 
   from '../../reusable/_arrayutils'; 
 import {IsEmpty, IsNull} from '../../reusable/_utils'; 
 
@@ -23,9 +23,11 @@ export function TestArrayUtil() {
 
   return <div> 
     <TestAccumulator/> <br/> 
+    
+    <TestGroup2/> <br/> 
   </div>
-    /*<TestGroup2/> <br/> 
-    <TestDuplicates /> <br/> 
+    
+    /*<TestDuplicates /> <br/> 
     <TestIntersect/> <br/> 
     <TestPicker /> <br/> 
     <TestUnion  /> <br/> 
@@ -45,22 +47,22 @@ function TestAccumulator() {
 
   const takeHalfPredicate = (value:T, i:number, accumulator:T[], remainder:T[]) => 
     accumulator.length < remainder.length; 
-  const [firstHalf, secondHalf] = Accumulator(ts, takeHalfPredicate); 
+  const [firstHalf, secondHalf] = Filter(ts, takeHalfPredicate); 
 
   const takeFourPredicate = (value:T, i:number, accumulator:T[], remainder:T[]) => 
     accumulator.length < 4; 
-  const [firstFour, minusFour] = Accumulator(ts, takeFourPredicate); 
+  const [firstFour, minusFour] = Filter(ts, takeFourPredicate); 
 
   const lastFourPredicate = (value:T, i:number, accumulator:T[], remainder:T[]) => 
-    remainder.length > 4; 
-  const [firstMinusFour, lastFour] = Accumulator(ts, lastFourPredicate); 
+    remainder.length >= 4; 
+  const [firstMinusFour, rest] = Filter(ts, lastFourPredicate); 
 
   return <div>
     <div>Group</div> 
     {JSON.stringify([ts])} <br/> 
     -- halves : {JSON.stringify([firstHalf, ' ............ ' , secondHalf])} <br/> 
     -- firstFour : {JSON.stringify([firstFour, ' ............ ' , minusFour])} <br/> 
-    -- lastFour : {JSON.stringify([firstMinusFour, ' ............ ' , lastFour])} <br/> 
+    -- lastFour : {JSON.stringify([firstMinusFour, ' ............ ' , rest])} <br/> 
   </div>
 } 
 
@@ -70,8 +72,8 @@ function TestGroup1() {
   type T = {id:string}; 
   type U = string; 
   const ts:T[] = [{id:'b'}, {id:'b'}, {id:'a'}, {id:'d'}, {id:'a'}, {id:'c'}]; 
-  const predicate = (value:T, i:number, array:T[]) => { 
-    const [first] = array; 
+  const predicate = (value:T, i:number, filtered:T[], remainder:T[]) => { 
+    const [first] = remainder; 
     return !IsEmpty(first) && value.id === first?.id; 
   }
 
@@ -86,17 +88,25 @@ function TestGroup1() {
   </div>
 } 
 
+
+
 function TestGroup2() { 
   type T = {id:string}; 
   type U = string; 
-  const ts:T[] = [
-    {id:'b'}, {id:'b'}, {id:'b'}, {id:'b'}, {id:'b'}, {id:'b'}, 
+  const ts:T[] = [ 
+    {id:'b'}, {id:'a'}, {id:'b'}, {id:'c'}, {id:'b'}, {id:'d'}, 
     {id:'a'}, {id:'d'}, {id:'a'}, {id:'d'}, {id:'a'}, {id:'d'}, 
-    {id:'a'}, {id:'c'}, {id:'a'}, {id:'c'}, {id:'a'}, {id:'c'}
+    {id:'a'}, {id:'c'}, {id:'a'}, {id:'c'}, {id:'a'}, {id:'c'} 
   ]; 
-  const predicate = (value:T, i:number, array:T[]) => { 
-    const [first] = array; 
-    return !IsEmpty(first) && value.id === first?.id && i < 4; 
+
+  const predicate = (value:T, i:number, filtered:T[], remainder:T[]) => { 
+    const [pivot] = filtered; 
+    //const [shift] = remainder; 
+    const test = filtered.length < 5 && (pivot?.id === value.id || IsEmpty(filtered)); 
+    console.log('Filtered :  ' + JSON.stringify(filtered)) 
+    console.log('Remainder:  ' +JSON.stringify(remainder)) 
+    console.log('value....:  ' + JSON.stringify([value, pivot, test])) 
+    return test; 
   }
 
   const groups = Group(ts, predicate) 
@@ -207,20 +217,6 @@ function TestUnion() {
     {JSON.stringify(A)} : 
     {JSON.stringify(B)} : 
     {JSON.stringify(Union(A, B, predicate))} 
-  </div> 
-} 
-
-// Test Indexes =========================================== 
-function TestIndexes({testArgs}:{testArgs:{array:any[], predicate:Predicate<any>} []}) { 
-  return <div> 
-    <span>Indexes</span>
-    {testArgs.map( ({array, predicate},i) => { 
-      return <div key={i}> 
-        {JSON.stringify(array)} : 
-        {JSON.stringify(predicate)} : 
-        {JSON.stringify(Indexes(array, predicate))} 
-      </div> 
-    })} 
   </div> 
 } 
 
