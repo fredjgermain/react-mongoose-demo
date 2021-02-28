@@ -1,251 +1,164 @@
 import React from 'react'; 
-import {Comparator, Predicate, ToArray, Intersect, Filter, Union, Group, Sort, Duplicates} 
+import {Comparator, Predicate, Sorter, Pick, ToArray, Intersect, Filter, Union, Group, Sort} 
   from '../../reusable/_arrayutils'; 
 import {IsEmpty, IsNull} from '../../reusable/_utils'; 
 
 
+function Grouping<T>(array:T[] = [], predicates:Predicate<T>[]):T[][] { 
+  const [predicate, ..._predicates] = predicates; 
+  if(!predicate) 
+    return [array]; 
+  
+  let grouped = [] as T[][]; 
+  const groups = Group(array, predicate); 
+  groups.forEach( group => { 
+    const _grouped = Grouping(group, _predicates); 
+    grouped = [...grouped, ..._grouped]; 
+  }); 
+  return grouped; 
+} 
+
+
+
+const nul = undefined; 
+const empty:any[] = []; 
+const nums = [5, 3, 7, 9, 6, 7, 8]; 
+const strs = ['a', 'bf', 'hf', 'l']; 
+
+type ObjId = {id:string}; 
+const objs = [{id:'b'}, {id:'c'}, {id:'d'}, {id:'c'}, {id:'d'}, {id:'a'}]; 
+type ObjIdNumStr = {id:string, num:number, str:string}; 
+const objIdVal:ObjIdNumStr[] = [ 
+  {id:'a', num:1, str: 'b'}, 
+  {id:'a', num:2, str: 'f'}, 
+  {id:'c', num:1, str: 'g'}, 
+  {id:'a', num:3, str: 'l'}, 
+  {id:'c', num:2, str: 'f'}, 
+  {id:'a', num:3, str: 'l'}, 
+  {id:'c', num:1, str: 'd'}, 
+]; 
+
+
 // Test Util ====================================
 export function TestArrayUtil() { 
-  const values:any[] = [
-    undefined, 
-    '', 
-    0, 
-    [] as any[], 
-    {}, 
-    null, 
-  ] 
+  const groupById = (v:ObjIdNumStr, i:number, As:ObjIdNumStr[]) => { 
+    const [pivot] = As; 
+    return IsNull(pivot) || pivot.id === v.id; 
+  } 
+  const groupByNum = (v:ObjIdNumStr, i:number, As:ObjIdNumStr[]) => { 
+    const [pivot] = As; 
+    return IsNull(pivot) || pivot.num === v.num; 
+  } 
 
-  const testArgs = [ 
-    {array:[12,56,4,9,7,5,566], predicate: v => v > 10}, 
-    {array:[12,56,4,9,7,5,566], predicate: (v,i) => i < 5} 
-  ] as { array:any[], predicate:Predicate<any> } []; 
-  
+  console.log(Grouping(objIdVal, [groupById, groupByNum])); 
 
   return <div> 
-    <TestAccumulator/> <br/> 
-    
-    <TestGroup2/> <br/> 
-  </div>
-    
-    /*<TestDuplicates /> <br/> 
-    <TestIntersect/> <br/> 
-    <TestPicker /> <br/> 
-    <TestUnion  /> <br/> 
-    <TestFilter {...{testArgs}} /> <br/> 
-    <TestIndexes {...{testArgs}} /> <br/> 
-    <TestSort /> 
-  </div> */
+    <TestSorts/> 
+  </div> 
 } 
 
 
+// SORT =================================================== 
+function TestSorts() {
+  const ascending = (t:any, pivot:any) => t > pivot; 
+  const descending = (t:any, pivot:any) => t < pivot; 
 
-// GROUP ==============================================
-function TestAccumulator() { 
-  type T = {id:string}; 
-  type U = string; 
-  const ts:T[] = [{id:'b'}, {id:'b'}, {id:'a'}, {id:'d'}, {id:'a'}, {id:'c'}]; 
-
-  const takeHalfPredicate = (value:T, i:number, accumulator:T[], remainder:T[]) => 
-    accumulator.length < remainder.length; 
-  const [firstHalf, secondHalf] = Filter(ts, takeHalfPredicate); 
-
-  const takeFourPredicate = (value:T, i:number, accumulator:T[], remainder:T[]) => 
-    accumulator.length < 4; 
-  const [firstFour, minusFour] = Filter(ts, takeFourPredicate); 
-
-  const lastFourPredicate = (value:T, i:number, accumulator:T[], remainder:T[]) => 
-    remainder.length >= 4; 
-  const [firstMinusFour, rest] = Filter(ts, lastFourPredicate); 
+  const ascendingId = (t:ObjId, pivot:ObjId) => t.id > pivot.id; 
+  const descendingId = (t:ObjId, pivot:ObjId) => t.id < pivot.id; 
 
   return <div>
-    <div>Group</div> 
-    {JSON.stringify([ts])} <br/> 
-    -- halves : {JSON.stringify([firstHalf, ' ............ ' , secondHalf])} <br/> 
-    -- firstFour : {JSON.stringify([firstFour, ' ............ ' , minusFour])} <br/> 
-    -- lastFour : {JSON.stringify([firstMinusFour, ' ............ ' , rest])} <br/> 
+    <TestSort {...{data:nums, sorter:ascending}} /> <br/>
+    <TestSort {...{data:nums, sorter:descending}} /> <br/>
+
+    <TestSort {...{data:strs, sorter:ascending}} /> <br/>
+    <TestSort {...{data:strs, sorter:descending}} /> <br/>
+
+    <TestSort {...{data:objs, sorter:ascendingId}} /> <br/>
+    <TestSort {...{data:objs, sorter:descendingId}} /> <br/>
   </div>
+}
+
+function TestSort<T>({data, sorter}:{data:T[], sorter:Sorter<T>}) { 
+  const sorted = Sort(data, sorter); 
+
+  return <div>
+    <b>{JSON.stringify(sorter.name)}</b> <br/> 
+    <div>Unsorted: {JSON.stringify(data)}</div> 
+    <div>Sorted: {JSON.stringify(sorted)}</div> 
+  </div>
+}
+
+// GROUP ==================================================
+function TestGroups() { 
+  const groupOf3 = (v:any, i:number, As:any[], Bs:any[], Cs:any[]) => As.length < 3;  
+  const groupById = (v:ObjId, i:number, As:ObjId[]) => { 
+    const [pivot] = As; 
+    return IsNull(pivot) || pivot.id === v.id; 
+  } 
+  
+  return <div> 
+    <TestGroup {...{data:empty, predicate:groupById}} /> <br/>
+    <TestGroup {...{data:objs, predicate:groupById}} /> <br/>
+    <TestGroup {...{data:objs, predicate:groupOf3}} /> <br/>
+  </div> 
 } 
 
 
-// GROUP ==============================================
-function TestGroup1() { 
-  type T = {id:string}; 
-  type U = string; 
-  const ts:T[] = [{id:'b'}, {id:'b'}, {id:'a'}, {id:'d'}, {id:'a'}, {id:'c'}]; 
-  const predicate = (value:T, i:number, filtered:T[], remainder:T[]) => { 
-    const [first] = remainder; 
-    return !IsEmpty(first) && value.id === first?.id; 
-  }
+function TestGroup<T>({data = [], predicate}:{data:T[], predicate:Predicate<T>}) { 
+  const groups = Group(data, predicate); 
 
-  const groups = Group(ts, predicate) 
-
-  return <div>
-    <div>Group</div> 
-    {JSON.stringify([ts])} <br/>
-    -- grouped : {groups.map( (group,i) => {
-        return <div key={i}>{JSON.stringify(group)}</div>
-      })}
-  </div>
-} 
-
-
-
-function TestGroup2() { 
-  type T = {id:string}; 
-  type U = string; 
-  const ts:T[] = [ 
-    {id:'b'}, {id:'a'}, {id:'b'}, {id:'c'}, {id:'b'}, {id:'d'}, 
-    {id:'a'}, {id:'d'}, {id:'a'}, {id:'d'}, {id:'a'}, {id:'d'}, 
-    {id:'a'}, {id:'c'}, {id:'a'}, {id:'c'}, {id:'a'}, {id:'c'} 
-  ]; 
-
-  const predicate = (value:T, i:number, filtered:T[], remainder:T[]) => { 
-    const [pivot] = filtered; 
-    //const [shift] = remainder; 
-    const test = filtered.length < 5 && (pivot?.id === value.id || IsEmpty(filtered)); 
-    console.log('Filtered :  ' + JSON.stringify(filtered)) 
-    console.log('Remainder:  ' +JSON.stringify(remainder)) 
-    console.log('value....:  ' + JSON.stringify([value, pivot, test])) 
-    return test; 
-  }
-
-  const groups = Group(ts, predicate) 
-
-  return <div>
-    <div>Group</div> 
-    {JSON.stringify([ts])} <br/>
-    -- grouped : {groups.map( (group,i) => {
-        return <div key={i}>{JSON.stringify(group)}</div>
-      })}
-  </div>
-} 
-
-// INTERSECT ==========================================
-function TestIntersect() { 
-  type T = {id:string}; 
-  type U = string; 
-  const ts:T[] = [{id:'b'}, {id:'b'}, {id:'a'}, {id:'d'}, {id:'a'}, {id:'c'}]; 
-  const us:U[] = ['b','c']; 
-  const compare = (t:T, u:U) => t.id === u; 
-
-  const [intersect, excluded] = Intersect(ts, us, compare); 
-
-  return <div>
-    <div>Intersect</div> 
-    {JSON.stringify([ts])} : 
-    {JSON.stringify([us])} : 
-      <br/> -- intersect: {JSON.stringify(intersect)} 
-      <br/> -- excluded: {JSON.stringify(excluded)} 
-  </div>
+  return <div> 
+    <b>{JSON.stringify(predicate.name)}</b> <br/> 
+    data: {JSON.stringify(data)} <br/> 
+    {groups.map( (group,i) => { 
+      return <div key={i}><span>{i}:</span> 
+        {JSON.stringify(group)} 
+      </div> 
+    })} 
+  </div> 
 }
 
 
 
-// DUPLICATES =========================================
-function TestDuplicates() { 
-  const ts = [{id:'b'}, {id:'b'}, {id:'a'}, {id:'d'}, {id:'a'}, {id:'c'}]; 
-  const {duplicates, unics} = Duplicates(ts, (t,u) => t.id === u.id); 
+// Filter =================================================
+function TestFilters() {
 
-  return <div> 
-    <div>Duplicates / Unics</div> 
-    {JSON.stringify([ts])} : 
-      <br/> -- duplicates: {JSON.stringify(duplicates)} 
-      <br/> -- unics: {JSON.stringify(unics)} 
-  </div> 
-} 
-
-
-
-// PICKER ===============================================
-function TestPicker() { 
-  type T = {id:string}; 
-  const array = [{id:'b'}, {id:'b'}, {id:'a'}, {id:'d'}, {id:'a'}, {id:'c'}]; 
-  //const comparator = (t:T,u:string) => t.id === (u as string); 
-  const pickingOrder = ['a', 'c']; 
-
-  const predicate = (t:T) => pickingOrder.includes(t.id); 
-
-  const sorter = (t:T,pivot:T) => { 
-    const pivotIndex = pickingOrder.indexOf(pivot.id); 
-    const index = pickingOrder.indexOf(t.id); 
-    return index >= 0 && index >= pivotIndex; 
-  }; 
-
-  //const grouped = Group<T, string>(array,  comparator); 
-  const [inclusion, exclusion] = Filter(array, predicate); 
-  const picked = Sort<T>(inclusion,  sorter); 
-
-  return <div> 
-    <div>Picker</div> 
-    {JSON.stringify([array])} : 
-      <br/> -- picked: {JSON.stringify(picked)} 
-  </div> 
-} 
-
-// SORT =================================================
-function TestSort() { 
-  const array = [{id:11}, {id:2}, {id:1}, {id:5}, {id:4}, {id:7}]; 
-  const sorted = Sort(array, (t, pivot) => t.id > pivot.id); 
-
-  const sort1 = <div><br/> {JSON.stringify(array)} : 
-    <br/> -- sorted: {JSON.stringify(sorted)} 
-  </div>
-
-
-  const array2 = [{id:'b'}, {id:'b'}, {id:'a'}, {id:'d'}, {id:'a'}, {id:'c'}]; 
-  const sorted2 = Sort(array2, (t, pivot) => t.id > pivot.id); 
-
-  const sort2 = <div><br/> {JSON.stringify(array2)} : 
-  <br/> -- sorted: {JSON.stringify(sorted2)} </div>
   
+
+  const even = (value:number) => value % 2 === 0; 
+  const half = (v:any, i:number, a:any[], b:any[], c:any[]) => a.length < b.length; 
+  const first4 = (v:any, i:number, a:any[], b:any[], c:any[]) => a.length < 4; 
+  const last4 = (v:any, i:number, a:any[], b:any[], c:any[]) => c.length < 4; 
+  const duplicate = (v:any, i:number, As:any[], Bs:any[], Cs:any[]) => { 
+    return As.some( a => a === v ) || Cs.some( c => c === v); 
+  } 
+  const idC = (v:ObjId) => v.id === 'c'; 
+  const duplicateId = (v:ObjId, i:number, As:ObjId[], Bs:ObjId[], Cs:ObjId[]) => { 
+    return As.some( a => a.id === v.id ) || Cs.some( c => c.id === v.id); 
+  } 
+
+  return <div>
+    <TestFilter {...{data:strs, predicate:half}}/> <br/> 
+    <TestFilter {...{data:nums, predicate:duplicate}}/> <br/> 
+    <TestFilter {...{data:objs, predicate:duplicateId}}/> <br/> 
+
+    <TestFilter {...{data:objs, predicate:idC}}/> <br/> 
+
+    <TestFilter {...{data:nums, predicate:even}}/> <br/> 
+    <TestFilter {...{data:nums, predicate:half}}/> <br/> 
+    <TestFilter {...{data:nums, predicate:first4}}/> <br/> 
+    <TestFilter {...{data:nums, predicate:last4}}/> <br/> 
+  </div>
+}
+
+function TestFilter<T>({data, predicate}:{data:T[], predicate:Predicate<T>}) { 
+  const [positive, negative] = Filter(data, predicate); 
+
   return <div> 
-    <div>Sort</div> 
-      {sort1}
-      {sort2}
+    {JSON.stringify(predicate.name)} <br/> 
+    data: {JSON.stringify(data)} <br/> 
+    positive: {JSON.stringify(positive)} <br/> 
+    negative: {JSON.stringify(negative)} <br/> 
   </div> 
-} 
-
-
-// Test Union ============================================= 
-function TestUnion() { 
-  const A = [12, 56, 4, 9, 7, 5, 566]; 
-  const B = [15, 99, 54, 68]; 
-  const predicate = (v:any) => v > 10; 
-
-  return <div> 
-    <div>Union</div> 
-    {JSON.stringify(A)} : 
-    {JSON.stringify(B)} : 
-    {JSON.stringify(Union(A, B, predicate))} 
-  </div> 
-} 
-
-// Test Filter ============================================ 
-function TestFilter({testArgs}:{testArgs:{array:any[], predicate:Predicate<any>} []}) { 
-  return <div> 
-    <span>Filter</span>
-    {testArgs.map( ({array, predicate},i) => { 
-      return <div key={i}> 
-        {JSON.stringify(array)} : 
-        {JSON.stringify(predicate)} : 
-        {JSON.stringify(Filter(array, predicate))} 
-      </div> 
-    })} 
-  </div> 
-} 
-
-// Tester ================================================= 
-function Tester({values, func}:{values:any[], func:(value:any)=>any}) { 
-  return <div> 
-    {values.map( (value,i) => { 
-      return <div key={i}> 
-        {JSON.stringify(value)} : 
-        {func.name} : 
-        {JSON.stringify(func(value))} 
-      </div> 
-    })} 
-  </div> 
-} 
-
-
+}
 
