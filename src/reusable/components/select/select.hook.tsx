@@ -19,7 +19,7 @@ export function useSelect({ifield, value, setValue, ...props}:IEditor):IUseSelec
   const options = props.options ?? []; 
   // SelectValue ................................
   function SelectValue (newValue:any) { 
-    const {inclusion, exclusion} = Filter(ToArray(value), e => e === newValue); 
+    const [inclusion, exclusion] = Filter(ToArray(value), e => e === newValue); 
     if(IsEmpty(inclusion) && multiple) 
       exclusion.push(newValue); 
     if(IsEmpty(inclusion) && !multiple) 

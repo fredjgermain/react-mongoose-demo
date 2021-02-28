@@ -2,8 +2,8 @@ import React, { useContext, useState } from 'react';
 import Nav from './components/nav/nav.component'; 
 import { Switch, Route } from 'react-router-dom'; 
 import { DaoContexter } from './reusable/_dao2'; 
-import { usePreloadCollections } from './components/preloader.component';
-
+import { usePreloadCollections } from './components/preloader.component'; 
+import {TestArrayUtil} from './experiments/testarray/testarrayutils.experiment'; 
 
 
 // Pages
@@ -22,6 +22,7 @@ export default function App() {
     <Nav/> 
     <div> ---- Preloader ... </div> <br/> 
     <h1> h1 title ... </h1> 
+    <TestArrayUtil/> 
     <MainSection/> 
     <br/> 
     <div> 

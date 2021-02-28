@@ -70,10 +70,10 @@ export function usePatient():IUsePatient {
     const appointment = FindAppointment(patient); 
     const [response] = await CreateUpdate('appointments', [appointment]); 
     if(response.success) { 
-      console.log(response.data); 
+      //console.log(response.data); 
       setAppointment(response.data); 
       const date = new Date(response.data['date'] as any); 
-      console.log([date.getFullYear(), date.getDate(), date.getMonth()+1]); 
+      //console.log([date.getFullYear(), date.getDate(), date.getMonth()+1]); 
     } 
     else 
       console.log('appointment failed ...'); 

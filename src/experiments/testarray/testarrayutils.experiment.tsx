@@ -1,5 +1,6 @@
 import React from 'react'; 
-import {Comparator, Predicate, ToArray, Filter, Indexes, Union, Sort, Duplicates} from '../../reusable/_arrayutils'; 
+import {Comparator, Predicate, ToArray, Intersect, Filter, Indexes, Union, Group, Sort, Duplicates, Accumulator} 
+  from '../../reusable/_arrayutils'; 
 import {IsEmpty, IsNull} from '../../reusable/_utils'; 
 
 
@@ -21,25 +22,112 @@ export function TestArrayUtil() {
   
 
   return <div> 
-    <TestDuplicates /> <br/>
-    <TestPicker /> <br/>
-    <TestUnion  /> <br/>
+    <TestAccumulator/> <br/> 
+  </div>
+    /*<TestGroup2/> <br/> 
+    <TestDuplicates /> <br/> 
+    <TestIntersect/> <br/> 
+    <TestPicker /> <br/> 
+    <TestUnion  /> <br/> 
     <TestFilter {...{testArgs}} /> <br/> 
     <TestIndexes {...{testArgs}} /> <br/> 
     <TestSort /> 
-  </div> 
-
-
-  return <div> 
-    <h1>ArrayTest</h1> 
-    <h3>test 'IsNull'</h3> 
-    <Tester {...{values, func:IsNull}} /> 
-    <br/> 
-    <h3>test 'IsEmpty'</h3> 
-    <Tester {...{values, func:IsEmpty}} /> 
-  </div> 
+  </div> */
 } 
 
+
+
+// GROUP ==============================================
+function TestAccumulator() { 
+  type T = {id:string}; 
+  type U = string; 
+  const ts:T[] = [{id:'b'}, {id:'b'}, {id:'a'}, {id:'d'}, {id:'a'}, {id:'c'}]; 
+
+  const takeHalfPredicate = (value:T, i:number, accumulator:T[], remainder:T[]) => 
+    accumulator.length < remainder.length; 
+  const [firstHalf, secondHalf] = Accumulator(ts, takeHalfPredicate); 
+
+  const takeFourPredicate = (value:T, i:number, accumulator:T[], remainder:T[]) => 
+    accumulator.length < 4; 
+  const [firstFour, minusFour] = Accumulator(ts, takeFourPredicate); 
+
+  const lastFourPredicate = (value:T, i:number, accumulator:T[], remainder:T[]) => 
+    remainder.length > 4; 
+  const [firstMinusFour, lastFour] = Accumulator(ts, lastFourPredicate); 
+
+  return <div>
+    <div>Group</div> 
+    {JSON.stringify([ts])} <br/> 
+    -- halves : {JSON.stringify([firstHalf, ' ............ ' , secondHalf])} <br/> 
+    -- firstFour : {JSON.stringify([firstFour, ' ............ ' , minusFour])} <br/> 
+    -- lastFour : {JSON.stringify([firstMinusFour, ' ............ ' , lastFour])} <br/> 
+  </div>
+} 
+
+
+// GROUP ==============================================
+function TestGroup1() { 
+  type T = {id:string}; 
+  type U = string; 
+  const ts:T[] = [{id:'b'}, {id:'b'}, {id:'a'}, {id:'d'}, {id:'a'}, {id:'c'}]; 
+  const predicate = (value:T, i:number, array:T[]) => { 
+    const [first] = array; 
+    return !IsEmpty(first) && value.id === first?.id; 
+  }
+
+  const groups = Group(ts, predicate) 
+
+  return <div>
+    <div>Group</div> 
+    {JSON.stringify([ts])} <br/>
+    -- grouped : {groups.map( (group,i) => {
+        return <div key={i}>{JSON.stringify(group)}</div>
+      })}
+  </div>
+} 
+
+function TestGroup2() { 
+  type T = {id:string}; 
+  type U = string; 
+  const ts:T[] = [
+    {id:'b'}, {id:'b'}, {id:'b'}, {id:'b'}, {id:'b'}, {id:'b'}, 
+    {id:'a'}, {id:'d'}, {id:'a'}, {id:'d'}, {id:'a'}, {id:'d'}, 
+    {id:'a'}, {id:'c'}, {id:'a'}, {id:'c'}, {id:'a'}, {id:'c'}
+  ]; 
+  const predicate = (value:T, i:number, array:T[]) => { 
+    const [first] = array; 
+    return !IsEmpty(first) && value.id === first?.id && i < 4; 
+  }
+
+  const groups = Group(ts, predicate) 
+
+  return <div>
+    <div>Group</div> 
+    {JSON.stringify([ts])} <br/>
+    -- grouped : {groups.map( (group,i) => {
+        return <div key={i}>{JSON.stringify(group)}</div>
+      })}
+  </div>
+} 
+
+// INTERSECT ==========================================
+function TestIntersect() { 
+  type T = {id:string}; 
+  type U = string; 
+  const ts:T[] = [{id:'b'}, {id:'b'}, {id:'a'}, {id:'d'}, {id:'a'}, {id:'c'}]; 
+  const us:U[] = ['b','c']; 
+  const compare = (t:T, u:U) => t.id === u; 
+
+  const [intersect, excluded] = Intersect(ts, us, compare); 
+
+  return <div>
+    <div>Intersect</div> 
+    {JSON.stringify([ts])} : 
+    {JSON.stringify([us])} : 
+      <br/> -- intersect: {JSON.stringify(intersect)} 
+      <br/> -- excluded: {JSON.stringify(excluded)} 
+  </div>
+}
 
 
 
@@ -58,7 +146,7 @@ function TestDuplicates() {
 
 
 
-// GROUP ===============================================
+// PICKER ===============================================
 function TestPicker() { 
   type T = {id:string}; 
   const array = [{id:'b'}, {id:'b'}, {id:'a'}, {id:'d'}, {id:'a'}, {id:'c'}]; 
@@ -74,7 +162,7 @@ function TestPicker() {
   }; 
 
   //const grouped = Group<T, string>(array,  comparator); 
-  const {inclusion, exclusion} = Filter(array, predicate); 
+  const [inclusion, exclusion] = Filter(array, predicate); 
   const picked = Sort<T>(inclusion,  sorter); 
 
   return <div> 

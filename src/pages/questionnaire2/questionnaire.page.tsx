@@ -4,11 +4,13 @@ import { DaoContext } from '../../reusable/_dao2';
 import { Editor } from '../../reusable/_input';
 import { useQuestionnaire, IUseQuestionnaire } from './usequestionnaire.hook'; 
 
+
 export const QuestionnnaireContext = React.createContext({} as IUseQuestionnaire); 
 export function Questionnaire() { 
   const context = useQuestionnaire(); 
-  const {questionnaire} = context; 
+  const {questionnaire, GetPages} = context; 
 
+  console.log(GetPages()); 
 
   return <QuestionnnaireContext.Provider value={context} > 
     <h2>Questionnaire </h2> 
