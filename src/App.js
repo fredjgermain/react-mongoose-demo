@@ -22,8 +22,7 @@ export default function App() {
     <Nav/> 
     <div> ---- Preloader ... </div> <br/> 
     <h1> h1 title ... </h1> 
-    <TestArrayUtil/> 
-    
+    <MainSection/> 
     <br/> 
     <div> 
       Footer 
@@ -31,6 +30,7 @@ export default function App() {
     <br/> 
   </DaoContexter> 
 } 
+
 
 
 function MainSection() {

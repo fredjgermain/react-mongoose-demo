@@ -79,36 +79,25 @@ export function useQuestionnaire():IUseQuestionnaire {
     return {form, instructions, question, response}; 
   } 
 
-  // group by
-  // sameForm
-  // sameInstructions
-  // max 4 questions per page. 
   function GetPages() { 
-    // PageBreak predicate 
-    const PageBreak = (index:number, i:number, array:number[]) => { 
-      const answer = questionnaire[index]; 
-      const answers = array.map( index => questionnaire[index]); 
-        //const predicate = (answer:IAnswer, i:number, answers:IAnswer[]) => { 
-      const question = GetQuestionnaireItem(answer).question as IQuestion; 
-      const questions = answers.map( answer => GetQuestionnaireItem(answer).question as IQuestion); 
+    // Display 1 form at a time ...
 
-      // Predicate on single element and on accumulator for page size 
-      const predicate = (question:IQuestion, i:number, array:IQuestion[]) => { 
-        const [first] = array; 
-        // same form 
-        const sameForm = question?.form === first.form; 
-        // same instructions 
-        const sameInstructions = JSON.stringify(question?.instructions) === JSON.stringify(first.instructions); 
-        return sameForm && sameInstructions; 
-      } 
-      // group max length
-      const accumulator = questions.filter((v,_i) => _i <= i); 
-      return accumulator.filter(predicate).length <= 4 && predicate(question, i, questions); 
-    }
-    
+    // sameInstructions
+    // max 4 questions per page. 
+    const PageBreak = (index:number, i:number, As:number[], Bs:number[], Cs:number[]) => { 
+      const question = GetQuestionnaireItem(questionnaire[index]).question as IQuestion; 
+      const qPivot = GetQuestionnaireItem(questionnaire[As[0]])?.question as IQuestion; 
+      // Same instructions 
+      const sameInstructions = JSON.stringify(question?.instructions) === JSON.stringify(qPivot?.instructions); 
+      // Page max length < 4
+      const pageBreaks = (sameInstructions || IsEmpty(As)); 
+      return pageBreaks; 
+    } 
 
-    const indexes = questionnaire.map((v,i) => i); 
-    return Group(indexes, PageBreak); 
+    const indexes = questionnaire.map( (k,i) => i); 
+    const groupedIndexes = Group(indexes, PageBreak); 
+    const pages = groupedIndexes.map( group => group.map( i => questionnaire[i]) ); 
+    return pages; 
   } 
 
 

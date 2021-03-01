@@ -1,22 +1,7 @@
 import React from 'react'; 
-import {Comparator, Predicate, Sorter, Pick, ToArray, Intersect, Filter, Union, Group, Sort} 
+import {Comparator, Predicate, Sorter, Pick, ToArray, Intersect, Filter, Union, Groups, Group, Sort} 
   from '../../reusable/_arrayutils'; 
 import {IsEmpty, IsNull} from '../../reusable/_utils'; 
-
-
-function Grouping<T>(array:T[] = [], predicates:Predicate<T>[]):T[][] { 
-  const [predicate, ..._predicates] = predicates; 
-  if(!predicate) 
-    return [array]; 
-  
-  let grouped = [] as T[][]; 
-  const groups = Group(array, predicate); 
-  groups.forEach( group => { 
-    const _grouped = Grouping(group, _predicates); 
-    grouped = [...grouped, ..._grouped]; 
-  }); 
-  return grouped; 
-} 
 
 
 
@@ -39,44 +24,35 @@ const objIdVal:ObjIdNumStr[] = [
 ]; 
 
 
-// Test Util ====================================
+// Test Util ==================================== 
 export function TestArrayUtil() { 
-  const groupById = (v:ObjIdNumStr, i:number, As:ObjIdNumStr[]) => { 
-    const [pivot] = As; 
-    return IsNull(pivot) || pivot.id === v.id; 
-  } 
-  const groupByNum = (v:ObjIdNumStr, i:number, As:ObjIdNumStr[]) => { 
-    const [pivot] = As; 
-    return IsNull(pivot) || pivot.num === v.num; 
-  } 
-
-  console.log(Grouping(objIdVal, [groupById, groupByNum])); 
-
   return <div> 
+    <TestFilters/> 
     <TestSorts/> 
+    <TestGroups /> 
   </div> 
 } 
 
 
 // SORT =================================================== 
-function TestSorts() {
+function TestSorts() { 
   const ascending = (t:any, pivot:any) => t > pivot; 
   const descending = (t:any, pivot:any) => t < pivot; 
 
   const ascendingId = (t:ObjId, pivot:ObjId) => t.id > pivot.id; 
   const descendingId = (t:ObjId, pivot:ObjId) => t.id < pivot.id; 
 
-  return <div>
-    <TestSort {...{data:nums, sorter:ascending}} /> <br/>
-    <TestSort {...{data:nums, sorter:descending}} /> <br/>
+  return <div> 
+    <TestSort {...{data:nums, sorter:ascending}} /> <br/> 
+    <TestSort {...{data:nums, sorter:descending}} /> <br/> 
 
-    <TestSort {...{data:strs, sorter:ascending}} /> <br/>
-    <TestSort {...{data:strs, sorter:descending}} /> <br/>
+    <TestSort {...{data:strs, sorter:ascending}} /> <br/> 
+    <TestSort {...{data:strs, sorter:descending}} /> <br/> 
 
-    <TestSort {...{data:objs, sorter:ascendingId}} /> <br/>
-    <TestSort {...{data:objs, sorter:descendingId}} /> <br/>
-  </div>
-}
+    <TestSort {...{data:objs, sorter:ascendingId}} /> <br/> 
+    <TestSort {...{data:objs, sorter:descendingId}} /> <br/> 
+  </div> 
+} 
 
 function TestSort<T>({data, sorter}:{data:T[], sorter:Sorter<T>}) { 
   const sorted = Sort(data, sorter); 
@@ -116,15 +92,12 @@ function TestGroup<T>({data = [], predicate}:{data:T[], predicate:Predicate<T>})
       </div> 
     })} 
   </div> 
-}
+} 
 
 
 
-// Filter =================================================
-function TestFilters() {
-
-  
-
+// Filter ================================================= 
+function TestFilters() { 
   const even = (value:number) => value % 2 === 0; 
   const half = (v:any, i:number, a:any[], b:any[], c:any[]) => a.length < b.length; 
   const first4 = (v:any, i:number, a:any[], b:any[], c:any[]) => a.length < 4; 
