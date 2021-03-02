@@ -17,15 +17,15 @@ export class Session {
 
   //private static callBacks:
 
-  public static StartSession(sessionName:string, value:any = {}) { 
-    if(Session.SessionExists(sessionName)) 
+  public static Start(sessionName:string, value:any = {}) { 
+    if(Session.Exists(sessionName)) 
       return; 
     const time = {start:Date.now(), last:Date.now()} 
     const session = {sessionName, time, value} as ISession; 
     Session.SetSession(session); 
   } 
 
-  public static SessionExists(sessionName:string):boolean { 
+  public static Exists(sessionName:string):boolean { 
     const session = Session.GetSession(sessionName); 
     return session ? true: false; 
   } 
@@ -41,7 +41,7 @@ export class Session {
   public static Set(sessionName:string, newValue:any, keys:string[] = []) { 
     const session = Session.GetSession(sessionName); 
     if(!session) { 
-      Session.StartSession(sessionName, newValue); 
+      Session.Start(sessionName, newValue); 
       return; 
     }
     const newSession = SetValueAt(session, newValue, ["value", ...keys]); 
@@ -66,7 +66,7 @@ export class Session {
   } 
 
   public static EndSession(sessionName:string) { 
-    if(!Session.SessionExists(sessionName)) 
+    if(!Session.Exists(sessionName)) 
       return false; 
     window.sessionStorage.removeItem(sessionName); 
     return true; 

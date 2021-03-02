@@ -7,7 +7,6 @@ import { PatientProfile } from './components/patientprofile.component';
 import { Questionnaire } from '../questionnaire2/questionnaire.page'; 
 import { EActionType } from '../../reusable/_dao'; 
 
-
 /* 
 if profile and questionnaire are empty; display patientId page. 
 if questionnaire is empty; display patientProfile page to createUpdate profile. 
@@ -18,7 +17,7 @@ export const PatientContext = React.createContext({} as IUsePatient);
 export default function PatientPage() { 
   console.log('patient page'); 
   const context = usePatient(); 
-  const {profile, appointment} = context; 
+  const {profile, appointment, TestResetSession: TestEndSession} = context; 
 
   const crudResponseTest = [{ 
     actionType:EActionType.CREATE, 
@@ -26,13 +25,19 @@ export default function PatientPage() {
     data: {}, 
     err: [] 
   } as ICrudResponse]; 
-  
+
+  //{!IsEmpty(profile) && !IsEmpty(appointment) && <Questionnaire/> } 
+
+
   return <PatientContext.Provider value={context}> 
+    <button onClick={TestEndSession}>Reset sessions</button> 
     <div>Profile : {JSON.stringify(profile)}</div> 
     <div>Appointment : {JSON.stringify(appointment)}</div> 
+
+
     {IsEmpty(profile) && <PatientIdentification/> } 
     {!IsEmpty(profile) && IsEmpty(appointment) && <PatientProfile/> } 
-    {!IsEmpty(profile) && !IsEmpty(appointment) && <Questionnaire/> } 
+    
   </PatientContext.Provider> 
 } 
 

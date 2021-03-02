@@ -8,15 +8,24 @@ type Keys = any[];
 export interface IUseSession { 
   Get: (keys?:Keys) => any; 
   Set: (newValue: any, keys?:Keys) => void; 
+  Reset: () => void; 
   End: () => void; 
 } 
 
 // UseSession =============================================
 export function useSession(sessionName:string, value?:any):IUseSession { 
-  const [session, setSession] = useState(value); 
+  const _value = Session.Exists(sessionName) ? Session.Get(sessionName): value;
+  const [session, setSession] = useState(_value); 
+
+  console.log(Session.Get(sessionName)); 
+  console.log(session); 
+
+  function Reset() { 
+    Set(value); 
+  } 
 
   function Get(keys?:string[]) { 
-    if(!Session.SessionExists(sessionName)) 
+    if(!Session.Exists(sessionName)) 
       Session.Set(sessionName, session); 
     return GetValueAt(session, keys); 
   } 
@@ -34,5 +43,5 @@ export function useSession(sessionName:string, value?:any):IUseSession {
     setSession(undefined) 
   } 
   
-  return {Get, Set, End}; 
+  return {Get, Set, Reset, End}; 
 }
