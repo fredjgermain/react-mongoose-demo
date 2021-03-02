@@ -1,17 +1,15 @@
 import { useContext, useEffect } from 'react'; 
-import { Filter, Group } from '../../reusable/_arrayutils'; 
 import { DaoContext } from '../../reusable/_dao2'; 
 import { useSession, Session } from '../../reusable/_session'; 
 import { IsEmpty, IsToday } from '../../reusable/_utils'; 
-
-import Patient from '../patient/patient.page'; 
-import { Questionnaire } from '../questionnaire/questionnaire.page';
+import { usePage, IPageHook } from '../../reusable/_usepage'; 
 
 
 export interface IUseQuestionnaire { 
+  paging: IPageHook<IAnswer>;
   questionnaire: IAnswer[]; 
   setQuestionnaire: (newAnswer:number, keys:any[]) => void; 
-  GetPages: () => any[][]; 
+  //GetPages: () => any[][]; 
 
   LoadQuestionnaire: () => void; 
   GetQuestionnaireItem:(answer:IAnswer) => {
@@ -28,8 +26,6 @@ export function useQuestionnaire():IUseQuestionnaire {
   const {GetIEntries, CreateUpdate} = useContext(DaoContext); 
   const profile = Session.Get( 'patient', ['profile']) as IEntry; 
 
-  //console.log(GetIEntries('questions')); 
-
   const sessionInitValue = {questionnaire:LoadQuestionnaire()}; 
   //console.log(sessionInitValue); 
   const questionnaireSession = useSession('questionnaire', sessionInitValue); 
@@ -39,6 +35,11 @@ export function useQuestionnaire():IUseQuestionnaire {
   const questionnaire = questionnaireSession.Get(['questionnaire']) as IAnswer[]; 
   const setQuestionnaire = (newValue:any, keys:any[] = []) => 
     questionnaireSession.Set(newValue, ['questionnaire', ...keys]); 
+
+  //const groupedIndexes = Groups(indexes, [GroupByForm, GroupByInstruction, GroupBy4]); 
+  //const pages = groupedIndexes.map( group => group.map( i => questionnaire[i]) ); 
+  //return pages; 
+  const paging = usePage(questionnaire, PageBreakPredicates()); 
 
   useEffect(() => { 
     SubmitQuestionnaire(); 
@@ -79,31 +80,38 @@ export function useQuestionnaire():IUseQuestionnaire {
     return {form, instructions, question, response}; 
   } 
 
-  function GetPages() { 
-    // Display 1 form at a time ...
 
-    // sameInstructions
-    // max 4 questions per page. 
-    const PageBreak = (index:number, i:number, As:number[], Bs:number[], Cs:number[]) => { 
-      const question = GetQuestionnaireItem(questionnaire[index]).question as IQuestion; 
-      const qPivot = GetQuestionnaireItem(questionnaire[As[0]])?.question as IQuestion; 
-      // Same instructions 
-      const sameInstructions = JSON.stringify(question?.instructions) === JSON.stringify(qPivot?.instructions); 
-      // Page max length < 4
-      const pageBreaks = (sameInstructions || IsEmpty(As)); 
-      return pageBreaks; 
+  function PageBreakPredicates() { 
+    function GetQuestionAndPivot(answer:IAnswer, As:IAnswer[]) { 
+      const question = GetQuestionnaireItem(answer).question as IQuestion; 
+      const pivot = GetQuestionnaireItem(As[0])?.question as IQuestion; 
+      return {question, pivot}; 
     } 
 
-    const indexes = questionnaire.map( (k,i) => i); 
-    const groupedIndexes = Group(indexes, PageBreak); 
-    const pages = groupedIndexes.map( group => group.map( i => questionnaire[i]) ); 
-    return pages; 
+    // group by form
+    const GroupByForm = (a:IAnswer, i:number, As:IAnswer[], Bs:IAnswer[], Cs:IAnswer[]) => { 
+      const {question, pivot} = GetQuestionAndPivot(a, As);
+      return JSON.stringify(question?.form) === JSON.stringify(pivot?.form) || IsEmpty(As); 
+    } 
+
+    // group by instructions set
+    const GroupByInstruction = (a:IAnswer, i:number, As:IAnswer[], Bs:IAnswer[], Cs:IAnswer[]) => { 
+      const {question, pivot} = GetQuestionAndPivot(a, As);
+      return JSON.stringify(question?.instructions) === JSON.stringify(pivot?.instructions) || IsEmpty(As); 
+    } 
+
+    // max 4 items
+    const GroupBy4 = (a:IAnswer, i:number, As:IAnswer[], Bs:IAnswer[], Cs:IAnswer[]) => { 
+      return As.length < 4; 
+    } 
+
+    return [GroupByForm, GroupByInstruction, GroupBy4]; 
   } 
 
 
   return { 
+    paging, 
     questionnaire, setQuestionnaire, 
-    GetPages, 
     LoadQuestionnaire, 
     GetQuestionnaireItem, 
     SubmitQuestionnaire 

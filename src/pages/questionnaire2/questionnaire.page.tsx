@@ -1,16 +1,14 @@
 import React, { useContext } from 'react'; 
-import { Arrx, Elements, Element, ElementContext } from '../../reusable/_arrx';
-import { DaoContext } from '../../reusable/_dao2';
-import { Editor } from '../../reusable/_input';
+import { Arrx, Elements, Element, ElementContext } from '../../reusable/_arrx'; 
+import { DaoContext } from '../../reusable/_dao2'; 
+import { Editor } from '../../reusable/_input'; 
 import { useQuestionnaire, IUseQuestionnaire } from './usequestionnaire.hook'; 
 
 
 export const QuestionnnaireContext = React.createContext({} as IUseQuestionnaire); 
 export function Questionnaire() { 
   const context = useQuestionnaire(); 
-  const {questionnaire, GetPages} = context; 
-
-  console.log(GetPages()); 
+  const {questionnaire} = context; 
 
   return <QuestionnnaireContext.Provider value={context} > 
     <h2>Questionnaire </h2> 
@@ -21,23 +19,34 @@ export function Questionnaire() {
   </QuestionnnaireContext.Provider> 
 } 
 
-export function QuestionPage({answers}:{answers:IAnswer[]}) { 
-  const {questionnaire, GetQuestionnaireItem} = useContext(QuestionnnaireContext); 
+export function Pager() { 
+  const {paging:{pageIndex, setPageIndex, pages}} = useContext(QuestionnnaireContext); 
+  return <div> 
+    {pages.map( (p,i) => { 
+      return <button key={i} onClick={() => setPageIndex(i)} disabled={i===pageIndex}>{i+1}</button> 
+    })} 
+  </div>
+}
 
-  const [first] = questionnaire; 
+export function QuestionPage({answers}:{answers:IAnswer[]}) { 
+  const {questionnaire, GetQuestionnaireItem, paging} = useContext(QuestionnnaireContext); 
+  const page = paging.pages[paging.pageIndex]; 
+  const indexes = page.map( e => e.i); 
+  const [first] = page.map( e => e.t); 
   const {form, instructions, question, response} = GetQuestionnaireItem(first); 
-    
+  
   return <div> 
     <h2>{form && form.titles[0]}</h2> 
     {instructions && instructions.map( p => { 
       return <h3 key={p._id} >{p.labels[0]}</h3> 
     })}
-    <Arrx values={questionnaire}>
-      <Elements>
+    <Arrx values={questionnaire}> 
+      <Elements indexes={indexes}> 
         <QuestionnaireItem /> <ResponseItem />
         <br/>
       </Elements>
-    </Arrx>
+    </Arrx> 
+    <Pager/> 
   </div> 
 } 
 

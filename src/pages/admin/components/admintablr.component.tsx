@@ -13,7 +13,7 @@ export function AdminTablr() {
   const {activeEntry, activeCollection} = useContext(CrudContext); 
   const {entries, ifields} = activeCollection; 
   const {pageIndex, setPageIndex, pages} = usePage(entries, 5); 
-  const page = pages[pageIndex]; 
+  const page = pages[pageIndex].map( e => e.i); 
   
   useUpdate(() => { 
     setPageIndex(0); 

@@ -6,6 +6,7 @@ import { usePreloadCollections } from './components/preloader.component';
 import {TestArrayUtil} from './experiments/testarray/testarrayutils.experiment'; 
 
 
+
 // Pages
 import Home from './pages/home/home.page.tsx'; 
 //import Admin from './pages/admin/admin.page.tsx'; 
@@ -15,6 +16,7 @@ import { Feedback } from './components/feedback/feedback2.component';
 const baseUrl = `https://fjg-mongoose-heroku.herokuapp.com/api/`; 
 
 //<Route path={'/admin'} component={Admin} /> 
+
 
 export default function App() { 
   return <DaoContexter {...{baseUrl}}> 
@@ -30,7 +32,6 @@ export default function App() {
     <br/> 
   </DaoContexter> 
 } 
-
 
 
 function MainSection() {

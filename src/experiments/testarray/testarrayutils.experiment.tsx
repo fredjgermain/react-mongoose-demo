@@ -11,7 +11,17 @@ const nums = [5, 3, 7, 9, 6, 7, 8];
 const strs = ['a', 'bf', 'hf', 'l']; 
 
 type ObjId = {id:string}; 
-const objs = [{id:'b'}, {id:'c'}, {id:'d'}, {id:'c'}, {id:'d'}, {id:'a'}]; 
+const objs = [
+  {id:'b'}, 
+  {id:'c'}, 
+  {id:'d'}, 
+  {id:'c'}, 
+  {id:'d'}, 
+  {id:'a'},
+  {id:'c'}, 
+  {id:'d'}, 
+  {id:'a'}
+]; 
 type ObjIdNumStr = {id:string, num:number, str:string}; 
 const objIdVal:ObjIdNumStr[] = [ 
   {id:'a', num:1, str: 'b'}, 
@@ -26,12 +36,68 @@ const objIdVal:ObjIdNumStr[] = [
 
 // Test Util ==================================== 
 export function TestArrayUtil() { 
-  return <div> 
+  /*
     <TestFilters/> 
     <TestSorts/> 
+  */
+  return <div> 
+
     <TestGroups /> 
   </div> 
 } 
+
+
+// GROUP ==================================================
+function TestGroups() { 
+  const indexes:number[][] = []; 
+
+  const realIndex = (i:number, As:any[], Bs:any[]) => { 
+    return As.length + Bs.length; 
+  } 
+  const stackIndexes = (i:number, As:any[], Bs:any[]) => { 
+    const group = IsEmpty(As) ? [] : indexes.pop() ?? []; 
+    indexes.push(group); 
+  } 
+
+  const groupOf3 = (v:any, i:number, As:any[], Bs:any[], Cs:any[]) => { 
+    const result = As.length < 3; 
+    if(result) 
+      console.log(realIndex(i, As, Bs)); 
+    return result; 
+  }
+  const groupById = (v:ObjId, i:number, As:ObjId[], Bs:ObjId[]) => { 
+    const [pivot] = As; 
+    const result = IsNull(pivot) || pivot.id === v.id; 
+    if(result) 
+      console.log(realIndex(i, As, Bs)); 
+    return result; 
+  } 
+  
+  // <TestGroup {...{data:empty, predicate:groupById}} /> <br/>
+  // <TestGroup {...{data:objs, predicate:groupOf3}} /> <br/>
+  return <div> 
+    <TestGroup {...{data:objs, predicate:groupById}} /> <br/>
+    
+  </div> 
+} 
+
+
+function TestGroup<T>({data = [], predicate}:{data:T[], predicate:Predicate<T>}) { 
+  const groups = Group(data, predicate); 
+
+  return <div> 
+    <b>{JSON.stringify(predicate.name)}</b> <br/> 
+    data: {JSON.stringify(data)} <br/> 
+    {groups.map( (group,i) => { 
+      return <div key={i}><span>{i}:</span> 
+        {JSON.stringify(group)} 
+      </div> 
+    })} 
+  </div> 
+} 
+
+
+
 
 
 // SORT =================================================== 
@@ -63,37 +129,6 @@ function TestSort<T>({data, sorter}:{data:T[], sorter:Sorter<T>}) {
     <div>Sorted: {JSON.stringify(sorted)}</div> 
   </div>
 }
-
-// GROUP ==================================================
-function TestGroups() { 
-  const groupOf3 = (v:any, i:number, As:any[], Bs:any[], Cs:any[]) => As.length < 3;  
-  const groupById = (v:ObjId, i:number, As:ObjId[]) => { 
-    const [pivot] = As; 
-    return IsNull(pivot) || pivot.id === v.id; 
-  } 
-  
-  return <div> 
-    <TestGroup {...{data:empty, predicate:groupById}} /> <br/>
-    <TestGroup {...{data:objs, predicate:groupById}} /> <br/>
-    <TestGroup {...{data:objs, predicate:groupOf3}} /> <br/>
-  </div> 
-} 
-
-
-function TestGroup<T>({data = [], predicate}:{data:T[], predicate:Predicate<T>}) { 
-  const groups = Group(data, predicate); 
-
-  return <div> 
-    <b>{JSON.stringify(predicate.name)}</b> <br/> 
-    data: {JSON.stringify(data)} <br/> 
-    {groups.map( (group,i) => { 
-      return <div key={i}><span>{i}:</span> 
-        {JSON.stringify(group)} 
-      </div> 
-    })} 
-  </div> 
-} 
-
 
 
 // Filter ================================================= 

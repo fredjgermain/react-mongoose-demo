@@ -1,48 +1,32 @@
 import {useState} from 'react'; 
-
-// As a reducer function ??
-type PageBreakPredicate = { 
-  (accumulator:Array<any>, value?:any, index?:number):boolean; 
-} 
+import { Groups, Predicate } from '../_arrayutils'; 
 
 // PAGE HOOK ====================================
-export interface IPageHook { 
+type I<T> = {i:number, t:T} 
+export interface IPageHook<T> { 
   pageIndex:number; 
   setPageIndex:React.Dispatch<React.SetStateAction<number>>; 
-  pages:Array<number[]>; 
-}
+  pages:I<T>[][]; 
+} 
 
-export function usePage(datas:any[], pageBreak:PageBreakPredicate|number):IPageHook { 
+export function usePage<T>(Ts:T[], predicates:Predicate<T>[]|number):IPageHook<T> { 
   const [pageIndex, setPageIndex] = useState(0); 
+  const iTs = Ts.map( (t,i) => {return {i,t}}); 
 
-  function PagesBreak(datas:any[], pageBreak:PageBreakPredicate|number):any[] { 
-    if(typeof pageBreak === 'number') { 
-      const pagesize = pageBreak > 0 ? pageBreak: 1; 
-      return PagesBreak(datas, (accumulator:Array<any>):boolean => accumulator?.length >= pagesize); 
-    } 
-
-    const pages:any[] = []; 
-    const indexes:number[] = []; 
-    const accumulator:any[] = []; 
-    datas.forEach( (d:any, i:number) => { 
-      accumulator.push(d); 
-      indexes.push(i); 
-      if(pageBreak(accumulator, d, i)) { 
-        accumulator.splice(0); 
-        pages.push([...indexes]); 
-        indexes.splice(0); 
-      } 
-      else if(i===datas.length-1) { 
-        pages.push(indexes); 
+  const PageCapSizePredicate = (predicates:number):Predicate<I<T>>[] => { 
+    const pagecapsize = predicates > 0 ? predicates: 1; 
+    return [(it:I<T>, i:number, As:I<T>[]) => As.length < pagecapsize]; 
+  } 
+  const PageBreakPredicates = (predicates:Predicate<T>[]):Predicate<I<T>>[] => { 
+    return predicates.map( predicate => { 
+      return (it:I<T>, i:number, As:I<T>[], Bs:I<T>[], Cs:I<T>[]) => { 
+        return predicate(it.t, i, As.map( a => a.t), Bs.map( b => b.t), Cs.map( c => c.t)); 
       } 
     }) 
-    return pages; 
   } 
 
-  const pages = PagesBreak(datas, pageBreak); 
-  if(pageIndex >= pages.length && pages.length > 0) 
-    setPageIndex(0); 
-  
+  const PageBreak = (typeof predicates === 'number') ? PageCapSizePredicate(predicates): PageBreakPredicates(predicates); 
+  const pages = Groups(iTs, PageBreak); 
   return {pageIndex, setPageIndex, pages}; 
 }
 

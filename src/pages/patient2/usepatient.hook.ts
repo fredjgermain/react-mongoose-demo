@@ -91,9 +91,10 @@ export function usePatient():IUsePatient {
   } 
 
   return {patientSession, 
-  profile, setProfile, 
-  appointment, setAppointment, 
-  RamqIsValid, 
-  IdentifyPatient, 
-  CreateUpdateProfile} 
+    profile, setProfile, 
+    appointment, setAppointment, 
+    RamqIsValid, 
+    IdentifyPatient, 
+    CreateUpdateProfile
+  } 
 } 

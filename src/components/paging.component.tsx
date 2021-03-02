@@ -3,8 +3,9 @@ import {IPageHook} from '../reusable/_usepage';
 
 
 // PAGING =======================================
-export function Paging({pageIndex, setPageIndex, pages}:IPageHook) { 
-  const page = pages[pageIndex] ?? []; 
+export function Paging({pageIndex, setPageIndex, pages}:IPageHook<any>) { 
+  return <div></div>
+  /*const page = pages[pageIndex] ?? []; 
   const [from, to] = [ [...page].shift(), [...page].pop()]; 
   const [first, last] = [pages.flat().shift(), pages.flat().pop()]; 
 
@@ -16,5 +17,5 @@ export function Paging({pageIndex, setPageIndex, pages}:IPageHook) {
       const disabled = pageIndex === i; 
       return <button key={i} {...{onClick, disabled}} >{i+1}</button> 
     })} 
-  </div>
+  </div>*/
 }
