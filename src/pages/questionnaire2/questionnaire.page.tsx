@@ -8,10 +8,11 @@ import { useQuestionnaire, IUseQuestionnaire } from './usequestionnaire.hook';
 export const QuestionnnaireContext = React.createContext({} as IUseQuestionnaire); 
 export function Questionnaire() { 
   const context = useQuestionnaire(); 
-  const {questionnaire} = context; 
+  const {questionnaire, TestResetSession} = context; 
 
   return <QuestionnnaireContext.Provider value={context} > 
     <h2>Questionnaire </h2> 
+    <button onClick={TestResetSession}>Reset sessions</button> 
     <div> 
       Questionnaire: {JSON.stringify(questionnaire.map(q => q.answer))} 
       <QuestionPage answers={questionnaire} /> 
@@ -20,19 +21,51 @@ export function Questionnaire() {
 } 
 
 export function Pager() { 
-  const {paging:{pageIndex, setPageIndex, pages}} = useContext(QuestionnnaireContext); 
+  const {paging, AnswersAreComplete, SubmitQuestionnaire} = useContext(QuestionnnaireContext); 
+  const {page, pageIndex, pages, setPageIndex} = paging; 
+  const pageIsComplete = AnswersAreComplete(page.map(ia => ia.t)); 
+  const formIsComplete = AnswersAreComplete(); 
+
+  console.log([pageIsComplete, formIsComplete]); 
+
+  async function SubmitAnswersAndNextPage () { 
+    await SubmitQuestionnaire(page.map(ia => ia.t)) 
+    setPageIndex(pageIndex+1) 
+  }
+
   return <div> 
     {pages.map( (p,i) => { 
       return <button key={i} onClick={() => setPageIndex(i)} disabled={i===pageIndex}>{i+1}</button> 
     })} 
+    <BtnSubmitAnswers/> 
   </div>
 }
+
+export function BtnSubmitAnswers() { 
+  const {paging, AnswersAreComplete, SubmitQuestionnaire} = useContext(QuestionnnaireContext); 
+  const {page, pageIndex, pages, setPageIndex} = paging; 
+  const pageIsComplete = AnswersAreComplete(page.map(ia => ia.t)); 
+  const formIsComplete = AnswersAreComplete(); 
+
+  async function SubmitAnswersAndNextPage () { 
+    await SubmitQuestionnaire(page.map(ia => ia.t)) 
+    setPageIndex(pageIndex+1) 
+  }
+
+  return <div> 
+    {formIsComplete ? 
+      <button onClick={() => SubmitQuestionnaire()} disabled={!formIsComplete}>Submit</button>: 
+      <button onClick={() => SubmitAnswersAndNextPage()} disabled={!pageIsComplete} >Next</button> 
+    } 
+  </div> 
+}
+
 
 export function QuestionPage({answers}:{answers:IAnswer[]}) { 
   const {questionnaire, GetQuestionnaireItem, paging} = useContext(QuestionnnaireContext); 
   const page = paging.pages[paging.pageIndex]; 
-  const indexes = page.map( e => e.i); 
-  const [first] = page.map( e => e.t); 
+  const indexes = page.map(e => e.i); 
+  const [first] = page.map(e => e.t); 
   const {form, instructions, question, response} = GetQuestionnaireItem(first); 
   
   return <div> 
@@ -42,7 +75,7 @@ export function QuestionPage({answers}:{answers:IAnswer[]}) {
     })}
     <Arrx values={questionnaire}> 
       <Elements indexes={indexes}> 
-        <QuestionnaireItem /> <ResponseItem />
+        <QuestionnaireItem /> <ResponseItem /> <ItemIsComplete/> 
         <br/>
       </Elements>
     </Arrx> 
@@ -50,6 +83,22 @@ export function QuestionPage({answers}:{answers:IAnswer[]}) {
   </div> 
 } 
 
+
+export function ItemIsComplete() {
+  const {questionnaire, GetQuestionnaireItem, AnswersAreComplete} = useContext(QuestionnnaireContext); 
+  const {index} = useContext(ElementContext); 
+  const answer = questionnaire[index]; 
+  const {question} = GetQuestionnaireItem(answer); 
+
+  const success = {className:'success', symbol:'✓'}; 
+  const failure = {className:'failure', symbol:'x'}; 
+  //const optional = {className:'optional', symbol:'?'}; 
+
+  const display = AnswersAreComplete([answer]) ? success: failure; 
+  console.log(question?.optional);
+  
+  return <span className={display.className}>{display.symbol} {question?.optional && '?'}</span>
+}
 
 
 export function QuestionnaireItem() { 

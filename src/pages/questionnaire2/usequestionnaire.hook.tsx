@@ -3,53 +3,46 @@ import { DaoContext } from '../../reusable/_dao2';
 import { useSession, Session } from '../../reusable/_session'; 
 import { IsEmpty, IsToday } from '../../reusable/_utils'; 
 import { usePage, IPageHook } from '../../reusable/_usepage'; 
+import { feedback } from '../../components/feedback/feedback2.component'; 
 
 
 export interface IUseQuestionnaire { 
-  paging: IPageHook<IAnswer>;
+  TestResetSession: () => void; 
+
+  paging: IPageHook<IAnswer>; 
   questionnaire: IAnswer[]; 
   setQuestionnaire: (newAnswer:number, keys:any[]) => void; 
   //GetPages: () => any[][]; 
 
+  AnswersAreComplete: (answers?:IAnswer[]) => boolean; 
   LoadQuestionnaire: () => void; 
-  GetQuestionnaireItem:(answer:IAnswer) => {
+  GetQuestionnaireItem:(answer:IAnswer) => { 
     form: undefined|IForm; 
     instructions: undefined|IInstruction[]; 
     question: undefined|IQuestion; 
     response: undefined|IResponse; 
   } 
-  SubmitQuestionnaire: (answers:IEntry[]) => void; 
+  SubmitQuestionnaire: (answers?:IEntry[]) => void; 
 } 
 
 
 export function useQuestionnaire():IUseQuestionnaire { 
+  console.log('questionnaire');
   const {GetIEntries, CreateUpdate} = useContext(DaoContext); 
-  const profile = Session.Get( 'patient', ['profile']) as IEntry; 
+  const profile = Session.Get('profile') as IEntry; 
 
-  const sessionInitValue = {questionnaire:LoadQuestionnaire()}; 
-  //console.log(sessionInitValue); 
-  const questionnaireSession = useSession('questionnaire', sessionInitValue); 
-  if(!questionnaireSession.Get()) 
-    questionnaireSession.Set(sessionInitValue) 
-  
-  const questionnaire = questionnaireSession.Get(['questionnaire']) as IAnswer[]; 
-  const setQuestionnaire = (newValue:any, keys:any[] = []) => 
-    questionnaireSession.Set(newValue, ['questionnaire', ...keys]); 
 
-  //const groupedIndexes = Groups(indexes, [GroupByForm, GroupByInstruction, GroupBy4]); 
-  //const pages = groupedIndexes.map( group => group.map( i => questionnaire[i]) ); 
-  //return pages; 
+  const sessionQuestionnaire = useSession('questionnaire', LoadQuestionnaire()); 
+  const questionnaire:IAnswer[] = sessionQuestionnaire.Get(); 
+  const setQuestionnaire = (newValue:any, keys:any[] = []) => sessionQuestionnaire.Set(newValue, [...keys]); 
   const paging = usePage(questionnaire, PageBreakPredicates()); 
-
-  useEffect(() => { 
-    SubmitQuestionnaire(); 
-  }, []); 
 
   // LoadQuestionnaire -----------------------------------
   function LoadQuestionnaire() { 
-    const loadQuestionnaire = (GetIEntries('answers') as IAnswer[]).filter( a => { 
+    const loadQuestionnaire = [] as any[]; 
+    /*(GetIEntries('answers') as IAnswer[]).filter( a => { 
       return a.patient === profile._id && IsToday(a.date); 
-    }) 
+    }) */
     return IsEmpty(loadQuestionnaire) ? BlankQuestionnaire() : loadQuestionnaire; 
   } 
 
@@ -65,9 +58,9 @@ export function useQuestionnaire():IUseQuestionnaire {
   async function SubmitQuestionnaire(answers?:IEntry[]) { 
     const toSubmit = answers ?? questionnaire; 
     const responses = await CreateUpdate('answers', toSubmit); 
-    setQuestionnaire(LoadQuestionnaire()); 
+    feedback.setValue(responses); 
+    //setQuestionnaire(LoadQuestionnaire()); 
   } 
-
 
   // return form, instructions, question, response
   function GetQuestionnaireItem(answer:IAnswer) { 
@@ -76,11 +69,20 @@ export function useQuestionnaire():IUseQuestionnaire {
     const [question] = GetIEntries('questions', [answer.question]) as IQuestion[]; 
     const [form] = GetIEntries('forms', [question?.form]) as IForm[]; 
     const instructions = GetIEntries('instructions', question?.instructions) as IInstruction[]; 
-    const [response] = GetIEntries('responses', [question.responseType]) as IResponse[]; 
+    const [response] = GetIEntries('responses', [question?.responseType]) as IResponse[]; 
     return {form, instructions, question, response}; 
   } 
 
+  function AnswersAreComplete(answers?:IAnswer[]) { 
+    const _answers = answers ?? questionnaire; 
+    return _answers.every( answer => {
+      const {question} = GetQuestionnaireItem(answer); 
+      return question && (question.optional || answer.answer >=0); 
+    }); 
+  } 
 
+
+  // Page Break Predicates =============================================
   function PageBreakPredicates() { 
     function GetQuestionAndPivot(answer:IAnswer, As:IAnswer[]) { 
       const question = GetQuestionnaireItem(answer).question as IQuestion; 
@@ -109,9 +111,17 @@ export function useQuestionnaire():IUseQuestionnaire {
   } 
 
 
+  const TestResetSession = () => {
+    sessionQuestionnaire.Reset(); 
+  }
+
   return { 
+    TestResetSession, 
+
     paging, 
     questionnaire, setQuestionnaire, 
+
+    AnswersAreComplete, 
     LoadQuestionnaire, 
     GetQuestionnaireItem, 
     SubmitQuestionnaire 

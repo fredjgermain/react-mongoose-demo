@@ -12,8 +12,8 @@ import {InlineCreate, InlineUpdateDelete} from './linecrud.component';
 export function AdminTablr() { 
   const {activeEntry, activeCollection} = useContext(CrudContext); 
   const {entries, ifields} = activeCollection; 
-  const {pageIndex, setPageIndex, pages} = usePage(entries, 5); 
-  const page = pages[pageIndex].map( e => e.i); 
+  const {pageIndex, setPageIndex, page, pages} = usePage(entries, 5); 
+  const _page = pages[pageIndex].map( e => e.i); 
   
   useUpdate(() => { 
     setPageIndex(0); 
@@ -27,10 +27,10 @@ export function AdminTablr() {
     <Tablr key={activeCollection.accessor} {...{datas:entries}}> 
       <Header><Heads {...{ifields:[...cols, colBtn]}} /></Header>
       <tbody>
-      <InlineUpdateDelete {...{page, cols, colBtn}}/> 
+      <InlineUpdateDelete {...{page: _page, cols, colBtn}}/> 
       <InlineCreate {...{cols, colBtn}}/> 
       </tbody> 
     </Tablr> 
-    <Paging {...{pageIndex, setPageIndex, pages}} /> 
+    <Paging {...{pageIndex, setPageIndex, page, pages}} /> 
   </div>
 }

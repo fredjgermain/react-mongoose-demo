@@ -26,9 +26,6 @@ export default function PatientPage() {
     err: [] 
   } as ICrudResponse]; 
 
-  //{!IsEmpty(profile) && !IsEmpty(appointment) && <Questionnaire/> } 
-
-
   return <PatientContext.Provider value={context}> 
     <button onClick={TestEndSession}>Reset sessions</button> 
     <div>Profile : {JSON.stringify(profile)}</div> 
@@ -37,8 +34,9 @@ export default function PatientPage() {
 
     {IsEmpty(profile) && <PatientIdentification/> } 
     {!IsEmpty(profile) && IsEmpty(appointment) && <PatientProfile/> } 
-    
+    {!IsEmpty(profile) && !IsEmpty(appointment) && <Questionnaire/> } 
   </PatientContext.Provider> 
+  //
 } 
 
 

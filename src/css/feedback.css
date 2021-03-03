@@ -7,3 +7,8 @@
   color: red; 
   font-style: italic; 
 }
+
+.optional {
+  color: blue; 
+  font-style: italic; 
+}

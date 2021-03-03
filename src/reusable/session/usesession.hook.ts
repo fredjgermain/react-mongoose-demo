@@ -17,9 +17,6 @@ export function useSession(sessionName:string, value?:any):IUseSession {
   const _value = Session.Exists(sessionName) ? Session.Get(sessionName): value;
   const [session, setSession] = useState(_value); 
 
-  console.log(Session.Get(sessionName)); 
-  console.log(session); 
-
   function Reset() { 
     Set(value); 
   } 
@@ -31,17 +28,23 @@ export function useSession(sessionName:string, value?:any):IUseSession {
   } 
 
   function Set(newValue:any, keys?:string[]) { 
-    setSession((prev:any) => { 
-      const newSession = SetValueAt(prev, newValue, keys); 
-      Session.Set(sessionName, newSession); 
-      return newSession; 
-    }) 
+    if(IsChanging(newValue, keys)) 
+      setSession((prev:any) => { 
+        const newSession = SetValueAt(prev, newValue, keys); 
+        Session.Set(sessionName, newSession); 
+        return newSession; 
+      }) 
   } 
 
   function End() { 
     Session.EndSession(sessionName); 
     setSession(undefined) 
   } 
+
+  function IsChanging(newValue:any, keys?:string[]) { 
+    const prev = GetValueAt(session, keys); 
+    return JSON.stringify(prev) !== JSON.stringify(newValue); 
+  }
   
   return {Get, Set, Reset, End}; 
 }

@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 export const feedback = { 
   value: () => [] as ICrudResponse[], 
-  setValue:(responses:ICrudResponse[]) => console.log(responses) 
+  setValue:(responses:ICrudResponse[]) => console.log(responses), 
 }; 
 
 export function Feedback() { 
@@ -12,5 +12,6 @@ export function Feedback() {
 
   return <div> 
     Feedback !! : {JSON.stringify(value)} <br/> 
+    <button onClick={() => feedback.setValue([] as ICrudResponse[]) }>Reset Feedback</button> 
   </div> 
 } 

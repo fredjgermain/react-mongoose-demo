@@ -24,32 +24,15 @@ export interface IUsePatient {
 // UsePatient ============================================= 
 export function usePatient():IUsePatient { 
   const {GetDefaultIEntry, GetIEntries, CreateUpdate, Validate} = useContext(DaoContext); 
-  
-  const testSession = useSession('testSession', {}); 
-  //Session.Set('testSession', 'test value'); 
-  console.log(Session.Get('testSession')); 
-  console.log(testSession.Get()); 
 
-
-  // Patient session --------------------------------------
-  const sessionProfile = useSession('patient', {}); 
+  // Profile & Appointment session --------------------------------------
+  const sessionProfile = useSession('profile', {}); 
   const sessionAppointment = useSession('appointment', {}); 
 
   const profile = sessionProfile.Get(); 
   const setProfile = (newValue:any, keys:any[] = []) => sessionProfile.Set(newValue, [...keys]); 
   const appointment = sessionAppointment.Get(); 
   const setAppointment = (newValue:any, keys:any[] = []) => sessionAppointment.Set(newValue, [...keys]); 
-
-  /*const sessionInitValue = {profile:{} as IEntry, appointment:{} as IEntry}; 
-  const patientSession = useSession('patient', sessionInitValue); 
-  if(!patientSession.Get()) 
-    patientSession.Set(sessionInitValue) 
-  
-  const profile = patientSession.Get(['profile']); 
-  
-  const appointment = patientSession.Get(['appointment']); 
-  const setAppointment = (newValue:any, keys:any[] = []) => patientSession.Set(newValue, ['appointment', ...keys]); */
-
 
   // RamqIsValid ------------------------------------------
   function RamqIsValid(value:string) { 
@@ -83,11 +66,10 @@ export function usePatient():IUsePatient {
   async function CreateUpdateAppointment(patient: IEntry) { 
     const appointment = FindAppointment(patient); 
     const [response] = await CreateUpdate('appointments', [appointment]); 
+    feedback.setValue([response]); 
     if(response.success) { 
-      //console.log(response.data); 
       setAppointment(response.data); 
       const date = new Date(response.data['date'] as any); 
-      //console.log([date.getFullYear(), date.getDate(), date.getMonth()+1]); 
     } 
     else 
       console.log('appointment failed ...'); 
