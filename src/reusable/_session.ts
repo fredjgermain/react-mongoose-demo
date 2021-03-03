@@ -1,5 +1,5 @@
-import {Session} from './session/session.class'; 
-import {useSession, IUseSession} from './session/usesession.hook';
+import {Session} from './customhooks/session/session.class'; 
+import {useSession, IUseSession} from './customhooks/session/usesession.hook';
 
 export {Session, useSession}; 
 export type {IUseSession}; 

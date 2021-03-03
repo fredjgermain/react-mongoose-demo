@@ -1,5 +1,5 @@
 import {useContext} from 'react'; 
-import {CrudContext} from '../../../reusable/_crud'; 
+
 import {TablrContext, CellContext} from '../../../reusable/_tablr'; 
 import {GetDefaultValueFromIField} from '../../../reusable/_utils'; 
 import {Reader, Editor} from '../../../reusable/_input'; 
@@ -8,7 +8,8 @@ import { EActionType } from '../../../reusable/_dao';
 
 // Cell Renderer =================================
 export function CellRender() { 
-  const {activeEntry, activeMode, setActiveEntry, GetIOptions} = useContext(CrudContext); 
+  return <div> CELL RENDER </div> 
+  /*const {activeEntry, activeMode, setActiveEntry, GetIOptions} = useContext(DaoContext); 
   const {datas} = useContext(TablrContext); 
   const {row, ifield} = useContext(CellContext); 
   const data = datas[row]; 
@@ -37,11 +38,11 @@ export function CellRender() {
   // options if foreign -------------------------
   const options = ifield.isModel ? GetIOptions(ifield) : undefined; 
   /*if(ifield.isModel)
-    console.log([ifield.accessor, options]); */
+    console.log([ifield.accessor, options]); 
 
   if(isEdit) 
     return <span>{ifield.isRequired && '!!!'}<Editor {...{value, ifield, setValue, options}} /></span> 
-  return <span>{ifield.isRequired && '!!!'}<Reader {...{value, ifield, options}} /></span> 
+  return <span>{ifield.isRequired && '!!!'}<Reader {...{value, ifield, options}} /></span> */
 } 
 
 

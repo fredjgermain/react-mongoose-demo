@@ -1,6 +1,6 @@
 import {useContext, useEffect} from 'react'; 
-import { DaoContext } from '../reusable/_dao2'; 
-import { useLoader } from '../reusable/_useloader'; 
+import { DaoContext } from '../reusable/_dao'; 
+import { useLoader } from '../reusable/_customhooks'; 
 
 
 // Preloader ==============================================

@@ -1,16 +1,16 @@
 import React, {useContext} from 'react'; 
-import {CrudContext} from '../../../reusable/_crud'; 
 import {Tablr, Header, Heads, } from '../../../reusable/_tablr'; 
 //import {BuildDefaultRenderingFunc} from '../../../reusable/_rendering'; 
-import {usePage} from '../../../reusable/_usepage'; 
+import {usePage} from '../../../reusable/_customhooks'; 
 import {Paging} from '../../../components/paging.component'; 
-import {useUpdate} from '../../../reusable/_useupdate'; 
+import {useUpdate} from '../../../reusable/_customhooks'; 
 import {InlineCreate, InlineUpdateDelete} from './linecrud.component'; 
 
 
 // ADMIN TABLR ===================================
 export function AdminTablr() { 
-  const {activeEntry, activeCollection} = useContext(CrudContext); 
+  return <div> ADMIN TABLR </div>
+  /*const {activeEntry, activeCollection} = useContext(CrudContext); 
   const {entries, ifields} = activeCollection; 
   const {pageIndex, setPageIndex, page, pages} = usePage(entries, 5); 
   const _page = pages[pageIndex].map( e => e.i); 
@@ -32,5 +32,5 @@ export function AdminTablr() {
       </tbody> 
     </Tablr> 
     <Paging {...{pageIndex, setPageIndex, page, pages}} /> 
-  </div>
+  </div>*/
 }

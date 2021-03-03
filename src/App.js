@@ -9,7 +9,7 @@ import {TestArrayUtil} from './experiments/testarray/testarrayutils.experiment';
 import Home from './pages/home/home.page.tsx'; 
 //import Admin from './pages/admin/admin.page.tsx'; 
 import PatientPage from './pages/patient2/patient.page.tsx'; 
-import { Feedback } from './components/feedback/feedback2.component';
+import { Feedback } from './components/feedback/feedback.component';
 
 const baseUrl = `https://fjg-mongoose-heroku.herokuapp.com/api/`; 
 

@@ -1,46 +1,17 @@
-import React, {useContext} from 'react'; 
-import {CrudContext} from '../../reusable/_crud'; 
-import {Arrx} from '../../reusable/_arrx'; 
+import { useState } from 'react'; 
 
-import '../../css/feedback.css'; 
+export const feedback = { 
+  value: () => [] as ICrudResponse[], 
+  setValue:(responses:ICrudResponse[]) => console.log(responses), 
+}; 
 
-
-// Feedback =====================================
-export function FeedBack() { 
-  const {state} = useContext(CrudContext); 
+export function Feedback() { 
+  const [value, setValue] = useState([] as ICrudResponse[]); 
+  feedback.value = () => value; 
+  feedback.setValue = (responses:ICrudResponse[]) => setValue(responses); 
 
   return <div> 
-    {state.busy && <span>LOADING ... </span>} 
-    {!state.busy && <span>Ready </span>} 
-    {!state.busy && !state.success && 'an errors occured'} 
+    Feedback !! : {JSON.stringify(value)} <br/> 
+    <button onClick={() => feedback.setValue([] as ICrudResponse[]) }>Reset Feedback</button> 
   </div> 
-} 
-
-function CrudFeedBack() { 
-  const {state} = useContext(CrudContext); 
-  // assumes state is ready and successful 
-  const responses = state.response as ICrudResponse[]; // ICrudResponse[] 
-  
-  return <div> 
-    #Responses : {responses.length} 
-  </div> 
-  /*{actionType, success, data, err} 
-  
-  const successMsg:any = { 
-    create:'Creation succeed', 
-    update:'Update succeed', 
-    delete:'Deletion succeed', 
-  } 
-  const errorMsg:any = { 
-    create:'Creation failed ', 
-    update:'Update failed', 
-    delete:'Deletion failed', 
-  } 
-
-  const className = success ? 'success' : 'failure'; 
-
-  return <div className={className}> 
-    <div>{success ? successMsg[actionType] : errorMsg[actionType]}</div> 
-    {!success && <Arrx {...{values:(err)}} />} 
-    </div> */
 } 

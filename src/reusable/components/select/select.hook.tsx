@@ -2,7 +2,7 @@ import {ToArray, Filter} from '../../_arrayutils';
 import {IsEmpty} from '../../_utils'; 
 import {IEditor} from '../../_input'; 
 
-import {useToggle, IUseToggle} from '../../_usetoggle'; 
+import {useToggle, IUseToggle} from '../../_customhooks'; 
 
 // USE SELECT ====================================
 export interface IUseSelect extends IEditor { 

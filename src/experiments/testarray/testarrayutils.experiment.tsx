@@ -51,25 +51,13 @@ export function TestArrayUtil() {
 function TestGroups() { 
   const indexes:number[][] = []; 
 
-  const realIndex = (i:number, As:any[], Bs:any[]) => { 
-    return As.length + Bs.length; 
-  } 
-  const stackIndexes = (i:number, As:any[], Bs:any[]) => { 
-    const group = IsEmpty(As) ? [] : indexes.pop() ?? []; 
-    indexes.push(group); 
-  } 
-
-  const groupOf3 = (v:any, i:number, As:any[], Bs:any[], Cs:any[]) => { 
+  const groupOf3 = (v:any, As:any[], Bs:any[], Cs:any[]) => { 
     const result = As.length < 3; 
-    if(result) 
-      console.log(realIndex(i, As, Bs)); 
     return result; 
   }
-  const groupById = (v:ObjId, i:number, As:ObjId[], Bs:ObjId[]) => { 
+  const groupById = (v:ObjId, As:ObjId[], Bs:ObjId[]) => { 
     const [pivot] = As; 
     const result = IsNull(pivot) || pivot.id === v.id; 
-    if(result) 
-      console.log(realIndex(i, As, Bs)); 
     return result; 
   } 
   
@@ -134,14 +122,14 @@ function TestSort<T>({data, sorter}:{data:T[], sorter:Sorter<T>}) {
 // Filter ================================================= 
 function TestFilters() { 
   const even = (value:number) => value % 2 === 0; 
-  const half = (v:any, i:number, a:any[], b:any[], c:any[]) => a.length < b.length; 
-  const first4 = (v:any, i:number, a:any[], b:any[], c:any[]) => a.length < 4; 
-  const last4 = (v:any, i:number, a:any[], b:any[], c:any[]) => c.length < 4; 
-  const duplicate = (v:any, i:number, As:any[], Bs:any[], Cs:any[]) => { 
+  const half = (v:any, a:any[], b:any[], c:any[]) => a.length < b.length; 
+  const first4 = (v:any, a:any[], b:any[], c:any[]) => a.length < 4; 
+  const last4 = (v:any, a:any[], b:any[], c:any[]) => c.length < 4; 
+  const duplicate = (v:any, As:any[], Bs:any[], Cs:any[]) => { 
     return As.some( a => a === v ) || Cs.some( c => c === v); 
   } 
   const idC = (v:ObjId) => v.id === 'c'; 
-  const duplicateId = (v:ObjId, i:number, As:ObjId[], Bs:ObjId[], Cs:ObjId[]) => { 
+  const duplicateId = (v:ObjId, As:ObjId[], Bs:ObjId[], Cs:ObjId[]) => { 
     return As.some( a => a.id === v.id ) || Cs.some( c => c.id === v.id); 
   } 
 

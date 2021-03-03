@@ -1,8 +1,8 @@
 import {DAO, ICrud} from './dao/dao.class'; 
-import {IUseDao, useDao, EActionType} from './dao/usedao.hook'; 
-import {DaoContexter, DaoContext} from './dao/daocontexter.component';
+import {IUseDao, useDao} from './dao/usedao.hook'; 
+import {DaoContexter, DaoContext, EActionType} from './dao/dao.contexter';
 
-export {DAO, useDao, EActionType} 
-export {DaoContexter, DaoContext} 
+export {DAO, useDao} 
+export {DaoContexter, DaoContext, EActionType} 
 
 export type {IUseDao, ICrud} 

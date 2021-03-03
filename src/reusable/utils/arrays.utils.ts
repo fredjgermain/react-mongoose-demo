@@ -1,7 +1,7 @@
 import { IsEmpty } from "../_utils";
 
 //export type Predicate<T> = (value:T, i:number, array:T[]) => boolean; 
-export type Predicate<T> = (t:T, i:number, positive:T[], negative:T[], remainder:T[]) => boolean; 
+export type Predicate<T> = (value:T, positive:T[], negative:T[], remainder:T[]) => boolean; 
 export type Comparator<T, U> = (t:T, u:U) => boolean; 
 export type Sorter<T> = (t:T, pivot:T) => boolean; 
 
@@ -117,7 +117,7 @@ export function Filter<T>(values:T[] = [], predicate:Predicate<T>):[T[], T[]] {
 
   values.forEach( (value:T, i:number) => { 
     const remainder = values.slice(i+1); 
-    if(predicate(value, i, positive, negative, remainder)) 
+    if(predicate(value, positive, negative, remainder)) 
       positive.push(value); 
     else 
       negative.push(value); 
