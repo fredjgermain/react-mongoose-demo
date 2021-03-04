@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'; 
 import {QuestionnnaireContext} from '../questionnaire.page'; 
-import { IPageHook } from '../../../reusable/_customhooks'; 
+import { IPageHook, usePage } from '../../../reusable/_customhooks'; 
 import {Filter, HeadMidTail} from '../../../reusable/_arrayutils';
 import { IsNull } from '../../../reusable/_utils';
 
@@ -25,6 +25,7 @@ export function Pager() {
     <PagerFromTo {...{paging}}/> <br/>
     <PagerBtn {...{paging}} /> <br/> 
     <BtnSubmitAnswers/> <br/> 
+    <TestPagerBtn {...{paging}} /> 
   </div> 
 } 
 
@@ -52,10 +53,27 @@ export function PagerBtn<T>({paging:{pageIndex, setPageIndex, page, pages}}:{pag
     indexes = AbbrevIndexes(pageIndex, indexes); 
 
   return <span> 
-    {indexes.map( i => { 
-      return <button key={i} onClick={() => setPageIndex(i)} disabled={i===pageIndex}>{i+1}</button> 
+    {indexes.map( (index, i) => { 
+      return <span key={index}> 
+        <button onClick={() => setPageIndex(index)} disabled={index===pageIndex}>{index+1}</button> 
+        {index + 1 !== indexes[i+1] && i < indexes.length-1 && '...'} 
+      </span> 
     })} 
   </span> 
+} 
+
+
+export function TestPagerBtn<T>({paging:{pageIndex, setPageIndex, page, pages}}:{paging:IPageHook<T>}) { 
+  let items = [] as number[]; 
+  while(items.length < 100) 
+    items.push(items.length); 
+
+  const paging = usePage(items, 5); 
+
+  return <div> 
+      {JSON.stringify(paging.page)} <br/>
+      <PagerBtn {...{paging}}/> 
+    </div> 
 } 
 
 
