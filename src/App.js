@@ -1,14 +1,15 @@
 import React, { useContext, useState } from 'react'; 
 import Nav from './components/nav/nav.component'; 
 import { Switch, Route } from 'react-router-dom'; 
-import { DaoContexter } from './reusable/_dao2'; 
+import { DaoContexter } from './reusable/_dao'; 
 import { usePreloadCollections } from './components/preloader.component'; 
 import {TestArrayUtil} from './experiments/testarray/testarrayutils.experiment'; 
+import {TestUseStateAt} from './reusable/customhooks/usestateat.hook'; 
 
 // Pages
 import Home from './pages/home/home.page.tsx'; 
 //import Admin from './pages/admin/admin.page.tsx'; 
-import PatientPage from './pages/patient2/patient.page.tsx'; 
+import PatientPage from './pages/patient/patient.page.tsx'; 
 import { Feedback } from './components/feedback/feedback.component';
 
 const baseUrl = `https://fjg-mongoose-heroku.herokuapp.com/api/`; 
@@ -18,6 +19,7 @@ const baseUrl = `https://fjg-mongoose-heroku.herokuapp.com/api/`;
 
 export default function App() { 
   return <DaoContexter {...{baseUrl}}> 
+    <TestUseStateAt/> 
     <div> ---- NAV ... </div> 
     <Nav/> 
     <div> ---- Preloader ... </div> <br/> 

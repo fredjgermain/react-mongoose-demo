@@ -1,4 +1,4 @@
-import {IsNull, IsEmpty, Copy, GetValueAt, SetValueAt} from './utils/value.utils'; 
+import {IsNull, IsEmpty, Copy, GetValueAt, SetValueAt, HasKey} from './utils/value.utils'; 
 
 import {SetSize, SetWidth, IEvent, 
   OnPress, OnTab, OnEnter, 
@@ -11,7 +11,7 @@ import {ParseDate, DaysPerMonth, IsLeapYear, IsToday} from './utils/date.utils';
 
 
 export type {IEvent} 
-export {IsNull, IsEmpty, Copy, GetValueAt, SetValueAt} 
+export {IsNull, IsEmpty, Copy, GetValueAt, SetValueAt, HasKey} 
 
 export {SetSize, SetWidth, 
   OnPress, OnTab, OnEnter, 

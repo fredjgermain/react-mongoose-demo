@@ -5,7 +5,7 @@ import {Input, InputArray} from '../../_input';
 import {Select} from '../../_input'; 
 
 import {IReader} from './reader.component'; 
-import { useUpdate } from '../../_useupdate'; 
+import { useUpdate } from '../../_customhooks'; 
 
 
 

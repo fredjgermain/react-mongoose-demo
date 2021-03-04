@@ -15,12 +15,12 @@ export function usePage<T>(Ts:T[] = [], predicates:Predicate<T>[]|number):IPageH
 
   const PageCapSizePredicate = (predicates:number):Predicate<I<T>>[] => { 
     const pagecapsize = predicates > 0 ? predicates: 1; 
-    return [(it:I<T>, i:number, As:I<T>[]) => As.length < pagecapsize]; 
+    return [(it:I<T>, As:I<T>[]) => As.length < pagecapsize]; 
   } 
   const PageBreakPredicates = (predicates:Predicate<T>[]):Predicate<I<T>>[] => { 
     return predicates.map( predicate => { 
-      return (it:I<T>, i:number, As:I<T>[], Bs:I<T>[], Cs:I<T>[]) => { 
-        return predicate(it.t, i, As.map( a => a.t), Bs.map( b => b.t), Cs.map( c => c.t)); 
+      return (it:I<T>, As:I<T>[], Bs:I<T>[], Cs:I<T>[]) => { 
+        return predicate(it.t, As.map( a => a.t), Bs.map( b => b.t), Cs.map( c => c.t)); 
       } 
     }) 
   } 

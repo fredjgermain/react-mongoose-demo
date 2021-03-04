@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'; 
 import { IReaderComponent, IEditorComponent } from '../../_input'; 
-import { useGetSet } from '../../_usegetset'; 
+import { useGetSet } from '../../_customhooks'; 
 import { GetDefaultValueFromIField, GetValueAt } from '../../_utils'; 
 import { ObjxContext, FieldContext } from './objx.component'; 
 

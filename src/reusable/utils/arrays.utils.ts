@@ -6,6 +6,18 @@ export type Comparator<T, U> = (t:T, u:U) => boolean;
 export type Sorter<T> = (t:T, pivot:T) => boolean; 
 
 
+
+/* GetHeadMidTail ==================================
+*/
+export function HeadMidTail<T>(array:T[] = []): [T, T[], T, T[], T] { 
+  const [firstHalf, secondHalf] = Filter(array, (t:T, firstHalf:T[]) => firstHalf.length < array.length/2); 
+  const [head, ...remainder] = firstHalf ?? []; 
+  const [mid, ...firstRemainder] = remainder.reverse() ?? []; 
+  const [tail, ...secondRemainder] = secondHalf?.reverse() ?? []; 
+
+  return [head, firstRemainder?.reverse() ?? [], mid ?? head, secondRemainder?.reverse() ?? [], tail ?? head]; 
+} 
+
 /* ToArray ======================================
 "Wrap" an object as an array if not already an array. 
 If object is undefined, returns an empty array. 

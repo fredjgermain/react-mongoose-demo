@@ -4,7 +4,7 @@ import { usePatient, IUsePatient } from './usepatient.hook';
 
 import { PatientIdentification } from './components/patientidentification.component'; 
 import { PatientProfile } from './components/patientprofile.component'; 
-import { Questionnaire } from '../questionnaire2/questionnaire.page'; 
+import { Questionnaire } from '../questionnaire/questionnaire.page'; 
 import { EActionType } from '../../reusable/_dao'; 
 
 /* 

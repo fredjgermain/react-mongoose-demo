@@ -91,19 +91,19 @@ export function useQuestionnaire():IUseQuestionnaire {
     } 
 
     // group by form
-    const GroupByForm = (a:IAnswer, i:number, As:IAnswer[], Bs:IAnswer[], Cs:IAnswer[]) => { 
+    const GroupByForm = (a:IAnswer, As:IAnswer[], Bs:IAnswer[], Cs:IAnswer[]) => { 
       const {question, pivot} = GetQuestionAndPivot(a, As);
       return JSON.stringify(question?.form) === JSON.stringify(pivot?.form) || IsEmpty(As); 
     } 
 
     // group by instructions set
-    const GroupByInstruction = (a:IAnswer, i:number, As:IAnswer[], Bs:IAnswer[], Cs:IAnswer[]) => { 
+    const GroupByInstruction = (a:IAnswer, As:IAnswer[], Bs:IAnswer[], Cs:IAnswer[]) => { 
       const {question, pivot} = GetQuestionAndPivot(a, As);
       return JSON.stringify(question?.instructions) === JSON.stringify(pivot?.instructions) || IsEmpty(As); 
     } 
 
     // max 4 items
-    const GroupBy4 = (a:IAnswer, i:number, As:IAnswer[], Bs:IAnswer[], Cs:IAnswer[]) => { 
+    const GroupBy4 = (a:IAnswer, As:IAnswer[], Bs:IAnswer[], Cs:IAnswer[]) => { 
       return As.length < 4; 
     } 
 

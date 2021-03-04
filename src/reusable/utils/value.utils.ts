@@ -13,6 +13,26 @@ export function Copy(value:any) {
 } 
 
 
+/* HasKey =========================================
+Recursively search through 'value' to find the nested keys specified in keys. 
+Returns false if it fails to find one of the keys. 
+Return true if it find all of the keys. 
+
+!!! Note: Works for both objects and arrays. 
+*/ 
+export function HasKey(value:any, keys?:any[]):boolean { 
+  if(IsEmpty(value) || !keys || IsEmpty(keys)) 
+    return false; 
+  const [key, ...remainingKeys] = keys; 
+  const _key = typeof key === 'string' ? key: new Number(key).toString(); 
+  if(!Object.keys(value).includes(_key) ) 
+    return false; 
+  if(IsEmpty(remainingKeys)) 
+    return true; 
+  return HasKey(value[_key], remainingKeys); 
+}
+
+
 /* SetValueAt =====================================
 Assign a newValue in object or array value at the index/key defined by keys. 
 Can assign a newValue to object with multiple levels. 
@@ -46,8 +66,12 @@ returns true if value is:
 otherwise returns false
 */
 export function IsNull(value:any): boolean { 
-  return (value ?? null) === null; 
+  return (value ?? null) === null || IsNaN(value); 
 } 
+
+export function IsNaN(value:any): boolean { 
+  return typeof value === 'number' && new Number(value).toString() === 'NaN'; 
+}
 
 /* IsEmpty ====================================== 
 return true if value is 
