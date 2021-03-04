@@ -7,6 +7,7 @@ import { PatientProfile } from './components/patientprofile.component';
 import { Questionnaire } from '../questionnaire/questionnaire.page'; 
 import { EActionType } from '../../reusable/_dao'; 
 
+
 /* 
 if profile and questionnaire are empty; display patientId page. 
 if questionnaire is empty; display patientProfile page to createUpdate profile. 
