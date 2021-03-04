@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'; 
 import {QuestionnnaireContext} from '../questionnaire.page'; 
 import { IPageHook, usePage } from '../../../reusable/_customhooks'; 
-import {Filter, HeadMidTail} from '../../../reusable/_arrayutils';
+import {Filter, HeadMidTail, Sort} from '../../../reusable/_arrayutils';
 import { IsNull } from '../../../reusable/_utils';
 
 
@@ -25,7 +25,6 @@ export function Pager() {
     <PagerFromTo {...{paging}}/> <br/>
     <PagerBtn {...{paging}} /> <br/> 
     <BtnSubmitAnswers/> <br/> 
-    <TestPagerBtn {...{paging}} /> 
   </div> 
 } 
 
@@ -50,7 +49,7 @@ export function PageOfPages<T>({paging:{pageIndex, setPageIndex, page, pages}}:{
 export function PagerBtn<T>({paging:{pageIndex, setPageIndex, page, pages}}:{paging:IPageHook<T>}) { 
   let indexes = pages.map( (p,i) => i); 
   if(indexes.length > 10) 
-    indexes = AbbrevIndexes(pageIndex, indexes); 
+    indexes = AbbrevIndexes2(pageIndex, indexes); 
 
   return <span> 
     {indexes.map( (index, i) => { 
@@ -63,21 +62,61 @@ export function PagerBtn<T>({paging:{pageIndex, setPageIndex, page, pages}}:{pag
 } 
 
 
-export function TestPagerBtn<T>({paging:{pageIndex, setPageIndex, page, pages}}:{paging:IPageHook<T>}) { 
+export function TestPagerBtn<T>() { 
   let items = [] as number[]; 
-  while(items.length < 100) 
+  while(items.length < 98) 
     items.push(items.length); 
 
   const paging = usePage(items, 5); 
 
+
+  TestAbbrev(10);
+  TestAbbrev(50);
+  TestAbbrev(98);
+  TestAbbrev(99);
+  TestAbbrev(100);
+
   return <div> 
-      {JSON.stringify(paging.page)} <br/>
-      <PagerBtn {...{paging}}/> 
-    </div> 
+    {JSON.stringify(paging.page)} <br/> 
+    <PagerBtn {...{paging}}/> 
+  </div> 
 } 
 
 
+function TestAbbrev(length:number) {
+  let items = [] as number[]; 
+  while(items.length < length) 
+    items.push(items.length); 
+
+
+  AbbrevIndexes(0, items); 
+  AbbrevIndexes(1, items); 
+  AbbrevIndexes(2, items); 
+  AbbrevIndexes(length-3, items); 
+  AbbrevIndexes(length-2, items); 
+  AbbrevIndexes(length-1, items); 
+}
+
+
+function IndexesWindow(index:number, min:number, max:number, length:number) { 
+  const window = []; 
+  let i = Math.max(index-5, min); 
+  while(window.length < length && i >=min && i<=max) { 
+    window.push(i++); 
+  } 
+  return window; 
+} 
+
 function AbbrevIndexes(index:number, indexes:number[]) { 
+  const window = IndexesWindow(index, 0, indexes.length-1, 5); 
+  const [abbrev] = Filter(indexes, (i:number, positive:number[], negative:number[], remainder:number[]) => { 
+    const t = Math.floor(indexes.length/5); 
+    return [0, ...window, indexes.length-1].includes(i) || (i % t) === 0; 
+  }) 
+  return abbrev; 
+}
+
+function AbbrevIndexes2(index:number, indexes:number[]) { 
   const [firstHalf, remainder] = Filter(indexes, (n:number, firstHalf:number[]) => firstHalf.length < index); 
   const [current, ...secondHalf] = remainder; 
 

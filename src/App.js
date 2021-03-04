@@ -3,8 +3,9 @@ import Nav from './components/nav/nav.component';
 import { Switch, Route } from 'react-router-dom'; 
 import { DaoContexter } from './reusable/_dao'; 
 import { usePreloadCollections } from './components/preloader.component'; 
+import {TestPagerBtn} from './pages/questionnaire/components/pager.component';
 import {TestArrayUtil} from './experiments/testarray/testarrayutils.experiment'; 
-import {TestUseStateAt} from './reusable/customhooks/usestateat.hook'; 
+//import {TestUseStateAt} from './reusable/customhooks/usestateat.hook'; 
 
 // Pages
 import Home from './pages/home/home.page.tsx'; 
@@ -17,9 +18,10 @@ const baseUrl = `https://fjg-mongoose-heroku.herokuapp.com/api/`;
 //<Route path={'/admin'} component={Admin} /> 
 
 
+
 export default function App() { 
   return <DaoContexter {...{baseUrl}}> 
-    <TestUseStateAt/> 
+    <TestPagerBtn/>
     <div> ---- NAV ... </div> 
     <Nav/> 
     <div> ---- Preloader ... </div> <br/> 
