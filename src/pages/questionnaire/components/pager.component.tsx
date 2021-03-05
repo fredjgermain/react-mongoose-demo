@@ -1,31 +1,17 @@
 import React, { useContext } from 'react'; 
 import {QuestionnnaireContext} from '../questionnaire.page'; 
-import { IPageHook, usePage } from '../../../reusable/_customhooks'; 
-import {Filter, HeadMidTail, Sort} from '../../../reusable/_arrayutils';
-import { IsNull } from '../../../reusable/_utils';
 import {PageOfPages, PagerBtn, PagerFromTo} from '../../../reusable/_pager';
 
 
 // PAGER ==================================================
 export function Pager() { 
-  const {paging, AnswersAreComplete, SubmitQuestionnaire} = useContext(QuestionnnaireContext); 
-  const {page, pageIndex, pages, setPageIndex} = paging; 
-  
-  const pageIsComplete = AnswersAreComplete(page.map(ia => ia.t)); 
-  const formIsComplete = AnswersAreComplete(); 
-
-  console.log([pageIsComplete, formIsComplete]); 
-
-  async function SubmitAnswersAndNextPage () { 
-    await SubmitQuestionnaire(page.map(ia => ia.t)) 
-    setPageIndex(pageIndex+1) 
-  }
+  const {paging} = useContext(QuestionnnaireContext); 
 
   return <div> 
-    <PageOfPages {...{paging}}/> <br/>
-    <PagerFromTo {...{paging}}/> <br/>
-    <PagerBtn {...{paging}} /> <br/> 
     <BtnSubmitAnswers/> <br/> 
+    <PageOfPages {...{paging}}/> <br/> 
+    <PagerFromTo {...{paging}}/> <br/> 
+    <PagerBtn {...{paging}} /> <br/> 
   </div> 
 } 
 

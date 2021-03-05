@@ -7,9 +7,10 @@ import {TestPagerBtn} from './reusable/_pager';
 import {TestArrayUtil} from './experiments/testarray/testarrayutils.experiment'; 
 //import {TestUseStateAt} from './reusable/customhooks/usestateat.hook'; 
 
+
 // Pages
 import Home from './pages/home/home.page.tsx'; 
-//import Admin from './pages/admin/admin.page.tsx'; 
+import AdminPage from './pages/admin2/admin.page.tsx'; 
 import PatientPage from './pages/patient/patient.page.tsx'; 
 import { Feedback } from './components/feedback/feedback.component';
 
@@ -46,6 +47,7 @@ function MainSection() {
     <Feedback/> 
     {ready && <Switch> 
       <Route exact path={'/'} component={Home} /> 
+      <Route path={'/admin'} component={AdminPage} /> 
       <Route path={'/patient'} component={PatientPage} /> 
     </Switch> 
     } 
