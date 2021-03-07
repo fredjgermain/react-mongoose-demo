@@ -3,9 +3,6 @@ import { DaoContext } from '../../reusable/_dao';
 import { feedback } from '../../components/feedback/feedback.component'; 
 import {useStateAt, usePage, IPageHook} from '../../reusable/_customhooks'; 
 import { IsEmpty } from '../../reusable/_utils'; 
-import { ArrxContext, ElementContext } from '../../reusable/_arrx'; 
-import { Objx, Fields } from '../../reusable/_objx'; 
-import {AdminContext} from './admin.page'; 
 import { Filter } from '../../reusable/_arrayutils';
 
 
@@ -44,25 +41,11 @@ export function useAdmin() {
     Set({...resetState, collection}); 
   }
   
-
   // Get Collection 
   function GetCollection() { 
     const [collection] = GetICollections([Get(['collection'])]); 
     return collection; 
   } 
-
-  
-  // GetEditing ........................................... 
-  /*function GetEditing():{entry:IEntry, mode:string} { 
-    return {entry:Get(['entry']), mode:Get(['mode'])}; 
-  } 
-  // SetEditing ........................................... 
-  function SetEditing(entry:IEntry = resetState.entry, mode:string = resetState.mode) { 
-    Set(entry, ['entry']); 
-    Set(mode, ['mode']); 
-  } */
-
-
 
   // GetEntries
   function GetEntries() { 
@@ -76,12 +59,7 @@ export function useAdmin() {
     return filtered; 
   }
 
-
   const paging = usePage(GetEntries(), 10); 
-
-
-
-  
 
   // GetCollectionOptions ................................. 
   function GetCollectionOptions():IOption[] { 
