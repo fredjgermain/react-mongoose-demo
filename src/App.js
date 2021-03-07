@@ -3,7 +3,6 @@ import Nav from './components/nav/nav.component';
 import { Switch, Route } from 'react-router-dom'; 
 import { DaoContexter } from './reusable/_dao'; 
 import { usePreloadCollections } from './components/preloader.component'; 
-import {TestsNestedObjx, TestsObjx} from './reusable/components/objx2/objx.component'; 
 
 //import {TestUseStateAt} from './reusable/customhooks/usestateat.hook'; 
 
@@ -22,10 +21,6 @@ const baseUrl = `https://fjg-mongoose-heroku.herokuapp.com/api/`;
 
 export default function App() { 
   return <DaoContexter {...{baseUrl}}> 
-    <div>
-      <TestsObjx/> <br/>
-      <TestsNestedObjx/>
-    </div>
     <div> ---- NAV ... </div> 
     <Nav/> 
     <div> ---- Preloader ... </div> <br/> 

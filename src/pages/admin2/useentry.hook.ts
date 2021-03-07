@@ -1,13 +1,14 @@
 import { useContext } from 'react'; 
 import { DaoContext } from '../../reusable/_dao'; 
-import { IsEmpty } from '../../reusable/_utils'; 
+import { IsEmpty, IsNull } from '../../reusable/_utils'; 
 import { ArrxContext, ElementContext } from '../../reusable/_arrx'; 
 import { AdminContext } from './admin.page'; 
 
 export interface IUseEntry { 
   GetDefaultEntry: () => IEntry; 
   GetEntry: () => IEntry; 
-  SetEntry : (newValue:any) => void; 
+  SetEntry: (newValue: any, keys?: TKey[] | undefined) => void; 
+  GetArgs: (keys?:TKey[]) => any; 
 
   GetEditing: () => string; 
   SetEditing: (mode?: string) => void; 
@@ -15,7 +16,7 @@ export interface IUseEntry {
 } 
 
 export function useEntry():IUseEntry { 
-  const {GetDefaultIEntry, GetIEntries, Validate} = useContext(DaoContext); 
+  const {GetDefaultIEntry, GetIEntries, Validate, GetIFields, GetIOptions} = useContext(DaoContext); 
   const admin = useContext(AdminContext); 
   const {values} = useContext(ArrxContext); 
   const {index} = useContext(ElementContext); 
@@ -35,9 +36,18 @@ export function useEntry():IUseEntry {
     return value; 
   } 
 
-  function SetEntry(newValue:any) { 
-    console.log(newValue); 
-  } 
+  function SetEntry(newValue:any, keys?:TKey[]) { 
+    admin.Set(newValue, keys ? ['entry', ...keys]: ['entry']); 
+  }
+
+  function GetArgs(keys?:TKey[]) { 
+    const lastk = keys ? [...keys].pop(): ''; 
+    const ifield = admin.GetFields().find(f=> f.accessor === lastk); 
+    if(!ifield) 
+      return {}; 
+    const options = GetIOptions(ifield); 
+    return {ifield, options}; 
+  }
 
   // Editing State ............................................
   function GetEditing():string { 
@@ -74,6 +84,5 @@ export function useEntry():IUseEntry {
     
   }
 
-
-  return { GetDefaultEntry, GetEntry, SetEntry, GetEditing, SetEditing, IsEditing } 
+  return { GetDefaultEntry, GetEntry, SetEntry, GetArgs, GetEditing, SetEditing, IsEditing } 
 }

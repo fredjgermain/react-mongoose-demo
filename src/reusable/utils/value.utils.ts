@@ -37,7 +37,7 @@ export function HasKey(value:any, keys?:any[]):boolean {
 Assign a newValue in object or array value at the index/key defined by keys. 
 Can assign a newValue to object with multiple levels. 
 */
-export function SetValueAt(value:any, newValue:any, keys?:any[]):any { 
+export function SetValueAt(value:any, newValue:any, keys?:TKey[]):any { 
   if(!keys || IsEmpty(keys)) 
     return newValue; 
   const [key, ...remainingKeys] = keys; 
@@ -51,7 +51,7 @@ export function SetValueAt(value:any, newValue:any, keys?:any[]):any {
 /* GetValueAt ========================================
 Return value specified at 'keys' 
 */
-export function GetValueAt(value:any, keys?:any[]):any { 
+export function GetValueAt(value:any, keys?:TKey[]):any { 
   if(IsEmpty(value) || !keys || IsEmpty(keys)) 
     return value; 
   const [key, ...remainingKeys] = keys; 

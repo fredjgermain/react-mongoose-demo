@@ -12,8 +12,8 @@ Has(keys) => boolean
 Find(predicate) => keys ? 
 */ 
 export function useStateAt<T>(value:T, OnChange?:(newValue:T) => void): 
-[ (keys?: any[] | undefined) => any, 
-  (newValue: any, keys?: any[] | undefined) => T] 
+[ (keys?: TKey[] | undefined) => any, 
+  (newValue: any, keys?: TKey[] | undefined) => void] 
 { 
   const [Value, SetValue] = useState(value); 
 
@@ -21,19 +21,19 @@ export function useStateAt<T>(value:T, OnChange?:(newValue:T) => void):
     Set(value); 
   }, value); 
 
-  function Get(keys?:any[]) { 
+  function Get(keys?:TKey[]) { 
     return GetValueAt(Value, keys); 
   } 
 
-  function Set(newValue:any, keys?:any[]) { 
+  function Set(newValue:any, keys?:TKey[]) { 
     const prev = Value; 
     if(JSON.stringify(prev) === JSON.stringify(newValue)) 
-      return prev; 
+      return; 
     SetValue((prev:T) => { 
       return SetValueAt(prev, newValue, keys); 
     }) 
     if(OnChange) OnChange(newValue) // callback when Value has changed. 
-    return prev; 
+    return; 
   } 
 
   return [Get, Set]; 

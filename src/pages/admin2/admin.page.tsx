@@ -5,7 +5,7 @@ import { IsEmpty } from '../../reusable/_utils';
 
 
 import {CollectionSelector} from './components/collectionselector.component'; 
-import {Entry} from './components/entry.component'; 
+import {Entry, Entry2} from './components/entry.component'; 
 import {Header} from './components/header.component'; 
 
 import '../../css/table.css'; 
@@ -38,8 +38,8 @@ export function AdminTablr() {
     <table> 
       <Header/> 
       <tbody><Arrx {...{values}}> 
-          <Elements><Entry/></Elements> 
-          <Element index={-1} ><Entry/></Element> 
+          <Elements><Entry2/></Elements> 
+          
       </Arrx></tbody> 
     </table> 
   </div> 

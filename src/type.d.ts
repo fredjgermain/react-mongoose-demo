@@ -3,6 +3,8 @@ interface IOption{
   label:string; 
 } 
 
+type TKey = string|number; 
+
 interface ICollection { 
   accessor:string; 
   label: string; 

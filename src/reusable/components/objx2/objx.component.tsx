@@ -1,14 +1,50 @@
 import React, { useContext } from 'react'; 
-import { ToArray, Union } from '../../_arrayutils';
-import {GetValueAt, IsNull, SetValueAt} from '../../_utils'; 
-//import { FieldLabel, FieldValue } from './field.component'; 
+import { ToArray, Union } from '../../_arrayutils'; 
+import { IReaderComponent, IEditorComponent } from '../../_input'; 
+import { GetValueAt, IsNull } from '../../_utils'; 
 
-type TKey = string|number; 
-type TKeys = TKey|TKey[]; 
+
+// GET SET AT ==============================================
+interface IGetSetAt {
+  Get:(keys?: TKey[]|undefined) => any; 
+  Set:(newValue: any, keys?: TKey[]|undefined) => void; 
+  Args:(keys:TKey[]) => any; 
+}
+export const GetSetAtContext = React.createContext({} as IGetSetAt); 
+export function GetSetAt({Get, Set, Args, children}:React.PropsWithChildren<IGetSetAt>) { 
+  return <GetSetAtContext.Provider value={{Get, Set, Args}}> 
+    {children ?? <Keys/>}
+  </GetSetAtContext.Provider> 
+} 
+
+type ReaderFunc = ({...props}:IReaderComponent) => JSX.Element; 
+export function ReaderAt({...props}:{readerFunc:ReaderFunc}) { 
+  const {Get, Args} = useContext(GetSetAtContext); 
+  const {k} = useContext(KeyContext); 
+  const value = Get(k); 
+  const {ifield, options} = Args(k) as {ifield:IField, options:IOption[]}; 
+  return <props.readerFunc {...{value, ifield, options}} /> 
+} 
+
+
+type EditorFunc = ({...props}:IEditorComponent) => JSX.Element; 
+export function EditorAt({...props}:{editorFunc:EditorFunc}) { 
+  const {Get, Set, Args} = useContext(GetSetAtContext); 
+  const {k} = useContext(KeyContext); 
+  const value = Get(k); 
+  const setValue = (newValue:any) => Set(newValue, k); 
+  const {ifield, options} = Args(k) as {ifield:IField, options:IOption[]}; 
+
+  return <props.editorFunc {...{value, setValue, ifield, options}} /> 
+} 
+
+
+
+
 
 export const ObjxContext = React.createContext({} as {value:any}); 
 const KeysContext = React.createContext({} as any); 
-export const KeyContext = React.createContext({} as {k:TKeys}); 
+export const KeyContext = React.createContext({} as {k:TKey[]}); 
 
 // OBJX =================================================== 
 export function Objx({value, children}:React.PropsWithChildren<{value:any}>) { 
@@ -18,9 +54,9 @@ export function Objx({value, children}:React.PropsWithChildren<{value:any}>) {
 } 
 
 // Keys =================================================== 
-export function Keys({keys, children}:React.PropsWithChildren<{keys?:TKeys[]}>) { 
-  const {value} = useContext(ObjxContext); 
-  const _keys = keys ?? Object.keys(value) ?? []; 
+export function Keys({keys, children}:React.PropsWithChildren<{keys?:TKey[][]}>) { 
+  //const {value} = useContext(ObjxContext); 
+  const _keys = keys ?? []; 
 
   return <KeysContext.Provider value={{keys}}> 
     {_keys?.map( _k => { 
@@ -30,9 +66,9 @@ export function Keys({keys, children}:React.PropsWithChildren<{keys?:TKeys[]}>) 
 } 
 
 // Key ==================================================== 
-export function Key({k, children}:React.PropsWithChildren<{k:TKeys}>) { 
+export function Key({k, children}:React.PropsWithChildren<{k:TKey[]}>) { 
   let {k:_k} = useContext(KeyContext); 
-  _k = !IsNull(_k) ? Union(_k, k) as TKeys: k; 
+  _k = !IsNull(_k) ? Union(_k, k) as TKey[]: k; 
   console.log(_k); 
 
   return <KeyContext.Provider value={{k:_k}} > 
@@ -58,16 +94,14 @@ export function KeyValue() {
 
 
 
-
-
 export function TestsObjx() { 
   const value = [0,['a', 'b','d'],5,65,['a', 'b','d']]; 
-  const keys = [['4', 2], 1]; 
+  const keys = [['4', 2], [1]]; 
 
   return <TestObjx {...{ value, keys }} /> 
 } 
 
-export function TestObjx({value, keys}:{value:any, keys:TKeys[]}) { 
+export function TestObjx({value, keys}:{value:any, keys:TKey[][]}) { 
   return <Objx value={value}> 
     <Keys keys={keys}> 
       <KeyString/><KeyValue/> <br/> 
@@ -78,12 +112,12 @@ export function TestObjx({value, keys}:{value:any, keys:TKeys[]}) {
 
 export function TestsNestedObjx() { 
   const value = [0,['a', 'b','d'],5,65,['a', 'b','d']]; 
-  const keys = ['4', 1]; 
-  const keys2= ['2', '0']; 
+  const keys = [['4'], [1]]; 
+  const keys2= [['2'], ['0']]; 
   return <TestNestedObjx {...{value, keys, keys2 }} /> 
 } 
 
-export function TestNestedObjx({value, keys, keys2}:{value:any, keys:TKeys[], keys2:TKeys[]}) { 
+export function TestNestedObjx({value, keys, keys2}:{value:any, keys:TKey[][], keys2:TKey[][]}) { 
 
   return <Objx value={value}> 
     <Keys keys={keys}> 
