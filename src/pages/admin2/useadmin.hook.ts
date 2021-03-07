@@ -2,81 +2,86 @@ import { useContext } from 'react';
 import { DaoContext } from '../../reusable/_dao'; 
 import { feedback } from '../../components/feedback/feedback.component'; 
 import {useStateAt, usePage, IPageHook} from '../../reusable/_customhooks'; 
-import { IsEmpty } from '../../reusable/_utils';
+import { IsEmpty } from '../../reusable/_utils'; 
+import { ArrxContext, ElementContext } from '../../reusable/_arrx'; 
+import { Objx, Fields } from '../../reusable/_objx'; 
+import {AdminContext} from './admin.page'; 
+import { Filter } from '../../reusable/_arrayutils';
 
 
-/*
-useContext(DaoContext) 
-
-usePage
-
-
-useStateAt 
-  - collection 
-  - entry
-  - mode 
-
-// CollectionSelector 
-getCollection 
-setCollection 
-
-IsEdited(id) => boolean 
-
-CreateUpdateEntry() 
-  await CreateUpdate 
-  - feedback.setValue([response]); 
-  - setEntry 
-  - setMode 
-  - ... render adminTable?? 
-
-DeleteEntry() 
-  await Delete 
-  - feedback.setvalue([response]); 
-  - setMode 
-  - ... render adminTable?? 
-
-*/ 
-
+export type TEditingState = {collection:string, entry:IEntry, mode:string}; 
 
 export interface IUseAdmin { 
   paging: IPageHook<IEntry>; 
   Get: (keys?: any[] | undefined) => any; 
-  Set: (newValue: any, keys?: any[] | undefined) => any; 
-  GetDefaultEntry: () => IEntry; 
-  GetEditing: () => {entry: IEntry; mode: string}; 
-  SetEditing: (entry?: IEntry | undefined, mode?: string | undefined) => void; 
+  Set: (newValue: any, keys?: any[] | undefined) => void; 
+  GetCollection: () => ICollection; 
+  
+  
+  /*GetEditing: () => {entry: IEntry; mode: string}; 
+  SetEditing: (entry?: IEntry | undefined, mode?: string | undefined) => void; */
+
+  GetEntries: () => IEntry[]; 
+  GetFields: () => IField[]; 
+
   GetCollectionOptions: () => IOption[]; 
   CreateUpdateEntry: () => Promise<void>; 
   DeleteEntry: () => Promise<void>; 
 } 
 
+
+
 // Use Admin ==============================================
 export function useAdmin() { 
   const {GetDefaultIEntry, GetICollections, GetIEntries, CreateUpdate, Delete, Validate} = useContext(DaoContext); 
 
-  // Get Set .............................................. 
-  const [Get, Set] = useStateAt({collection:undefined, entry:{} as IEntry, mode:''}); 
+  // EditingState ..........................................
+  const resetState:TEditingState = {collection:'', entry:{} as IEntry, mode:'read'}; 
+  const [Get, Set] = useStateAt(resetState); 
 
-  let entries = GetIEntries(Get(['collection'])); 
-  entries = IsEmpty(entries) ? [] as IEntry[]: entries; 
-  const paging = usePage(entries, 10); 
+  function Reset() { 
+    const collection = Get(['collection']); 
+    Set({...resetState, collection}); 
+  }
+  
 
-  // GetDefaultEntry ...................................... 
-  function GetDefaultEntry() { 
-    const defaultEntry = GetDefaultIEntry(Get(['collection'])); 
-    if(IsEmpty(defaultEntry)) 
-      return {} as IEntry; 
-    return defaultEntry; 
+  // Get Collection 
+  function GetCollection() { 
+    const [collection] = GetICollections([Get(['collection'])]); 
+    return collection; 
   } 
+
   
   // GetEditing ........................................... 
-  function GetEditing():{entry:IEntry, mode:string} { 
+  /*function GetEditing():{entry:IEntry, mode:string} { 
     return {entry:Get(['entry']), mode:Get(['mode'])}; 
   } 
   // SetEditing ........................................... 
-  function SetEditing(entry?:IEntry, mode?:string) { 
-    Set({entry, mode}) // will it overwrite/remove 'collection' ? 
+  function SetEditing(entry:IEntry = resetState.entry, mode:string = resetState.mode) { 
+    Set(entry, ['entry']); 
+    Set(mode, ['mode']); 
+  } */
+
+
+
+  // GetEntries
+  function GetEntries() { 
+    const entries = GetIEntries(Get(['collection'])) ?? []; 
+    return IsEmpty(entries) ? [] as IEntry[]: entries; 
   } 
+
+  function GetFields() { 
+    const ifields:IField[] = GetCollection()?.ifields ?? []; 
+    const [filtered] = Filter(ifields, (f:IField) => !!f.label); 
+    return filtered; 
+  }
+
+
+  const paging = usePage(GetEntries(), 10); 
+
+
+
+  
 
   // GetCollectionOptions ................................. 
   function GetCollectionOptions():IOption[] { 
@@ -92,8 +97,8 @@ export function useAdmin() {
     const entry = Get(['entry']); 
     const [response] = await CreateUpdate(collection, [entry]); 
     feedback.setValue([response]); 
-    const defaultEntry = GetDefaultIEntry(collection); 
-    SetEditing(defaultEntry, 'read'); 
+    // Reset after Create Update 
+    Reset(); 
   } 
 
   // DeleteEntry .......................................... 
@@ -102,16 +107,20 @@ export function useAdmin() {
     const entry = Get(['entry']); 
     const [response] = await Delete(collection, [entry]); 
     feedback.setValue([response]); 
-    const defaultEntry = GetDefaultIEntry(collection); 
-    SetEditing(defaultEntry, 'read'); 
+    // Reset after editing 
+    Reset(); 
   } 
 
   return { 
     paging, 
     Get, Set, 
-    GetDefaultEntry, 
-    GetEditing, 
-    SetEditing, 
+    GetCollection, 
+    GetEntries, 
+    GetFields, 
+
+    /*GetEditing, 
+    SetEditing, */
+  
     GetCollectionOptions, 
     CreateUpdateEntry, 
     DeleteEntry, 
