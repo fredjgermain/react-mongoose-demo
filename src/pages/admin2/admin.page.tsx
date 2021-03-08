@@ -1,14 +1,14 @@
 import React, { useContext } from 'react'; 
 import { useAdmin, IUseAdmin, TEditingState } from './useadmin.hook'; 
-import { Arrx, Elements, Element } from '../../reusable/_arrx'; 
+import { Objx, Keys, Key } from '../../reusable/_objx2'; 
 import { IsEmpty } from '../../reusable/_utils'; 
 
-
 import {CollectionSelector} from './components/collectionselector.component'; 
-import {Entry, Entry2} from './components/entry.component'; 
+import {Entry} from './components/entry.component'; 
 import {Header} from './components/header.component'; 
 
 import '../../css/table.css'; 
+import { PagerFromTo, PageOfPages, PagerBtn } from '../../reusable/_pager';
 
 /* 
 - title 
@@ -28,20 +28,25 @@ export default function AdminPage() {
 
 export function AdminTablr() { 
   console.log('admintablr'); 
-  const {GetCollection, GetEntries} = useContext(AdminContext); 
-  const values = GetEntries(); 
+  const {GetCollection, GetEntries, paging} = useContext(AdminContext); 
+  const value = GetEntries(); 
   const collectionLabel = GetCollection()?.label; 
+  const indexes = paging.page.map( item => [item.i]); 
 
   return <div> 
     <h3>{collectionLabel}</h3> 
     <EditingState/> 
-    <table> 
-      <Header/> 
-      <tbody><Arrx {...{values}}> 
-          <Elements><Entry2/></Elements> 
-          
-      </Arrx></tbody> 
-    </table> 
+    <table><Header/><tbody> 
+      <Objx {...{value}}> 
+        <Keys {...{keys:indexes}}><Entry/></Keys> 
+      </Objx> 
+      <Entry/> 
+    </tbody></table> 
+    <div> 
+      <PagerFromTo {...{paging}} /> <br/>
+      <PageOfPages {...{paging}} /> <br/>
+      <PagerBtn {...{paging}}/> 
+    </div>
   </div> 
 } 
 

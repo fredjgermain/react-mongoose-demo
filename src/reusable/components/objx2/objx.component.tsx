@@ -13,7 +13,7 @@ interface IGetSetAt {
 export const GetSetAtContext = React.createContext({} as IGetSetAt); 
 export function GetSetAt({Get, Set, Args, children}:React.PropsWithChildren<IGetSetAt>) { 
   return <GetSetAtContext.Provider value={{Get, Set, Args}}> 
-    {children ?? <Keys/>}
+    {children}
   </GetSetAtContext.Provider> 
 } 
 
@@ -49,28 +49,27 @@ export const KeyContext = React.createContext({} as {k:TKey[]});
 // OBJX =================================================== 
 export function Objx({value, children}:React.PropsWithChildren<{value:any}>) { 
   return <ObjxContext.Provider value={{value}}> 
-    {children ?? <Keys/>} 
+    {children} 
   </ObjxContext.Provider> 
 } 
 
 // Keys =================================================== 
-export function Keys({keys, children}:React.PropsWithChildren<{keys?:TKey[][]}>) { 
+export function Keys({keys, nested = false, children}:React.PropsWithChildren<{keys:TKey[][], nested?:boolean}>) { 
   //const {value} = useContext(ObjxContext); 
-  const _keys = keys ?? []; 
-
-  return <KeysContext.Provider value={{keys}}> 
-    {_keys?.map( _k => { 
-      return <Key key={JSON.stringify(_k)} {...{k: _k}}>{children}</Key> 
+  return <KeysContext.Provider value={{}}> 
+    {keys?.map( k => { 
+      return <Key key={JSON.stringify(k)} {...{k, nested}} > 
+        {children} 
+      </Key> 
     })} 
   </KeysContext.Provider> 
 } 
 
 // Key ==================================================== 
-export function Key({k, children}:React.PropsWithChildren<{k:TKey[]}>) { 
+export function Key({k, nested = false, children}:React.PropsWithChildren<{k:TKey[], nested?:boolean}>) { 
   let {k:_k} = useContext(KeyContext); 
-  _k = !IsNull(_k) ? Union(_k, k) as TKey[]: k; 
-  console.log(_k); 
-
+  _k = !IsNull(_k) && nested ? Union(_k, k) as TKey[]: k; 
+  
   return <KeyContext.Provider value={{k:_k}} > 
     {children ?? <KeyValue/>} 
   </KeyContext.Provider> 

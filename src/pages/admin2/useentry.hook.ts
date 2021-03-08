@@ -1,10 +1,12 @@
 import { useContext } from 'react'; 
 import { DaoContext } from '../../reusable/_dao'; 
-import { IsEmpty, IsNull } from '../../reusable/_utils'; 
-import { ArrxContext, ElementContext } from '../../reusable/_arrx'; 
+import { GetValueAt, IsEmpty } from '../../reusable/_utils'; 
 import { AdminContext } from './admin.page'; 
+import { KeyContext, ObjxContext } from '../../reusable/_objx2';
 
 export interface IUseEntry { 
+  index?: TKey[]; 
+
   GetDefaultEntry: () => IEntry; 
   GetEntry: () => IEntry; 
   SetEntry: (newValue: any, keys?: TKey[] | undefined) => void; 
@@ -18,8 +20,8 @@ export interface IUseEntry {
 export function useEntry():IUseEntry { 
   const {GetDefaultIEntry, GetIEntries, Validate, GetIFields, GetIOptions} = useContext(DaoContext); 
   const admin = useContext(AdminContext); 
-  const {values} = useContext(ArrxContext); 
-  const {index} = useContext(ElementContext); 
+  const {value} = useContext(ObjxContext); 
+  const {k:index} = useContext(KeyContext); 
 
   // GetDefaultEntry ...................................... 
   function GetDefaultEntry() { 
@@ -31,9 +33,9 @@ export function useEntry():IUseEntry {
   
   // Get Entry ............................................
   function GetEntry() { 
-    const entry:IEntry = IsEditing() ? admin.Get(['entry']): values[index]; 
-    const value = !IsEmpty(entry) ? entry: GetDefaultEntry(); 
-    return value; 
+    let entry:IEntry = IsEditing() ? admin.Get(['entry']): GetValueAt(value, index); 
+    entry = !IsEmpty(entry) ? entry: GetDefaultEntry(); 
+    return entry; 
   } 
 
   function SetEntry(newValue:any, keys?:TKey[]) { 
@@ -51,15 +53,16 @@ export function useEntry():IUseEntry {
 
   // Editing State ............................................
   function GetEditing():string { 
-    const entry = values[index] as IEntry; 
+    const entry = GetValueAt(value, index) as IEntry; 
     const editedEntry = admin.Get(['entry']) as IEntry; 
     const mode = admin.Get(['mode']); 
 
-    if(index < 0 && mode === 'create') 
+    console.log(index); 
+
+    if(IsEmpty(index) && mode === 'create') 
       return mode; 
     if(entry && editedEntry && entry?._id === editedEntry?._id) 
       return mode; 
-    //return index >= 0 ? 'read': 'new'; 
     return 'read'; 
   } 
 
@@ -70,6 +73,7 @@ export function useEntry():IUseEntry {
   }
   
   function IsEditing() { 
+    //console.log(GetEditing()); 
     const editMode = ['create', 'update']; 
     return editMode.includes(GetEditing()); 
   } 
@@ -84,5 +88,5 @@ export function useEntry():IUseEntry {
     
   }
 
-  return { GetDefaultEntry, GetEntry, SetEntry, GetArgs, GetEditing, SetEditing, IsEditing } 
+  return { index, GetDefaultEntry, GetEntry, SetEntry, GetArgs, GetEditing, SetEditing, IsEditing } 
 }
