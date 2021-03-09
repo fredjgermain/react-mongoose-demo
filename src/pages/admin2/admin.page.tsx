@@ -1,15 +1,13 @@
 import React, { useContext } from 'react'; 
-import { useEditState, IUseEditState, IUseAdmin, useAdmin } from './useadmin.hook'; 
-import { Objx, Keys, Key } from '../../reusable/_objx2'; 
+import { IUseAdmin, useAdmin } from './hooks/useadmin.hook'; 
 import { IsEmpty } from '../../reusable/_utils'; 
 
-import {CollectionSelector} from './components/collectionselector.component'; 
-import {Entry} from './components/entry.component'; 
-import {Header} from './components/header.component'; 
+import { CollectionSelector } from './components/collectionselector.component'; 
+import { Entry } from './components/entry.component'; 
+import { Header } from './components/header.component'; 
 
 import '../../css/table.css'; 
 import { PagerFromTo, PageOfPages, PagerBtn } from '../../reusable/_pager';
-import { Filter } from '../../reusable/_arrayutils';
 import { DaoContext } from '../../reusable/_dao';
 
 /* 

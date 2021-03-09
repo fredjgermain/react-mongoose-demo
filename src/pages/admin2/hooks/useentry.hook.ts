@@ -1,8 +1,10 @@
 import { useContext } from 'react'; 
-import { DaoContext } from '../../reusable/_dao'; 
-import { AdminContext } from './admin.page'; 
-import { useStateAt } from '../../reusable/_customhooks'; 
-import { feedback } from '../../components/feedback/feedback.component'; 
+import { DaoContext } from '../../../reusable/_dao'; 
+import { AdminContext } from '../admin.page'; 
+import { useStateAt } from '../../../reusable/_customhooks'; 
+import { feedback } from '../../../components/feedback/feedback.component'; 
+
+
 
 export interface IUseEntry { 
   index:number; 
@@ -17,6 +19,7 @@ export interface IUseEntry {
   DeleteEntry: () => Promise<void>; 
 } 
 
+// useEntry ===============================================
 export function useEntry(index:number):IUseEntry { 
   const {GetDefaultIEntry, GetIEntries, Validate, GetIFields, GetIOptions, CreateUpdate, Delete} = useContext(DaoContext); 
   const {columns, collectionAccessor, GetEditingMode, SetEditingMode} = useContext(AdminContext); 
