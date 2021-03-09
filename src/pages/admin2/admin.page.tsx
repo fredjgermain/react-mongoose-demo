@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'; 
-import { useAdmin, IUseAdmin, TEditingState } from './useadmin.hook'; 
+import { useEditState, IUseEditState, IUseAdmin, useAdmin } from './useadmin.hook'; 
 import { Objx, Keys, Key } from '../../reusable/_objx2'; 
 import { IsEmpty } from '../../reusable/_utils'; 
 
@@ -9,6 +9,8 @@ import {Header} from './components/header.component';
 
 import '../../css/table.css'; 
 import { PagerFromTo, PageOfPages, PagerBtn } from '../../reusable/_pager';
+import { Filter } from '../../reusable/_arrayutils';
+import { DaoContext } from '../../reusable/_dao';
 
 /* 
 - title 
@@ -21,42 +23,59 @@ export default function AdminPage() {
   return <AdminContext.Provider value={context}> 
     <h2>Admin section</h2> 
     <CollectionSelector/> 
-    {!IsEmpty(context.GetCollection()) && <AdminTablr/>} 
+    {!IsEmpty(context.GetEditState(['collection'])) && <AdminTablr/>} 
   </AdminContext.Provider> 
 } 
 
 
 export function AdminTablr() { 
   console.log('admintablr'); 
-  const {GetCollection, GetEntries, paging} = useContext(AdminContext); 
-  const value = GetEntries(); 
-  const collectionLabel = GetCollection()?.label; 
-  const indexes = paging.page.map( item => [item.i]); 
+  const {GetICollections} = useContext(DaoContext); 
+  const {collectionAccessor, paging} = useContext(AdminContext); 
+  const [collection] = GetICollections([collectionAccessor]); 
+  const {label} = collection; 
+
+  const Tbody = <tbody> 
+      {paging.page.map( e => { 
+        return <Entry key={e.i} {...{index:e.i}} /> 
+      })} 
+      <Entry index={-1} /> 
+    </tbody> 
 
   return <div> 
-    <h3>{collectionLabel}</h3> 
+    <h3>{label}</h3> 
     <EditingState/> 
-    <table><Header/><tbody> 
-      <Objx {...{value}}> 
-        <Keys {...{keys:indexes}}><Entry/></Keys> 
-      </Objx> 
-      <Entry/> 
-    </tbody></table> 
+    <table><Header/> 
+      {Tbody} 
+    </table> 
     <div> 
-      <PagerFromTo {...{paging}} /> <br/>
-      <PageOfPages {...{paging}} /> <br/>
+      <PagerFromTo {...{paging}} /> <br/> 
+      <PageOfPages {...{paging}} /> <br/> 
       <PagerBtn {...{paging}}/> 
-    </div>
+    </div> 
   </div> 
 } 
 
+
+// Entries ================================================ 
+/*function Entries({indexes}:{indexes:number[]}) { 
+  const {GetCollection, GetEntries} = useContext(AdminContext); 
+  const entries = Filter(GetEntries(), e => e._id); 
+
+
+
+  return 
+  
+}*/
+
+
 export function EditingState() {
-  const {Get} = useContext(AdminContext); 
-  const {collection, entry, mode} = Get() as TEditingState; 
+  const {GetEditState} = useContext(AdminContext); 
+  const {collection, index, mode} = GetEditState();
 
   return <div> 
     Collection: {collection} <br/> 
-    Entry: {JSON.stringify(entry)} <br/> 
+    index: {JSON.stringify(index)} <br/> 
     Mode: {mode} <br/> 
   </div>
 }

@@ -5,9 +5,9 @@ import { AdminContext } from '../admin.page';
 
 // Collection Selector ====================================
 export function CollectionSelector() { 
-  const {Get, Set, GetCollectionOptions} = useContext(AdminContext); 
-  const value = Get(['collection']); 
-  const setValue = (newValue:string) => Set(newValue, ['collection']); 
+  const {GetEditState, SetEditState, GetCollectionOptions} = useContext(AdminContext); 
+  const value = GetEditState(['collection']); 
+  const setValue = (newValue:string) => SetEditState(newValue, ['collection']); 
   const ifield:IField = {accessor:'', label:'', defaultValue:'', type:'string'}; 
   const options = GetCollectionOptions(); 
 

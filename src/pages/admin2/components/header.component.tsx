@@ -4,13 +4,10 @@ import { AdminContext } from '../admin.page';
 
 
 export function Header() { 
-  const { GetFields } = useContext(AdminContext); 
-  const ifields = GetFields(); 
-  const btn:IField = {accessor:'', defaultValue:'', label:'btn', type:''}; 
+  const { columns } = useContext(AdminContext); 
+  const cols = [...columns, 'btn']; 
 
   return <thead><tr> 
-    <Objx {...{value:{}, ifields:[...ifields, btn]}}> 
-      <Fields><th><FieldLabel/></th></Fields> 
-    </Objx> 
+    {cols.map( c => <th key={c}>{c}</th> )}
   </tr></thead> 
 } 

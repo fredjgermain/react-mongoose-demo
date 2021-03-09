@@ -34,6 +34,7 @@ export default function App() {
 } 
 
 
+
 function MainSection() {
   const ready = usePreloadCollections(); 
 

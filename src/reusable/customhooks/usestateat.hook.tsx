@@ -11,7 +11,7 @@ Rem(keys) => previous value ?
 Has(keys) => boolean 
 Find(predicate) => keys ? 
 */ 
-export function useStateAt<T>(value:T, OnChange?:(newValue:T) => void): 
+export function useStateAt<T>(value:T): 
 [ (keys?: TKey[] | undefined) => any, 
   (newValue: any, keys?: TKey[] | undefined) => void] 
 { 
@@ -32,7 +32,6 @@ export function useStateAt<T>(value:T, OnChange?:(newValue:T) => void):
     SetValue((prev:T) => { 
       return SetValueAt(prev, newValue, keys); 
     }) 
-    if(OnChange) OnChange(newValue) // callback when Value has changed. 
     return; 
   } 
 

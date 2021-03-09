@@ -1,65 +1,38 @@
-import { useContext } from 'react'; 
+import { useContext, useEffect, useState } from 'react'; 
 import { DaoContext } from '../../reusable/_dao'; 
-import { feedback } from '../../components/feedback/feedback.component'; 
 import {useStateAt, usePage, IPageHook} from '../../reusable/_customhooks'; 
-import { IsEmpty } from '../../reusable/_utils'; 
-import { Filter } from '../../reusable/_arrayutils';
 
 
-export type TEditingState = {collection:string, entry:IEntry, mode:string}; 
-
-export interface IUseAdmin { 
+export interface IUseAdmin extends IUseEditState {
   paging: IPageHook<IEntry>; 
-  Get: (keys?: any[] | undefined) => any; 
-  Set: (newValue: any, keys?: any[] | undefined) => void; 
-  GetCollection: () => ICollection; 
-  
-  
-  /*GetEditing: () => {entry: IEntry; mode: string}; 
-  SetEditing: (entry?: IEntry | undefined, mode?: string | undefined) => void; */
+  collectionAccessor: string; 
 
-  GetEntries: () => IEntry[]; 
-  GetFields: () => IField[]; 
+  columns: string[]; 
+  setColumns: React.Dispatch<React.SetStateAction<string[]>>; 
 
-  GetCollectionOptions: () => IOption[]; 
-  CreateUpdateEntry: () => Promise<void>; 
-  DeleteEntry: () => Promise<void>; 
+  GetFields: (field?: string[] | undefined) => IField[]; 
+  GetCollectionOptions(): IOption[]; 
 } 
 
 
-
-// Use Admin ==============================================
 export function useAdmin() { 
-  const {GetDefaultIEntry, GetICollections, GetIEntries, CreateUpdate, Delete, Validate} = useContext(DaoContext); 
+  const {GetICollections, GetIEntries, GetIFields} = useContext(DaoContext); 
 
-  // EditingState ..........................................
-  const resetState:TEditingState = {collection:'', entry:{} as IEntry, mode:'read'}; 
-  const [Get, Set] = useStateAt(resetState); 
+  const [columns, setColumns] = useState([] as string[]); 
+  const editState = useEditState(); 
+  const collectionAccessor = editState.GetEditState(['collection']) as string; 
+  const paging = usePage(GetIEntries(collectionAccessor), 10); 
 
-  function Reset() { 
-    const collection = Get(['collection']); 
-    Set({...resetState, collection}); 
-  }
-  
-  // Get Collection 
-  function GetCollection() { 
-    const [collection] = GetICollections([Get(['collection'])]); 
-    return collection; 
+
+  // Reset Columns on collection change
+  useEffect(() => { 
+    IniColumns(); 
+  }, [collectionAccessor]); 
+
+  function IniColumns() { 
+    if(!!collectionAccessor) 
+      setColumns(GetFields().filter(f => !!f.label).map( f => f.accessor )); 
   } 
-
-  // GetEntries
-  function GetEntries() { 
-    const entries = GetIEntries(Get(['collection'])) ?? []; 
-    return IsEmpty(entries) ? [] as IEntry[]: entries; 
-  } 
-
-  function GetFields() { 
-    const ifields:IField[] = GetCollection()?.ifields ?? []; 
-    const [filtered] = Filter(ifields, (f:IField) => !!f.label); 
-    return filtered; 
-  }
-
-  const paging = usePage(GetEntries(), 10); 
 
   // GetCollectionOptions ................................. 
   function GetCollectionOptions():IOption[] { 
@@ -69,38 +42,40 @@ export function useAdmin() {
     }); 
   } 
 
-  // CreateUpdateEntry .................................... 
-  async function CreateUpdateEntry() { 
-    const collection = Get(['collection']); 
-    const entry = Get(['entry']); 
-    const [response] = await CreateUpdate(collection, [entry]); 
-    feedback.setValue([response]); 
-    // Reset after Create Update 
-    Reset(); 
+  // 
+  function GetFields(field?:string[]) { 
+    return GetIFields(collectionAccessor, field); 
   } 
-
-  // DeleteEntry .......................................... 
-  async function DeleteEntry() { 
-    const collection = Get(['collection']); 
-    const entry = Get(['entry']); 
-    const [response] = await Delete(collection, [entry]); 
-    feedback.setValue([response]); 
-    // Reset after editing 
-    Reset(); 
-  } 
-
-  return { 
-    paging, 
-    Get, Set, 
-    GetCollection, 
-    GetEntries, 
-    GetFields, 
-
-    /*GetEditing, 
-    SetEditing, */
   
-    GetCollectionOptions, 
-    CreateUpdateEntry, 
-    DeleteEntry, 
+  return {paging, columns, setColumns, collectionAccessor, GetFields, GetCollectionOptions, ...editState} 
+}
+
+
+// EditingState ..........................................
+export interface IUseEditState { 
+  GetEditState: (keys?: TKey[] | undefined) => any; 
+  SetEditState: (newValue: any, keys?: TKey[] | undefined) => void; 
+  GetEditingMode: (index?: number | undefined) => string; 
+  SetEditingMode: (index?: number | undefined, mode?: string | undefined) => void; 
+} 
+
+// editIndex is either null or number from -1 and above. 
+// -1 means the inline create is active. 
+export function useEditState() { 
+  const resetState = {collection:'', index:null, mode:'read'}; 
+  const [GetEditState, SetEditState] = useStateAt(resetState); 
+  const collection = GetEditState(['collection']) as string; 
+
+  function GetEditingMode(index?:number):string { 
+    if(index === GetEditState(['index'])) 
+      return GetEditState(['mode']); 
+    return 'read'; 
   } 
+
+  function SetEditingMode(index?:number, mode?:string) { 
+    const newState = {collection, index:index ?? null, mode:mode ?? 'read'} 
+    SetEditState(newState); 
+  } 
+
+  return { GetEditState, SetEditState, GetEditingMode, SetEditingMode }
 }

@@ -1,48 +1,67 @@
 import React, { useContext } from 'react'; 
 import { IUseEntry, useEntry } from '../useentry.hook'; 
-
 import { Reader, Editor } from '../../../reusable/_input'; 
 import { AdminContext } from '../admin.page'; 
-
-import {GetSetAt, ReaderAt, EditorAt, Key, Keys} from '../../../reusable/components/objx2/objx.component'; 
-import { GetValueAt, IsEmpty } from '../../../reusable/_utils'; 
-
+import { DaoContext } from '../../../reusable/_dao';
 
 
 // ENTRY ==================================================
-export const EntryContext = React.createContext({} as IUseEntry)
-export function Entry() { 
-  const { GetFields } = useContext(AdminContext); 
-  const context = useEntry(); 
-  const { index, IsEditing, GetEntry, SetEntry, GetArgs, GetEditing } = context; 
+export const EntryContext = React.createContext({} as IUseEntry) 
+export function Entry({index}:{index:number}) { 
+  const {GetIOptions} = useContext(DaoContext); 
+  const context = useEntry(index); 
+  const {editMode, Get, Set, Args, GetColumnsIField} = context; 
+  const isCreateUpdate = ['create', 'update'].includes(editMode); 
+  const ifields = GetColumnsIField(); 
 
-  const Get = (keys?:TKey[]) => GetValueAt(GetEntry(), keys); 
-  const Set = (newValue:any, keys?:TKey[]) => SetEntry(newValue, keys); 
-  const Args = GetArgs; 
-
-  const keys = GetFields().map( f => [f.accessor]); 
-  const btn = ['btn']; 
+  function Cell(ifield:IField) { 
+    const value = Get([ifield.accessor]); 
+    const setValue = (newValue:any) => Set(newValue, [ifield.accessor]); 
+    const options = GetIOptions(ifield); 
+    return isCreateUpdate ? <Editor {...{value, setValue, ifield, options}} /> : <Reader {...{value, ifield, options}} /> 
+  }
 
   return <EntryContext.Provider value={context}> 
-    <GetSetAt {...{Get, Set, Args}} > 
-      <tr><Keys {...{keys}} > 
-        <td> 
-          {IsEditing() ? <EditorAt {...{editorFunc:Editor}} /> : <ReaderAt {...{readerFunc:Reader}} /> } 
-        </td> 
-      </Keys> 
-      <Key k={btn}> 
-        <td> 
-          { IsEmpty(index) ? <InlineCreateBtn/> : <InlineUpdateDeleteBtn /> } 
-        </td> 
-      </Key> 
-      </tr> 
-    </GetSetAt>
+    <tr> 
+      {ifields.map( ifield => <td key={ifield.accessor}>{Cell(ifield)}</td> )} 
+      <td> 
+        {index > -1 ? <InlineUpdateDeleteBtn/>: <InlineCreateBtn/>} 
+      </td> 
+    </tr> 
   </EntryContext.Provider>
 }
 
 
+export const IndexedContext = React.createContext({} as {value:any}); 
+export const IndexesContext = React.createContext({} as any); 
+export const IndexContext = React.createContext({} as {index:number|string}); 
+
+export function Indexed({value, children}:React.PropsWithChildren<{value:any}>) { 
+  return <IndexedContext.Provider value={{value}}> 
+    {children} 
+  </IndexedContext.Provider> 
+} 
+
+export function Indexes({indexes, children}:React.PropsWithChildren<{indexes:(string|number)[]}>) { 
+  return <IndexesContext.Provider value={{}}> 
+    {indexes.map( index => { 
+      return <Index key={index} index={index}> 
+        {children} 
+      </Index> 
+    })} 
+    {children} 
+  </IndexesContext.Provider> 
+} 
+
+export function Index({index, children}:React.PropsWithChildren<{index:(string|number)}>) { 
+  return <IndexContext.Provider value={{index}} > 
+    {children} 
+  </IndexContext.Provider> 
+}
+
+
 export function InlineCreateBtn() {
-  const {CreateUpdateEntry} = useContext(AdminContext); 
+  const {CreateUpdateEntry} = useContext(EntryContext); 
   const CreateBtn = {mode:'create', action:CreateUpdateEntry, labels:{affirm:'Create', confirm:'Confirm', cancel:'Cancel'}} 
 
   return <span> 
@@ -52,7 +71,7 @@ export function InlineCreateBtn() {
 
 
 export function InlineUpdateDeleteBtn() { 
-  const {CreateUpdateEntry, DeleteEntry} = useContext(AdminContext); 
+  const {CreateUpdateEntry, DeleteEntry} = useContext(EntryContext); 
   const UpdateBtn = {mode:'update', action:CreateUpdateEntry, labels:{affirm:'Update', confirm:'Confirm', cancel:'Cancel'}} 
   const DeleteBtn = {mode:'delete', action:DeleteEntry, labels:{affirm:'Delete', confirm:'Confirm', cancel:'Cancel'}} 
 
@@ -63,17 +82,19 @@ export function InlineUpdateDeleteBtn() {
 } 
 
 export function InlineBtn({...props}:{mode:string, labels:{affirm:string, confirm:string, cancel:string}, action:()=>Promise<void>}) { 
-  const { GetEditing, SetEditing } = useContext(EntryContext); 
+  const {editMode, index} = useContext(EntryContext); 
+  const {SetEditingMode} = useContext(AdminContext); 
 
-  const mode = GetEditing(); 
-  if(mode === 'read') 
+  if(editMode === 'read') 
     return <span> 
-      <button onClick={() => SetEditing(props.mode) }>{props.labels.affirm}</button>
+      {editMode}
+      <button onClick={() => SetEditingMode(index, props.mode) }>{props.labels.affirm}</button>
     </span> 
-  if(mode === props.mode) 
+  if(editMode === props.mode) 
     return <span> 
+      {editMode}
       <button onClick={props.action}>{props.labels.confirm}</button> 
-      <button onClick={() => SetEditing() }>{props.labels.cancel}</button> 
+      <button onClick={() => SetEditingMode() }>{props.labels.cancel}</button> 
     </span> 
-  return <span>{mode}</span>; 
+  return <span>{editMode}</span>; 
 }
