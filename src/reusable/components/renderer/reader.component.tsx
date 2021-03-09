@@ -89,6 +89,14 @@ function ReadMany({ifield, value=[]}:IReader) {
     })}]</span> 
   } 
   return <span> 
+    <div className={'readmany-long'}> 
+      {value.map( (e, i) => { 
+        return <div key={i}>{i}. {e}</div> 
+      })} 
+    </div> 
+  </span>
+
+  /*return <span> 
     <div className={'readmany-short'}> 
       {ifield.type} x {value ? (value as any[]).length : 0} <br/> 
       <div className={'readmany-long'}> 
@@ -97,7 +105,7 @@ function ReadMany({ifield, value=[]}:IReader) {
         })} 
       </div> 
     </div> 
-  </span> 
+  </span> */
 } 
 
 // Default Read mixed ..............................................

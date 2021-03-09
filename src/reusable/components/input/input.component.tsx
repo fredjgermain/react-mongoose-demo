@@ -1,8 +1,7 @@
 import React from 'react'; 
 //import CSS from ''
 import {IEvent, IsNull, OnEnter, SetSize, 
-  GetDefaultValueFromIField, GetValueFromInput} from '../../../reusable/_utils'; 
-
+  GetDefaultValueFromIField, GetValueFromInput, GetInputType} from '../../../reusable/_utils'; 
 
 
 // IInput =================================================
@@ -20,7 +19,7 @@ export interface IInput {
 
 // --------------------------------------------------------
 export function Input({value, setValue, ifield, 
-  inputType, 
+  inputType = GetInputType(ifield.type), 
   width = (value:any) => SetSize(value), 
   validator=(value:any) => true, 
   onPressEnter=() => {}, 
@@ -43,6 +42,9 @@ export function Input({value, setValue, ifield,
   // on PressEnter
   const onKeyUp = (event: React.KeyboardEvent<HTMLInputElement>) => OnEnter(event, onPressEnter); 
   const style = {width: `${width(Value)+2}ch`}; 
+
+  if(!ifield.isArray)
+    console.log([ifield, inputType]); 
 
   if(ifield.type === 'boolean') 
     return <input {...{type:inputType, checked:Value, onChange, onKeyUp}} /> 

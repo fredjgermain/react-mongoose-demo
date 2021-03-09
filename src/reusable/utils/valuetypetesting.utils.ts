@@ -41,11 +41,13 @@ export function GetTypeByValue(value:any) {
 }
 
 export function GetDefaultValueByType(type:string) { 
+  if(type==='boolean') 
+    return false; 
   if(type==='string') 
-    return '';
-  if(type==='number')
+    return ''; 
+  if(type==='number') 
     return 0; 
-  if(type==='array')
+  if(type==='array') 
     return []; 
   if(type==='date') 
     return new Date(); 

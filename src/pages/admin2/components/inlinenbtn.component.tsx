@@ -44,5 +44,5 @@ export function InlineBtn({...props}:{mode:string, labels:{affirm:string, confir
       <button onClick={props.action}>{props.labels.confirm}</button> 
       <button onClick={() => SetEditingMode() }>{props.labels.cancel}</button> 
     </span> 
-  return <span>{editMode}</span>; 
+  return <span></span>; 
 } 
