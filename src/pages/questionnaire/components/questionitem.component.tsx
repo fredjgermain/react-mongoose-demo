@@ -6,6 +6,16 @@ import {QuestionnnaireContext} from '../questionnaire.page';
 
 import '../../../css/feedback.css'; 
 
+
+export function QuestionItem({answer, index}:{answer:IAnswer, index:number}) { 
+  const {questionnaire, GetQuestionnaireItem, AnswersAreComplete} = useContext(QuestionnnaireContext); 
+  const {question, response} = GetQuestionnaireItem(answer); 
+
+
+  return <div> </div>
+}
+
+
 // Item Is Complete =========================================
 export function ItemIsComplete() {
   const {questionnaire, GetQuestionnaireItem, AnswersAreComplete} = useContext(QuestionnnaireContext); 
@@ -18,7 +28,7 @@ export function ItemIsComplete() {
   //const optional = {className:'optional', symbol:'?'}; 
 
   const display = AnswersAreComplete([answer]) ? success: failure; 
-  console.log(question?.optional);
+  console.log(question?.optional); 
   
   return <span className={display.className}>{display.symbol} {question?.optional && '?'}</span>
 }
@@ -37,25 +47,36 @@ export function ItemLabel() {
 }
 
 // Item Response choice ====================================
-export function ItemResponse() { 
-  const {GetIFields, GetIOptions} = useContext(DaoContext); 
-  const {questionnaire, setQuestionnaire, GetQuestionnaireItem, } = useContext(QuestionnnaireContext); 
-  const {index} = useContext(ElementContext); 
+export function ItemResponse(index:number) { 
+  const {questionnaire, setQuestionnaire, GetQuestionnaireItem} = useContext(QuestionnnaireContext); 
+  //const {index} = useContext(ElementContext); 
   const answer = questionnaire[index] as IAnswer; 
   const {response} = GetQuestionnaireItem(answer); 
+  
+
+  const enums = response?.responseType['enum'] as string[]; 
   const value = answer.answer; 
+  const setValue = (newAnswer:number) => setQuestionnaire(newAnswer, [index, 'answer']); 
+  const options = enums?.map( (e, i) => { 
+    return {value:i, label:e}; 
+  }); 
 
-  const setValue = (newAnswer:number) => { 
-    setQuestionnaire(newAnswer, [index, 'answer']); 
-  } 
+  const ifield = {accessor:'', label:'', type:'number', defaultValue:-1, 
+    enums, isEnum:!!enums} as IField; 
+  
+  return <Editor {...{value, setValue, ifield, options} }/> 
+  /*const ifield = responseTypeArgs.ifield; 
+  const options = responseTypeArgs.options; */
 
-  const type = response?.responseType['type'] 
+  //return <Editor {...{value, setValue, ifield, options}}/> 
+
+  /*const type = response?.responseType['type'] 
   const defaultValue = ''; 
   const options = (response?.responseType['enum'] as string[]).map( (e, i) => { 
     return {value:i, label:e}; 
-  });
+  }); 
   const ifield = {accessor:'', label:'', type, defaultValue} as IField;
   
   //return <span>{JSON.stringify(response)}</span> 
-  return <Editor {...{value, setValue, ifield, options}} />
+  return <Editor {...{value, setValue, ifield, options}} />*/
 } 

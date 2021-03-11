@@ -1,7 +1,7 @@
 import { useContext } from 'react'; 
-import { DaoContext } from '../../reusable/_dao'; 
-import { Session, useSession, IUseSession } from '../../reusable/_session'; 
-import { feedback } from '../../components/feedback/feedback.component'; 
+import { DaoContext } from '../../../reusable/_dao'; 
+import { Session, useSession, IUseSession } from '../../../reusable/_session'; 
+import { feedback } from '../../../components/feedback/feedback.component'; 
 
 
 export interface IUsePatient { 

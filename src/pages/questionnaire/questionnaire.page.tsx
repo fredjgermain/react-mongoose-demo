@@ -1,5 +1,5 @@
 import React from 'react'; 
-import { useQuestionnaire, IUseQuestionnaire } from './usequestionnaire.hook'; 
+import { useQuestionnaire, IUseQuestionnaire } from './hooks/usequestionnaire.hook'; 
 import {QuestionPage} from './components/questionpage.component'; 
 
 

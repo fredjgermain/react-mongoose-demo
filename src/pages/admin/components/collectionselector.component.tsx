@@ -1,18 +1,15 @@
-import React, {useContext, useState} from 'react'; 
-//import {CrudContext} from '../../../reusable/_crud'; 
-import {Select} from '../../../reusable/_input'; 
+import React, { useContext } from 'react'; 
+import { Select } from '../../../reusable/_input'; 
+import { AdminContext } from '../admin.page'; 
 
 
+// Collection Selector ====================================
 export function CollectionSelector() { 
-  return <div> COLLECTION SELECTOR </div>
+  const {GetEditState, SetEditState, GetCollectionOptions} = useContext(AdminContext); 
+  const value = GetEditState(['collection']); 
+  const setValue = (newValue:string) => SetEditState(newValue, ['collection']); 
+  const ifield:IField = {accessor:'', label:'', defaultValue:'', type:'string'}; 
+  const options = GetCollectionOptions(); 
 
-  // const {activeCollection:value, setActiveCollection:setValue, GetICollections} = useContext(CrudContext); 
-
-  // //const [value, setValue] = useState(activeCollection?.accessor); 
-  // const options:IOption[] = GetICollections().map( ic => { return {value:ic, label:ic.label} }); 
-  // const ifield = {accessor:'', label:'', defaultValue:{}, type:''} as IField; 
-
-  // return <div> 
-  //   <Select {...{ifield, value, setValue, options}} /> 
-  // </div>
-}
+  return <Select {...{value, setValue, ifield, options}} /> 
+} 

@@ -1,4 +1,3 @@
-import React from 'react'; 
 import {Link, withRouter} from 'react-router-dom'; 
 
 
@@ -11,6 +10,7 @@ interface INav {
 function Nav({history}:INav) { 
   console.log(history); 
   return <div> 
+    <div> -- Navigation -- </div>
     <div> 
       <Link to='' >Home</Link> 
     </div> 

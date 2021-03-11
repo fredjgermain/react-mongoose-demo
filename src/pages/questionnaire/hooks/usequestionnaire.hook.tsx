@@ -1,9 +1,9 @@
 import { useContext, useEffect } from 'react'; 
-import { DaoContext } from '../../reusable/_dao'; 
-import { useSession, Session } from '../../reusable/_session'; 
-import { IsEmpty, IsToday } from '../../reusable/_utils'; 
-import { usePage, IPageHook } from '../../reusable/_customhooks'; 
-import { feedback } from '../../components/feedback/feedback.component'; 
+import { DaoContext } from '../../../reusable/_dao'; 
+import { useSession, Session } from '../../../reusable/_session'; 
+import { IsEmpty, IsToday } from '../../../reusable/_utils'; 
+import { usePage, IPageHook } from '../../../reusable/_customhooks'; 
+import { feedback } from '../../../components/feedback/feedback.component'; 
 
 
 export interface IUseQuestionnaire { 

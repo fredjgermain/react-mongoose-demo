@@ -6,7 +6,10 @@ import {IPageHook, usePage} from './customhooks/usepage';
 import {useSession, IUseSession} from './customhooks/session/usesession.hook'; 
 import {useToggle, IUseToggle} from './components/toggle/usetoggle.hook'; 
 import {useUpdate} from './customhooks/useupdate.hook'; 
+import {IUseIEntry, useIEntry} from './customhooks/useientry.hook'; 
 
+export {useIEntry}
+export type {IUseIEntry}; 
 export {useUpdate}; 
 export {useToggle}; 
 export type {IUseToggle}; 
