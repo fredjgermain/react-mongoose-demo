@@ -9,7 +9,7 @@ import { Header } from './components/header.component';
 import '../../css/table.css'; 
 import { PagerFromTo, PageOfPages, PagerBtn } from '../../reusable/_pager';
 import { DaoContext } from '../../reusable/_dao';
-
+import { Feedback } from '../../components/feedback/feedback.component';
 
 
 /* Admin Pages ============================================
@@ -22,6 +22,7 @@ export default function AdminPage() {
   const context = useAdmin(); 
   return <AdminContext.Provider value={context}> 
     <h2>Admin section</h2> 
+    <Feedback/>
     <CollectionSelector/> 
     {!IsEmpty(context.GetEditState(['collection'])) && <AdminTablr/>} 
   </AdminContext.Provider> 

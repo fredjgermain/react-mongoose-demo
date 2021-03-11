@@ -1,19 +1,17 @@
 import React from 'react'; 
 import { useQuestionnaire, IUseQuestionnaire } from './hooks/usequestionnaire.hook'; 
 import {QuestionPage} from './components/questionpage.component'; 
-
+import { Feedback } from '../../components/feedback/feedback.component';
 
 export const QuestionnnaireContext = React.createContext({} as IUseQuestionnaire); 
 export function Questionnaire() { 
   const context = useQuestionnaire(); 
-  const {questionnaire, TestResetSession} = context; 
 
+  // Questionnaire: {JSON.stringify(questionnaire.map(q => q.answer))} 
+  // <button onClick={TestResetSession}>Reset sessions</button> 
   return <QuestionnnaireContext.Provider value={context} > 
     <h2>Questionnaire </h2> 
-    <button onClick={TestResetSession}>Reset sessions</button> 
-    <div> 
-      Questionnaire: {JSON.stringify(questionnaire.map(q => q.answer))} 
-      <QuestionPage answers={questionnaire} /> 
-    </div> 
+    <Feedback/>
+    <QuestionPage /> 
   </QuestionnnaireContext.Provider> 
 } 

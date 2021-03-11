@@ -13,11 +13,9 @@ export function Feedback() {
   feedback.value = () => value; 
   feedback.setValue = (responses:ICrudResponse[]) => setValue(responses); 
 
-  return <div> 
-    Feedback !! : {JSON.stringify(value)} <br/> 
-    <DisplayFeedBack responses={value} /> 
-    <button onClick={() => feedback.setValue([] as ICrudResponse[]) }>Reset Feedback</button> 
-  </div> 
+  // Feedback !! : {JSON.stringify(value)} <br/> 
+  // <button onClick={() => feedback.setValue([] as ICrudResponse[]) }>Reset Feedback</button> 
+  return <DisplayFeedBack responses={value} /> 
 } 
 
 

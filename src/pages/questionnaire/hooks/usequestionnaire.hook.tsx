@@ -1,7 +1,7 @@
-import { useContext, useEffect } from 'react'; 
+import { useContext } from 'react'; 
 import { DaoContext } from '../../../reusable/_dao'; 
 import { useSession, Session } from '../../../reusable/_session'; 
-import { IsEmpty, IsToday } from '../../../reusable/_utils'; 
+import { IsEmpty } from '../../../reusable/_utils'; 
 import { usePage, IPageHook } from '../../../reusable/_customhooks'; 
 import { feedback } from '../../../components/feedback/feedback.component'; 
 
@@ -16,12 +16,12 @@ export interface IUseQuestionnaire {
 
   AnswersAreComplete: (answers?:IAnswer[]) => boolean; 
   LoadQuestionnaire: () => void; 
-  GetQuestionnaireItem:(answer:IAnswer) => { 
+  /*GetQuestionnaireItem:(answer:IAnswer) => { 
     form: undefined|IForm; 
     instructions: undefined|IInstruction[]; 
     question: undefined|IQuestion; 
     response: undefined|IResponse; 
-  } 
+  } */
   SubmitQuestionnaire: (answers?:IEntry[]) => void; 
 } 
 
@@ -31,11 +31,15 @@ export function useQuestionnaire():IUseQuestionnaire {
   const {GetIEntries, CreateUpdate} = useContext(DaoContext); 
   const profile = Session.Get('profile') as IEntry; 
 
-
   const sessionQuestionnaire = useSession('questionnaire', LoadQuestionnaire()); 
   const questionnaire:IAnswer[] = sessionQuestionnaire.Get(); 
   const setQuestionnaire = (newValue:any, keys:any[] = []) => sessionQuestionnaire.Set(newValue, [...keys]); 
   const paging = usePage(questionnaire, PageBreakPredicates()); 
+
+  function GetQuestion(answer:IAnswer) { 
+    const [question] = GetIEntries('questions', [answer?.question]) as IQuestion[]; 
+    return question; 
+  }
 
   // LoadQuestionnaire -----------------------------------
   function LoadQuestionnaire() { 
@@ -63,7 +67,7 @@ export function useQuestionnaire():IUseQuestionnaire {
   } 
 
   // return form, instructions, question, response
-  function GetQuestionnaireItem(answer:IAnswer) { 
+  /*function GetQuestionnaireItem(answer:IAnswer) { 
     if(!answer) 
       return {form:undefined, instructions:undefined, question:undefined, response:undefined}; 
     const [question] = GetIEntries('questions', [answer.question]) as IQuestion[]; 
@@ -71,13 +75,13 @@ export function useQuestionnaire():IUseQuestionnaire {
     const instructions = GetIEntries('instructions', question?.instructions) as IInstruction[]; 
     const [response] = GetIEntries('responses', [question?.responseType]) as IResponse[]; 
     return {form, instructions, question, response}; 
-  } 
+  } */
 
   function AnswersAreComplete(answers?:IAnswer[]) { 
     const _answers = answers ?? questionnaire; 
     return _answers.every( answer => {
-      const {question} = GetQuestionnaireItem(answer); 
-      return question && (question.optional || answer.answer >=0); 
+      const question = GetQuestion(answer); 
+      return question && (question?.optional || answer.answer >=0); 
     }); 
   } 
 
@@ -85,8 +89,8 @@ export function useQuestionnaire():IUseQuestionnaire {
   // Page Break Predicates =============================================
   function PageBreakPredicates() { 
     function GetQuestionAndPivot(answer:IAnswer, As:IAnswer[]) { 
-      const question = GetQuestionnaireItem(answer).question as IQuestion; 
-      const pivot = GetQuestionnaireItem(As[0])?.question as IQuestion; 
+      const question = GetQuestion(answer); 
+      const pivot = GetQuestion(As[0]); 
       return {question, pivot}; 
     } 
 
@@ -123,7 +127,6 @@ export function useQuestionnaire():IUseQuestionnaire {
 
     AnswersAreComplete, 
     LoadQuestionnaire, 
-    GetQuestionnaireItem, 
     SubmitQuestionnaire 
   } 
 }

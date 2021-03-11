@@ -8,7 +8,6 @@ import Landing from './pages/landing/landing.page';
 import Home from './pages/home/home.page'; 
 import AdminPage from './pages/admin/admin.page'; 
 import PatientPage from './pages/patient/patient.page'; 
-import { Feedback } from './components/feedback/feedback.component'; 
 
 const baseUrl = `https://fjg-mongoose-heroku.herokuapp.com/api/`; 
 
@@ -31,7 +30,6 @@ function MainSection() {
   return <div> 
     <Nav/> 
     <h1> h1 title ... </h1> 
-    <Feedback/> 
     <Switch> 
       <Route exact path={'/'} component={Home} /> 
       <Route path={'/admin'} component={AdminPage} /> 
