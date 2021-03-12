@@ -22,7 +22,7 @@ export interface IUseQuestionnaire {
     question: undefined|IQuestion; 
     response: undefined|IResponse; 
   } */
-  SubmitQuestionnaire: (answers?:IEntry[]) => void; 
+  SubmitQuestionnaire: (answers?:IEntry[]) => Promise<ICrudResponse[]>; 
 } 
 
 
@@ -62,8 +62,7 @@ export function useQuestionnaire():IUseQuestionnaire {
   async function SubmitQuestionnaire(answers?:IEntry[]) { 
     const toSubmit = answers ?? questionnaire; 
     const responses = await CreateUpdate('answers', toSubmit); 
-    feedback.setValue(responses); 
-    //setQuestionnaire(LoadQuestionnaire()); 
+    return responses; 
   } 
 
   // return form, instructions, question, response

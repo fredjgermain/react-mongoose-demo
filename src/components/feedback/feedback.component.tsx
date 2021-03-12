@@ -1,7 +1,38 @@
-import { useState } from 'react'; 
+import React, { useEffect, useState } from 'react'; 
 import { Filter } from '../../reusable/_arrayutils'; 
 
 import '../../css/feedback.css'; 
+
+/* 
+Type: 
+- 0: Success (green) 
+- 1: Misc (blue) 
+- 2: Warning (yellow) 
+- 3: Failure (red) 
+*/ 
+type FeedbackLine = {type:number, msg:string} 
+type FeedbackHook = { 
+  getFeedbacks: () => FeedbackLine[], 
+  setFeedbacks: React.Dispatch<React.SetStateAction<FeedbackLine[]>> 
+} 
+
+export function FeedbackObj({_ref}:{_ref:React.MutableRefObject<FeedbackHook>}) { 
+  const [feedbacks, setFeedbacks] = useState([] as FeedbackLine[]); 
+  const classNames = ['success', 'note', 'warning', 'failure']; 
+  
+  useEffect(() => { 
+    _ref.current = {getFeedbacks: () => feedbacks, setFeedbacks} as FeedbackHook; 
+  }, []); 
+
+  return <ul> 
+    {feedbacks.map( (feedback,i) => { 
+      return <li key={i} className={classNames[feedback.type]}>{feedback.msg}</li> 
+    })} 
+  </ul> 
+} 
+
+
+
 
 export const feedback = { 
   value: () => [] as ICrudResponse[], 

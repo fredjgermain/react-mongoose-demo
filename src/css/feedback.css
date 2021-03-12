@@ -1,14 +1,26 @@
-.success {
-  color: green; 
-  font-weight: bold;
-}
-
-.failure {
-  color: red; 
-  font-style: italic; 
-}
-
 .optional {
   color: blue; 
   font-style: italic; 
 }
+
+.success { 
+  color: green; 
+  font-weight: bold; 
+} 
+
+.note { 
+  color: purple; 
+  font-style: italic; 
+} 
+
+.warning { 
+  color: cornflowerblue; 
+  font-style: italic; 
+} 
+
+.failure {
+  color: brown; 
+  font-style: italic; 
+}
+
+

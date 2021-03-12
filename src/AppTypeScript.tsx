@@ -8,6 +8,8 @@ import Landing from './pages/landing/landing.page';
 import Home from './pages/home/home.page'; 
 import AdminPage from './pages/admin/admin.page'; 
 import PatientPage from './pages/patient/patient.page'; 
+import { FeedbackObj } from './components/feedback/feedback.component';
+import { useEffect, useRef } from 'react';
 
 const baseUrl = `https://fjg-mongoose-heroku.herokuapp.com/api/`; 
 
@@ -20,16 +22,31 @@ export default function AppTypeScript() {
 } 
 
 
+type FeedbackLine = {type:number, msg:string} 
+type FeedbackHook = { 
+  getFeedbacks: () => FeedbackLine[], 
+  setFeedbacks: React.Dispatch<React.SetStateAction<FeedbackLine[]>> 
+} 
 // MAIN SECTION ===========================================
 function MainSection() { 
   const ready = usePreloadCollections(); 
+  const ref = useRef<any>(null); 
+
+  useEffect(() => { 
+    console.log(ref); 
+  },[]); 
 
   if(!ready) 
     return <Landing/> 
 
   return <div> 
     <Nav/> 
-    <h1> h1 title ... </h1> 
+    <FeedbackObj _ref={ref} /> 
+    <button onClick={() => ref?.current.setFeedbacks([{type:0, msg:'success !!'}] )} >Success</button> <br/> 
+    <button onClick={() => ref?.current.setFeedbacks([{type:1, msg:'note?'}] )} >Node</button> <br/> 
+    <button onClick={() => ref?.current.setFeedbacks([{type:2, msg:'warning !!'}] )} >Warning</button> <br/> 
+    <button onClick={() => ref?.current.setFeedbacks([{type:3, msg:'failure !!'}] )} >Failure</button> <br/> 
+
     <Switch> 
       <Route exact path={'/'} component={Home} /> 
       <Route path={'/admin'} component={AdminPage} /> 
@@ -40,3 +57,4 @@ function MainSection() {
     <br/> 
   </div> 
 } 
+

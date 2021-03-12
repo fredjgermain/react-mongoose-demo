@@ -1,6 +1,7 @@
 import React, { useContext } from 'react'; 
 import {QuestionnnaireContext} from '../questionnaire.page'; 
 import {PageOfPages, PagerBtn, PagerFromTo} from '../../../reusable/_pager';
+import { feedback } from '../../../components/feedback/feedback.component';
 
 
 // PAGER ==================================================
@@ -28,14 +29,21 @@ export function BtnSubmitAnswers() {
   const formIsComplete = AnswersAreComplete(); 
 
   async function SubmitAnswersAndNextPage () { 
-    await SubmitQuestionnaire(page.map(ia => ia.t)) 
-    setPageIndex(pageIndex+1) 
+    
+  }
+
+  async function SubmitAnswersFinal() { 
+    const responses = await SubmitQuestionnaire(); 
+    if(responses.every( r => r.success )) 
+      feedback.setValue(responses); // success 
+    else 
+      feedback.setValue(responses); // failure 
   }
 
   return <div> 
     {formIsComplete ? 
-      <button onClick={() => SubmitQuestionnaire()} disabled={!formIsComplete}>Submit</button>: 
-      <button onClick={() => SubmitAnswersAndNextPage()} disabled={!pageIsComplete} >Next</button> 
+      <button onClick={() => SubmitAnswersFinal()} disabled={!formIsComplete}>Submit</button>: 
+      <button onClick={() => setPageIndex(pageIndex+1)} disabled={!pageIsComplete} >Next</button> 
     } 
   </div> 
 }

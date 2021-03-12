@@ -17,7 +17,7 @@ export function PatientIdentification () {
   const setValue = (newValue:any) => Set(newValue, ['ramq']); 
 
   return <div> 
-    <h2>Patient identification</h2> 
+    <h1>Patient identification</h1> 
     <div>
       <label>Ramq:</label><Editor {...{value, setValue, ifield}}/>
       <span>{RamqIsValid(value) ? '✓' : 'x'}</span> 

@@ -21,7 +21,7 @@ export function PatientProfile() {
   
 
   return <div> 
-    <h2>Patient profile</h2> 
+    <h1>Patient profile</h1> 
     <div>
       <label>Ramq:</label><Reader {...ramq}/> <br/>
       <label>First name:</label><Editor {...firstName}/> <br/>

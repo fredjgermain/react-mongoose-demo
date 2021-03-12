@@ -5,7 +5,6 @@ import { usePatient, IUsePatient } from './hooks/usepatient.hook';
 import { PatientIdentification } from './components/patientidentification.component'; 
 import { PatientProfile } from './components/patientprofile.component'; 
 import { Questionnaire } from '../questionnaire/questionnaire.page'; 
-import { Feedback } from '../../components/feedback/feedback.component';
 
 /* 
 if profile and questionnaire are empty; display patientId page. 
@@ -24,7 +23,6 @@ export default function PatientPage() {
     <div>Appointment : {JSON.stringify(appointment)}</div> 
   */ 
   return <PatientContext.Provider value={context}> 
-    <Feedback/>
     {IsEmpty(profile) && <PatientIdentification/> } 
     {!IsEmpty(profile) && IsEmpty(appointment) && <PatientProfile/> } 
     {!IsEmpty(profile) && !IsEmpty(appointment) && <Questionnaire/> }

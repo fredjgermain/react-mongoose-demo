@@ -21,7 +21,7 @@ export const AdminContext = React.createContext({} as IUseAdmin);
 export default function AdminPage() { 
   const context = useAdmin(); 
   return <AdminContext.Provider value={context}> 
-    <h2>Admin section</h2> 
+    <h1>Admin section</h1> 
     <Feedback/>
     <CollectionSelector/> 
     {!IsEmpty(context.GetEditState(['collection'])) && <AdminTablr/>} 

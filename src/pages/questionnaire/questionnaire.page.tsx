@@ -1,7 +1,6 @@
 import React from 'react'; 
 import { useQuestionnaire, IUseQuestionnaire } from './hooks/usequestionnaire.hook'; 
 import {QuestionPage} from './components/questionpage.component'; 
-import { Feedback } from '../../components/feedback/feedback.component';
 
 export const QuestionnnaireContext = React.createContext({} as IUseQuestionnaire); 
 export function Questionnaire() { 
@@ -10,8 +9,7 @@ export function Questionnaire() {
   // Questionnaire: {JSON.stringify(questionnaire.map(q => q.answer))} 
   // <button onClick={TestResetSession}>Reset sessions</button> 
   return <QuestionnnaireContext.Provider value={context} > 
-    <h2>Questionnaire </h2> 
-    <Feedback/>
+    <h1>Questionnaire </h1> 
     <QuestionPage /> 
   </QuestionnnaireContext.Provider> 
 } 

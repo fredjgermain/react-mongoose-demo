@@ -1,7 +1,7 @@
 
 export default function Landing() {
   return <div> 
-    <h2>Heroku is waking up</h2> 
+    <h1>Heroku is waking up</h1> 
     It should not take long ... 
   </div>
 }
