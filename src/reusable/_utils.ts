@@ -4,7 +4,7 @@ import {SetSize, SetWidth, IEvent,
   OnPress, OnTab, OnEnter, 
   GetInputType, GetValueFromInput} from './utils/htmlelement.utils'; 
 
-import {IsInRange, GetDefaultValueByType, GetTypeByValue, GetDefaultValueFromIField, GetDefaultIEntry} 
+import {IsInRange, GetDefaultValueByType, GetTypeByValue, GetSelectedValuesFromOptions, GetDefaultValueFromIField, GetDefaultIEntry} 
   from './utils/valuetypetesting.utils'; 
 
 import {ParseDate, DaysPerMonth, IsLeapYear, IsToday} from './utils/date.utils'; 
@@ -17,5 +17,5 @@ export {SetSize, SetWidth,
   OnPress, OnTab, OnEnter, 
   GetInputType, GetValueFromInput} 
 
-export {IsInRange, GetDefaultValueByType, GetTypeByValue, GetDefaultValueFromIField, GetDefaultIEntry} 
+export {IsInRange, GetDefaultValueByType, GetTypeByValue, GetSelectedValuesFromOptions, GetDefaultValueFromIField, GetDefaultIEntry} 
 export {ParseDate, DaysPerMonth, IsLeapYear, IsToday} 

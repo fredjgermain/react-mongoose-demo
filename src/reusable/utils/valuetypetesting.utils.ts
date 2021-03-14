@@ -1,3 +1,5 @@
+import { Pick, ToArray } from "../_arrayutils";
+
 // TYPE VALUE TESTING ###########################
 export function GetDefaultIEntry(ifields:IField[]) { 
   let entry = {} as IEntry; 
@@ -5,6 +7,10 @@ export function GetDefaultIEntry(ifields:IField[]) {
     entry[f.accessor] = GetDefaultValueFromIField(f); 
   }); 
   return entry; 
+}
+
+export function GetSelectedValuesFromOptions(value:any, options:IOption[]) { 
+  return Pick(options, ToArray(value), (o,u) => o.value === u); 
 }
 
 export function GetDefaultValueFromIField(ifield:IField) { 

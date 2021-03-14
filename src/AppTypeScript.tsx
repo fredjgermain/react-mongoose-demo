@@ -3,6 +3,10 @@ import { Switch, Route } from 'react-router-dom';
 import { DaoContexter } from './reusable/_dao'; 
 import { usePreloadCollections } from './components/preloader.component'; 
 
+import Editor from './components/reader_editor/editor.component'; 
+import Reader from './components/reader_editor/reader.component'; 
+
+
 // Pages
 import Landing from './pages/landing/landing.page'; 
 import Home from './pages/home/home.page'; 
