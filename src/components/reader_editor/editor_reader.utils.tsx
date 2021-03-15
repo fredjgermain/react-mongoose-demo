@@ -1,3 +1,4 @@
+import { Input } from "../../reusable/_input";
 import { GetDefaultValueFromIField, GetSelectedValuesFromOptions, IsEmpty } from "../../reusable/_utils";
 
 
@@ -5,13 +6,15 @@ export type IReaderFunc = ({...props}:IReader) => JSX.Element;
 export interface IReader { 
   value:any; 
   options?:IOption[]; 
-  ifield:IField; 
-}
+  ifield:IField;    // type:IType ?? 
+} 
 
 
 export type IEditorFunc = ({...props}:IEditor) => JSX.Element; 
 export interface IEditor extends IReader { 
   editValue: (newValue:any) => void; 
+  validators?:any; 
+  placeholder?:any; 
 }
 
 
@@ -38,9 +41,8 @@ export function GetDefaultEditorFunc(ifield:IField) {
 } 
 
 function EditOne({value, editValue, options, ifield}:IEditor) { 
-  return <div>
-    Edit One
-  </div>
+
+  return <div> EDIT ONE </div>
 }
 
 function EditMany({value, editValue, options, ifield}:IEditor) { 

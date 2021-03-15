@@ -28,22 +28,32 @@ export function GetValueFromInput(event:IEvent) {
   const type = target.type; 
   if(type === 'number') 
     return target.valueAsNumber as number; 
-  if(type === 'date') 
-    return target.valueAsDate; 
+  if(type === 'date') { 
+    //console.log([target.value, target.valueAsDate]); 
+    //return target.valueAsDate; 
+    return target.value; 
+  }
   if(type === 'checkbox') 
     return target.checked as boolean; 
   return target.value; 
 } 
 
 
-// GetInputType ---------------------------------
+/* GetInputType ---------------------------------
+List of acceptable types;
+button, checkbox, color, date, datetime-local, email, image, hidden, number, password, range, reset, tel, text, time, url, week
+
+List of excluded types; file, 
+*/
 export function GetInputType(type:string) { 
-  if(type === 'number') 
-    return 'number'; 
-  if(type === 'boolean') 
-    return 'checkbox'; 
+  const acceptableTypes = ['button', 'checkbox', 'color', 'date', 'datetime-local', 'email', 'image', 'hidden', 'number', 'password', 'range', 'reset', 'tel', 'text', 'time', 'url', 'week']; 
+  
   if(type === 'string') 
     return 'text'; 
+  if(type === 'boolean') 
+    return 'checkbox'; 
+  if(acceptableTypes.includes(type)) 
+    return type; 
   return 'text'; 
 }
 
