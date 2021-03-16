@@ -11,7 +11,7 @@ export function TestInputArray({...props}:IInputArray) {
   return <div> 
     {JSON.stringify(_values)} 
     <InputArray {...{_type, _values, _defaultValue, _onChange, _width}} /> 
-  </div>
+  </div> 
 } 
 
 
