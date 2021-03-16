@@ -6,7 +6,7 @@ export interface IInputSelect {
   _value:any; 
   _onChange: (newValues:any[]) => void; 
   _options: IOption[]; 
-  _multiple: boolean; 
+  _multiple?: boolean; 
   _width?: (value:any) => number; 
 } 
 
@@ -17,8 +17,7 @@ export interface IUseSelect extends IInputSelect {
   GetSelection: () => IOption[]; 
   //Toggle:IUseToggle<HTMLDivElement>; 
 } 
-export function useInputSelect({_value, _options, _onChange, _multiple, _width}:IInputSelect):IUseSelect { 
-  //const Toggle = useToggle<HTMLDivElement>(true); 
+export function useInputSelect({_value, _options = [], _onChange, _multiple = false, _width}:IInputSelect):IUseSelect {   
 
   // SelectValue ................................
   function SelectValue (newValue:any) { 

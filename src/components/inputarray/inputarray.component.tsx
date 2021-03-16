@@ -57,10 +57,9 @@ function useInputArray({...props}:IInputArray):IUseInputArray {
 
 //interface IProps extends IInputArray, React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> {} 
 export const InputArrayContext = React.createContext({} as IUseInputArray); 
-export function InputArray({...props}:IInputArray) { 
+export default function InputArray({...props}:IInputArray) { 
   const context = useInputArray(props); 
 
-  console.log(context._values); 
   return <InputArrayContext.Provider value={context} > 
     {context._values.map( (e,i) => { 
       return <div key={i} > 

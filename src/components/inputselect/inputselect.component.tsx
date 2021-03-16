@@ -18,7 +18,7 @@ export function TestInputSelect({...props}:IInputSelect) {
 
 
 export const SelectContext = React.createContext({} as IUseSelect); 
-export function InputSelect({...props}:IInputSelect) { 
+export default function InputSelect({...props}:IInputSelect) { 
   const context = useInputSelect(props); 
 
   const {toggle, ToggleBtnAction, toggleTarget, Toggle} = useToggle<HTMLDivElement>(true); 

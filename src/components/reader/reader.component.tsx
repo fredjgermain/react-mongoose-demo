@@ -1,4 +1,3 @@
-import { Input } from "../../reusable/_input";
 import { GetDefaultValueFromIField, GetSelectedValuesFromOptions, IsEmpty } from "../../reusable/_utils";
 
 
@@ -8,15 +7,9 @@ export interface IReader {
   options?:IOption[]; 
   ifield:IField;    // type:IType ?? 
 } 
-
-
-export type IEditorFunc = ({...props}:IEditor) => JSX.Element; 
-export interface IEditor extends IReader { 
-  editValue: (newValue:any) => void; 
-  validators?:any; 
-  placeholder?:any; 
-}
-
+interface IProps extends IReader { 
+  func:IReaderFunc; 
+} 
 
 export function GetReadValue(value:any, options:IOption[], ifield:IField) { 
   return IsEmpty(options) ? 
@@ -32,30 +25,13 @@ export function GetDefaultReaderFunc(ifield:IField) {
   return ReadOne; 
 } 
 
-export function GetDefaultEditorFunc(ifield:IField) { 
-  if(ifield.isArray) 
-    return EditMany; 
-  if(ifield.isMixed) 
-    return EditMixed; 
-  return EditOne; 
+export default function Reader({ifield, options=[], ...props}:IProps) { 
+  const value = GetReadValue(props.value, options, ifield); 
+  props.func = props.func ?? GetDefaultReaderFunc(ifield); 
+  return <props.func {...{value, options, ifield}} /> 
 } 
 
-function EditOne({value, editValue, options, ifield}:IEditor) { 
 
-  return <div> EDIT ONE </div>
-}
-
-function EditMany({value, editValue, options, ifield}:IEditor) { 
-  return <div>
-    Edit Many
-  </div>
-}
-
-function EditMixed({value, editValue, options, ifield}:IEditor) { 
-  return <div>
-    Edit Mixed
-  </div>
-}
 
 
 
