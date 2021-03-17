@@ -5,29 +5,6 @@ import { ToArray } from '../../reusable/_arrayutils';
 import { IsEmpty } from '../../reusable/_utils'; 
 
 
-
-function FeedbackSetter({feedbackRef}:{feedbackRef:React.MutableRefObject<GetSet>}) { 
-  return <div> 
-    <button onClick={() => feedbackRef.current?.Set([{type:0, msg:'success !!'}] )} >Success</button> <br/> 
-    <button onClick={() => feedbackRef.current?.Set([{type:1, msg:'note?'}] )} >Note</button> <br/> 
-    <button onClick={() => feedbackRef.current?.Set([{type:2, msg:'warning !!'}] )} >Warning</button> <br/> 
-    <button onClick={() => feedbackRef.current?.Set([{type:3, msg:'failure !!'}] )} >Failure</button> <br/> 
-  </div> 
-}
-
-export function TestFeedback({args}:{args:any}) { 
-  const feedbackRef = useRef<GetSet>({} as GetSet);
-
-  return <div>
-    <FeedbackComponent {...{feedbackRef}}> 
-      <FeedbackLines/> 
-    </FeedbackComponent> 
-
-    <FeedbackSetter {...{feedbackRef}} />
-  </div> 
-}
-
-
 // Feedback =============================================== 
 export type GetSet = { 
   Get: () => any; 
@@ -41,7 +18,6 @@ export function FeedbackComponent( {feedbackRef, children}:React.PropsWithChildr
 
   feedbackRef.current.Get = () => value; 
   feedbackRef.current.Set = (newValue:any) => setValue(newValue); 
-
 
   return <FeedbackContext.Provider value={{Get:() => value, Set:(newValue:any) => setValue(newValue)}}> 
     {children} 
