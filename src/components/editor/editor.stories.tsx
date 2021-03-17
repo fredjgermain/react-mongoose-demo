@@ -24,7 +24,6 @@ EditorString.args = {
   editValue: (newValue:any) => console.log(newValue)  
 }
 
-
 export const EditorBool = Template.bind({}) 
 EditorBool.args = { 
   value:false, 

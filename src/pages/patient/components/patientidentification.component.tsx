@@ -1,5 +1,5 @@
-import React, { useContext, useState } from 'react'; 
-import { Editor, Reader } from '../../../reusable/_input'; 
+import { useContext } from 'react'; 
+import { Editor } from '../../../reusable/_input'; 
 import { PatientContext } from '../patient.page'; 
 
 import { DaoContext } from '../../../reusable/_dao'; 

@@ -12,7 +12,7 @@ import Landing from './pages/landing/landing.page';
 import Home from './pages/home/home.page'; 
 import AdminPage from './pages/admin/admin.page'; 
 import PatientPage from './pages/patient/patient.page'; 
-import { FeedbackObj } from './components/feedback/feedback.component';
+import FeedbackObj from './components/feedback/feedback.component';
 import { useEffect, useRef } from 'react';
 
 const baseUrl = `https://fjg-mongoose-heroku.herokuapp.com/api/`; 
@@ -34,7 +34,7 @@ type FeedbackHook = {
 // MAIN SECTION ===========================================
 function MainSection() { 
   const ready = usePreloadCollections(); 
-  const ref = useRef<any>(null); 
+  const ref = useRef<FeedbackHook>({} as FeedbackHook); 
 
   useEffect(() => { 
     console.log(ref); 
@@ -46,10 +46,11 @@ function MainSection() {
   return <div> 
     <Nav/> 
     <FeedbackObj _ref={ref} /> 
-    <button onClick={() => ref?.current.setFeedbacks([{type:0, msg:'success !!'}] )} >Success</button> <br/> 
-    <button onClick={() => ref?.current.setFeedbacks([{type:1, msg:'note?'}] )} >Node</button> <br/> 
-    <button onClick={() => ref?.current.setFeedbacks([{type:2, msg:'warning !!'}] )} >Warning</button> <br/> 
-    <button onClick={() => ref?.current.setFeedbacks([{type:3, msg:'failure !!'}] )} >Failure</button> <br/> 
+    
+    <button onClick={() => ref.current?.setFeedbacks([{type:0, msg:'success !!'}] )} >Success</button> <br/> 
+    <button onClick={() => ref.current?.setFeedbacks([{type:1, msg:'note?'}] )} >Node</button> <br/> 
+    <button onClick={() => ref.current?.setFeedbacks([{type:2, msg:'warning !!'}] )} >Warning</button> <br/> 
+    <button onClick={() => ref.current?.setFeedbacks([{type:3, msg:'failure !!'}] )} >Failure</button> <br/> 
 
     <Switch> 
       <Route exact path={'/'} component={Home} /> 

@@ -1,6 +1,6 @@
-import React, { useContext, useState } from 'react'; 
+import { useContext } from 'react'; 
 import { Editor, Reader } from '../../../reusable/_input'; 
-import { IsEmpty, GetValueAt } from '../../../reusable/_utils'; 
+import { IsEmpty } from '../../../reusable/_utils'; 
 import { PatientContext } from '../patient.page'; 
 
 import { DaoContext } from '../../../reusable/_dao'; 

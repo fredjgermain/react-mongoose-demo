@@ -1,36 +1,75 @@
-import React, { useEffect, useState } from 'react'; 
+import React, { useCallback, useContext, useEffect, useRef, useState } from 'react'; 
 import { Filter } from '../../reusable/_arrayutils'; 
 
 import '../../css/feedback.css'; 
+import { IsEmpty } from '../../reusable/_utils';
 
-/* 
-Type: 
-- 0: Success (green) 
-- 1: Misc (blue) 
-- 2: Warning (yellow) 
-- 3: Failure (red) 
-*/ 
+
 type FeedbackLine = {type:number, msg:string} 
-type FeedbackHook = { 
-  getFeedbacks: () => FeedbackLine[], 
-  setFeedbacks: React.Dispatch<React.SetStateAction<FeedbackLine[]>> 
+export type FeedbackHook = { 
+  getFeedbacks: () => FeedbackLine[]; 
+  setFeedbacks: (newValue:FeedbackLine[]) => void; 
 } 
 
-export function FeedbackObj({_ref}:{_ref:React.MutableRefObject<FeedbackHook>}) { 
-  const [feedbacks, setFeedbacks] = useState([] as FeedbackLine[]); 
+
+
+// Feedback =============================================== 
+type GetSetFeedback = { 
+  getFeedbacks: () => any; 
+  setFeedbacks: (newValue:any) => void; 
+}
+export function useFeedback() { 
+  return useRef<GetSetFeedback>({} as GetSetFeedback); 
+} 
+
+export const FeedbackContext = React.createContext({} as GetSetFeedback); 
+export function FeedbackComponent( {feedbackref, children}:React.PropsWithChildren<{feedbackref:React.MutableRefObject<FeedbackHook>}> ) { 
+  const [value, setValue] = useState({} as any); 
+
+  feedbackref.current = { 
+    getFeedbacks: () => value, 
+    setFeedbacks: useCallback((newValue:any) => setValue(newValue), []) 
+  } 
+
+  return <FeedbackContext.Provider value={{...feedbackref.current}}> 
+    {children} 
+  </FeedbackContext.Provider> 
+} 
+
+export function FeedbackLines() { 
+  const {getFeedbacks} = useContext(FeedbackContext); 
+  const value:FeedbackLine[] = IsEmpty(getFeedbacks()) ? []: getFeedbacks(); 
   const classNames = ['success', 'note', 'warning', 'failure']; 
-  
-  useEffect(() => { 
-    _ref.current = {getFeedbacks: () => feedbacks, setFeedbacks} as FeedbackHook; 
-  }, []); 
 
   return <ul> 
-    {feedbacks.map( (feedback,i) => { 
+    {value.map( (feedback,i) => { 
       return <li key={i} className={classNames[feedback.type]}>{feedback.msg}</li> 
     })} 
   </ul> 
 } 
 
+
+// Feedback hook ========================================== 
+
+/*export type FeedbackHook = { 
+  getFeedbacks: () => FeedbackLine[], 
+  setFeedbacks: React.Dispatch<React.SetStateAction<FeedbackLine[]>> 
+} */
+
+export default function FeedbackObj({_ref}:{_ref:React.MutableRefObject<FeedbackHook>}) { 
+  const [value, setValue] = useState([] as FeedbackLine[]); 
+  const classNames = ['success', 'note', 'warning', 'failure']; 
+  
+  useEffect(() => { 
+    _ref.current = {getFeedbacks: () => value, setFeedbacks: (newValue:FeedbackLine[]) => setValue(newValue)} as FeedbackHook; 
+  }, []); 
+
+  return <ul> 
+    {value.map( (feedback,i) => { 
+      return <li key={i} className={classNames[feedback.type]}>{feedback.msg}</li> 
+    })} 
+  </ul> 
+} 
 
 
 
