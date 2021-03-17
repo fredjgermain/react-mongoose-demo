@@ -1,44 +1,59 @@
-import React, { useCallback, useContext, useEffect, useRef, useState } from 'react'; 
-import { Filter } from '../../reusable/_arrayutils'; 
+import React, { useContext, useRef, useState } from 'react'; 
 
 import '../../css/feedback.css'; 
-import { IsEmpty } from '../../reusable/_utils';
+import { ToArray } from '../../reusable/_arrayutils'; 
+import { IsEmpty } from '../../reusable/_utils'; 
 
 
-type FeedbackLine = {type:number, msg:string} 
-export type FeedbackHook = { 
-  getFeedbacks: () => FeedbackLine[]; 
-  setFeedbacks: (newValue:FeedbackLine[]) => void; 
-} 
 
+function FeedbackSetter({feedbackRef}:{feedbackRef:React.MutableRefObject<GetSet>}) { 
+  return <div> 
+    <button onClick={() => feedbackRef.current?.Set([{type:0, msg:'success !!'}] )} >Success</button> <br/> 
+    <button onClick={() => feedbackRef.current?.Set([{type:1, msg:'note?'}] )} >Note</button> <br/> 
+    <button onClick={() => feedbackRef.current?.Set([{type:2, msg:'warning !!'}] )} >Warning</button> <br/> 
+    <button onClick={() => feedbackRef.current?.Set([{type:3, msg:'failure !!'}] )} >Failure</button> <br/> 
+  </div> 
+}
+
+export function TestFeedback({args}:{args:any}) { 
+  const feedbackRef = useRef<GetSet>({} as GetSet);
+
+  return <div>
+    <FeedbackComponent {...{feedbackRef}}> 
+      <FeedbackLines/> 
+    </FeedbackComponent> 
+
+    <FeedbackSetter {...{feedbackRef}} />
+  </div> 
+}
 
 
 // Feedback =============================================== 
-type GetSetFeedback = { 
-  getFeedbacks: () => any; 
-  setFeedbacks: (newValue:any) => void; 
+export type GetSet = { 
+  Get: () => any; 
+  Set: (newValue:any) => void; 
 }
-export function useFeedback() { 
-  return useRef<GetSetFeedback>({} as GetSetFeedback); 
-} 
 
-export const FeedbackContext = React.createContext({} as GetSetFeedback); 
-export function FeedbackComponent( {feedbackref, children}:React.PropsWithChildren<{feedbackref:React.MutableRefObject<FeedbackHook>}> ) { 
+export const FeedbackContext = React.createContext({} as GetSet); 
+export function FeedbackComponent( {feedbackRef, children}:React.PropsWithChildren<{feedbackRef:React.MutableRefObject<GetSet>}> ) { 
+  console.log('component'); 
   const [value, setValue] = useState({} as any); 
 
-  feedbackref.current = { 
-    getFeedbacks: () => value, 
-    setFeedbacks: useCallback((newValue:any) => setValue(newValue), []) 
-  } 
+  feedbackRef.current.Get = () => value; 
+  feedbackRef.current.Set = (newValue:any) => setValue(newValue); 
 
-  return <FeedbackContext.Provider value={{...feedbackref.current}}> 
+
+  return <FeedbackContext.Provider value={{Get:() => value, Set:(newValue:any) => setValue(newValue)}}> 
     {children} 
+    <div>Set feedback: {JSON.stringify(feedbackRef.current.Get())}</div> 
   </FeedbackContext.Provider> 
 } 
 
+type FeedbackLine = {type:number, msg:string} 
 export function FeedbackLines() { 
-  const {getFeedbacks} = useContext(FeedbackContext); 
-  const value:FeedbackLine[] = IsEmpty(getFeedbacks()) ? []: getFeedbacks(); 
+  console.log('Feedbacklines'); 
+  const {Get} = useContext(FeedbackContext); 
+  const value:FeedbackLine[] = IsEmpty(Get()) ? [] : ToArray(Get()); 
   const classNames = ['success', 'note', 'warning', 'failure']; 
 
   return <ul> 
@@ -49,82 +64,47 @@ export function FeedbackLines() {
 } 
 
 
-// Feedback hook ========================================== 
-
-/*export type FeedbackHook = { 
-  getFeedbacks: () => FeedbackLine[], 
-  setFeedbacks: React.Dispatch<React.SetStateAction<FeedbackLine[]>> 
-} */
-
-export default function FeedbackObj({_ref}:{_ref:React.MutableRefObject<FeedbackHook>}) { 
-  const [value, setValue] = useState([] as FeedbackLine[]); 
-  const classNames = ['success', 'note', 'warning', 'failure']; 
-  
-  useEffect(() => { 
-    _ref.current = {getFeedbacks: () => value, setFeedbacks: (newValue:FeedbackLine[]) => setValue(newValue)} as FeedbackHook; 
-  }, []); 
-
-  return <ul> 
-    {value.map( (feedback,i) => { 
-      return <li key={i} className={classNames[feedback.type]}>{feedback.msg}</li> 
-    })} 
-  </ul> 
-} 
+/// ######################################################
 
 
-
-export const feedback = { 
-  value: () => [] as ICrudResponse[], 
-  setValue:(responses:ICrudResponse[]) => console.log(responses), 
-}; 
-
-export function Feedback() { 
-  const [value, setValue] = useState([] as ICrudResponse[]); 
-  feedback.value = () => value; 
-  feedback.setValue = (responses:ICrudResponse[]) => setValue(responses); 
-
-  // Feedback !! : {JSON.stringify(value)} <br/> 
-  // <button onClick={() => feedback.setValue([] as ICrudResponse[]) }>Reset Feedback</button> 
-  return <DisplayFeedBack responses={value} /> 
-} 
-
-
-function DisplayFeedBack({responses}:{responses:ICrudResponse[]}) { 
-  const actionType = responses[0]?.actionType; 
-  const [successes, failures] = Filter(responses, r => r.success); 
-  const errMsgs = ListErrMsgs(failures); 
+export function TestParentChild({args}:{args:any}) { 
+  const _ref = useRef<GetSet>({} as GetSet); 
 
   return <div> 
-    {successes.length > 0 && <h4 className={'success'}>{SuccessesFeedback(actionType, successes.length)}</h4>} <br/> 
-    {failures.length > 0 && <div className={'failure'}>
-      <h4>{FailuresFeedback(actionType, failures.length)}</h4>
-      <ul>
-        {errMsgs.map( e => { 
-          return <li key={e}>{e}</li> 
-        })} 
-      </ul> 
-    </div>}
-  </div> 
-} 
+    <Parent {...{_ref}} > 
+      <Child /> 
+    </Parent> 
+    <button onClick={() => _ref.current.Set(_ref.current.Get()+1)}>+1</button> 
+    <button onClick={() => _ref.current.Set(_ref.current.Get()-1)}>-1</button> 
+  </div>
+}
 
-function SuccessesFeedback(actionType:string, n:number) { 
-  return n > 1 ? 
-    `${n} items have been ${actionType}d`: 
-    `${n} item has been ${actionType}d`; 
-} 
+function Setter({setValue}:{setValue:(newValue:any) => void}) { 
 
-function FailuresFeedback(actionType:string, n:number) { 
-  return n > 1 ? 
-    `${n} items have failed to ${actionType}d`: 
-    `${n} item has failed to ${actionType}d`; 
-} 
+  return <div> 
+    <button onClick={() => setValue((prev:any) => prev+1)}>+1</button> 
+    <button onClick={() => setValue((prev:any) => prev-1)}>-1</button> 
+  </div>
+}
 
-function ListErrMsgs(failures:ICrudResponse[]) {
-  let errMsg:string[] = []; 
-  failures.forEach( f => { 
-    const errs = f.err.map(e => JSON.stringify(e)); 
-    errMsg = [...errMsg, ...(errs ?? [])]; 
-  }) 
-  const [filtered] = Filter(errMsg, (e, msg) => !msg.includes(e)); 
-  return filtered; 
+const ParentContext = React.createContext({} as {value:number, setValue:React.Dispatch<React.SetStateAction<number>>});
+
+function Parent({_ref, children}:React.PropsWithChildren<{_ref:React.MutableRefObject<GetSet>}>) { 
+  const [value, setValue] = useState(0 as number); 
+
+  _ref.current.Get = () => value; 
+  _ref.current.Set = (newValue:any) => setValue(newValue); 
+
+  return <div>
+    <ParentContext.Provider value={{value, setValue}}> 
+      value from parent {value} <br/> 
+      {children} 
+    </ParentContext.Provider> 
+    <Setter {...{setValue}}/> 
+  </div>
+}
+
+function Child() { 
+  const {value} = useContext(ParentContext); 
+  return <div>value from child {value}</div> 
 } 

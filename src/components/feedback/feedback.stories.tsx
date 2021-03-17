@@ -1,41 +1,58 @@
-import React, {useRef, useState } from 'react'; 
-import FeedbackObj, { FeedbackHook, FeedbackComponent, useFeedback, FeedbackLines } from './feedback.component'; 
-import InputArray from '../inputarray/inputarray.component'; 
+import React, { useContext, useRef } from 'react'; 
+import { TestParentChild, TestFeedback } from './feedback.component'; 
 
 
 export default { 
-  title: 'Input/Feedback', 
-  component: FeedbackComponent, 
+  title: 'Feedback', 
+  component: TestParentChild, 
 } 
 
+let Template = args => <TestParentChild {...args} /> 
+export const Test_ParentChild = Template.bind({}) 
+Test_ParentChild.args = { 
 
-type GetSetFeedback = { 
-  getFeedbacks: () => any; 
-  setFeedbacks: (newValue:any) => void; 
 }
 
-function TestFeedback() { 
-  const feedbackref = useRef<GetSetFeedback>({} as GetSetFeedback); 
-  //const feedbackref = useFeedback(); 
 
+Template = args => <TestFeedback {...args} /> 
+export const Test_Feedback = Template.bind({}) 
+Test_Feedback.args = { 
+
+}
+
+/*
+function FeedbackSetter({feedbackRef}:{feedbackRef:React.MutableRefObject<GetSet>}) { 
   return <div> 
-    <FeedbackComponent {...{feedbackref}} >
-      <FeedbackLines/> 
-    </FeedbackComponent> <br/> 
-    <button onClick={() => feedbackref.current?.setFeedbacks([{type:0, msg:'success !!'}] )} >Success</button> <br/> 
-    <button onClick={() => feedbackref.current?.setFeedbacks([{type:1, msg:'note?'}] )} >Note</button> <br/> 
-    <button onClick={() => feedbackref.current?.setFeedbacks([{type:2, msg:'warning !!'}] )} >Warning</button> <br/> 
-    <button onClick={() => feedbackref.current?.setFeedbacks([{type:3, msg:'failure !!'}] )} >Failure</button> <br/> 
-
+    <button onClick={() => feedbackRef.current?.Set([{type:0, msg:'success !!'}] )} >Success</button> <br/> 
+    <button onClick={() => feedbackRef.current?.Set([{type:1, msg:'note?'}] )} >Note</button> <br/> 
+    <button onClick={() => feedbackRef.current?.Set([{type:2, msg:'warning !!'}] )} >Warning</button> <br/> 
+    <button onClick={() => feedbackRef.current?.Set([{type:3, msg:'failure !!'}] )} >Failure</button> <br/> 
   </div> 
 } 
 
-const Template = args => <TestFeedback {...args} /> 
+function FeedbackTemplate({...props}:{args:any, feedbackchild: any, feedbacksetter: any}) { 
+  const feedbackRef = useRef<GetSet>({} as GetSet); 
 
-export const Feedback_first = Template.bind({}) 
-Feedback_first.args = {} 
+  return <div> 
+    <FeedbackComponent {...{feedbackRef}} > 
+      {props.feedbackchild} 
+    </FeedbackComponent> <br/> 
+    <props.feedbacksetter {...{feedbackRef}} /> 
+  </div> 
+} 
 
+const Template = args => <FeedbackTemplate {...args} /> 
 
+export const Feedback_Lines = Template.bind({}) 
+Feedback_Lines.args = { 
+  feedbackchild: <FeedbackLines/>, 
+  feedbacksetter: FeedbackSetter
+} 
+
+/*export const Feedback_Crud = Template.bind({}) 
+Feedback_Crud.args = { 
+  children: <
+}*/
 /*
 function TestFeedback({args}:any) { 
   const [_values, _setValues] = useState([]); 
