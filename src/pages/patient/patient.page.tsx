@@ -11,6 +11,7 @@ if profile and questionnaire are empty; display patientId page.
 if questionnaire is empty; display patientProfile page to createUpdate profile. 
 if questionnaire is not empty; display questionnaire. 
 */ 
+
 export const PatientContext = React.createContext({} as IUsePatient); 
 export default function PatientPage() { 
   console.log('patient page'); 

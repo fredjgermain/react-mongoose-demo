@@ -1,11 +1,14 @@
-import React, { useContext } from 'react'; 
+import React from 'react'; 
 import { Filter, ToArray } from '../../reusable/_arrayutils'; 
-import { FeedbackContext } from './feedback.component'; 
+import { useRefGetSet, GetSet } from './feedback.component'; 
 import { IsEmpty } from '../../reusable/_utils'; 
 
 
-export function FeedbackCruds() { 
-  const {Get} = useContext(FeedbackContext); 
+/*export function FeedbackCruds() { 
+  const {Get} = useContext(FeedbackContext); */
+
+export function FeedbackCruds({feedbackRef}:{feedbackRef:React.MutableRefObject<GetSet>}) { 
+  const {Get} = useRefGetSet(feedbackRef); 
   const responses:ICrudResponse[] = IsEmpty(Get()) ? []: ToArray(Get()); 
   const actionType = responses[0]?.actionType; 
 

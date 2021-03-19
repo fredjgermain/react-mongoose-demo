@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from 'react'; 
+import React, { useState } from 'react'; 
 
 import '../../css/feedback.css'; 
 import { ToArray } from '../../reusable/_arrayutils'; 
@@ -9,26 +9,32 @@ import { IsEmpty } from '../../reusable/_utils';
 export type GetSet = { 
   Get: () => any; 
   Set: (newValue:any) => void; 
-}
-
-export const FeedbackContext = React.createContext({} as GetSet); 
-export function FeedbackComponent( {feedbackRef, children}:React.PropsWithChildren<{feedbackRef:React.MutableRefObject<GetSet>}> ) { 
-  console.log('component'); 
-  const [value, setValue] = useState({} as any); 
-
-  feedbackRef.current.Get = () => value; 
-  feedbackRef.current.Set = (newValue:any) => setValue(newValue); 
-
-  return <FeedbackContext.Provider value={{Get:() => value, Set:(newValue:any) => setValue(newValue)}}> 
-    {children} 
-    <div>Set feedback: {JSON.stringify(feedbackRef.current.Get())}</div> 
-  </FeedbackContext.Provider> 
 } 
 
+
+export function useRefGetSet(feedbackRef:React.MutableRefObject<GetSet>) { 
+  const [value, setValue] = useState({} as any); 
+  feedbackRef.current = {
+    Get: () => value, 
+    Set: (newValue:any) => setValue(newValue), 
+  }
+  const Get = () => value; 
+  const Set = (newValue:any) => setValue(newValue); 
+  return {Get, Set} 
+} 
+
+
+export function TestFeedback({feedbackRef}:{feedbackRef:React.MutableRefObject<GetSet>}) { 
+  const {Get} = useRefGetSet(feedbackRef); 
+  return <div> 
+    {JSON.stringify(Get())} 
+  </div> 
+} 
+
+
 type FeedbackLine = {type:number, msg:string} 
-export function FeedbackLines() { 
-  console.log('Feedbacklines'); 
-  const {Get} = useContext(FeedbackContext); 
+export function FeedbackLines({feedbackRef}:{feedbackRef:React.MutableRefObject<GetSet>}) { 
+  const {Get} = useRefGetSet(feedbackRef);  
   const value:FeedbackLine[] = IsEmpty(Get()) ? [] : ToArray(Get()); 
   const classNames = ['success', 'note', 'warning', 'failure']; 
 
@@ -40,47 +46,18 @@ export function FeedbackLines() {
 } 
 
 
-/// ######################################################
 
 
-export function TestParentChild({args}:{args:any}) { 
-  const _ref = useRef<GetSet>({} as GetSet); 
 
-  return <div> 
-    <Parent {...{_ref}} > 
-      <Child /> 
-    </Parent> 
-    <button onClick={() => _ref.current.Set(_ref.current.Get()+1)}>+1</button> 
-    <button onClick={() => _ref.current.Set(_ref.current.Get()-1)}>-1</button> 
-  </div>
-}
+// export const FeedbackContext = React.createContext({} as GetSet); 
+// export function FeedbackComponent( {feedbackRef, children}:React.PropsWithChildren<{feedbackRef:React.MutableRefObject<GetSet>}> ) { 
+//   console.log('component'); 
+//   const context = useRefGetSet(feedbackRef); 
+//   return <FeedbackContext.Provider value={context}> 
+//     {children} 
+//     <div>Set feedback: {JSON.stringify(feedbackRef.current.Get())}</div> 
+//   </FeedbackContext.Provider> 
+// } 
 
-function Setter({setValue}:{setValue:(newValue:any) => void}) { 
 
-  return <div> 
-    <button onClick={() => setValue((prev:any) => prev+1)}>+1</button> 
-    <button onClick={() => setValue((prev:any) => prev-1)}>-1</button> 
-  </div>
-}
 
-const ParentContext = React.createContext({} as {value:number, setValue:React.Dispatch<React.SetStateAction<number>>});
-
-function Parent({_ref, children}:React.PropsWithChildren<{_ref:React.MutableRefObject<GetSet>}>) { 
-  const [value, setValue] = useState(0 as number); 
-
-  _ref.current.Get = () => value; 
-  _ref.current.Set = (newValue:any) => setValue(newValue); 
-
-  return <div>
-    <ParentContext.Provider value={{value, setValue}}> 
-      value from parent {value} <br/> 
-      {children} 
-    </ParentContext.Provider> 
-    <Setter {...{setValue}}/> 
-  </div>
-}
-
-function Child() { 
-  const {value} = useContext(ParentContext); 
-  return <div>value from child {value}</div> 
-} 

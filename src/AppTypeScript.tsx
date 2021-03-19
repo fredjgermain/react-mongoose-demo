@@ -23,12 +23,6 @@ export default function AppTypeScript() {
   </DaoContexter> 
 } 
 
-
-type FeedbackLine = {type:number, msg:string} 
-type FeedbackHook = { 
-  getFeedbacks: () => FeedbackLine[], 
-  setFeedbacks: React.Dispatch<React.SetStateAction<FeedbackLine[]>> 
-} 
 // MAIN SECTION ===========================================
 function MainSection() { 
   const ready = usePreloadCollections(); 

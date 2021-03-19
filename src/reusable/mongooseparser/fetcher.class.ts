@@ -66,11 +66,11 @@ export class Fetcher {
 
   // Delete ...............................................
   /* Sends an array of objects with the only property being '_id' ... [{_id}] */
-  public async Delete(modelName:string, entries:IEntry[]): Promise<ICrudResponse[]> { 
+  public async Delete(accessor:string, entries:IEntry[]): Promise<ICrudResponse[]> { 
     const toDelete = entries.map(e => { 
       const {_id, ...data} = e; 
       return {_id}; 
     }); 
-    return (await axios.put(this.baseUrl+'delete/'+modelName, toDelete)).data; 
+    return (await axios.put(this.baseUrl+'delete/'+accessor, toDelete)).data; 
   } 
 } 

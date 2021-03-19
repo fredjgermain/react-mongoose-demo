@@ -80,6 +80,10 @@ function GetDefaultValue(type:string, options:any):any {
 } 
 
 
+
+
+
+
 function GetValidators(field:IMongooseField):IValidator[] { 
   const required = (value:any) => { 
     return !IsEmpty(value); 
@@ -91,7 +95,11 @@ function GetValidators(field:IMongooseField):IValidator[] {
     return true; 
   } 
 
-  const range = (value:any) => { 
+  const arrayLength = (value:any[]) => { 
+    return IsInRange(value.length, field.options['minelements'], field.options['maxelements']) 
+  } 
+
+  const numberRange = (value:any) => { 
     return IsInRange(value, field.options['min'], field.options['max']); 
   } 
 
@@ -101,7 +109,9 @@ function GetValidators(field:IMongooseField):IValidator[] {
   if(field.options['regex']) 
     validators.push(regex); 
   if(field.options['min'] || field.options['max']) 
-    validators.push(range); 
+    validators.push(numberRange); 
+  if(field.options['minelements'] || field.options['maxelements']) 
+    validators.push(arrayLength); 
   return validators; 
 } 
 

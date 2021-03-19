@@ -76,6 +76,15 @@ export class DAO {
     }); 
   } 
 
+  // Validate --------------------------------------------- 
+  public Validate(collection:string, value:{[key:string]:any}):boolean[] { 
+    const ifieldAccessors = Object.keys(value); 
+    const ifields = this.GetIFields(collection, ifieldAccessors); 
+    return ifields.map( ifield => { 
+      return ifield.validators?.every( valid => valid(value[ifield.accessor]) ) ?? true; 
+    }) 
+  } 
+
   // COLLECTIONS -------------------------------------------
   public async Collections(accessors?:string[]):Promise<ICrudResponse[]> { 
     const responses = (await this.crud.Collections(accessors)) as ICrudResponse[]; 
@@ -93,7 +102,6 @@ export class DAO {
         this.collections.push(newCol); 
     }) 
   } 
-
 
   /*Create Or Update ---------------------------------- 
   Create entries satisfying a given predicate. 
