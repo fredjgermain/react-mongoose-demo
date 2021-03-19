@@ -1,39 +1,60 @@
 import {useMemo} from 'react'; 
-import { DAO, ICrud } from '../_dao'; 
+import { DAO, ICrud, IDao } from '../_dao'; 
 import {Fetcher} from '../_mongooseparser'; 
 
 
 export interface IUseDao { 
   // Get collections, entry, fields data 
-  GetICollections:(accessors?:string[]) => ICollection[]; 
-  GetIFields:(accessor:string, fields?:string[]) => IField[]; 
-  GetIEntries:(accessor:string, ids?:string[]) => IEntry[]; 
-  GetDefaultIEntry:(accessor:string) => IEntry; 
+  //GetICollections:(accessors?:string[]) => ICollection[]; 
+  GetICollections(accessors?: string[] | undefined): ICollection[]
+  GetIFields(accessor: string, fields?: string[] | undefined): IField[]
+  GetIEntries(accessor: string, ids?: string[] | undefined): IEntry[]
+  GetDefaultIEntry(accessor: string): IEntry
+
+  //GetIFields:(accessor:string, fields?:string[]) => IField[]; 
+  //GetIEntries:(accessor:string, ids?:string[]) => IEntry[]; 
+  //GetDefaultIEntry:(accessor:string) => IEntry; 
   
   // Get foreign elements
-  GetForeignElements: (ifield:IField) => {foreignCollection:ICollection|undefined, abbrevField:IField|undefined}, 
+  /*GetForeignElements: (ifield:IField) => {foreignCollection:ICollection|undefined, abbrevField:IField|undefined}, 
 
   // Get options 
-  GetIOptions: (ifield:IField) => IOption[]; 
+  GetIOptions: (ifield:IField) => IOption[]; */
 
   // load remote collections. 
   Collections:(accessors?:string[]) => Promise<ICrudResponse[]>; 
 
   // Crud functionalities. 
-  CreateUpdate: (accessor:string, entries:IEntry[], predicate?:(entry:IEntry)=>boolean) => Promise<ICrudResponse[]>; 
+  /*CreateUpdate: (accessor:string, entries:IEntry[], predicate?:(entry:IEntry)=>boolean) => Promise<ICrudResponse[]>; 
   Create: (accessor:string, entries:IEntry[]) => Promise<ICrudResponse[]>; 
   Read: (accessor:string, id?:string[]) => Promise<ICrudResponse[]>; 
   Update: (accessor:string, entries:IEntry[]) => Promise<ICrudResponse[]>; 
-  Delete: (accessor:string, entries:IEntry[]) => Promise<ICrudResponse[]>; 
+  Delete: (accessor:string, entries:IEntry[]) => Promise<ICrudResponse[]>; */
 
   // Validate 
-  Validate: (collectionAccessor:string, ifieldAccessor:string, value:any) => boolean; 
+  //Validate: (collection:string, value:{[key:string]:any}) => boolean[]; 
 }
 
-export function useDao(baseUrl:string):IUseDao { 
-  const Dao = useMemo(() => new DAO(new Fetcher(baseUrl) as ICrud), []); 
+/*export function useDao(baseUrl:string):IUseDao { 
+  const Dao = useMemo(() => new DAO(new Fetcher(baseUrl) as ICrud), []); */
+export function useDao(dao:DAO):IDao { 
+  return useMemo(() => dao, []); 
+}
 
-  const GetICollections = (accessors?:string[]) => Dao.GetICollections(accessors); 
+  /*const {GetICollections, GetIFields, GetIEntries, GetDefaultIEntry, 
+    GetIOptions, GetForeignElements, Validate, 
+    CreateUpdate, Create, Read, Update, Delete} = Dao;
+
+  
+
+  // Collections 
+  const Collections = async (accessors?:string[]) => Dao.Collections(accessors); 
+
+  return {GetICollections, GetIFields, GetIEntries, GetDefaultIEntry, 
+    GetIOptions, GetForeignElements, Validate, 
+    Collections, CreateUpdate, Create, Read, Update, Delete}; */
+
+  /*const GetICollections = (accessors?:string[]) => Dao.GetICollections(accessors); 
   const GetIFields = (accessor:string, fields?:string[]) => Dao.GetIFields(accessor, fields); 
   const GetIEntries = (accessor:string, ids?:string[]) => Dao.GetIEntries(accessor, ids); 
   const GetDefaultIEntry = (accessor:string) => Dao.GetDefaultIEntry(accessor); 
@@ -66,5 +87,5 @@ export function useDao(baseUrl:string):IUseDao {
     GetForeignElements, GetIOptions, 
     Collections, CreateUpdate, Create, Read, Update, Delete, 
     Validate
-  }; 
-} 
+  }; */
+

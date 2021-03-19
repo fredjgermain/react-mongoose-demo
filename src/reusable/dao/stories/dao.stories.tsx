@@ -1,11 +1,12 @@
-import { useMemo, useEffect } from 'react'; 
-import { DAO } from '../dao.class'; 
+import React, { useContext, useEffect } from 'react'; 
 import { crud } from './mockcrud'; 
 import { useLoader } from '../../_customhooks'; 
+import { useDao, IUseDao, DAO, IDao, ICrud } from '../../_dao';
 
 
 
-function TestValidate({dao, accessor, value}:{dao:DAO, accessor:string, value:{[key:string]:any}}) { 
+function TestValidate({accessor, value}:{accessor:string, value:{[key:string]:any}}) { 
+  const dao = useContext(DaoContext); 
   const validation = dao.Validate(accessor, value); 
   return <div> 
     {JSON.stringify(validation)} 
@@ -13,17 +14,19 @@ function TestValidate({dao, accessor, value}:{dao:DAO, accessor:string, value:{[
 } 
 
 
-function DisplayCollection({dao, accessor}:{dao:DAO, accessor:string}) { 
+function DisplayCollection({accessor}:{accessor:string}) { 
+  const dao = useContext(DaoContext); 
   const [collection] = dao.GetICollections([accessor]); 
+
   return <div> 
     FIELDS: <br/>
     {collection?.ifields.map( f => { 
-      return <div>{JSON.stringify(f)}</div> 
+      return <div key={f.accessor}>{JSON.stringify(f)}</div> 
     })} 
     <br/>
     ENTRIES <br/>
     {collection?.entries.map( e => { 
-      return <div>{JSON.stringify(e)}</div> 
+      return <div key={e._id}>{JSON.stringify(e)}</div> 
     })} 
   </div> 
 } 
@@ -38,11 +41,11 @@ export default {
 const Template = args => <TestMockDao {...args} /> 
 export const Mock_TestValidate = Template.bind({}) 
 Mock_TestValidate.args = { 
-  child: TestValidate, 
+  child: TestValidate,
   args: { 
     accessor:'patients', 
     value: {ramq:'JEAF23118301'} 
-  } 
+  }, 
 } 
 
 export const Mock_DisplayCollectionA = Template.bind({}) 
@@ -65,7 +68,7 @@ Mock_DisplayQuestions.args = {
 
 
 // -------------------------------------------------------
-function useLoadCollection(Dao:DAO, accessors:string[]) { 
+function useLoadCollection(Dao:IUseDao, accessors:string[]) { 
   const callback = (res:any) => {}; 
   const {state, Load} = useLoader(); 
 
@@ -77,14 +80,19 @@ function useLoadCollection(Dao:DAO, accessors:string[]) {
 } 
 
 
-function TestMockDao({...props}:{child:any, args:any}) { 
-  const dao = useMemo(() => new DAO(crud), []); 
+const DaoContext = React.createContext({} as IDao); 
+function DaoContexter({crud, children}:React.PropsWithChildren<{crud:ICrud}>) { 
+  const dao = useDao(new DAO(crud)); 
   const accessors = ['collectiona', 'collectionb', 'questions', 'patients', 'responses']; 
   const ready = useLoadCollection(dao, accessors); 
 
-  return <div>{ 
-    ready ? 
-      <props.child {...{dao, ...props.args}} />: 
-      'Is loading ...' 
-  }</div>; 
+  return <DaoContext.Provider value={dao}> 
+    {ready? children: 'not ready'} 
+  </DaoContext.Provider> 
+} 
+
+function TestMockDao({...props}:{child:any, args:any}) { 
+  return <DaoContexter crud={crud} > 
+      <props.child {...props.args} /> 
+  </DaoContexter> 
 } 
