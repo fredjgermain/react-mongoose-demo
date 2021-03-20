@@ -1,7 +1,6 @@
-import React, { useContext, useEffect } from 'react'; 
+import { useContext } from 'react'; 
 import { crud } from './mockcrud'; 
-import { useLoader } from '../../_customhooks'; 
-import { useDao, IUseDao, DAO, IDao, ICrud } from '../../_dao';
+import { DaoContext, DaoContexter } from '../../_dao'; 
 
 
 
@@ -42,6 +41,7 @@ const Template = args => <TestMockDao {...args} />
 export const Mock_TestValidate = Template.bind({}) 
 Mock_TestValidate.args = { 
   child: TestValidate,
+  accessors: ['collectiona', 'collectionb', 'questions', 'patients', 'responses'], 
   args: { 
     accessor:'patients', 
     value: {ramq:'JEAF23118301'} 
@@ -51,6 +51,7 @@ Mock_TestValidate.args = {
 export const Mock_DisplayCollectionA = Template.bind({}) 
 Mock_DisplayCollectionA.args = { 
   child: DisplayCollection, 
+  accessors: ['collectiona', 'collectionb', 'questions', 'patients', 'responses'], 
   args: { 
     accessor:'collectiona', 
   } 
@@ -59,6 +60,7 @@ Mock_DisplayCollectionA.args = {
 export const Mock_DisplayQuestions = Template.bind({}) 
 Mock_DisplayQuestions.args = { 
   child: DisplayCollection, 
+  accessors: ['collectiona', 'collectionb', 'questions', 'patients', 'responses'], 
   args: { 
     accessor:'questions', 
   } 
@@ -68,7 +70,7 @@ Mock_DisplayQuestions.args = {
 
 
 // -------------------------------------------------------
-function useLoadCollection(Dao:IUseDao, accessors:string[]) { 
+/*function useLoadCollection(Dao:IUseDao, accessors:string[]) { 
   const callback = (res:any) => {}; 
   const {state, Load} = useLoader(); 
 
@@ -89,10 +91,10 @@ function DaoContexter({crud, children}:React.PropsWithChildren<{crud:ICrud}>) {
   return <DaoContext.Provider value={dao}> 
     {ready? children: 'not ready'} 
   </DaoContext.Provider> 
-} 
+} */
 
-function TestMockDao({...props}:{child:any, args:any}) { 
-  return <DaoContexter crud={crud} > 
+function TestMockDao({...props}:{child:any, accessors: string[], args:any}) { 
+  return <DaoContexter crud={crud} accessors={props.accessors} > 
       <props.child {...props.args} /> 
   </DaoContexter> 
 } 

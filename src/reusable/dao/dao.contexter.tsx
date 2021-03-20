@@ -1,19 +1,28 @@
-import React from 'react'; 
-import {IUseDao, useDao} from './usedao.hook'; 
+import React, {useMemo, useEffect} from 'react'; 
+import {ICrud, IDao, DAO} from './dao.class'; 
+import {useLoader} from '../_customhooks'; 
 
 
-export enum EActionType { 
-  CREATE = 'create', 
-  READ = 'read', 
-  UPDATE = 'update', 
-  DELETE = 'delete', 
-}
+// -------------------------------------------------------
+function useLoadCollection(Dao:IDao, accessors:string[]) { 
+  const callback = (res:any) => {}; 
+  const {state, Load} = useLoader(); 
+
+  useEffect(() => { 
+    Load( () => Dao.Collections(accessors), callback); 
+  }, []); 
+
+  return state.success; 
+} 
 
 
-export const DaoContext = React.createContext({} as IUseDao); 
-// CrudContexter ========================================== 
-export function DaoContexter({baseUrl, children}:React.PropsWithChildren<{baseUrl:string}>) { 
-  return <DaoContext.Provider value={useDao(baseUrl)}> 
-    {children} 
+export const DaoContext = React.createContext({} as IDao); 
+export function DaoContexter({accessors, crud, children}:React.PropsWithChildren<{accessors:string[], crud:ICrud}>) { 
+  const dao = useMemo(() => new DAO(crud), []); 
+  //const accessors = ['collectiona', 'collectionb', 'questions', 'patients', 'responses']; 
+  const ready = useLoadCollection(dao, accessors); 
+
+  return <DaoContext.Provider value={dao}> 
+    {ready? children: 'not ready'} 
   </DaoContext.Provider> 
-}
+} 
