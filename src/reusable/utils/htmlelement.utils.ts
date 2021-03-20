@@ -12,7 +12,7 @@ export function OnPress(event:any, keys:string[], Func:()=>void)  {
     Func(); 
 } 
 
-export function OnEnter(event:any, Func:()=>void) { 
+export function OnEnter(event:any, Func:()=>void = ()=>{}) { 
   OnPress(event, ['Enter', 'NumpadEnter'], Func); 
 } 
 

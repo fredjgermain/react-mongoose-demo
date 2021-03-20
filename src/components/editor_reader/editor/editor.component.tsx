@@ -1,5 +1,5 @@
-import { useState } from 'react'; 
-import { IsEmpty } from '../../../reusable/_utils'; 
+import { useEffect, useState } from 'react'; 
+import { IsEmpty, GetDefaultValueFromIField } from '../../../reusable/_utils'; 
 import { GetReadValue, IReader } from '../reader/_reader'; 
 import { Input } from '../input/_input'; 
 import { InputArray } from '../inputarray/_inputarray'; 
@@ -9,23 +9,23 @@ import { InputSelect } from '../inputselect/_inputselect';
 export type IEditorFunc = ({...props}:IEditor) => JSX.Element; 
 export interface IEditor extends IReader { 
   editValue: (newValue:any) => void; 
-  validation: (newValue:any) => boolean; 
+  validation?: (newValue:any) => boolean; 
 } 
 
 interface IProps extends IEditor{ 
-  func: IEditorFunc; 
+  func?: IEditorFunc; 
 }
 
 
-export function Editor({options, ifield, validation = () => true, ...props}:IProps) { 
-  const [value, setValue] = useState(GetReadValue(props.value, options, ifield)); 
-  const editValue = (newValue:any) => { 
-    if(validation(newValue)) 
-      setValue(newValue); 
-  } 
 
-  props.func = props.func ?? GetDefaultEditorFunc(ifield, !IsEmpty(options)); 
-  return <props.func {...{value, editValue, options, ifield, validation}} /> 
+export function Editor({options = [], validation = () => true, ...props}:IProps) { 
+  const value = IsEmpty(props.value) ? GetDefaultValueFromIField(props.ifield): props.value; 
+  console.log(GetDefaultValueFromIField(props.ifield)); 
+  console.log(value); 
+  const args = {...props, value, options, validation}; 
+
+  props.func = props.func ?? GetDefaultEditorFunc(props.ifield, !IsEmpty(options)); 
+  return <props.func {...args} /> 
 } 
 
 
@@ -74,14 +74,14 @@ function EditSelection(ifield:IField) {
     EditSelectSingle; 
 }
 
-function EditSelectSingle({value, editValue, options, ifield}:IEditor) { 
+function EditSelectSingle({value, editValue, options = [], ifield}:IEditor) { 
   const _value = value; 
   const _onChange = editValue; 
   const _options = options; 
   return <InputSelect {...{_value, _options, _onChange}} /> 
 }
 
-function EditSelectMulti({value, editValue, options, ifield}:IEditor) { 
+function EditSelectMulti({value, editValue, options = [], ifield}:IEditor) { 
   const _value = value; 
   const _onChange = editValue; 
   const _options = options; 

@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'; 
-import { Select } from '../../../reusable/_input'; 
+import {Editor, Reader} from '../../../components/editor_reader/_editor_reader'; 
 import { AdminContext } from '../admin.page'; 
 
 
@@ -7,11 +7,12 @@ import { AdminContext } from '../admin.page';
 export function CollectionSelector() { 
   const {GetEditState, SetEditState, GetCollectionOptions} = useContext(AdminContext); 
   const value = GetEditState(['collection']); 
-  const setValue = (newValue:string) => SetEditState(newValue, ['collection']); 
+  const editValue = (newValue:string) => SetEditState(newValue, ['collection']); 
   const ifield:IField = {accessor:'', label:'', defaultValue:'', type:'string'}; 
   const options = GetCollectionOptions(); 
 
   return <div> 
-    <Select {...{value, setValue, ifield, options}} /> 
+    <Editor {...{value, editValue, ifield, options}}  /> 
+    <Reader {...{value, ifield, options}} /> 
   </div> 
 } 

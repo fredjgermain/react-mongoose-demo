@@ -21,8 +21,8 @@ export default {
 
 const Template = args => <TestInputSelect {...args} /> 
 
-export const TestInput_StringS = Template.bind({}) 
-TestInput_StringS.args = { 
+export const TestInputSelect_single = Template.bind({}) 
+TestInputSelect_single.args = { 
   _value:0, 
   _options: [ 
     {value:0, label:'option 0'}, 
@@ -30,4 +30,16 @@ TestInput_StringS.args = {
     {value:2, label:'option 2'}, 
   ] as IOption[], 
   _multiple: false, 
+} 
+
+
+export const TestInputSelect_multi = Template.bind({}) 
+TestInputSelect_multi.args = { 
+  _value:[], 
+  _options: [ 
+    {value:'0', label:'option 0'}, 
+    {value:'1', label:'option 1'}, 
+    {value:'2', label:'option 2'}, 
+  ] as IOption[], 
+  _multiple: true, 
 } 

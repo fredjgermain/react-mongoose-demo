@@ -8,7 +8,7 @@ export interface IReader {
   ifield:IField;    // type:IType ?? 
 } 
 interface IProps extends IReader { 
-  func:IReaderFunc; 
+  func?:IReaderFunc; 
 } 
 
 export function GetReadValue(value:any, options:IOption[], ifield:IField) { 
