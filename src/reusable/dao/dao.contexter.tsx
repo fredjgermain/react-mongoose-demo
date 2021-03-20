@@ -1,28 +1,33 @@
-import React, {useMemo, useEffect} from 'react'; 
+import React, {useMemo, useEffect, useContext} from 'react'; 
 import {ICrud, IDao, DAO} from './dao.class'; 
-import {useLoader} from '../_customhooks'; 
-
+import { useLoader } from '../_customhooks'; 
 
 // -------------------------------------------------------
-function useLoadCollection(Dao:IDao, accessors:string[]) { 
+export function useLoadCollection(accessors:string[]) { 
+  const dao = useContext(DaoContext);
   const callback = (res:any) => {}; 
   const {state, Load} = useLoader(); 
 
   useEffect(() => { 
-    Load( () => Dao.Collections(accessors), callback); 
+    Load( () => dao.Collections(accessors), callback); 
   }, []); 
 
   return state.success; 
 } 
 
 
-export const DaoContext = React.createContext({} as IDao); 
-export function DaoContexter({accessors, crud, children}:React.PropsWithChildren<{accessors:string[], crud:ICrud}>) { 
-  const dao = useMemo(() => new DAO(crud), []); 
-  //const accessors = ['collectiona', 'collectionb', 'questions', 'patients', 'responses']; 
-  const ready = useLoadCollection(dao, accessors); 
+export function Preloader({accessors, children}:React.PropsWithChildren<{accessors:string[]}>) { 
+  const ready = useLoadCollection(accessors); 
+  return <span> 
+    {ready ? children: 'Loading ...'} 
+  </span> 
+}
 
+
+export const DaoContext = React.createContext({} as IDao); 
+export function DaoContexter({crud, children}:React.PropsWithChildren<{crud:ICrud}>) { 
+  const dao = useMemo(() => new DAO(crud), []); 
   return <DaoContext.Provider value={dao}> 
-    {ready? children: 'not ready'} 
+    {children}
   </DaoContext.Provider> 
 } 

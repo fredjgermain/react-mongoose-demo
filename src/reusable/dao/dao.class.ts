@@ -1,6 +1,6 @@
-import {Pick, Filter} from '../_arrayutils'; 
-import { IsEmpty } from '../_utils';
-import {Collection} from './collection.class'; 
+import { Pick, Filter } from '../_arrayutils'; 
+import { IsEmpty } from '../_utils'; 
+import { Collection } from './collection.class'; 
 
 export interface ICrud { 
   Collections:(accessors?:string[]) => Promise<ICrudResponse[]>; 
@@ -120,6 +120,9 @@ export class DAO implements IDao {
     return responses; 
   } 
 
+  /* 
+  Either Add/Push new collection "this.collections" or update present collection stored in "this.collections". 
+  */
   private PushUpdateCollection(icollections:ICollection[]) { 
     icollections.forEach( newCol => { 
       const index = this.collections.findIndex(col => col.accessor === newCol.accessor); 

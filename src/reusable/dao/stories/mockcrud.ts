@@ -1,3 +1,4 @@
+import { Fetcher } from '../../_mongooseparser';
 import {Collection} from '../collection.class'; 
 import {ICrud} from '../dao.class'; 
 import {mockDb} from './mockdb'; 
@@ -74,9 +75,7 @@ async function Delete(accessor:string, entries:IEntry[]): Promise<ICrudResponse[
 } 
 
 // MockCrud
-export const crud:ICrud = { 
-  Collections, 
-  Create, 
-  Delete, 
-  Read, 
-  Update} 
+//export const crud:ICrud = { Collections, Create, Delete, Read, Update} 
+
+const baseUrl = `https://fjg-mongoose-heroku.herokuapp.com/api/`; 
+export const crud = new Fetcher(baseUrl); 

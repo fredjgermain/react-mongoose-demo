@@ -1,7 +1,6 @@
 import { useContext } from 'react'; 
 import { crud } from './mockcrud'; 
-import { DaoContext, DaoContexter } from '../../_dao'; 
-
+import { DaoContext, DaoContexter, Preloader, ICrud } from '../../_dao'; 
 
 
 function TestValidate({accessor, value}:{accessor:string, value:{[key:string]:any}}) { 
@@ -30,6 +29,13 @@ function DisplayCollection({accessor}:{accessor:string}) {
   </div> 
 } 
 
+function TestMockDao({...props}:{child:any, accessors: string[], args:any}) { 
+  return <DaoContexter crud={crud as ICrud} > 
+      <Preloader {...props} > 
+        <props.child {...props.args} /> 
+      </Preloader>
+  </DaoContexter> 
+} 
 
 
 export default { 
@@ -41,60 +47,19 @@ const Template = args => <TestMockDao {...args} />
 export const Mock_TestValidate = Template.bind({}) 
 Mock_TestValidate.args = { 
   child: TestValidate,
-  accessors: ['collectiona', 'collectionb', 'questions', 'patients', 'responses'], 
+  accessors: ['questions', 'patients', 'responses', 'answers', 'forms', 'instructions'], 
   args: { 
     accessor:'patients', 
     value: {ramq:'JEAF23118301'} 
   }, 
 } 
 
-export const Mock_DisplayCollectionA = Template.bind({}) 
-Mock_DisplayCollectionA.args = { 
-  child: DisplayCollection, 
-  accessors: ['collectiona', 'collectionb', 'questions', 'patients', 'responses'], 
-  args: { 
-    accessor:'collectiona', 
-  } 
-} 
-
 export const Mock_DisplayQuestions = Template.bind({}) 
 Mock_DisplayQuestions.args = { 
   child: DisplayCollection, 
-  accessors: ['collectiona', 'collectionb', 'questions', 'patients', 'responses'], 
+  accessors: ['questions', 'patients', 'responses'], 
   args: { 
     accessor:'questions', 
   } 
 } 
 
-
-
-
-// -------------------------------------------------------
-/*function useLoadCollection(Dao:IUseDao, accessors:string[]) { 
-  const callback = (res:any) => {}; 
-  const {state, Load} = useLoader(); 
-
-  useEffect(() => { 
-    Load( () => Dao.Collections(accessors), callback); 
-  }, []); 
-
-  return state.success; 
-} 
-
-
-const DaoContext = React.createContext({} as IDao); 
-function DaoContexter({crud, children}:React.PropsWithChildren<{crud:ICrud}>) { 
-  const dao = useDao(new DAO(crud)); 
-  const accessors = ['collectiona', 'collectionb', 'questions', 'patients', 'responses']; 
-  const ready = useLoadCollection(dao, accessors); 
-
-  return <DaoContext.Provider value={dao}> 
-    {ready? children: 'not ready'} 
-  </DaoContext.Provider> 
-} */
-
-function TestMockDao({...props}:{child:any, accessors: string[], args:any}) { 
-  return <DaoContexter crud={crud} accessors={props.accessors} > 
-      <props.child {...props.args} /> 
-  </DaoContexter> 
-} 
