@@ -26,7 +26,9 @@ export function useInputSelect({_value, _options = [], _onChange, _multiple = fa
       exclusion.push(newValue); 
     if(IsEmpty(inclusion) && !_multiple) 
       exclusion[0] = newValue; 
-    const selection = _multiple ? exclusion: exclusion.shift(); 
+    const selectionFromOptions = GetSelectedValuesFromOptions(exclusion, _options).map( o => o.value); 
+    const selection = _multiple ? selectionFromOptions: selectionFromOptions.shift(); 
+    //const selection = _multiple ? exclusion: exclusion.shift(); 
     _onChange(selection); 
   } 
 

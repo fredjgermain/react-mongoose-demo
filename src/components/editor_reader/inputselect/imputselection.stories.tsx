@@ -35,7 +35,7 @@ TestInputSelect_single.args = {
 
 export const TestInputSelect_multi = Template.bind({}) 
 TestInputSelect_multi.args = { 
-  _value:[], 
+  _value:['a'], 
   _options: [ 
     {value:'0', label:'option 0'}, 
     {value:'1', label:'option 1'}, 
