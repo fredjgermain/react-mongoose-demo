@@ -11,5 +11,7 @@ export function CollectionSelector() {
   const ifield:IField = {accessor:'', label:'', defaultValue:'', type:'string'}; 
   const options = GetCollectionOptions(); 
 
-  return <Select {...{value, setValue, ifield, options}} /> 
+  return <div> 
+    <Select {...{value, setValue, ifield, options}} /> 
+  </div> 
 } 

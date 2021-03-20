@@ -1,5 +1,5 @@
 import React from 'react'; 
-import Reader from './reader.component'; 
+import {Reader} from './reader.component'; 
 
 export default { 
   title: 'editor/Reader', 

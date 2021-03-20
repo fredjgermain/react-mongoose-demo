@@ -19,12 +19,12 @@ export interface IUseAdmin extends IUseEditState {
 
 // useAdmin ===============================================
 export function useAdmin() { 
-  const {GetICollections, GetIEntries, GetIFields} = useContext(DaoContext); 
+  const dao = useContext(DaoContext); 
 
   const [columns, setColumns] = useState([] as string[]); 
   const editState = useEditState(); 
   const collectionAccessor = editState.GetEditState(['collection']) as string; 
-  const paging = usePage(GetIEntries(collectionAccessor), 5); 
+  const paging = usePage(dao.GetIEntries(collectionAccessor), 5); 
 
 
   // Reset Columns on collection change
@@ -39,7 +39,7 @@ export function useAdmin() {
 
   // GetCollectionOptions ................................. 
   function GetCollectionOptions():IOption[] { 
-    const collections = GetICollections(); 
+    const collections = dao.GetICollections(); 
     return collections.map( c => { 
       return {value:c.accessor, label:c.label} 
     }); 
@@ -47,7 +47,7 @@ export function useAdmin() {
 
   // 
   function GetFields(field?:string[]) { 
-    return GetIFields(collectionAccessor, field); 
+    return dao.GetIFields(collectionAccessor, field); 
   } 
   
   return {paging, columns, setColumns, collectionAccessor, GetFields, GetCollectionOptions, ...editState} 

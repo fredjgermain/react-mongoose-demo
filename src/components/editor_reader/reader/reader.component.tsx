@@ -1,4 +1,4 @@
-import { GetDefaultValueFromIField, GetSelectedValuesFromOptions, IsEmpty } from "../../reusable/_utils";
+import { GetDefaultValueFromIField, GetSelectedValuesFromOptions, IsEmpty } from "../../../reusable/_utils";
 
 
 export type IReaderFunc = ({...props}:IReader) => JSX.Element; 
@@ -25,7 +25,7 @@ export function GetDefaultReaderFunc(ifield:IField) {
   return ReadOne; 
 } 
 
-export default function Reader({ifield, options=[], ...props}:IProps) { 
+export function Reader({ifield, options=[], ...props}:IProps) { 
   const value = GetReadValue(props.value, options, ifield); 
   props.func = props.func ?? GetDefaultReaderFunc(ifield); 
   return <props.func {...{value, options, ifield}} /> 

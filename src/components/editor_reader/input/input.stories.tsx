@@ -1,5 +1,19 @@
-import React from 'react'; 
-import { TestInput } from './input.component';
+import React, {useState} from 'react'; 
+import { IInput, Input } from './_input'; 
+import { GetInputType } from '../../../reusable/_utils'; 
+
+
+
+function TestInput({...props}:IInput) { 
+  const [value, setValue] = useState(props._value); 
+  props._value = value; 
+  props._onChange = (newValue:any) => setValue(newValue); 
+
+  return <div> 
+    {JSON.stringify(value)} {GetInputType(props._type)} <br/> 
+    <Input {...props} > </Input> 
+  </div>
+}
 
 
 export default { 

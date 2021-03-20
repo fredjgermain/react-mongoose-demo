@@ -1,9 +1,9 @@
-import { useState } from 'react';
-import { IsEmpty } from '../../reusable/_utils';
-import { GetReadValue, IReader} from '../reader/reader.component'; 
-import Input from '../input/input.component'; 
-import InputArray from '../inputarray/inputarray.component'; 
-import InputSelect from '../inputselect/inputselect.component'; 
+import { useState } from 'react'; 
+import { IsEmpty } from '../../../reusable/_utils'; 
+import { GetReadValue, IReader } from '../reader/_reader'; 
+import { Input } from '../input/_input'; 
+import { InputArray } from '../inputarray/_inputarray'; 
+import { InputSelect } from '../inputselect/_inputselect'; 
 
 
 export type IEditorFunc = ({...props}:IEditor) => JSX.Element; 
@@ -17,7 +17,7 @@ interface IProps extends IEditor{
 }
 
 
-export default function Editor({options, ifield, validation = () => true, ...props}:IProps) { 
+export function Editor({options, ifield, validation = () => true, ...props}:IProps) { 
   const [value, setValue] = useState(GetReadValue(props.value, options, ifield)); 
   const editValue = (newValue:any) => { 
     if(validation(newValue)) 
@@ -29,7 +29,7 @@ export default function Editor({options, ifield, validation = () => true, ...pro
 } 
 
 
-export function GetDefaultEditorFunc(ifield:IField, hasOptions:boolean) { 
+function GetDefaultEditorFunc(ifield:IField, hasOptions:boolean) { 
   if(hasOptions) 
     return EditSelection(ifield); 
   if(ifield.isArray) 

@@ -1,21 +1,9 @@
 import React, { useContext, useEffect, useState } from 'react'; 
-import { IsNull } from '../../reusable/_utils';
-import Input from '../input/input.component'; 
+import { IsNull } from '../../../reusable/_utils';
+import { Input } from '../input/_input'; 
 
 
-export function TestInputArray({...props}:IInputArray) { 
-  const [_values, setValue] = useState(props._values); 
-  const _onChange = (newValue:any[]) => setValue(newValue); 
-  const {_type, _defaultValue, _width} = props; 
-
-  return <div> 
-    {JSON.stringify(_values)} 
-    <InputArray {...{_type, _values, _defaultValue, _onChange, _width}} /> 
-  </div> 
-} 
-
-
-interface IInputArray { 
+export interface IInputArray { 
   _type: string; 
   _values:any[]; 
   _defaultValue: any; 
@@ -57,7 +45,7 @@ function useInputArray({...props}:IInputArray):IUseInputArray {
 
 //interface IProps extends IInputArray, React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> {} 
 export const InputArrayContext = React.createContext({} as IUseInputArray); 
-export default function InputArray({...props}:IInputArray) { 
+export function InputArray({...props}:IInputArray) { 
   const context = useInputArray(props); 
 
   return <InputArrayContext.Provider value={context} > 

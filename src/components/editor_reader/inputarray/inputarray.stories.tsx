@@ -1,5 +1,17 @@
-import React from 'react'; 
-import { TestInputArray } from './inputarray.component';
+import React, { useState } from 'react'; 
+import {InputArray, IInputArray} from './_inputarray'; 
+
+function TestInputArray({...props}:IInputArray) { 
+  const [_values, setValue] = useState(props._values); 
+  const _onChange = (newValue:any[]) => setValue(newValue); 
+  const {_type, _defaultValue, _width} = props; 
+
+  return <div> 
+    {JSON.stringify(_values)} 
+    <InputArray {...{_type, _values, _defaultValue, _onChange, _width}} /> 
+  </div> 
+} 
+
 
 
 export default { 

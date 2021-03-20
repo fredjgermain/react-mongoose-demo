@@ -1,24 +1,13 @@
-import React, {useContext, useState} from 'react'; 
+import React, {useContext} from 'react'; 
 import { IInputSelect, IUseSelect, useInputSelect } from './inputselect.hook'; 
-import { useToggle } from '../../reusable/_customhooks'; 
-import { IsEmpty } from '../../reusable/_utils';
+import { useToggle } from '../../../reusable/_customhooks'; 
+import { IsEmpty } from '../../../reusable/_utils';
 
 import './select.style.css'; 
 
-export function TestInputSelect({...props}:IInputSelect) { 
-  const [_value, setValue] = useState(props._value); 
-  const _onChange = (newValue:any[]) => setValue(newValue); 
-  const {_options, _multiple, _width} = props; 
-
-  return <div> 
-    {JSON.stringify(_value)} <br/> 
-    <InputSelect {...{_value, _onChange, _options, _multiple, _width}} /> 
-  </div> 
-} 
-
 
 export const SelectContext = React.createContext({} as IUseSelect); 
-export default function InputSelect({...props}:IInputSelect) { 
+export function InputSelect({...props}:IInputSelect) { 
   const context = useInputSelect(props); 
 
   const {toggle, ToggleBtnAction, toggleTarget, Toggle} = useToggle<HTMLDivElement>(true); 

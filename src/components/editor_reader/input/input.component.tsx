@@ -2,13 +2,13 @@
 This component serves as a wrapper for regular 'input' fields. 
 Makes it easier to edit and get changes from regular 'input' fields with their correct types. 
 */ 
-import React, { useState } from 'react'; 
+import React from 'react'; 
 //import CSS from ''
 import {IEvent, IsNull, OnEnter, SetSize, 
-  GetValueFromInput, GetInputType} from '../../reusable/_utils'; 
+  GetValueFromInput, GetInputType} from '../../../reusable/_utils'; 
 
 
-interface IInput { 
+export interface IInput { 
   _type: string; 
   _value:any; 
   _defaultValue: any; 
@@ -21,7 +21,7 @@ interface IProps extends IInput, React.DetailedHTMLProps<React.InputHTMLAttribut
 /*export default function Input({_type, _value, _defaultValue, _onChange, _onPressEnter, _width,
   children, ...inputArgs}:React.PropsWithChildren<IProps>) { */
 
-export default function Input({_type, _value, _defaultValue, 
+export function Input({_type, _value, _defaultValue, 
   _onChange, _onPressEnter, _width, 
   ...inputArgs}:IProps) { 
   
@@ -46,14 +46,3 @@ export default function Input({_type, _value, _defaultValue,
   return <input {...{inputArgs}} {...{type, value, onChange, onKeyUp, style}} /> 
 }
 
-
-export function TestInput({...props}:IInput) { 
-  const [value, setValue] = useState(props._value); 
-  props._value = value; 
-  props._onChange = (newValue:any) => setValue(newValue); 
-
-  return <div> 
-    {JSON.stringify(value)} {GetInputType(props._type)} <br/> 
-    <Input {...props} > </Input> 
-  </div>
-}
