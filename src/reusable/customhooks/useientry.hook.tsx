@@ -13,23 +13,23 @@ export interface IUseIEntry {
 } 
 
 export function useIEntry(collectionAccessor:string, index:number):IUseIEntry { 
-  const {GetDefaultIEntry, GetIEntries, Validate, GetIFields, GetIOptions, CreateUpdate, Delete} = useContext(DaoContext); 
+  const dao = useContext(DaoContext); 
   const [Get, Set] = useStateAt(GetEntry()); 
 
   // Get Entry ............................................
   function GetEntry() { 
-    return GetIEntries(collectionAccessor).find( (e,i) => i === index) 
-      ?? GetDefaultIEntry(collectionAccessor) 
+    return dao.GetIEntries(collectionAccessor).find( (e,i) => i === index) 
+      ?? dao.GetDefaultIEntry(collectionAccessor) 
       ?? {} as IEntry; 
   } 
   
   // Get Columns Args .....................................
   function GetIEditorArgs(columns: string[]) { 
-    const ifields = GetIFields(collectionAccessor, columns); 
+    const ifields = dao.GetIFields(collectionAccessor, columns); 
     return ifields.map( ifield => { 
       const value = Get([ifield.accessor]); 
       const setValue = (newValue:any) => Set(newValue, [ifield.accessor]); 
-      const options = GetIOptions(ifield); 
+      const options = dao.GetIOptions(ifield); 
       return {ifield, value, setValue, options}; 
     }); 
   } 

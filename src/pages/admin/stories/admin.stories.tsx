@@ -8,6 +8,7 @@ import {useEditState} from '../hooks/useeditstate.hook';
 import { IsEmpty } from '../../../reusable/_utils'; 
 
 //import { CollectionSelector } from '../components/collectionselector.component'; 
+import AdminPage from '../admin.page'; 
 import { AdminRow } from '../components/adminrow.component'; 
 import { Header } from '../components/header.component'; 
 import { PagerFromTo, PageOfPages, PagerBtn } from '../../../reusable/_pager';
@@ -17,8 +18,6 @@ import {Editor, Reader} from '../../../components/editor_reader/_editor_reader';
 import '../../../css/table.css'; 
 //import { Feedback } from '../../../components/feedback/feedback.component';
 
-
-const AdminContext = React.createContext({} as IUseAdmin); 
 function TemplateComponent({accessors}:{accessors:string[]}) { 
   return <DaoContexter crud={crud as ICrud} > 
     <Preloader {...{accessors}}> 
@@ -27,21 +26,15 @@ function TemplateComponent({accessors}:{accessors:string[]}) {
   </DaoContexter> 
 }
 
-
+/*
 function CollectionSelector() { 
-  
   const {GetEditState, SetEditState, GetCollectionOptions} = useContext(AdminContext); 
   const value = GetEditState(['collection']); 
-  const editValue = (newValue:string) => console.log(newValue); 
-  //SetEditState(newValue, ['collection']); 
+  const editValue = (newValue:string) => SetEditState(newValue, ['collection']); 
   const ifield:IField = {accessor:'', label:'', defaultValue:'', type:'string'}; 
   const options = GetCollectionOptions(); 
 
-  return <div> 
-    <Editor {...{value, editValue, ifield, options}}  /> <br/>
-    {JSON.stringify(value)} 
-    |<Reader {...{value, ifield}} />|
-  </div> 
+  return <Editor {...{value, editValue, ifield, options}} />
 }
 
 
@@ -50,7 +43,7 @@ function AdminPage() {
   return <AdminContext.Provider value={context} > 
     <CollectionSelector/> 
   </AdminContext.Provider> 
-}
+}*/
 
 
 export default { 

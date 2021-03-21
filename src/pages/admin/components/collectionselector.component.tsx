@@ -11,8 +11,5 @@ export function CollectionSelector() {
   const ifield:IField = {accessor:'', label:'', defaultValue:'', type:'string'}; 
   const options = GetCollectionOptions(); 
 
-  return <div> 
-    <Editor {...{value, editValue, ifield, options}}  /> 
-    <Reader {...{value, ifield, options}} /> 
-  </div> 
-} 
+  return <Editor {...{value, editValue, ifield, options}} />
+}

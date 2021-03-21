@@ -20,7 +20,6 @@ export interface IUseAdmin extends IUseEditState {
 // useAdmin ===============================================
 export function useAdmin() { 
   const dao = useContext(DaoContext); 
-
   const [columns, setColumns] = useState([] as string[]); 
   const editState = useEditState(); 
   const collectionAccessor = editState.GetEditState(['collection']) as string; 
@@ -30,6 +29,7 @@ export function useAdmin() {
   // Reset Columns on collection change
   useEffect(() => { 
     IniColumns(); 
+    paging.setPageIndex(0); 
   }, [collectionAccessor]); 
 
   function IniColumns() { 

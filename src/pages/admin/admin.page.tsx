@@ -9,7 +9,7 @@ import { Header } from './components/header.component';
 import '../../css/table.css'; 
 import { PagerFromTo, PageOfPages, PagerBtn } from '../../reusable/_pager';
 import { DaoContext } from '../../reusable/_dao';
-import { Feedback } from '../../components/feedback/feedback.component';
+//import { Feedback } from '../../components/feedback/feedback.component';
 
 
 /* Admin Pages ============================================
@@ -22,19 +22,29 @@ export default function AdminPage() {
   const context = useAdmin(); 
   return <AdminContext.Provider value={context}> 
     <h1>Admin section</h1> 
-    <Feedback/>
+    <br/> 
     <CollectionSelector/> 
     {!IsEmpty(context.GetEditState(['collection'])) && <AdminTablr/>} 
   </AdminContext.Provider> 
 } 
 
+// export default function AdminPage() { 
+//   const context = useAdmin(); 
+//   return <AdminContext.Provider value={context}> 
+//     <h1>Admin section</h1> 
+//     <Feedback/>
+//     <CollectionSelector/> 
+//     {!IsEmpty(context.GetEditState(['collection'])) && <AdminTablr/>} 
+//   </AdminContext.Provider> 
+// } 
+
 /* Admin tabler ============================================ 
 */
 export function AdminTablr() { 
   console.log('admintablr'); 
-  const {GetICollections} = useContext(DaoContext); 
+  const dao = useContext(DaoContext); 
   const {collectionAccessor, paging} = useContext(AdminContext); 
-  const [collection] = GetICollections([collectionAccessor]); 
+  const [collection] = dao.GetICollections([collectionAccessor]); 
   const {label} = collection; 
 
   const Tbody = <tbody> 
