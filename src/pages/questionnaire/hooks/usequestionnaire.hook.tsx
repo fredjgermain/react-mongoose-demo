@@ -3,7 +3,7 @@ import { DaoContext } from '../../../reusable/_dao';
 import { useSession, Session } from '../../../reusable/_session'; 
 import { IsEmpty } from '../../../reusable/_utils'; 
 import { usePage, IPageHook } from '../../../reusable/_customhooks'; 
-import { feedback } from '../../../components/feedback/feedback.component'; 
+//import { feedback } from '../../../components/feedback/feedback.component'; 
 
 
 export interface IUseQuestionnaire { 
@@ -28,7 +28,7 @@ export interface IUseQuestionnaire {
 
 export function useQuestionnaire():IUseQuestionnaire { 
   console.log('questionnaire');
-  const {GetIEntries, CreateUpdate} = useContext(DaoContext); 
+  const dao = useContext(DaoContext); 
   const profile = Session.Get('profile') as IEntry; 
 
   const sessionQuestionnaire = useSession('questionnaire', LoadQuestionnaire()); 
@@ -37,7 +37,7 @@ export function useQuestionnaire():IUseQuestionnaire {
   const paging = usePage(questionnaire, PageBreakPredicates()); 
 
   function GetQuestion(answer:IAnswer) { 
-    const [question] = GetIEntries('questions', [answer?.question]) as IQuestion[]; 
+    const [question] = dao.GetIEntries('questions', [answer?.question]) as IQuestion[]; 
     return question; 
   }
 
@@ -52,7 +52,7 @@ export function useQuestionnaire():IUseQuestionnaire {
 
   // BlankQuestionnaire ----------------------------------- 
   function BlankQuestionnaire():IAnswer[] { 
-    const entries = GetIEntries('questions'); 
+    const entries = dao.GetIEntries('questions'); 
     return entries.map( q => { 
       return {_id:'', patient:profile._id, date: new Date(), question:q._id, answer:-1} as IAnswer; 
     }); 
@@ -61,7 +61,7 @@ export function useQuestionnaire():IUseQuestionnaire {
   // SubmitQuestionnaire ----------------------------------
   async function SubmitQuestionnaire(answers?:IEntry[]) { 
     const toSubmit = answers ?? questionnaire; 
-    const responses = await CreateUpdate('answers', toSubmit); 
+    const responses = await dao.CreateUpdate('answers', toSubmit); 
     return responses; 
   } 
 

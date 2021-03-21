@@ -23,8 +23,7 @@ export function InlineUpdateDeleteBtn() {
   const DeleteBtn = {mode:'delete', action:DeleteEntry, labels:{affirm:'Delete', confirm:'Confirm', cancel:'Cancel'}} 
 
   return <span> 
-    <InlineBtn {...UpdateBtn} /> 
-    <InlineBtn {...DeleteBtn} /> 
+    <InlineBtn {...UpdateBtn} /><InlineBtn {...DeleteBtn} /> 
   </span> 
 } 
 
@@ -40,9 +39,9 @@ export function InlineBtn({...props}:{mode:string, labels:{affirm:string, confir
       <button onClick={() => SetEditingMode(index, props.mode) }>{props.labels.affirm}</button>
     </span> 
   if(editMode === props.mode) 
-    return <span> 
-      <button onClick={props.action}>{props.labels.confirm}</button> 
-      <button onClick={() => SetEditingMode() }>{props.labels.cancel}</button> 
-    </span> 
+    return <span>
+      <span><button onClick={props.action}>{props.labels.confirm}</button></span>
+      <span><button onClick={() => SetEditingMode() }>{props.labels.cancel}</button></span>
+    </span>
   return <span></span>; 
 } 

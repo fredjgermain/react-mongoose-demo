@@ -1,6 +1,6 @@
 import React from 'react'; 
 import { IUseRow, useRow } from '../hooks/userow.hook'; 
-import { Reader, Editor, IEditor, IReader } from '../../../reusable/_input'; 
+import { Editor, Reader, IReader } from '../../../components/editor_reader/_editor_reader'; 
 import { InlineCreateBtn, InlineUpdateDeleteBtn } from './inlinenbtn.component'; 
 
 
@@ -15,7 +15,7 @@ export function AdminRow({index}:{index:number}) {
     <tr> 
       {columnsArgs.map( (arg,i) => { 
         return <td key={i}> 
-            {isCreateUpdate ? <Editor {...(arg as IEditor)} /> : <Reader {...(arg as IReader)} />} 
+            {isCreateUpdate ? <Editor {...arg} /> : <Reader {...(arg as IReader)} />} 
           </td> 
         })} 
       <td> 

@@ -8,11 +8,11 @@ import { useStateAt } from '../../../reusable/_customhooks';
 
 
 export function PatientIdentification () { 
-  const {GetIFields, GetDefaultIEntry} = useContext(DaoContext); 
+  const dao = useContext(DaoContext); 
   const {RamqIsValid, IdentifyPatient} = useContext(PatientContext); 
-  const [ifield] = GetIFields('patients', ['ramq']); 
+  const [ifield] = dao.GetIFields('patients', ['ramq']); 
 
-  const [Get, Set] = useStateAt(GetDefaultIEntry('patients')); 
+  const [Get, Set] = useStateAt(dao.GetDefaultIEntry('patients')); 
   const value = Get(['ramq']); 
   const setValue = (newValue:any) => Set(newValue, ['ramq']); 
 

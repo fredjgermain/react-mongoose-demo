@@ -2,8 +2,7 @@ import { useContext } from 'react';
 import { DaoContext } from '../../../reusable/_dao'; 
 import { AdminContext } from '../admin.page'; 
 import { useIEntry, IUseIEntry } from '../../../reusable/_customhooks'; 
-//import { feedback } from '../../../components/feedback/feedback.component'; 
-import { IEditor } from '../../../reusable/_input'; 
+import { IEditor } from '../../../components/editor_reader/_editor_reader'; 
 
 
 export interface IUseRow extends IUseIEntry{ 
@@ -20,8 +19,8 @@ export interface IUseRow extends IUseIEntry{
 
 // useEntry ===============================================
 export function useRow(index:number):IUseRow { 
-  const dao = useContext(DaoContext); 
-  const {columns, collectionAccessor, GetEditingMode, SetEditingMode} = useContext(AdminContext); 
+  //const dao = useContext(DaoContext); 
+  const {dao, columns, collectionAccessor, GetEditingMode, SetEditingMode, feedbackRef} = useContext(AdminContext); 
   const useientry = useIEntry(collectionAccessor, index); 
   
   // Entry Hook ............................................
@@ -33,7 +32,7 @@ export function useRow(index:number):IUseRow {
   // CreateUpdateEntry .................................... 
   async function CreateUpdateEntry() { 
     const [response] = await dao.CreateUpdate(collectionAccessor, [entry]); 
-    //feedback.setValue([response]); 
+    feedbackRef.current.Set([response]); 
     if(response.actionType === 'create') 
       Set(dao.GetDefaultIEntry(collectionAccessor)) 
     // Reset after editing state
@@ -43,7 +42,7 @@ export function useRow(index:number):IUseRow {
   // DeleteEntry .......................................... 
   async function DeleteEntry() { 
     const [response] = await dao.Delete(collectionAccessor, [entry]); 
-    //feedback.setValue([response]); 
+    feedbackRef.current.Set([response]); 
     // Reset after editing state
     SetEditingMode(); 
   } 

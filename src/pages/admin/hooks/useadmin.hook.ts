@@ -1,11 +1,13 @@
 import { useContext, useEffect, useState } from 'react'; 
-import { DaoContext } from '../../../reusable/_dao'; 
+import { DaoContext, IDao } from '../../../reusable/_dao'; 
 import { usePage, IPageHook } from '../../../reusable/_customhooks'; 
-import { IUseEditState, useEditState } from './useeditstate.hook';
+import { IUseEditState, useEditState } from './useeditstate.hook'; 
+import { useAdminFeedbackRef, AdminFeedBackRef } from '../components/adminfeedback.component'; 
 
 
 
 export interface IUseAdmin extends IUseEditState {
+  dao:IDao; 
   paging: IPageHook<IEntry>; 
   collectionAccessor: string; 
 
@@ -14,6 +16,7 @@ export interface IUseAdmin extends IUseEditState {
 
   GetFields: (field?: string[] | undefined) => IField[]; 
   GetCollectionOptions(): IOption[]; 
+  feedbackRef: AdminFeedBackRef; 
 } 
 
 
@@ -24,13 +27,19 @@ export function useAdmin() {
   const editState = useEditState(); 
   const collectionAccessor = editState.GetEditState(['collection']) as string; 
   const paging = usePage(dao.GetIEntries(collectionAccessor), 5); 
-
+  const feedbackRef = useAdminFeedbackRef(); 
 
   // Reset Columns on collection change
   useEffect(() => { 
     IniColumns(); 
     paging.setPageIndex(0); 
+    
   }, [collectionAccessor]); 
+
+  useEffect(() => { 
+    if(feedbackRef.current.Set) 
+      feedbackRef.current.Set([]) 
+  }, [collectionAccessor, paging.pageIndex]) 
 
   function IniColumns() { 
     if(!!collectionAccessor) 
@@ -50,6 +59,6 @@ export function useAdmin() {
     return dao.GetIFields(collectionAccessor, field); 
   } 
   
-  return {paging, columns, setColumns, collectionAccessor, GetFields, GetCollectionOptions, ...editState} 
+  return {dao, paging, columns, setColumns, collectionAccessor, GetFields, GetCollectionOptions, feedbackRef, ...editState} 
 }
 

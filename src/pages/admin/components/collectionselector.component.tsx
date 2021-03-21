@@ -1,5 +1,5 @@
-import React, { useContext } from 'react'; 
-import {Editor, Reader} from '../../../components/editor_reader/_editor_reader'; 
+import { useContext } from 'react'; 
+import { Editor } from '../../../components/editor_reader/_editor_reader'; 
 import { AdminContext } from '../admin.page'; 
 
 

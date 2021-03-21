@@ -1,7 +1,7 @@
 import { useContext } from 'react'; 
 import { DaoContext } from '../_dao'; 
 import { useStateAt } from '../_customhooks'; 
-import { IEditor, IReader } from '../_input'; 
+import { IEditor } from '../../components/editor_reader/_editor_reader'; 
 
 
 // IENTRY =================================================
@@ -28,9 +28,9 @@ export function useIEntry(collectionAccessor:string, index:number):IUseIEntry {
     const ifields = dao.GetIFields(collectionAccessor, columns); 
     return ifields.map( ifield => { 
       const value = Get([ifield.accessor]); 
-      const setValue = (newValue:any) => Set(newValue, [ifield.accessor]); 
+      const editValue = (newValue:any) => Set(newValue, [ifield.accessor]); 
       const options = dao.GetIOptions(ifield); 
-      return {ifield, value, setValue, options}; 
+      return {ifield, value, editValue, options}; 
     }); 
   } 
 

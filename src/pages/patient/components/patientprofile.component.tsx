@@ -9,9 +9,9 @@ import { useStateAt } from '../../../reusable/_customhooks';
 
 
 export function PatientProfile() { 
-  const {GetIFields} = useContext(DaoContext); 
+  const dao = useContext(DaoContext); 
   const {profile, CreateUpdateProfile} = useContext(PatientContext); 
-  const [ramqIField, firstNameField, lastNameField] = GetIFields('patients', ['ramq', 'firstName', 'lastName']); 
+  const [ramqIField, firstNameField, lastNameField] = dao.GetIFields('patients', ['ramq', 'firstName', 'lastName']); 
   const btnLabel = !IsEmpty(profile._id) ? 
     'Update patient profile': 
     'Create new patient profile'; 

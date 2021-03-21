@@ -18,16 +18,16 @@ export interface IUseQuestionnaireItem {
 
 export function useQuestionnaireItem(index:number) : IUseQuestionnaireItem { 
   const {questionnaire, setQuestionnaire} = useContext(QuestionnnaireContext); 
-  const {GetIEntries} = useContext(DaoContext); 
+  const dao = useContext(DaoContext); 
 
   const answer = questionnaire[index]; 
   if(!answer) 
     return {} as IUseQuestionnaireItem; 
 
-  const [question] = GetIEntries('questions', [answer.question]) as IQuestion[]; 
-  const [form] = GetIEntries('forms', [question?.form]) as IForm[]; 
-  const instructions = GetIEntries('instructions', question?.instructions) as IInstruction[]; 
-  const [response] = GetIEntries('responses', [question?.responseType]) as IResponse[]; 
+  const [question] = dao.GetIEntries('questions', [answer.question]) as IQuestion[]; 
+  const [form] = dao.GetIEntries('forms', [question?.form]) as IForm[]; 
+  const instructions = dao.GetIEntries('instructions', question?.instructions) as IInstruction[]; 
+  const [response] = dao.GetIEntries('responses', [question?.responseType]) as IResponse[]; 
   const isOptional = question?.optional; 
 
   const enums = response?.responseType['enum'] as string[]; 
