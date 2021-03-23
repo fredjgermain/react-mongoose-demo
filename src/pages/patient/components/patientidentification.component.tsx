@@ -1,5 +1,5 @@
 import { useContext } from 'react'; 
-import { Editor } from '../../../reusable/_input'; 
+import { Editor } from '../../../components/editor_reader/_editor_reader'; 
 import { PatientContext } from '../patient.page'; 
 
 import { DaoContext } from '../../../reusable/_dao'; 
@@ -14,12 +14,12 @@ export function PatientIdentification () {
 
   const [Get, Set] = useStateAt(dao.GetDefaultIEntry('patients')); 
   const value = Get(['ramq']); 
-  const setValue = (newValue:any) => Set(newValue, ['ramq']); 
+  const editValue = (newValue:any) => Set(newValue, ['ramq']); 
 
   return <div> 
     <h1>Patient identification</h1> 
     <div>
-      <label>Ramq:</label><Editor {...{value, setValue, ifield}}/>
+      <label>Ramq:</label><Editor {...{value, editValue, ifield}}/>
       <span>{RamqIsValid(value) ? '✓' : 'x'}</span> 
     </div> 
     <button onClick={() => IdentifyPatient(value)}>Identify</button> 

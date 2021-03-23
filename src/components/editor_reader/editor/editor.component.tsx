@@ -20,8 +20,6 @@ interface IProps extends IEditor{
 
 export function Editor({options = [], validation = () => true, ...props}:IProps) { 
   const value = IsEmpty(props.value) ? GetDefaultValueFromIField(props.ifield): props.value; 
-  console.log(GetDefaultValueFromIField(props.ifield)); 
-  console.log(value); 
   const args = {...props, value, options, validation}; 
 
   props.func = props.func ?? GetDefaultEditorFunc(props.ifield, !IsEmpty(options)); 

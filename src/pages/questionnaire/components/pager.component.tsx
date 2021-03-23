@@ -1,12 +1,12 @@
 import React, { useContext } from 'react'; 
-import {QuestionnnaireContext} from '../questionnaire.page'; 
+import { QuestionnaireContext } from '../questionnaire.page'; 
 import {PageOfPages, PagerBtn, PagerFromTo} from '../../../reusable/_pager';
-import { feedback } from '../../../components/feedback/feedback.component';
+
 
 
 // PAGER ==================================================
 export function Pager() { 
-  const {paging} = useContext(QuestionnnaireContext); 
+  const {paging} = useContext(QuestionnaireContext); 
 
   return <div> 
     <BtnSubmitAnswers/> <br/> 
@@ -23,7 +23,7 @@ export function Pager() {
 
 // Butonn Submit Answers =========================================
 export function BtnSubmitAnswers() { 
-  const {paging, AnswersAreComplete, SubmitQuestionnaire} = useContext(QuestionnnaireContext); 
+  const {paging, feedbackRef, AnswersAreComplete, SubmitQuestionnaire} = useContext(QuestionnaireContext); 
   const {page, pageIndex, pages, setPageIndex} = paging; 
   const pageIsComplete = AnswersAreComplete(page.map(ia => ia.t)); 
   const formIsComplete = AnswersAreComplete(); 
@@ -34,10 +34,7 @@ export function BtnSubmitAnswers() {
 
   async function SubmitAnswersFinal() { 
     const responses = await SubmitQuestionnaire(); 
-    if(responses.every( r => r.success )) 
-      feedback.setValue(responses); // success 
-    else 
-      feedback.setValue(responses); // failure 
+    feedbackRef.current.Set(responses); // success 
   }
 
   return <div> 

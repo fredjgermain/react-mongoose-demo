@@ -1,9 +1,9 @@
 import { useContext } from 'react'; 
 import { DaoContext } from '../../../reusable/_dao'; 
-import { useSession, Session } from '../../../reusable/_session'; 
+import { useSession } from '../../../reusable/_session'; 
 import { IsEmpty } from '../../../reusable/_utils'; 
 import { usePage, IPageHook } from '../../../reusable/_customhooks'; 
-//import { feedback } from '../../../components/feedback/feedback.component'; 
+import { QuestionnaireFeedBackRef, useQuestionnaireFeedbackRef } from '../components/questionnaire.feedback'; 
 
 
 export interface IUseQuestionnaire { 
@@ -12,6 +12,8 @@ export interface IUseQuestionnaire {
   paging: IPageHook<IAnswer>; 
   questionnaire: IAnswer[]; 
   setQuestionnaire: (newAnswer:number, keys:any[]) => void; 
+
+  feedbackRef:QuestionnaireFeedBackRef; 
   //GetPages: () => any[][]; 
 
   AnswersAreComplete: (answers?:IAnswer[]) => boolean; 
@@ -26,10 +28,12 @@ export interface IUseQuestionnaire {
 } 
 
 
-export function useQuestionnaire():IUseQuestionnaire { 
-  console.log('questionnaire');
+export function useQuestionnaire(patient:IEntry):IUseQuestionnaire { 
+  console.log('questionnaire'); 
   const dao = useContext(DaoContext); 
-  const profile = Session.Get('profile') as IEntry; 
+  const date = new Date(); 
+  const feedbackRef = useQuestionnaireFeedbackRef(); 
+  //const profile = Session.Get('profile') as IEntry; 
 
   const sessionQuestionnaire = useSession('questionnaire', LoadQuestionnaire()); 
   const questionnaire:IAnswer[] = sessionQuestionnaire.Get(); 
@@ -54,7 +58,8 @@ export function useQuestionnaire():IUseQuestionnaire {
   function BlankQuestionnaire():IAnswer[] { 
     const entries = dao.GetIEntries('questions'); 
     return entries.map( q => { 
-      return {_id:'', patient:profile._id, date: new Date(), question:q._id, answer:-1} as IAnswer; 
+      //const appointment:IAppointment = {patient._id, date:Date.now()} 
+      return {_id:'', patient:patient._id, date, question:q._id, answer:-1} as IAnswer; 
     }); 
   } 
 
@@ -65,16 +70,6 @@ export function useQuestionnaire():IUseQuestionnaire {
     return responses; 
   } 
 
-  // return form, instructions, question, response
-  /*function GetQuestionnaireItem(answer:IAnswer) { 
-    if(!answer) 
-      return {form:undefined, instructions:undefined, question:undefined, response:undefined}; 
-    const [question] = GetIEntries('questions', [answer.question]) as IQuestion[]; 
-    const [form] = GetIEntries('forms', [question?.form]) as IForm[]; 
-    const instructions = GetIEntries('instructions', question?.instructions) as IInstruction[]; 
-    const [response] = GetIEntries('responses', [question?.responseType]) as IResponse[]; 
-    return {form, instructions, question, response}; 
-  } */
 
   function AnswersAreComplete(answers?:IAnswer[]) { 
     const _answers = answers ?? questionnaire; 
@@ -123,6 +118,8 @@ export function useQuestionnaire():IUseQuestionnaire {
 
     paging, 
     questionnaire, setQuestionnaire, 
+
+    feedbackRef, 
 
     AnswersAreComplete, 
     LoadQuestionnaire, 

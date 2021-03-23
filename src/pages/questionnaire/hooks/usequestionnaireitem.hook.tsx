@@ -1,10 +1,7 @@
 import { useContext } from 'react'; 
 import { DaoContext } from '../../../reusable/_dao'; 
 import { IEditor } from '../../../reusable/_input'; 
-import { QuestionnnaireContext } from '../questionnaire.page'; 
-
-
-
+import { QuestionnaireContext } from '../questionnaire.page'; 
 
 export interface IUseQuestionnaireItem { 
   answer: IAnswer; 
@@ -17,9 +14,9 @@ export interface IUseQuestionnaireItem {
 }
 
 export function useQuestionnaireItem(index:number) : IUseQuestionnaireItem { 
-  const {questionnaire, setQuestionnaire} = useContext(QuestionnnaireContext); 
+  const {questionnaire, setQuestionnaire} = useContext(QuestionnaireContext); 
   const dao = useContext(DaoContext); 
-
+  
   const answer = questionnaire[index]; 
   if(!answer) 
     return {} as IUseQuestionnaireItem; 

@@ -1,13 +1,13 @@
 import { useContext } from 'react'; 
 import { Editor } from '../../../reusable/_input'; 
-import {QuestionnnaireContext} from '../questionnaire.page'; 
+import {QuestionnaireContext} from '../questionnaire.page'; 
 import { useQuestionnaireItem } from '../hooks/usequestionnaireitem.hook';
 
 import '../../../css/feedback.css'; 
 
 
 export function QuestionItem({index}:{index:number}) { 
-  const {AnswersAreComplete} = useContext(QuestionnnaireContext); 
+  const {AnswersAreComplete} = useContext(QuestionnaireContext); 
   const {answer, question, IEditorArgs} = useQuestionnaireItem(index); 
   const label = question?.labels[0]; 
   const success = {className:'success', symbol:'✓'}; 

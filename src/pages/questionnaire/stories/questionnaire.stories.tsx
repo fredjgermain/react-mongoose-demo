@@ -1,25 +1,30 @@
 import { crud } from '../../../reusable/dao/stories/mockcrud'; 
 import { DaoContexter, Preloader, ICrud } from '../../../reusable/_dao'; 
-import AdminPage from '../admin.page'; 
+
+import QuestionnairePage from '../questionnaire.page'; 
+
 
 import '../../../css/table.css'; 
 
-function TemplateComponent({accessors}:{accessors:string[]}) { 
+
+function TemplateComponent({accessors, patient}:{accessors:string[], patient:IPatient}) { 
+
   return <DaoContexter crud={crud as ICrud} > 
     <Preloader {...{accessors}}> 
-      <AdminPage/> 
+      <QuestionnairePage {...{patient}}/> 
     </Preloader> 
   </DaoContexter> 
 }
 
 export default { 
-  title: 'Admin/Admin', 
+  title: 'Questionnaire/Questionnaire', 
   component: TemplateComponent, 
 } 
 
 const Template = args => <TemplateComponent {...args} /> 
-export const TestAdminPage = Template.bind({}) 
-TestAdminPage.args = { 
+export const TestQuestionnairePage = Template.bind({}) 
+TestQuestionnairePage.args = { 
   accessors: ['questions', 'patients', 'responses', 'answers', 'forms', 'instructions'], 
+  patient: {_id:'1', ramq:'', firstName:'', lastName:'' } as IPatient, 
 } 
 

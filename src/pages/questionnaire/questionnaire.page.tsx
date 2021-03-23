@@ -1,15 +1,47 @@
-import React from 'react'; 
+import React, {useContext} from 'react'; 
 import { useQuestionnaire, IUseQuestionnaire } from './hooks/usequestionnaire.hook'; 
-import {QuestionPage} from './components/questionpage.component'; 
+import { QuestionItem } from './components/questionitem.component'; 
+import { useQuestionnaireItem } from './hooks/usequestionnaireitem.hook'; 
+import { Pager } from './components/pager.component'; 
+import { QuestionnaireFeedback }  from './components/questionnaire.feedback';
 
-export const QuestionnnaireContext = React.createContext({} as IUseQuestionnaire); 
-export function Questionnaire() { 
-  const context = useQuestionnaire(); 
 
-  // Questionnaire: {JSON.stringify(questionnaire.map(q => q.answer))} 
-  // <button onClick={TestResetSession}>Reset sessions</button> 
-  return <QuestionnnaireContext.Provider value={context} > 
-    <h1>Questionnaire </h1> 
-    <QuestionPage /> 
-  </QuestionnnaireContext.Provider> 
+
+
+
+export const QuestionnaireContext = React.createContext({} as IUseQuestionnaire); 
+export default function QuestionnairePage({patient}:{patient:IPatient}) { 
+  const context = useQuestionnaire(patient);   
+  const {paging, feedbackRef} = context; 
+  const page = paging.pages[paging.pageIndex]; 
+  
+  return <QuestionnaireContext.Provider value={context} > 
+    <ResetQuestionnaire/> 
+    <QuestionnaireFeedback {...{feedbackRef}}/> 
+    <FormTitleInstructions/> 
+    <div> 
+      {page.map( p => { 
+        return <QuestionItem key={p.i} {...{index:p.i}} /> 
+      })} 
+    </div> 
+    <Pager/> 
+  </QuestionnaireContext.Provider> 
 } 
+
+function FormTitleInstructions() { 
+  const {paging} = useContext(QuestionnaireContext); 
+  const page = paging.pages[paging.pageIndex]; 
+  const {form, instructions} = useQuestionnaireItem(page[0]?.i); 
+  
+  return <div><h2>{form && form.titles[0]}</h2> 
+    {instructions && instructions.map( p => { 
+      return <h3 key={p._id} >{p.labels[0]}</h3> 
+    })}
+  </div>
+}
+
+function ResetQuestionnaire() {
+  const {TestResetSession} = useContext(QuestionnaireContext); 
+  return <button onClick={TestResetSession} >Reset Questionnaire</button>
+}
+

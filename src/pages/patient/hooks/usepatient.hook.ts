@@ -1,7 +1,7 @@
 import { useContext } from 'react'; 
 import { DaoContext } from '../../../reusable/_dao'; 
-import { Session, useSession, IUseSession } from '../../../reusable/_session'; 
-//import { feedback } from '../../../components/feedback/feedback.component'; 
+import { useSession } from '../../../reusable/_session'; 
+import { PatientFeedBackRef, usePatientFeedbackRef } from '../components/patient.feedback'; 
 
 
 export interface IUsePatient { 
@@ -10,8 +10,7 @@ export interface IUsePatient {
   profile: IEntry; 
   setProfile: (newValue:any, keys:any[]) => void; 
 
-  appointment: IEntry; 
-  setAppointment: (newValue:any, keys:any[]) => void; 
+  feedbackRef:PatientFeedBackRef; 
 
   IdentifyPatient: (ramq:string) => void; 
   RamqIsValid: (value:string) => boolean; 
@@ -25,14 +24,14 @@ export interface IUsePatient {
 export function usePatient():IUsePatient { 
   const dao = useContext(DaoContext); 
 
-  // Profile & Appointment session --------------------------------------
+  // Profile session --------------------------------------
   const sessionProfile = useSession('profile', {}); 
   const sessionAppointment = useSession('appointment', {}); 
 
   const profile = sessionProfile.Get(); 
   const setProfile = (newValue:any, keys:any[] = []) => sessionProfile.Set(newValue, [...keys]); 
-  const appointment = sessionAppointment.Get(); 
-  const setAppointment = (newValue:any, keys:any[] = []) => sessionAppointment.Set(newValue, [...keys]); 
+
+  const feedbackRef = usePatientFeedbackRef(); 
 
   // RamqIsValid ------------------------------------------
   function RamqIsValid(value:string) { 
@@ -54,9 +53,8 @@ export function usePatient():IUsePatient {
   // CreateUpdateProfile ----------------------------------
   async function CreateUpdateProfile(patient: IEntry) { 
     const [response] = await dao.CreateUpdate('patients', [patient]); 
-    //feedback.setValue([response]); 
+    feedbackRef.current.Set(response); 
     if(response.success) { 
-      await CreateUpdateAppointment(response.data); 
       setProfile(response.data); 
     } 
     else 
@@ -64,7 +62,7 @@ export function usePatient():IUsePatient {
   } 
 
   // CreateUpdateappointment ----------------------------------
-  async function CreateUpdateAppointment(patient: IEntry) { 
+  /*async function CreateUpdateAppointment(patient: IEntry) { 
     const appointment = FindAppointment(patient); 
     const [response] = await dao.CreateUpdate('appointments', [appointment]); 
     //feedback.setValue([response]); 
@@ -74,10 +72,10 @@ export function usePatient():IUsePatient {
     } 
     else 
       console.log('appointment failed ...'); 
-  } 
+  } */
 
   // FindCurrentSession -----------------------------------
-  function FindAppointment(patient: IEntry) { 
+  /*function FindAppointment(patient: IEntry) { 
     const entries = dao.GetIEntries('appointments'); 
     const defaultAppointment = {...dao.GetDefaultIEntry('appointments'), patient:patient._id}; 
     const foundAppointment = entries.find( e => { 
@@ -85,7 +83,7 @@ export function usePatient():IUsePatient {
       return e_patient === patient._id; 
     }); 
     return {...defaultAppointment, ...foundAppointment}; 
-  } 
+  } */
 
 
   const TestResetSession = () => {
@@ -97,7 +95,7 @@ export function usePatient():IUsePatient {
     TestResetSession, 
 
     profile, setProfile, 
-    appointment, setAppointment, 
+    feedbackRef, 
     RamqIsValid, 
     IdentifyPatient, 
     CreateUpdateProfile

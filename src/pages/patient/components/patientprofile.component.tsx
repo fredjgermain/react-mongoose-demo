@@ -1,17 +1,15 @@
 import { useContext } from 'react'; 
-import { Editor, Reader } from '../../../reusable/_input'; 
+import { Editor, Reader } from '../../../components/editor_reader/_editor_reader'; 
 import { IsEmpty } from '../../../reusable/_utils'; 
 import { PatientContext } from '../patient.page'; 
 
 import { DaoContext } from '../../../reusable/_dao'; 
-import { useStateAt } from '../../../reusable/_customhooks';
+import { useStateAt } from '../../../reusable/_customhooks'; 
 
 
 
 export function PatientProfile() { 
-  const dao = useContext(DaoContext); 
   const {profile, CreateUpdateProfile} = useContext(PatientContext); 
-  const [ramqIField, firstNameField, lastNameField] = dao.GetIFields('patients', ['ramq', 'firstName', 'lastName']); 
   const btnLabel = !IsEmpty(profile._id) ? 
     'Update patient profile': 
     'Create new patient profile'; 
@@ -38,14 +36,14 @@ function CollectArgs(
     Get: (keys?: TKey[] | undefined) => any, 
     Set?: (newValue: any, keys?: TKey[] | undefined) => void) 
 { 
-  const {GetIFields, GetIOptions} = useContext(DaoContext); 
-  const ifields = GetIFields('patients', fieldAccessors); 
+  const dao = useContext(DaoContext); 
+  const ifields = dao.GetIFields('patients', fieldAccessors); 
   let args:any = {}; 
   ifields.forEach( ifield => { 
     const value = Get([ifield.accessor]); 
-    const setValue = Set ? (newValue:any) => Set(newValue, [ifield.accessor]): undefined; 
-    const options = GetIOptions(ifield); 
-    args[ifield.accessor] = {ifield, value, setValue, options}; 
+    const editValue = Set ? (newValue:any) => Set(newValue, [ifield.accessor]): undefined; 
+    const options = dao.GetIOptions(ifield); 
+    args[ifield.accessor] = {ifield, value, editValue, options}; 
   }); 
   return args; 
 }

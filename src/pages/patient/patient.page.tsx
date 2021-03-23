@@ -4,7 +4,8 @@ import { usePatient, IUsePatient } from './hooks/usepatient.hook';
 
 import { PatientIdentification } from './components/patientidentification.component'; 
 import { PatientProfile } from './components/patientprofile.component'; 
-import { Questionnaire } from '../questionnaire/questionnaire.page'; 
+import { PatientFeedback } from './components/patient.feedback'; 
+
 
 /* 
 if profile and questionnaire are empty; display patientId page. 
@@ -16,18 +17,19 @@ export const PatientContext = React.createContext({} as IUsePatient);
 export default function PatientPage() { 
   console.log('patient page'); 
   const context = usePatient(); 
-  const {profile, appointment} = context; 
+  const {profile, feedbackRef} = context; 
 
-  /*
-    <button onClick={TestEndSession}>Reset sessions</button> 
-    <div>Profile : {JSON.stringify(profile)}</div> 
-    <div>Appointment : {JSON.stringify(appointment)}</div> 
-  */ 
   return <PatientContext.Provider value={context}> 
+    <PatientFeedback {...{feedbackRef}}/> 
+    {IsEmpty(profile) && <PatientIdentification/> } 
+    {!IsEmpty(profile) && <PatientProfile/> } 
+  </PatientContext.Provider> 
+   
+  /*return <PatientContext.Provider value={context}> 
     {IsEmpty(profile) && <PatientIdentification/> } 
     {!IsEmpty(profile) && IsEmpty(appointment) && <PatientProfile/> } 
-    {!IsEmpty(profile) && !IsEmpty(appointment) && <Questionnaire/> }
-  </PatientContext.Provider> 
+    {!IsEmpty(profile) && !IsEmpty(appointment) && <QuestionnairePage/> }
+  </PatientContext.Provider> */
   // 
   //
 } 

@@ -6,7 +6,7 @@ interface IPatient extends IEntry {
 
 interface IAnswer extends IEntry { 
   patient: string; 
-  date: Date; 
+  date: Date;
   question: string; 
   answer: number; 
 } 

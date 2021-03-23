@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from 'react';
 import { DaoContext, IDao } from '../../../reusable/_dao'; 
 import { usePage, IPageHook } from '../../../reusable/_customhooks'; 
 import { IUseEditState, useEditState } from './useeditstate.hook'; 
-import { useAdminFeedbackRef, AdminFeedBackRef } from '../components/adminfeedback.component'; 
+import { useAdminFeedbackRef, AdminFeedBackRef } from '../components/admin.feedback'; 
 
 
 
