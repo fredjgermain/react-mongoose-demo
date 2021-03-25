@@ -1,11 +1,11 @@
 import React, { useContext } from 'react'; 
-import  { Redirect } from 'react-router-dom'; 
+import  { Redirect, useHistory } from 'react-router-dom'; 
 import { usePatient, IUsePatient } from './hooks/usepatient.hook'; 
+
 
 //import { PatientIdentification } from './components/patientidentification.component'; 
 import { PatientProfile } from './components/patientprofile.component'; 
 import { PatientFeedback } from './components/patient.feedback'; 
-
 
 /* 
 if profile and questionnaire are empty; display patientId page. 
@@ -17,12 +17,13 @@ export const PatientContext = React.createContext({} as IUsePatient);
 export default function PatientPage() { 
   console.log('patient page'); 
   const context = usePatient(); 
-  const {feedbackRef} = context; 
+  const {feedbackRef, ready} = context; 
 
   return <PatientContext.Provider value={context}> 
     <ResetProfile/> 
     <PatientFeedback {...{feedbackRef}}/> 
     <PatientProfile/> 
+    {JSON.stringify(ready)} 
     <QuestionnaireRedirection/> 
   </PatientContext.Provider> 
 
@@ -46,10 +47,14 @@ function ResetProfile() {
 
 function QuestionnaireRedirection() { 
   const {ready} = useContext(PatientContext); 
-  // <Redirect to={'Questionnaire'}/> 
-  if(ready) 
-    return <div> redirecting to questionnaire ... </div>
-  return <div>Questionnaire not ready</div>
+  let history = useHistory(); 
+  //<button onClick={() => history.push('/questionnaire')}>Redirect</button>: 
+  return <div> 
+    <div>{JSON.stringify(history)}</div> 
+    {ready ? 
+      <Redirect to={"/questionnaire"} />: 
+      <p>Not ready ... </p>} 
+  </div> 
 }
 
 

@@ -10,6 +10,8 @@ import { Session } from '../../reusable/_session';
 export const QuestionnaireContext = React.createContext({} as IUseQuestionnaire); 
 export default function QuestionnairePage() { 
   const patient = Session.Get('profile'); 
+  
+
   const context = useQuestionnaire(patient); 
   const {paging, feedbackRef} = context; 
   const page = paging.pages[paging.pageIndex]; 
@@ -39,8 +41,12 @@ function FormTitleInstructions() {
   </div>
 }
 
-function ResetQuestionnaire() {
+
+function ResetQuestionnaire() { 
   const {TestResetSession} = useContext(QuestionnaireContext); 
-  return <button onClick={TestResetSession} >Reset Questionnaire</button>
+
+  return <div>
+    <button onClick={TestResetSession} >Reset Questionnaire</button>
+  </div>
 }
 

@@ -30,6 +30,8 @@ export interface IUseQuestionnaire {
 
 export function useQuestionnaire(patient:IEntry):IUseQuestionnaire { 
   console.log('questionnaire'); 
+  console.log(patient); 
+
   const dao = useContext(DaoContext); 
   const date = new Date(); 
   const feedbackRef = useQuestionnaireFeedbackRef(); 
@@ -59,7 +61,7 @@ export function useQuestionnaire(patient:IEntry):IUseQuestionnaire {
     const entries = dao.GetIEntries('questions'); 
     return entries.map( q => { 
       //const appointment:IAppointment = {patient._id, date:Date.now()} 
-      return {_id:'', patient:patient._id, date, question:q._id, answer:-1} as IAnswer; 
+      return {_id:'', patient:patient?._id ?? '', date, question:q._id, answer:-1} as IAnswer; 
     }); 
   } 
 
@@ -108,10 +110,9 @@ export function useQuestionnaire(patient:IEntry):IUseQuestionnaire {
     return [GroupByForm, GroupByInstruction, GroupBy4]; 
   } 
 
-
-  const TestResetSession = () => {
+  const TestResetSession = () => { 
     sessionQuestionnaire.Reset(); 
-  }
+  } 
 
   return { 
     TestResetSession, 

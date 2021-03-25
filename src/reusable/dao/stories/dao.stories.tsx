@@ -1,3 +1,4 @@
+import { Story } from "@storybook/react";
 import { useContext } from 'react'; 
 import { crud } from './mockcrud'; 
 import { DaoContext, DaoContexter, ICrud} from '../../_dao'; 
@@ -41,7 +42,7 @@ export default {
   component: TestMockDao, 
 } 
 
-const Template = args => <TestMockDao {...args} /> 
+const Template:Story<{child:any, accessors: string[], args:any}> = args => <TestMockDao {...args} /> 
 export const Mock_TestValidate = Template.bind({}) 
 Mock_TestValidate.args = { 
   child: TestValidate,

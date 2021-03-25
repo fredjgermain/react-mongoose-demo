@@ -1,3 +1,4 @@
+import { Story } from '@storybook/react'; 
 import { crud } from '../../../reusable/dao/stories/mockcrud'; 
 import { DaoContexter, ICrud } from '../../../reusable/_dao'; 
 
@@ -19,7 +20,7 @@ export default {
   component: TemplateComponent, 
 } 
 
-const Template = args => <TemplateComponent {...args} /> 
+const Template:Story<{accessors:string[]}> =  args => <TemplateComponent {...args} /> 
 export const TestLandingPage = Template.bind({}) 
 TestLandingPage.args = { 
   accessors: ['questions', 'patients', 'responses', 'answers', 'forms', 'instructions'], 
