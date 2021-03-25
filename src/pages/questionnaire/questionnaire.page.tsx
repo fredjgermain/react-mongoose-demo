@@ -4,14 +4,13 @@ import { QuestionItem } from './components/questionitem.component';
 import { useQuestionnaireItem } from './hooks/usequestionnaireitem.hook'; 
 import { Pager } from './components/pager.component'; 
 import { QuestionnaireFeedback }  from './components/questionnaire.feedback';
-
-
-
+import { Session } from '../../reusable/_session';
 
 
 export const QuestionnaireContext = React.createContext({} as IUseQuestionnaire); 
-export default function QuestionnairePage({patient}:{patient:IPatient}) { 
-  const context = useQuestionnaire(patient);   
+export default function QuestionnairePage() { 
+  const patient = Session.Get('profile'); 
+  const context = useQuestionnaire(patient); 
   const {paging, feedbackRef} = context; 
   const page = paging.pages[paging.pageIndex]; 
   

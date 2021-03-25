@@ -1,34 +1,27 @@
 import { useContext } from 'react'; 
-import { Editor, Reader } from '../../../components/editor_reader/_editor_reader'; 
-import { IsEmpty } from '../../../reusable/_utils'; 
+import { Editor } from '../../../components/editor_reader/_editor_reader'; 
 import { PatientContext } from '../patient.page'; 
 
 import { DaoContext } from '../../../reusable/_dao'; 
 import { useStateAt } from '../../../reusable/_customhooks'; 
 
 
-
 export function PatientProfile() { 
-  const {profile, CreateUpdateProfile} = useContext(PatientContext); 
-  const btnLabel = !IsEmpty(profile._id) ? 
-    'Update patient profile': 
-    'Create new patient profile'; 
-  
-  const [Get, Set] = useStateAt(profile); 
+  const context = useContext(PatientContext); 
+  const {CreateUpdateProfile, ready, TestResetSession} = context; 
+  const [Get, Set] = useStateAt({ramq:'', firstName:'', lastName:''}); 
   const {ramq, firstName, lastName} = CollectArgs(['ramq', 'firstName', 'lastName'], Get, Set); 
-  
 
   return <div> 
     <h1>Patient profile</h1> 
-    <div>
-      <label>Ramq:</label><Reader {...ramq}/> <br/>
-      <label>First name:</label><Editor {...firstName}/> <br/>
-      <label>Last name:</label><Editor {...lastName}/> <br/>
+    <div> 
+      <div><label>Ramq:</label><Editor {...ramq} /></div> 
+      <div><label>First name:</label><Editor {...firstName} /></div> 
+      <div><label>Last name:</label><Editor {...lastName} /></div> 
     </div> 
-    <button onClick={() => CreateUpdateProfile(Get())}>{btnLabel}</button> 
+    <button onClick={() => CreateUpdateProfile(Get())}>Save profile</button> 
   </div> 
-}
-
+} 
 
 
 function CollectArgs( 
@@ -48,31 +41,3 @@ function CollectArgs(
   return args; 
 }
 
-
-
-// export function PatientProfile() { 
-//   console.log('patient profile'); 
-//   const {GetIFields} = useContext(DaoContext); 
-//   const {profile, CreateUpdateProfile} = useContext(PatientContext); 
-//   const [ramqIField, ...ifields] = GetIFields('patients', ['ramq', 'firstName', 'lastName']); 
-
-//   const [value, setValue] = useState(profile); 
-
-//   const btnLabel = !IsEmpty(profile._id) ? 
-//     'Update patient profile': 
-//     'Create new patient profile'; 
-
-//   return <div> 
-//     <h2>Patient profile</h2> 
-//     {JSON.stringify(value)} 
-//     <Objx {...{value, ifields}} > 
-//       <Field {...{ifield:ramqIField}} >
-//         <div><FieldLabel/><FieldReader {...{readerFunc:Reader}} /></div>
-//       </Field> 
-//       <Fields {...{ifields}} > 
-//         <div><FieldLabel/><FieldEditor {...{setValue, editorFunc:Editor}} /></div> 
-//       </Fields> 
-//     </Objx> 
-//     <button onClick={() => CreateUpdateProfile(value)}>{btnLabel}</button>
-//   </div> 
-// } 

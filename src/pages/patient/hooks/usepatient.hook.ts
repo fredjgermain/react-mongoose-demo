@@ -1,6 +1,7 @@
 import { useContext } from 'react'; 
 import { DaoContext } from '../../../reusable/_dao'; 
 import { useSession } from '../../../reusable/_session'; 
+import { IsEmpty } from '../../../reusable/_utils';
 import { PatientFeedBackRef, usePatientFeedbackRef } from '../components/patient.feedback'; 
 
 
@@ -9,6 +10,7 @@ export interface IUsePatient {
 
   profile: IEntry; 
   setProfile: (newValue:any, keys:any[]) => void; 
+  ready: boolean; 
 
   feedbackRef:PatientFeedBackRef; 
 
@@ -26,10 +28,19 @@ export function usePatient():IUsePatient {
 
   // Profile session --------------------------------------
   const sessionProfile = useSession('profile', {}); 
-  const sessionAppointment = useSession('appointment', {}); 
 
-  const profile = sessionProfile.Get(); 
+  const profile = sessionProfile.Get() as IPatient; 
   const setProfile = (newValue:any, keys:any[] = []) => sessionProfile.Set(newValue, [...keys]); 
+  
+  //const sessionReady = useSession('ready', false); 
+  const ready = IsReady(); 
+  
+  function IsReady() { 
+    if(IsEmpty(profile)) 
+      return false; 
+    return Object.keys(profile).every( k => !IsEmpty(profile[k])) 
+  }
+
 
   const feedbackRef = usePatientFeedbackRef(); 
 
@@ -45,7 +56,7 @@ export function usePatient():IUsePatient {
     const foundProfile = entries.find( e => { 
       const e_ramq = (e['ramq'] as string); 
       return e_ramq.toLowerCase() === ramq.toLowerCase(); 
-    });
+    }); 
     const newProfile = {...dao.GetDefaultIEntry('patients'), ramq}; 
     setProfile(foundProfile ?? newProfile); 
   }
@@ -57,8 +68,9 @@ export function usePatient():IUsePatient {
     if(response.success) { 
       setProfile(response.data); 
     } 
-    else 
+    else { 
       console.log(response.err); 
+    } 
   } 
 
   // CreateUpdateappointment ----------------------------------
@@ -88,13 +100,13 @@ export function usePatient():IUsePatient {
 
   const TestResetSession = () => {
     sessionProfile.Reset(); 
-    sessionAppointment.Reset(); 
   }
 
   return { 
     TestResetSession, 
 
     profile, setProfile, 
+    ready, 
     feedbackRef, 
     RamqIsValid, 
     IdentifyPatient, 

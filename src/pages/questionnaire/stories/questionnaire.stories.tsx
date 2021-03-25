@@ -1,5 +1,6 @@
 import { crud } from '../../../reusable/dao/stories/mockcrud'; 
-import { DaoContexter, Preloader, ICrud } from '../../../reusable/_dao'; 
+import { DaoContexter, ICrud } from '../../../reusable/_dao'; 
+import { useSession } from '../../../reusable/_session'; 
 
 import QuestionnairePage from '../questionnaire.page'; 
 
@@ -8,13 +9,11 @@ import '../../../css/table.css';
 
 
 function TemplateComponent({accessors, patient}:{accessors:string[], patient:IPatient}) { 
-
-  return <DaoContexter crud={crud as ICrud} > 
-    <Preloader {...{accessors}}> 
-      <QuestionnairePage {...{patient}}/> 
-    </Preloader> 
+  const sessionProfile = useSession('profile', patient); 
+  return <DaoContexter {...{crud:crud as ICrud, accessors}} > 
+    <QuestionnairePage/> 
   </DaoContexter> 
-}
+} 
 
 export default { 
   title: 'Questionnaire/Questionnaire', 

@@ -1,5 +1,5 @@
 import { crud } from '../../../reusable/dao/stories/mockcrud'; 
-import { DaoContexter, Preloader, ICrud } from '../../../reusable/_dao'; 
+import { DaoContexter, ICrud } from '../../../reusable/_dao'; 
 
 import PatientPage from '../patient.page'; 
 
@@ -7,12 +7,10 @@ import PatientPage from '../patient.page';
 import '../../../css/table.css'; 
 
 
-function TemplateComponent({accessors, patient}:{accessors:string[], patient:IPatient}) { 
+function TemplateComponent({accessors}:{accessors:string[]}) { 
 
-  return <DaoContexter crud={crud as ICrud} > 
-    <Preloader {...{accessors}}> 
+  return <DaoContexter {...{crud:crud as ICrud, accessors}} > 
       <PatientPage /> 
-    </Preloader> 
   </DaoContexter> 
 }
 
