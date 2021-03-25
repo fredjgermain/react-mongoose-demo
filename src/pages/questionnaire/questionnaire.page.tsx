@@ -5,6 +5,7 @@ import { useQuestionnaireItem } from './hooks/usequestionnaireitem.hook';
 import { Pager } from './components/pager.component'; 
 import { QuestionnaireFeedback }  from './components/questionnaire.feedback';
 import { Session } from '../../reusable/_session';
+import { SessionDebug } from '../../components/sessiondebug/sessiondebug.component';
 
 
 export const QuestionnaireContext = React.createContext({} as IUseQuestionnaire); 
@@ -17,7 +18,6 @@ export default function QuestionnairePage() {
   const page = paging.pages[paging.pageIndex]; 
   
   return <QuestionnaireContext.Provider value={context} > 
-    <ResetQuestionnaire/> 
     <QuestionnaireFeedback {...{feedbackRef}}/> 
     <FormTitleInstructions/> 
     <div> 

@@ -27,11 +27,8 @@ export interface IUseQuestionnaire {
   SubmitQuestionnaire: (answers?:IEntry[]) => Promise<ICrudResponse[]>; 
 } 
 
-
 export function useQuestionnaire(patient:IEntry):IUseQuestionnaire { 
-  console.log('questionnaire'); 
-  console.log(patient); 
-
+  //console.log('questionnaire'); 
   const dao = useContext(DaoContext); 
   const date = new Date(); 
   const feedbackRef = useQuestionnaireFeedbackRef(); 

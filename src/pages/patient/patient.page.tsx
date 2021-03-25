@@ -20,7 +20,6 @@ export default function PatientPage() {
   const {feedbackRef, ready} = context; 
 
   return <PatientContext.Provider value={context}> 
-    <ResetProfile/> 
     <PatientFeedback {...{feedbackRef}}/> 
     <PatientProfile/> 
     {JSON.stringify(ready)} 

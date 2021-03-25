@@ -1,6 +1,7 @@
 import Nav from './components/nav/nav.component'; 
 import { Switch, Route } from 'react-router-dom'; 
 import { DaoContexter, ICrud } from './reusable/_dao'; 
+import {SessionDebug} from './components/sessiondebug/sessiondebug.component';
 //import { usePreloadCollections } from './components/preloader.component'; 
 
 /*import Editor from './components/'; 
@@ -30,6 +31,9 @@ export default function AppTypeScript() {
 // MAIN SECTION ===========================================
 function MainSection() { 
   return <div> 
+    --- Session ----- <br/> 
+    <SessionDebug {...{sessionNames:["profile", "questionnaire"]}}/> 
+    ----------------- <br/> 
     <Nav/> 
     <Switch> 
       <Route exact path={'/'} component={Home} /> 
