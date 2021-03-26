@@ -1,7 +1,7 @@
-import { useContext } from 'react'; 
+import { useContext, useState } from 'react'; 
 import { DaoContext } from '../../../reusable/_dao'; 
-import { useSession } from '../../../reusable/_session'; 
-import { IsEmpty } from '../../../reusable/_utils';
+import { useSession, Session } from '../../../reusable/_session'; 
+import { IsEmpty } from '../../../reusable/_utils'; 
 import { PatientFeedBackRef, usePatientFeedbackRef } from '../components/patient.feedback'; 
 
 
@@ -24,13 +24,15 @@ export interface IUsePatient {
 
 // UsePatient ============================================= 
 export function usePatient():IUsePatient { 
+  console.log("patient"); 
   const dao = useContext(DaoContext); 
 
-  // Profile session --------------------------------------
-  const sessionProfile = useSession('profile', {}); 
-
-  const profile = sessionProfile.Get() as IPatient; 
-  const setProfile = (newValue:any, keys:any[] = []) => sessionProfile.Set(newValue, [...keys]); 
+  // Profile session -------------------------------------- 
+  const [profile, _setProfile] = useState(Session.Get('profile')); 
+  const setProfile = (newValue:any) => { 
+    Session.Set('profile', newValue); 
+    _setProfile(newValue); 
+  }
   
   //const sessionReady = useSession('ready', false); 
   const ready = IsReady(); 
@@ -65,6 +67,7 @@ export function usePatient():IUsePatient {
   async function CreateUpdateProfile(patient: IEntry) { 
     const [response] = await dao.CreateUpdate('patients', [patient]); 
     feedbackRef.current.Set(response); 
+    //console.log(response);
     if(response.success) { 
       setProfile(response.data); 
     } 
@@ -98,8 +101,9 @@ export function usePatient():IUsePatient {
   } */
 
 
-  const TestResetSession = () => {
-    sessionProfile.Reset(); 
+  const TestResetSession = () => { 
+    setProfile({}); 
+    //sessionProfile.Reset(); 
   }
 
   return { 

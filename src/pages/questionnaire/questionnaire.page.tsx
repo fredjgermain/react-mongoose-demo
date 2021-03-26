@@ -5,13 +5,14 @@ import { useQuestionnaireItem } from './hooks/usequestionnaireitem.hook';
 import { Pager } from './components/pager.component'; 
 import { QuestionnaireFeedback }  from './components/questionnaire.feedback';
 import { Session } from '../../reusable/_session';
-import { SessionDebug } from '../../components/sessiondebug/sessiondebug.component';
+import { IsEmpty } from '../../reusable/_utils'; 
+import { Redirection } from '../../components/redirector/redicrector.component'; 
 
 
 export const QuestionnaireContext = React.createContext({} as IUseQuestionnaire); 
 export default function QuestionnairePage() { 
-  const patient = Session.Get('profile'); 
-  
+  const patient = Session.Get('profile') as IEntry; 
+  const patientNull = IsEmpty(patient?._id); 
 
   const context = useQuestionnaire(patient); 
   const {paging, feedbackRef} = context; 
@@ -26,6 +27,7 @@ export default function QuestionnairePage() {
       })} 
     </div> 
     <Pager/> 
+    <Redirection {...{condition:patientNull, destination:'patient'}}/> 
   </QuestionnaireContext.Provider> 
 } 
 
@@ -38,15 +40,6 @@ function FormTitleInstructions() {
     {instructions && instructions.map( p => { 
       return <h3 key={p._id} >{p.labels[0]}</h3> 
     })}
-  </div>
-}
-
-
-function ResetQuestionnaire() { 
-  const {TestResetSession} = useContext(QuestionnaireContext); 
-
-  return <div>
-    <button onClick={TestResetSession} >Reset Questionnaire</button>
   </div>
 }
 

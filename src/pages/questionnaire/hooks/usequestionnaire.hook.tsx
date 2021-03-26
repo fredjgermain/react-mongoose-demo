@@ -34,11 +34,16 @@ export function useQuestionnaire(patient:IEntry):IUseQuestionnaire {
   const feedbackRef = useQuestionnaireFeedbackRef(); 
   //const profile = Session.Get('profile') as IEntry; 
 
+  // Questionnaire session --------------------------------
   const sessionQuestionnaire = useSession('questionnaire', LoadQuestionnaire()); 
   const questionnaire:IAnswer[] = sessionQuestionnaire.Get(); 
   const setQuestionnaire = (newValue:any, keys:any[] = []) => sessionQuestionnaire.Set(newValue, [...keys]); 
+
+  // Paging -----------------------------------------------
   const paging = usePage(questionnaire, PageBreakPredicates()); 
 
+
+  
   function GetQuestion(answer:IAnswer) { 
     const [question] = dao.GetIEntries('questions', [answer?.question]) as IQuestion[]; 
     return question; 

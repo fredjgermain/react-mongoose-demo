@@ -1,20 +1,32 @@
+import { useState } from 'react';
 import {IUseSession, Session} from '../../reusable/_session'; 
 
-export function SessionDebug({sessionNames}:{sessionNames:string[]}) { 
+
+export function SessionDebug({sessionName}:{sessionName:string}) {
+  const [value, setValue] = useState(Session.Get(sessionName)); 
+  const EndSession = () => { 
+    Session.EndSession(sessionName); 
+    setValue(Session.Get(sessionName)); 
+  } 
+
+  return <div> 
+    {JSON.stringify(value)} <br/> 
+    <button onClick={EndSession}>End Session</button> 
+  </div> 
+}
+
+
+export function SessionsDebug({sessionNames}:{sessionNames:string[]}) { 
   
+
   function Refresh() { 
     window.location.reload(false); 
   } 
 
   return <div> 
-    {sessionNames.map( s => { 
-      return <div>
-        {s} :  
-        {JSON.stringify(Session.Get(s))} <br/>
-        <button onClick={() => Session.EndSession(s)} >End Session</button> 
-      </div> 
+    {sessionNames.map( (s,i) => { 
+      return <SessionDebug key={i} sessionName={s} /> 
     })} 
-    
     <button onClick={Refresh} >Refresh</button> <br/> 
   </div> 
 } 

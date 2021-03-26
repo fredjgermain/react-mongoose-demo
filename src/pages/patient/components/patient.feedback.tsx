@@ -10,7 +10,9 @@ export function usePatientFeedbackRef() {
 
 export function PatientFeedback({feedbackRef}:{feedbackRef:React.MutableRefObject<GetSet>}) { 
   const {Get, Set} = useRefGetSet(feedbackRef); 
+  console.log(Get()); 
   return <div> 
+    <em>Patient Feedback</em><br/> 
     {JSON.stringify(Get())} 
     <button onClick={() => Set('testFeedback')} > Feedback</button>
   </div> 
