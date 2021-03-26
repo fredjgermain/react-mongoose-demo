@@ -18,9 +18,7 @@ export const AdminContext = React.createContext({} as IUseAdmin);
 export default function AdminPage() { 
   const context = useAdmin(); 
   return <AdminContext.Provider value={context}> 
-    <EditingState/> 
-    <h1>Admin section</h1> 
-    <br/> 
+    <h1>Admin section</h1> <br/> 
     <CollectionSelector/> 
     {!IsEmpty(context.GetEditState(['collection'])) && <AdminTable/>} 
   </AdminContext.Provider> 

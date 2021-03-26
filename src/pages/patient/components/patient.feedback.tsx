@@ -10,10 +10,29 @@ export function usePatientFeedbackRef() {
 
 export function PatientFeedback({feedbackRef}:{feedbackRef:React.MutableRefObject<GetSet>}) { 
   const {Get, Set} = useRefGetSet(feedbackRef); 
-  console.log(Get()); 
+  const response = Get() as ICrudResponse; 
+  
   return <div> 
     <em>Patient Feedback</em><br/> 
-    {JSON.stringify(Get())} 
-    <button onClick={() => Set('testFeedback')} > Feedback</button>
+    {response.success ? 
+      <Success {...{response}} /> : 
+      <ListErrMsgs {...{response}}/> } 
+    <button onClick={() => Set('testFeedback')} > Feedback</button> 
   </div> 
-}
+} 
+
+function Success({response}:{response:ICrudResponse}) { 
+  const {firstName, lastName} = response?.data as IPatient; 
+  return <div> 
+    Welcome {firstName} {lastName}. 
+  </div> 
+} 
+
+function ListErrMsgs({response}:{response:ICrudResponse}) { 
+  const errMsg = response.err; 
+  return <ul> 
+    {errMsg?.map( e => { 
+      return <li className={'failure'}>{e}</li> 
+    })} 
+  </ul> 
+} 

@@ -13,12 +13,12 @@
 }
 
 
-table {
-  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
-  border-collapse: collapse;
-  width: 100%;
-  font-size: 12px;
-}
+table { 
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif; 
+  border-collapse: collapse; 
+  width: 100%; 
+  font-size: 12px; 
+} 
 
 table td, table th {
   border: 1px solid #ddd;

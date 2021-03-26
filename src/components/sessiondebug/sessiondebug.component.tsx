@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import {IUseSession, Session} from '../../reusable/_session'; 
+import { Session } from '../../reusable/_session'; 
 
 
 export function SessionDebug({sessionName}:{sessionName:string}) {
@@ -13,7 +13,7 @@ export function SessionDebug({sessionName}:{sessionName:string}) {
     {JSON.stringify(value)} <br/> 
     <button onClick={EndSession}>End Session</button> 
   </div> 
-}
+} 
 
 
 export function SessionsDebug({sessionNames}:{sessionNames:string[]}) { 

@@ -15,19 +15,21 @@ export function AdminTable() {
   const {label} = collection; 
 
   const Tbody = <tbody> 
-      {paging.page.map( e => { 
-        return <AdminRow key={e.i} {...{index:e.i}} /> 
-      })} 
-      <AdminRow index={-1} /> 
-    </tbody> 
+    {paging.page.map( e => { 
+      return <AdminRow key={e.i} {...{index:e.i}} /> 
+    })} 
+    <AdminRow index={-1} /> 
+  </tbody> 
 
   return <div> 
-    <h3>{label}</h3> 
-    
     <AdminFeedback {...{feedbackRef:feedbackRef}} /> 
+    <h2>{label}</h2> 
     <table>
       <Header/> 
       {Tbody} 
+      <tfoot>
+        TAble footer
+      </tfoot>
     </table> 
     <div> 
       <PagerFromTo {...{paging}} /> <br/> 
