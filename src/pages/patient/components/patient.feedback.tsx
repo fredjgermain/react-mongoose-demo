@@ -13,11 +13,9 @@ export function PatientFeedback({feedbackRef}:{feedbackRef:React.MutableRefObjec
   const response = Get() as ICrudResponse; 
   
   return <div> 
-    <em>Patient Feedback</em><br/> 
     {response.success ? 
       <Success {...{response}} /> : 
       <ListErrMsgs {...{response}}/> } 
-    <button onClick={() => Set('testFeedback')} > Feedback</button> 
   </div> 
 } 
 

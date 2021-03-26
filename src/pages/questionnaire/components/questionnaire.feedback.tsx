@@ -15,9 +15,7 @@ export function QuestionnaireFeedback({feedbackRef}:{feedbackRef:React.MutableRe
 
   // {responses.every( r => r.success) ? <Success /> : <Error />} 
   return <div> 
-    <em>Questionnaire Feedback</em><br/> 
     {!IsEmpty(responses) && <SubmittedResponses {...{responses}} />} 
-    <button onClick={() => Set('testFeedback')} >Feedback</button> 
   </div> 
 } 
 
