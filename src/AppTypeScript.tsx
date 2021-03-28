@@ -12,7 +12,7 @@ import HomePage from './pages/home/home.page';
 import AdminPage from './pages/admin/admin.page'; 
 import PatientPage from './pages/patient/patient.page'; 
 import QuestionnairePage from './pages/questionnaire/questionnaire.page'; 
-
+import ThankYouPage from './pages/thankyou/thankyou.page'; 
 
 
 
@@ -41,6 +41,7 @@ function MainSection() {
         <Route path={'/admin'} component={AdminPage} /> 
         <Route path={'/patient'} component={PatientPage} /> 
         <Route path={'/questionnaire'} component={QuestionnairePage} /> 
+        <Route path={'/thankyou'} component={ThankYouPage} /> 
       </Switch>
     </main> 
     <footer>Footer</footer> 

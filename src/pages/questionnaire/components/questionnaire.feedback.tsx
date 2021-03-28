@@ -1,6 +1,7 @@
 import React, { useRef } from 'react'; 
 import { useRefGetSet, GetSet } from '../../../components/feedback/feedback.component'; 
-import { IsEmpty } from '../../../reusable/_utils';
+import { IsEmpty } from '../../../reusable/_utils'; 
+import { Redirection } from '../../../components/redirector/redicrector.component'; 
 
 
 export type QuestionnaireFeedBackRef = React.MutableRefObject<GetSet>; 
@@ -10,7 +11,7 @@ export function useQuestionnaireFeedbackRef() {
 } 
 
 export function QuestionnaireFeedback({feedbackRef}:{feedbackRef:React.MutableRefObject<GetSet>}) { 
-  const {Get, Set} = useRefGetSet(feedbackRef); 
+  const {Get} = useRefGetSet(feedbackRef); 
   const responses = Get() as ICrudResponse[]; 
 
   // {responses.every( r => r.success) ? <Success /> : <Error />} 
@@ -20,9 +21,11 @@ export function QuestionnaireFeedback({feedbackRef}:{feedbackRef:React.MutableRe
 } 
 
 function SubmittedResponses({responses}:{responses:ICrudResponse[]}) { 
+  const completed = responses.every( r => r.success)
+
   return <div> 
-    {responses.every( r => r.success) ? 
-      <div className={'success'}> Thank you for completing this form. </div> : 
+    {completed ? 
+      <Redirection {...{condition:completed, destination:'thankyou'}}/> : 
       <div className={'failure'}> An errors happened. </div> } 
   </div> 
 } 

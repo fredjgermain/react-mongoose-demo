@@ -28,9 +28,9 @@ export function AdminFeedback({feedbackRef}:{feedbackRef:React.MutableRefObject<
           return <li key={e}>{e}</li> 
         })} 
       </ul> 
-    </div>}
+    </div>} 
   </div> 
-}
+} 
 
 function SuccessesFeedback(actionType:string, n:number) { 
   return n > 1 ? 

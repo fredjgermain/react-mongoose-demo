@@ -27,7 +27,7 @@ export function useQuestionnaireItem(index:number) : IUseQuestionnaireItem {
   const [response] = dao.GetIEntries('responses', [question?.responseType]) as IResponse[]; 
   const isOptional = question?.optional; 
 
-  const enums = response?.responseType['enum'] as string[]; 
+  const enums = response?.values as string[]; 
   const value = answer.answer; 
   const setValue = (newAnswer:number) => setQuestionnaire(newAnswer, [index, 'answer']); 
   const options = enums?.map( (e, i) => { 
@@ -35,7 +35,6 @@ export function useQuestionnaireItem(index:number) : IUseQuestionnaireItem {
   }); 
   const ifield = {accessor:'', label:'', type:'number', defaultValue:-1, 
     enums, isEnum:!!enums} as IField; 
-
   const IEditorArgs = {value, setValue, options, ifield} as IEditor; 
 
 

@@ -23,7 +23,7 @@ interface IInstruction extends IEntry {
 
 interface IResponse extends IEntry { 
   rId: string; 
-  responseType: any; 
+  values: any; 
 } 
 
 interface IQuestion extends IEntry{ 
