@@ -1,5 +1,5 @@
 .buttonload {
-  background-color: #4CAF50; /* Green background */
+  background-color: #222831; /* Green background */
   border: none; /* Remove borders */
   color: white; /* White text */
   padding: 12px 24px; /* Some padding */
@@ -33,6 +33,6 @@ table tr:hover {background-color: #ddd;}
 table th {
   padding-top: 5px; 
   padding-bottom: 5px; 
-  background-color: #4CAF50; 
-  color: white;
+  background-color: #222831; 
+  color: #eeeeee;
 }

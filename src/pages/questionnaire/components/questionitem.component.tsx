@@ -15,10 +15,10 @@ export function QuestionItem({index}:{index:number}) {
 
   const display = AnswersAreComplete([answer]) ? success: failure; 
 
-  return <div> 
-    <span>{label}</span> 
-    <Editor {...IEditorArgs} /> 
-    <span className={display.className}>{display.symbol} {question?.optional && '?'}</span>
+  return <div className={'questionItem'}> 
+    <span>{label} : </span> 
+    <span><Editor {...IEditorArgs} /></span> 
+    <span className={display.className}> {display.symbol} {question?.optional && '?'}</span> 
   </div>
 }
 

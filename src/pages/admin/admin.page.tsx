@@ -18,15 +18,17 @@ export const AdminContext = React.createContext({} as IUseAdmin);
 export default function AdminPage() { 
   const context = useAdmin(); 
   return <AdminContext.Provider value={context}> 
-    <h1>Admin section</h1> <br/> 
+    <h1>Admin section</h1> 
+    Select a data collection you wish to read or edit. 
+    <br/> 
     <CollectionSelector/> 
     {!IsEmpty(context.GetEditState(['collection'])) && <AdminTable/>} 
   </AdminContext.Provider> 
 } 
 
-function EditingState() {
+function EditingState() { 
   const {GetEditState} = useContext(AdminContext); 
-  const {collection, index, mode} = GetEditState();
+  const {collection, index, mode} = GetEditState(); 
 
   return <div> 
     Collection: {collection} <br/> 

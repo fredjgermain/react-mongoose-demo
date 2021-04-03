@@ -23,27 +23,30 @@ export interface IUseAdmin extends IUseEditState {
 // useAdmin ===============================================
 export function useAdmin() { 
   const dao = useContext(DaoContext); 
-  const [columns, setColumns] = useState([] as string[]); 
   const editState = useEditState(); 
   const collectionAccessor = editState.GetEditState(['collection']) as string; 
-  const paging = usePage(dao.GetIEntries(collectionAccessor), 5); 
+  const paging = usePage(dao.GetIEntries(collectionAccessor), 10); 
   const feedbackRef = useAdminFeedbackRef(); 
 
+  const [_columns, setColumns] = useState([] as string[]); 
+  const columns = GetFields().filter(f => !!f.label).map( f => f.accessor ); 
+
   // Reset Columns on collection change
-  useEffect(() => { 
-    IniColumns(); 
-    paging.setPageIndex(0); 
-    
+  /*useEffect(() => { 
+      IniColumns(); 
+      paging.setPageIndex(0); 
   }, [collectionAccessor]); 
 
   useEffect(() => { 
-    if(feedbackRef.current.Set) 
+    if(collectionAccessor !== 'answers' && feedbackRef.current.Set) 
       feedbackRef.current.Set([]) 
-  }, [collectionAccessor, paging.pageIndex]) 
+  }, [collectionAccessor, paging.pageIndex]) */
 
   function IniColumns() { 
-    if(!!collectionAccessor) 
-      setColumns(GetFields().filter(f => !!f.label).map( f => f.accessor )); 
+    if(!!collectionAccessor) { 
+      /*console.log(columns); 
+      setColumns((prev) => columns); */
+    }
   } 
 
   // GetCollectionOptions ................................. 

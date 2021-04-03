@@ -18,28 +18,52 @@ export default function QuestionnairePage() {
   const {paging, feedbackRef} = context; 
   const page = paging.pages[paging.pageIndex]; 
   
-  return <QuestionnaireContext.Provider value={context} > 
+  return <QuestionnaireContext.Provider value={context}> 
+    <h1>Questionnaires</h1> 
     <QuestionnaireFeedback {...{feedbackRef}}/> 
+    <br/> 
     <FormTitleInstructions/> 
-    <div> 
-      {page.map( p => { 
-        return <QuestionItem key={p.i} {...{index:p.i}} /> 
-      })} 
-    </div> 
-    <Pager/> 
+    <br/> 
+    <QuestionMap {...{page}} /> 
     <Redirection {...{condition:patientNull, destination:'patient'}}/> 
   </QuestionnaireContext.Provider> 
 } 
 
+
+function FormTitle({page}:{page:{i:number, t:IAnswer}[]}) { 
+  const {form} = useQuestionnaireItem(page[0]?.i); 
+  return <div> 
+    <h2>{form && form.titles[0]}</h2> 
+  </div> 
+} 
+
+
+// ---------------------------------------
 function FormTitleInstructions() { 
   const {paging} = useContext(QuestionnaireContext); 
   const page = paging.pages[paging.pageIndex]; 
   const {form, instructions} = useQuestionnaireItem(page[0]?.i); 
   
-  return <div><h2>{form && form.titles[0]}</h2> 
-    {instructions && instructions.map( p => { 
-      return <h3 key={p._id} >{p.labels[0]}</h3> 
-    })}
-  </div>
-}
+  return <div> 
+    <h2>{form && form.titles[0]}</h2> 
+    <br/> 
+    {!IsEmpty(instructions) && <ul className={'borderedform'}> 
+      {instructions.map( p => { 
+        return <li className={'warning'} key={p._id} >{p.labels[0]}</li> 
+      })} 
+    </ul>} 
+  </div> 
+} 
+
+
+// ---------------------------------------
+function QuestionMap({page}:{page:{i:number, t:IAnswer}[]}) { 
+  return <div className={'borderedform'}> 
+    {page.map( p => { 
+      return <QuestionItem key={p.i} {...{index:p.i}} /> 
+    })} 
+    <br/> 
+    <Pager/> 
+  </div> 
+} 
 

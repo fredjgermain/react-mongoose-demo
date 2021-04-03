@@ -8,7 +8,6 @@ import { AdminContext } from '../admin.page';
 
 /* Admin tabler ============================================ */
 export function AdminTable() { 
-  console.log('admintablr'); 
   //const dao = useContext(DaoContext); 
   const {dao, collectionAccessor, paging, feedbackRef} = useContext(AdminContext); 
   const [collection] = dao.GetICollections([collectionAccessor]); 
@@ -18,23 +17,45 @@ export function AdminTable() {
     {paging.page.map( e => { 
       return <AdminRow key={e.i} {...{index:e.i}} /> 
     })} 
-    <AdminRow index={-1} /> 
   </tbody> 
 
+
   return <div> 
+  <AdminFeedback {...{feedbackRef:feedbackRef}} /> 
+  <h2>{label}</h2> 
+  <br/>
+  <table>
+    <caption>You may read, update, delete and create new entries in the collection {label}</caption>
+    <Header/> 
+    {Tbody} 
+    <tfoot> 
+      <AdminRow index={-1} /> 
+    </tfoot> 
+  </table> 
+  <div> 
+    <PagerFromTo {...{paging}} /> <br/> 
+    <PageOfPages {...{paging}} /> <br/> 
+    <PagerBtn {...{paging}}/> 
+  </div> 
+  </div> 
+
+
+  /*return <div> 
     <AdminFeedback {...{feedbackRef:feedbackRef}} /> 
     <h2>{label}</h2> 
+    <br/>
     <table>
+      <caption>You may read, update, delete and create new entries in the collection {label}</caption>
       <Header/> 
       {Tbody} 
-      <tfoot>
-        TAble footer
-      </tfoot>
+      <tfoot> 
+        <AdminRow index={-1} /> 
+      </tfoot> 
     </table> 
     <div> 
       <PagerFromTo {...{paging}} /> <br/> 
       <PageOfPages {...{paging}} /> <br/> 
       <PagerBtn {...{paging}}/> 
     </div> 
-  </div> 
+  </div> */
 } 

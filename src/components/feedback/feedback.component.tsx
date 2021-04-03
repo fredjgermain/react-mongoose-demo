@@ -1,6 +1,6 @@
 import React, { useState } from 'react'; 
 
-import '../../css/feedback.css'; 
+import '../../css/main.css'; 
 import { ToArray } from '../../reusable/_arrayutils'; 
 import { IsEmpty } from '../../reusable/_utils'; 
 

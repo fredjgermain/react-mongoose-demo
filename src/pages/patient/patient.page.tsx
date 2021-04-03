@@ -15,6 +15,9 @@ export default function PatientPage() {
   const {feedbackRef, ready} = context; 
 
   return <PatientContext.Provider value={context}> 
+    <h1>Patient section</h1> 
+    <p>Please write down your RAMQ number, then your first and last name, then press 'Save profile' before proceding with the questionnaires.</p>
+
     <PatientFeedback {...{feedbackRef}}/> 
     <PatientProfile/> 
     <Redirection {...{condition:ready, destination:'questionnaire'}}/> 

@@ -8,18 +8,16 @@ import { useStateAt } from '../../../reusable/_customhooks';
 
 export function PatientProfile() { 
   const context = useContext(PatientContext); 
-  const {CreateUpdateProfile, ready, TestResetSession} = context; 
+  const {CreateUpdateProfile} = context; 
   const [Get, Set] = useStateAt({ramq:'', firstName:'', lastName:''}); 
   const {ramq, firstName, lastName} = CollectArgs(['ramq', 'firstName', 'lastName'], Get, Set); 
 
-  return <div> 
-    <h1>Patient profile</h1> 
-    <div> 
-      <div><label>Ramq:</label><Editor {...ramq} /></div> 
-      <div><label>First name:</label><Editor {...firstName} /></div> 
-      <div><label>Last name:</label><Editor {...lastName} /></div> 
-    </div> 
-    <button onClick={() => CreateUpdateProfile(Get())}>Save profile</button> 
+  return <div className={'borderedform'}> 
+    <div><label>Ramq:</label><Editor {...ramq} /></div> 
+    <div><label>First name:</label><Editor {...firstName} /></div> 
+    <div><label>Last name:</label><Editor {...lastName} /></div> 
+    <br/> 
+    <button onClick={() => CreateUpdateProfile(Get())}>Save</button> 
   </div> 
 } 
 

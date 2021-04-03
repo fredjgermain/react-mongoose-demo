@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from "react"; 
-import { setInterval } from "timers"; 
+import { useMemo, useState } from "react"; 
+import { setInterval, clearInterval } from "timers"; 
 
 
 export function useCountDown() { 
