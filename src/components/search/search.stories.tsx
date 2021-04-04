@@ -1,21 +1,22 @@
 import React, {useState} from 'react'; 
-import {Search} from './search.component'; 
+import {InputFilter} from './search.component'; 
 
 
 
 function TemplateResearch({selection}:{selection:any[]}) { 
-  const [_selection, setSelection] = useState(selection); 
+  const [values, setValues] = useState([]); 
+  const onFilter = (newValues:any) => console.log(newValues); 
+
   return <div> 
-    {JSON.stringify(selection)} <br/> 
-    {JSON.stringify(_selection)} <br/> 
-    <Search {...{selection, setSelection, field:'v'}} /> 
+    {JSON.stringify(values)} 
+    <InputFilter {...{onFilter}} /> 
   </div> 
 } 
 
 
 
 export default { 
-  title: 'research/Research', 
+  title: 'editor/Filter', 
   component: TemplateResearch 
 } 
 
@@ -34,9 +35,14 @@ TestFilters.args = {
   predicates: predicates, 
 }*/
 
+export const ArrayNumber = Template.bind({}) 
+ArrayNumber.args = { 
+    selection:[1,2,3,4,6,8,9], 
+} 
+  
 export const ResearchString = Template.bind({}) 
 ResearchString.args = { 
-    selection:[
+    selection:[ 
       {a:'a', v:1}, 
       {a:'b', v:2}, 
       {a:'c', v:3}, 
