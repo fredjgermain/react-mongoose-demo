@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'; 
 import { Filter, Predicate } from '../../reusable/_arrayutils'; 
-import { IsEmpty } from '../../reusable/_utils'; 
+import { IsEmpty, GetDefaultValueByType } from '../../reusable/_utils'; 
 import { Input } from '../editor_reader/input/_input'; 
 import { InputSelect } from '../editor_reader/inputselect/_inputselect'; 
 //import {Editor, IEditor} from '../../components/editor_reader/editor/_editor'; 
@@ -31,16 +31,25 @@ export interface IInput {
   size?: (value:any) => number; 
 } 
 
-export function InputFilter({onFilter}:{onFilter:(newFilter)=>void}) { 
+export function InputFilter({...props}:{type:string, onChange:(newValue:string) => void}) { 
   const [strPredicate, setStrPredicate] = useState(''); 
 
   const _onChange = (newValue:string) => setStrPredicate(newValue); 
-  const args = {_type:'string', _value:strPredicate, _defaultValue:'', _onChange}; 
+  const args = { 
+    _value: strPredicate, 
+    _defaultValue: GetDefaultValueByType(props.type), 
+    _type:props.type, 
+    _onChange, 
+  }; 
 
 
-  const values = [1,8,49,50, 662,422, 512566]; 
-  const predicates = ParsePredicate('>5 && < 50 && % 2 = 0', 0); 
-  values.forEach( v => console.log([v, predicates.every( p => p(v) ) ])) 
+
+  /*let predicates:((x:string|number) => boolean)[]; 
+  /*if(props.type === 'string') 
+    predicates = (s:string) => s.match(strPredicate); 
+  //if(props.type === 'number') 
+  predicates === ParseNumericPredicate(strPredicate, 0); */
+  //values.forEach( v => console.log([v, predicates.every( p => p(v) ) ])) 
   
   return <div> 
     {strPredicate} <br/> 
@@ -48,29 +57,36 @@ export function InputFilter({onFilter}:{onFilter:(newFilter)=>void}) {
   </div> 
 } 
 
+type FilterPredicate = (x:string|number|boolean) => boolean; 
 
+function BooleanPredicate(value:boolean):FilterPredicate { 
+  return (x:string|number|boolean) => { 
+    return x === value; 
+  } 
+}
 
+function StringPredicate(value:string):FilterPredicate { 
+  return (x:string|number|boolean) => { 
+    return !!value.match((x as string)); 
+  } 
+}
 
-type ParsedPredicate = (x:number) => boolean; 
-
-
-function ParsePredicate(value:string, defaultValue:number):ParsedPredicate[] { 
+function NumericPredicate(value:string):FilterPredicate { 
   /*const operator =  /[(>=)|(<=)|(>)|(<)|(=)]/ 
   const operand =  /[(>=)|(<=)|(>)|(<)|(=)]/ */ 
-  const seperator = /[(&&)|(||)]/ 
+  const seperator = /[(&&)]/ 
   const strPredicates = value.split(seperator).filter(s => s!==''); 
-  const predicates:ParsedPredicate[] = []; 
-  
+  const predicates:((x:number) => boolean)[] = []; 
   strPredicates.forEach( p => { 
     try{ 
       const func = (x:number):boolean => eval(x.toString() + p); 
-      func(defaultValue); 
+      func(0); 
       predicates.push(func); 
     }catch(error) { 
-      return [] as ParsedPredicate[]; 
+      return (x:number) => true; 
     }; 
-  })
-  return predicates;  
+  }) 
+  return (x:string|number|boolean) => predicates.every( predicate => predicate(x as number) ); 
 }
 
 

@@ -5,11 +5,16 @@ import {InputFilter} from './search.component';
 
 function TemplateResearch({selection}:{selection:any[]}) { 
   const [values, setValues] = useState([]); 
-  const onFilter = (newValues:any) => console.log(newValues); 
+  const value = values; 
+  const type = 'number'; 
+  const onChange = (newValues:any) => console.log(newValues); 
+
+  const test = "fred "; 
+  console.log(!!test.match("je")); 
 
   return <div> 
     {JSON.stringify(values)} 
-    <InputFilter {...{onFilter}} /> 
+    <InputFilter {...{onChange, type}} /> 
   </div> 
 } 
 
