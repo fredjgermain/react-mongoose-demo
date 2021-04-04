@@ -78,14 +78,14 @@ export function Key({k, nested = false, children}:React.PropsWithChildren<{k:TKe
 // KeyString ============================================== 
 export function KeyString() { 
   const {k} = useContext(KeyContext); 
-  return <span>{JSON.stringify(k)} : </span> 
+  return <div>{JSON.stringify(k)} : </div> 
 } 
 
 // KeyValue =============================================== 
 export function KeyValue() { 
   const {value} = useContext(ObjxContext); 
   const {k} = useContext(KeyContext); 
-  return <span>{JSON.stringify(GetValueAt(value, ToArray(k)))}</span> 
+  return <div>{JSON.stringify(GetValueAt(value, ToArray(k)))}</div> 
 } 
 
 

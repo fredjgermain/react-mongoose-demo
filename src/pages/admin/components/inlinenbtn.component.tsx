@@ -9,9 +9,9 @@ export function InlineCreateBtn() {
   const {CreateUpdateEntry} = useContext(AdminRowContext); 
   const CreateBtn = {mode:'create', action:CreateUpdateEntry, labels:{affirm:'Create', confirm:'Confirm', cancel:'Cancel'}} 
 
-  return <span> 
+  return <div> 
     <InlineBtn {...CreateBtn}/> 
-  </span> 
+  </div> 
 }
 
 
@@ -22,9 +22,9 @@ export function InlineUpdateDeleteBtn() {
   const UpdateBtn = {mode:'update', action:CreateUpdateEntry, labels:{affirm:'Update', confirm:'Confirm', cancel:'Cancel'}} 
   const DeleteBtn = {mode:'delete', action:DeleteEntry, labels:{affirm:'Delete', confirm:'Confirm', cancel:'Cancel'}} 
 
-  return <span> 
+  return <div> 
     <InlineBtn {...UpdateBtn} /><InlineBtn {...DeleteBtn} /> 
-  </span> 
+  </div> 
 } 
 
 
@@ -35,13 +35,13 @@ export function InlineBtn({...props}:{mode:string, labels:{affirm:string, confir
   const {SetEditingMode} = useContext(AdminContext); 
 
   if(editMode === 'read') 
-    return <span> 
+    return <div> 
       <button onClick={() => SetEditingMode(index, props.mode) }>{props.labels.affirm}</button>
-    </span> 
+    </div> 
   if(editMode === props.mode) 
-    return <span>
-      <span><button onClick={props.action}>{props.labels.confirm}</button></span>
-      <span><button onClick={() => SetEditingMode() }>{props.labels.cancel}</button></span>
-    </span>
-  return <span></span>; 
+    return <div>
+      <div><button onClick={props.action}>{props.labels.confirm}</button></div>
+      <div><button onClick={() => SetEditingMode() }>{props.labels.cancel}</button></div>
+    </div>
+  return <div></div>; 
 } 

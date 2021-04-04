@@ -9,14 +9,14 @@ import { ObjxContext, FieldContext } from './objx.component';
 // Util component ----------------------------
 export function FieldLabel() {
   const {ifield} = useContext(FieldContext);
-  return <span>{ifield.label}:</span>
+  return <div>{ifield.label}:</div>
 }
 
 export function FieldValue() {
   const {value} = useContext(ObjxContext); 
   const {ifield} = useContext(FieldContext); 
   const _value = value[ifield.accessor] ?? GetDefaultValueFromIField(ifield); 
-  return <span>{JSON.stringify(_value)}</span> 
+  return <div>{JSON.stringify(_value)}</div> 
 }
 
 

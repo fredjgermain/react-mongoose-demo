@@ -77,7 +77,7 @@ function TestGroup<T>({data = [], predicate}:{data:T[], predicate:Predicate<T>})
     <b>{JSON.stringify(predicate.name)}</b> <br/> 
     data: {JSON.stringify(data)} <br/> 
     {groups.map( (group,i) => { 
-      return <div key={i}><span>{i}:</span> 
+      return <div key={i}><div>{i}:</div> 
         {JSON.stringify(group)} 
       </div> 
     })} 

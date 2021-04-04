@@ -56,9 +56,9 @@ Mock_TestValidate.args = {
 export const Mock_DisplayQuestions = Template.bind({}) 
 Mock_DisplayQuestions.args = { 
   child: DisplayCollection, 
-  accessors: ['questions', 'patients', 'responses'], 
+  accessors: ['questions', 'patients', 'responses', 'answers', 'forms', 'instructions'], 
   args: { 
-    accessor:'questions', 
+    accessor:'answers', 
   } 
 } 
 

@@ -26,6 +26,12 @@ const Template = args => <TemplateEditor {...args} />
 
 
 // Editor One Value ===========================================
+export const EditorDate = Template.bind({}) 
+EditorDate.args = { 
+  value:new Date(), 
+  ifield:{accessor:'', label:'', type:'date', defaultValue:new Date()}, 
+} 
+
 export const EditorNumber = Template.bind({}) 
 EditorNumber.args = { 
   value:12, 

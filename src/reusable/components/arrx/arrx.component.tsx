@@ -44,11 +44,11 @@ export function Element({index, children}:React.PropsWithChildren<{index:number}
 // Typical Component ============================
 export function ElementIndex() { 
   const {index} = useContext(ElementContext); 
-  return <span>{index}. </span> 
+  return <div>{index}. </div> 
 }
 
 export function ElementValue() { 
   const {values} = useContext(ArrxContext); 
   const {index} = useContext(ElementContext); 
-  return <span>{JSON.stringify(values[index])}</span> 
+  return <div>{JSON.stringify(values[index])}</div> 
 }

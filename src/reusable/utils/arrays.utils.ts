@@ -137,6 +137,19 @@ export function Filter<T>(values:T[] = [], predicate:Predicate<T>):[T[], T[]] {
   return [positive, negative]; 
 }
 
+export function Filters<T>(values:T[] = [], predicates:Predicate<T>[]):[T[], T[]] { 
+  const [predicate, ..._predicates] = predicates; 
+  if(!predicate) 
+    return [values, []]; 
+  
+  const [positive, negative] = Filter(values, predicate); 
+  if(IsEmpty(positive)) 
+    return [positive, negative]; 
+  
+  const [_positive, _negative] = Filters(positive, _predicates); 
+  return [_positive, [...negative, ..._negative]]; 
+} 
+
 
 
 /* UNION ================================================== 

@@ -6,7 +6,7 @@ interface IRedirection {
 } 
 
 export function Redirection({condition, destination}:IRedirection) { 
-  return <span> 
+  return <div> 
     {condition && <Redirect to={`/${destination}`} />} 
-  </span> 
+  </div> 
 }

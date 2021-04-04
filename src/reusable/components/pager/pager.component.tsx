@@ -13,14 +13,14 @@ export function PagerBtn<T>({paging:{pageIndex, setPageIndex, page, pages}}:{pag
   if(indexes.length > 10) 
     indexes = AbbrevIndexes(pageIndex, indexes); 
 
-  return <span> 
+  return <div> 
     {indexes.map( (index, i) => { 
-      return <span key={index}> 
+      return <div key={index}> 
         <button onClick={() => setPageIndex(index)} disabled={index===pageIndex}>{index+1}</button> 
         {index + 1 !== indexes[i+1] && i < indexes.length-1 && '...'} 
-      </span> 
+      </div> 
     })} 
-  </span> 
+  </div> 
 } 
 
 /* Pager From To
@@ -32,11 +32,11 @@ export function PagerFromTo<T>({paging:{pageIndex, setPageIndex, page, pages}}:{
   from = !IsNull(from) ? from+1: 0; 
   to = !IsNull(to) ? to+1: from; 
   //const indexes.length-1; 
-  return <span> 
+  return <div> 
     {from === to ? 
-      <span>Item #{from}</span>: 
-      <span>Items #{from} to {to}</span>} 
-  </span> 
+      <div>Item #{from}</div>: 
+      <div>Items #{from} to {to}</div>} 
+  </div> 
 } 
 
 
@@ -44,7 +44,7 @@ export function PagerFromTo<T>({paging:{pageIndex, setPageIndex, page, pages}}:{
 Display index the current page being display and the total number of pages. 
 */
 export function PageOfPages<T>({paging:{pageIndex, setPageIndex, page, pages}}:{paging:IPageHook<T>}) { 
-  return <span>Page {pageIndex+1} of {pages?.length ?? 0}</span> 
+  return <div>Page {pageIndex+1} of {pages?.length ?? 0}</div> 
 } 
 
 

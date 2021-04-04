@@ -20,7 +20,7 @@ export function PatientIdentification () {
     <h1>Patient identification</h1> 
     <div>
       <label>Ramq:</label><Editor {...{value, editValue, ifield}}/>
-      <span>{RamqIsValid(value) ? '✓' : 'x'}</span> 
+      <div>{RamqIsValid(value) ? '✓' : 'x'}</div> 
     </div> 
     <button onClick={() => IdentifyPatient(value)}>Identify</button> 
   </div> 

@@ -10,9 +10,9 @@ function Nav({history}:INav) {
   console.log(history); 
   return <nav> 
     <div> 
-      <span><Link to=''>Home Page</Link></span> 
-      <span><Link to='/patient'>Patient Section</Link></span> 
-      <span><Link to='/admin'>Admin Section</Link></span> 
+      <div><Link to=''>Home Page</Link></div> 
+      <div><Link to='/patient'>Patient Section</Link></div> 
+      <div><Link to='/admin'>Admin Section</Link></div> 
     </div> 
   </nav> 
 } 

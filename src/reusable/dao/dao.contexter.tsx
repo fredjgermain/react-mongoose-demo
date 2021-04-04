@@ -18,9 +18,9 @@ export function useLoadCollection(accessors:string[]) {
 
 export function Preloader({accessors, children}:React.PropsWithChildren<{accessors:string[]}>) { 
   const ready = useLoadCollection(accessors); 
-  return <span> 
+  return <div> 
     {ready ? children: 'Loading ...'} 
-  </span> 
+  </div> 
 }
 
 

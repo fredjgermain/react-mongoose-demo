@@ -21,10 +21,10 @@ export function TestSelect() {
 
 
   return <div> 
-    <span>{JSON.stringify(value)}</span> 
-    <span>Label:</span> 
+    <div>{JSON.stringify(value)}</div> 
+    <div>Label:</div> 
     <Select {...{ifield, value, setValue, options}} /> 
-    <span>asdasdasdsa:</span> 
+    <div>asdasdasdsa:</div> 
   </div> 
 } 
 
@@ -59,15 +59,15 @@ function Selection() {
 
   return <div className={'select-header'}> 
 
-    {IsEmpty(selection) && <span className={'select-placeholder'}> --- Empty --- </span>} 
+    {IsEmpty(selection) && <div className={'select-placeholder'}> --- Empty --- </div>} 
 
     {selection.map( (option, i) => { 
       const key = JSON.stringify(option.value); 
       const onClick = () => SelectValue(option?.value); 
       const className = 'select-option'; 
-      return <span key={key} {...{onClick, className}}> 
+      return <div key={key} {...{onClick, className}}> 
         {option?.label}{(i < selection.length-1) ? ', ':''}
-      </span> 
+      </div> 
     })} 
   </div> 
 }

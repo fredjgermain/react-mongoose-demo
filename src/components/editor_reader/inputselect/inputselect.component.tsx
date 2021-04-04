@@ -36,15 +36,14 @@ function Selection() {
 
   return <div className={'select-header'}> 
 
-    {IsEmpty(selection) && <span className={'select-placeholder'}> --- Empty --- </span>} 
+    {IsEmpty(selection) && <div className={'select-placeholder'}> --- Empty --- </div>} 
 
     {selection.map( (option, i) => { 
-      const key = JSON.stringify(option.value); 
       const onClick = () => SelectValue(option?.value); 
       const className = 'select-option'; 
-      return <span key={key} {...{onClick, className}}> 
+      return <div key={i} {...{onClick, className}}> 
         {option?.label}{(i < selection.length-1) ? ', ':''}
-      </span> 
+      </div> 
     })} 
   </div> 
 }
@@ -57,11 +56,10 @@ function Options() {
   const IsSelected = (option:IOption) => selection.some(o => o?.value === option?.value); 
 
   return <div className={'select-options'}  > 
-    {_options.map( option => { 
-      const key = JSON.stringify(option.value); 
+    {_options.map( (option,i) => { 
       const onClick = () => SelectValue(option.value); 
       const className = IsSelected(option) ? 'select-option-selected': 'select-option'; 
-      return <div key={key} {...{onClick, className}} > 
+      return <div key={i} {...{onClick, className}} > 
         {option.label} 
       </div> 
     })}

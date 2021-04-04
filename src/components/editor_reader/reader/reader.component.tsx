@@ -32,33 +32,30 @@ export function Reader({ifield, options=[], ...props}:IProps) {
 } 
 
 
-
-
-
 function ReadOne({value, options, ifield}:IReader) { 
-  if(ifield.type === 'boolean') 
-    return <span>{JSON.stringify(value)}</span> 
-  return <span>{value}</span> 
+  if(ifield.type === 'string' || ifield.type === 'number') 
+    return <div>{value}</div> 
+  return <div>{JSON.stringify(value)}</div> 
 } 
 
 function ReadMany({value, options, ifield}:IReader) { 
   const isShort = JSON.stringify(value).length < 15; 
 
   if(!Array.isArray(value)) 
-    return <span>{JSON.stringify(value)}</span> 
+    return <div>{JSON.stringify(value)}</div> 
 
   if(isShort) { 
-    return <span>[{value.map( (e, i) => { 
-        return <span key={i}>{i!==0 && ', '}{JSON.stringify(e)}</span> 
-    })}]</span> 
+    return <div>[{value.map( (e, i) => { 
+        return <div key={i}>{i!==0 && ', '}{JSON.stringify(e)}</div> 
+    })}]</div> 
   } 
-  return <span> 
+  return <div> 
     <div className={'readmany-long'}> 
       {value.map( (e, i) => { 
         return <div key={i}>{i}. {JSON.stringify(e)}</div> 
       })} 
     </div> 
-  </span>
+  </div>
 } 
 
 

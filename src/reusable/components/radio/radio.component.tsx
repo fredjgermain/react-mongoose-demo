@@ -5,15 +5,15 @@ export function Radio({ifield, value, setValue, options}:IEditor) {
 
   const onclick = (value:any) => console.log(value); 
 
-  return <span> 
+  return <div> 
       {options?.map( o => { 
         const id = o.value; 
         const value = o.value; 
-        return <span onClick={onclick}> 
+        return <div onClick={onclick}> 
             {o.label} 
-          </span> 
+          </div> 
       })} 
-  </span> 
+  </div> 
 } 
 
 

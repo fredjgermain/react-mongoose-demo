@@ -71,8 +71,8 @@ function ReadFunc({...props}:{readfunc:ReaderFunc, args:IReader}) {
 // Default Read one .......................................
 function ReadOne({ifield, value=GetDefaultValueFromIField(ifield)}:IReader) { 
   if(ifield.type === 'boolean') 
-    return <span>{JSON.stringify(value)}</span> 
-  return <span>{value}</span> 
+    return <div>{JSON.stringify(value)}</div> 
+  return <div>{value}</div> 
 } 
 
 
@@ -81,20 +81,20 @@ function ReadMany({ifield, value=[]}:IReader) {
   const isShort = JSON.stringify(value).length < 15; 
 
   if(!Array.isArray(value)) 
-    return <span>{JSON.stringify(value)}</span> 
+    return <div>{JSON.stringify(value)}</div> 
 
   if(isShort) { 
-    return <span>[{value.map( (e, i) => { 
-        return <span key={i}>{i!==0 && ', '}{e}</span> 
-    })}]</span> 
+    return <div>[{value.map( (e, i) => { 
+        return <div key={i}>{i!==0 && ', '}{e}</div> 
+    })}]</div> 
   } 
-  return <span> 
+  return <div> 
     <div className={'readmany-long'}> 
       {value.map( (e, i) => { 
         return <div key={i}>{i}. {e}</div> 
       })} 
     </div> 
-  </span>
+  </div>
 
   /*return <span> 
     <div className={'readmany-short'}> 
@@ -110,5 +110,5 @@ function ReadMany({ifield, value=[]}:IReader) {
 
 // Default Read mixed ..............................................
 function ReadMixed({ifield, value}:IReader) { 
-  return <span>{JSON.stringify(value)}</span> 
+  return <div>{JSON.stringify(value)}</div> 
 } 

@@ -56,13 +56,13 @@ export function Key({k, children}:React.PropsWithChildren<IKey>) {
 
 export function Label() { 
   const {k} = useContext(KeyContext); 
-  return <span>{k}: </span> 
+  return <div>{k}: </div> 
 } 
 
 export function Value() { 
   const {value} = useContext(ObjxContext); 
   const {k} = useContext(KeyContext); 
-  return <span>{value[k]}</span> 
+  return <div>{value[k]}</div> 
 } 
 
 export function Test() { 

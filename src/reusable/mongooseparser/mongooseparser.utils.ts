@@ -1,4 +1,4 @@
-import {IsEmpty, IsInRange} from '../_utils';
+import {IsEmpty, IsInRange, GetDefaultValueByType} from '../_utils';
 
 export interface IMongooseCollection { 
   accessor:string; 
@@ -72,11 +72,7 @@ function GetDefaultValue(type:string, options:any):any {
     return options['defaultValue']; 
   if(options['default']) 
     return options['default']; 
-  if(type === 'boolean') 
-    return false; 
-  if(type === 'number') 
-    return 0; 
-  return ''; 
+  return GetDefaultValueByType(type); 
 } 
 
 
