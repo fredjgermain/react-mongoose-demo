@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'; 
+import React, { useContext, useEffect, useState } from 'react'; 
 import { Filter, Filters, Predicate } from '../../reusable/_arrayutils'; 
 import { IsEmpty, GetDefaultValueByType } from '../../reusable/_utils'; 
 import { Input } from '../editor_reader/input/_input'; 
@@ -31,9 +31,17 @@ type _Predicate = (x:any) => boolean;
 */
 
 
-type KeyPredicate = {key:string, predicate:(x:any) => boolean} 
+type KeyPredicate = {handle:string, predicate:(x:any) => boolean} 
 
-export function useFilter(values:any[]) { 
+
+export const FilterPredicatesContext = React.createContext({} as IUseFilters); 
+
+
+interface IUseFilters { 
+  filteredValues: any[]; 
+  setPredicates: (keyPredicate?: KeyPredicate) => void; 
+} 
+export function useFilters(values:any[]) { 
   const [_predicates, _setPredicates] = useState<KeyPredicate[]>([]); 
   const [filteredValues] = Filters(values, _predicates.map(p => p.predicate)); 
 
@@ -42,7 +50,7 @@ export function useFilter(values:any[]) {
       _setPredicates([]); 
     else 
       _setPredicates( (prev:KeyPredicate[]) => { 
-        const copy = [...prev.filter( kp => kp.key !== keyPredicate.key ), keyPredicate]; 
+        const copy = [...prev.filter( kp => kp.handle !== keyPredicate.handle ), keyPredicate]; 
         return copy; 
       }); 
   } 
@@ -50,7 +58,17 @@ export function useFilter(values:any[]) {
   return {filteredValues, setPredicates}; 
 } 
 
+export function useFilter(handle:string, type:string) { 
+  const {filteredValues, setPredicates} = useContext(FilterPredicatesContext); 
+  const [strPredicate, setStrPredicate] = useState(''); 
+  const predicate = FilterPredicate(strPredicate, type, handle); 
 
+  useEffect(()=>{ 
+    setPredicates({handle, predicate}); 
+  }, [strPredicate]); 
+  
+  return [strPredicate, setStrPredicate]; 
+} 
 
 
 

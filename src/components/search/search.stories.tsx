@@ -1,16 +1,16 @@
 import React, {useState} from 'react'; 
-import { InputFilter, FilterBy, useFilter } from './search.component'; 
+import { InputFilter, FilterBy, useFilters } from './search.component'; 
 
 
 
 function TemplateResearch({...props}:{values:any[]}) { 
   const _values = [1,2,3,4,5,6,7,8,9]; 
-  const {filteredValues, setPredicates} = useFilter(_values); 
+  const {filteredValues, setPredicates} = useFilters(_values); 
 
-  const even = {key:'a', predicate: (x:any) => x % 2 ===0} 
-  const odd = {key:'a', predicate: (x:any) => x % 2 ===1} 
-  const greaterthan5 = {key:'b', predicate: (x:any) => x > 5} 
-  const lessthan5 = {key:'b', predicate: (x:any) => x <= 5} 
+  const even = {handle:'a', predicate: (x:any) => x % 2 ===0} 
+  const odd = {handle:'a', predicate: (x:any) => x % 2 ===1} 
+  const greaterthan5 = {handle:'b', predicate: (x:any) => x > 5} 
+  const lessthan5 = {handle:'b', predicate: (x:any) => x <= 5} 
 
   return <div> 
     {JSON.stringify(filteredValues)} 
