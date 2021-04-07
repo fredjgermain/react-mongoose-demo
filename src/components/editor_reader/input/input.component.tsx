@@ -1,48 +1,63 @@
-/*
-This component serves as a wrapper for regular 'input' fields. 
-Makes it easier to edit and get changes from regular 'input' fields with their correct types. 
-*/ 
-import React from 'react'; 
-//import CSS from ''
-import {IEvent, IsNull, OnEnter, SetSize, 
-  GetValueFromInput, GetInputType} from '../../../reusable/_utils'; 
+import React from 'react';
+import {IEvent, IsNull, OnEnter, DefaultWidth, 
+  GetValueFromInput, GetInputType, GetDefaultValueByType} from '../../../reusable/_utils'; 
 
 
-export interface IInput { 
-  _type: string; 
-  _value:any; 
-  _defaultValue: any; 
-  _onChange: (newValue:any) => void; 
-  _onPressEnter?: () => void; 
-  _width?: (value:any) => number; 
-} 
-// INPUT =================================================
-interface IProps extends IInput, React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> {} 
-/*export default function Input({_type, _value, _defaultValue, _onChange, _onPressEnter, _width,
-  children, ...inputArgs}:React.PropsWithChildren<IProps>) { */
+export interface IInput{ 
+  type: string; 
+  value: any; 
+  defaultValue?: any; 
 
-export function Input({_type, _value, _defaultValue, 
-  _onChange, _onPressEnter, _width, 
-  ...inputArgs}:IProps) { 
-  
-  const type = GetInputType(_type); 
-  const value = IsNull(_value) ? _defaultValue: _value; 
+  placeholder?: string; 
 
-  const onChange = (event:IEvent) => { 
-    const valueFromInput = GetValueFromInput(event); 
-    const newValue = IsNull(valueFromInput) ? _defaultValue : valueFromInput; 
-    if(JSON.stringify(newValue) !== JSON.stringify(_value) ) 
-      _onChange(newValue); 
-  } 
+  onSetValue: (newValue:any) => void; 
+  onPressEnter?: () => void; 
 
-  const onKeyUp = (event: React.KeyboardEvent<HTMLInputElement>) => OnEnter(event, _onPressEnter); 
-
-  const style = _width ? 
-    {width: `${_width(value)+2}ch`}: 
-    {width: `${SetSize(value)+2}ch`}; 
-  
-  if(type==='checkbox') 
-    return <input {...{inputArgs, type, checked:value, onChange, onKeyUp} } /> 
-  return <input {...{inputArgs}} {...{type, value, onChange, onKeyUp, style}} /> 
+  sizeFunc?: (value:any) => number; 
+  inputAttribute?: React.InputHTMLAttributes<HTMLInputElement>; 
 }
 
+export function Input({...props}:IInput) { 
+  const {width, ...args} = PrepArgs(props); 
+  // Concatenate width defined above with inputAttribute.style if any other style has been defined. 
+  const style = {...props.inputAttribute?.style, ...width} 
+
+  // Regroup arguments
+  const inputArgs = {...props.inputAttribute, ...args, style}; 
+
+  if(args.type==='checkbox') 
+    return <input {...inputArgs} {...{checked:args.value} } /> 
+  return <input {...inputArgs} /> 
+} 
+
+
+function PrepArgs({...props}:IInput) { 
+  const type = GetInputType(props.type); 
+  const defaultValue = IsNull(props.defaultValue) ? 
+    GetDefaultValueByType(props.type) : 
+    props.defaultValue; 
+  const value = IsNull(props.value) ? 
+    defaultValue : 
+    props.value; 
+  
+  const placeholder = props.placeholder ?? ''; 
+
+  // Called on input Change
+  const onChange = (event:IEvent) => { 
+    const valueFromInput = GetValueFromInput(event); 
+    const newValue = IsNull(valueFromInput) ? defaultValue : valueFromInput; 
+    if(JSON.stringify(newValue) !== JSON.stringify(value) ) 
+      props.onSetValue(newValue); 
+  } 
+
+  // Function called on KeyUp. 
+  const onKeyUp = (event: React.KeyboardEvent<HTMLInputElement>) => OnEnter(event, props.onPressEnter); 
+
+  // Calculate input width 
+  const width = props.sizeFunc ? 
+    {width: `${props.sizeFunc(value)}ch`}: 
+    {width: `${DefaultWidth(value, type)}ch`}; 
+  
+  // Regroups to arguments to pass to input tag
+  return {type, value, placeholder, onChange, onKeyUp, width} 
+}

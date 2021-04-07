@@ -1,6 +1,6 @@
 import {IsNull, IsEmpty, Copy, GetValueAt, SetValueAt, HasKey} from './utils/value.utils'; 
 
-import {SetSize, SetWidth, IEvent, 
+import {DefaultWidth, IEvent, 
   OnPress, OnTab, OnEnter, 
   GetInputType, GetValueFromInput} from './utils/htmlelement.utils'; 
 
@@ -13,7 +13,7 @@ import {ParseDate, DaysPerMonth, IsLeapYear, IsToday} from './utils/date.utils';
 export type {IEvent} 
 export {IsNull, IsEmpty, Copy, GetValueAt, SetValueAt, HasKey} 
 
-export {SetSize, SetWidth, 
+export {DefaultWidth, 
   OnPress, OnTab, OnEnter, 
   GetInputType, GetValueFromInput} 
 

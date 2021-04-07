@@ -1,15 +1,11 @@
 import React, {useState} from 'react'; 
 //import { IInput, Input } from './_input'; 
-import { IInput, Input } from './input2.component'; 
+import { IInput, Input } from './_input'; 
 import { GetInputType } from '../../../reusable/_utils'; 
 
 
 
-interface IInputTest extends IInput { 
-  
-} 
-
-function TestInput({...props}:IInputTest) { 
+function TestInput({...props}:IInput) { 
   const [value, setValue] = useState(props.value); 
   props.value = value; 
   props.onSetValue = (newValue:any) => setValue(newValue); 
@@ -63,6 +59,7 @@ TestInput_Bool.args = {
   value: false, 
   onSetValue: (newValue:any) => console.log(newValue), 
   onPressEnter: () => console.log('on Press Enter'), 
+  //sizeFunc: (value:any) => 5, 
   //_width: , 
 } 
 
