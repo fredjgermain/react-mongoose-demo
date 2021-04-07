@@ -1,31 +1,21 @@
 import React, {useState} from 'react'; 
-import { InputFilters, InputFilter, FilterBy, useFilters } from './inputfilter.component'; 
+import { Filters } from '../../reusable/_arrayutils';
+import { InputFilters, InputFilter, useFilters } from './inputfilter.component'; 
 
 
 
-function TemplateResearch({...props}:{values:any[]}) { 
-  const values = [1,2,3,4,5,6,7,8,9]; 
-
+function TemplateResearch({values, filters}:{values:any[], filters:{handle:string, type:string}[]}) { 
+  
   return <InputFilters {...{values}} > 
-    <InputFilter {...{handle:'', type:'number'}} /> 
+    {filters.map( f => { 
+      return <InputFilter key={f.handle} {...f} /> 
+    })}
   </InputFilters> 
-
-  //const {filteredValues, setPredicates} = useFilters(_values); 
-  /*const even = {handle:'a', predicate: (x:any) => x % 2 ===0} 
-  const odd = {handle:'a', predicate: (x:any) => x % 2 ===1} 
-  const greaterthan5 = {handle:'b', predicate: (x:any) => x > 5} 
-  const lessthan5 = {handle:'b', predicate: (x:any) => x <= 5} */
-
-  /*return <div> 
-    {JSON.stringify(filteredValues)} 
-    <br/> 
-    <button onClick={()=>setPredicates()}>All</button> 
-    <button onClick={()=>setPredicates(even)}>evens</button> 
-    <button onClick={()=>setPredicates(odd)}>odds</button> 
-    <button onClick={()=>setPredicates(greaterthan5)}>{'> 5'}</button> 
-    <button onClick={()=>setPredicates(lessthan5)}>{'<= 5'}</button> 
-  </div> */
 } 
+
+
+const str = "ajjaaj"; 
+console.log( str.match('aa')); 
 
 
 
@@ -52,17 +42,23 @@ TestFilters.args = {
 export const ArrayNumber = Template.bind({}) 
 ArrayNumber.args = { 
   values:[1,2,3,4,6,8,9], 
+  filters:[{handle:'', type:'number'}] 
 } 
   
 export const ResearchString = Template.bind({}) 
 ResearchString.args = { 
   values:[ 
-    {a:'a', v:1}, 
-    {a:'b', v:2}, 
-    {a:'c', v:3}, 
-    {a:'d', v:4}, 
-    {a:'e', v:2}, 
-    {a:'f', v:3}, 
-  ]
+    {a:'aa', v:1, bool:false}, 
+    {a:'aa', v:2, bool:true}, 
+    {a:'b', v:3, bool:false}, 
+    {a:'bb', v:4, bool:true}, 
+    {a:'ee', v:2, bool:false}, 
+    {a:'bbb', v:3, bool:false}, 
+  ],
+  filters:[ 
+    {handle:'a', type:'string'}, 
+    {handle:'v', type:'number'}, 
+    {handle:'bool', type:'boolean'}, 
+  ] 
 }
   
