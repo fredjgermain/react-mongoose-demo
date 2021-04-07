@@ -37,11 +37,39 @@ type KeyPredicate = {handle:string, predicate:(x:any) => boolean}
 export const FilterPredicatesContext = React.createContext({} as IUseFilters); 
 
 
+export function InputFilters({values, children}:React.PropsWithChildren<{values:any[]}>) { 
+  const context = useFilters(values); 
+  return <FilterPredicatesContext.Provider value={context}> 
+    {JSON.stringify(context.filteredValues)}
+    {children} 
+  </FilterPredicatesContext.Provider> 
+}
+
+export function InputFilter({handle, type}:{handle:string, type:string}) { 
+  const {setPredicates} = useContext(FilterPredicatesContext); 
+  const [value, setValue] = useState(''); 
+  const onSetValue = (newValue:string) => setValue(newValue); 
+
+  const onPressEnter = () => { 
+    const predicate = FilterPredicate(value, type, handle); 
+    setPredicates({handle, predicate}); 
+  }; 
+
+  return <Input {...{type:'string', value, onSetValue, onPressEnter}} /> 
+}
+
+export function FilterBy() { 
+
+}
+
+
+
+
 interface IUseFilters { 
   filteredValues: any[]; 
   setPredicates: (keyPredicate?: KeyPredicate) => void; 
 } 
-export function useFilters(values:any[]) { 
+export function useFilters(values:any[]):IUseFilters { 
   const [_predicates, _setPredicates] = useState<KeyPredicate[]>([]); 
   const [filteredValues] = Filters(values, _predicates.map(p => p.predicate)); 
 
@@ -70,53 +98,6 @@ export function useFilter(handle:string, type:string) {
   return [strPredicate, setStrPredicate]; 
 } 
 
-
-
-
-
-
-
-
-
-
-
-
-
-export function FilterBy({...props}:{k?:string, type:string, setPredicates:any} ) { 
-  const [strPredicate, setStrPredicate] = useState(''); 
-  const _predicate = FilterPredicate(strPredicate, props.type); 
-  const [predicate, setPredicate] = useState(  {_predicate} ); 
-
-  useEffect(() => { 
-    props.setPredicates( (prev:any[]) => { 
-      console.log(prev.findIndex( p => p === predicate )); 
-      return [...prev.filter( p => p === predicate ), predicate]; 
-    }); 
-  },[]); 
-
-  const _onChange = (newStrPredicate:string) => { 
-    const newPredicateFunc = FilterPredicate(newStrPredicate, props.type); 
-    setStrPredicate(newStrPredicate); 
-    setPredicate({_predicate:newPredicateFunc}); 
-
-    props.setPredicates( (prev:any[]) => { 
-      console.log(prev.findIndex( p => p === predicate )); 
-      return [...prev.filter( p => p === predicate ), newPredicateFunc]; 
-    }); 
-  } 
-  
-  const args = { 
-    _value: strPredicate, 
-    _defaultValue: GetDefaultValueByType(props.type), 
-    _type:'string', 
-    _onChange, 
-  }; 
-
-  return <div> 
-    {strPredicate} <br/> 
-    <Input {...args}/> 
-  </div> 
-} 
 
 
 function FilterPredicate(strPredicate:string, type:string, key?:string): (x:any) => boolean { 
@@ -165,6 +146,50 @@ function LambdaPredicate(strPredicate:string): (x:any) => boolean {
   return (x:any) => predicates.every( predicate => predicate(x) ); 
 }
 
+
+
+
+
+
+
+
+
+/*
+export function FilterBy({...props}:{k?:string, type:string, setPredicates:any} ) { 
+  const [strPredicate, setStrPredicate] = useState(''); 
+  const _predicate = FilterPredicate(strPredicate, props.type); 
+  const [predicate, setPredicate] = useState(  {_predicate} ); 
+
+  useEffect(() => { 
+    props.setPredicates( (prev:any[]) => { 
+      console.log(prev.findIndex( p => p === predicate )); 
+      return [...prev.filter( p => p === predicate ), predicate]; 
+    }); 
+  },[]); 
+
+  const _onChange = (newStrPredicate:string) => { 
+    const newPredicateFunc = FilterPredicate(newStrPredicate, props.type); 
+    setStrPredicate(newStrPredicate); 
+    setPredicate({_predicate:newPredicateFunc}); 
+
+    props.setPredicates( (prev:any[]) => { 
+      console.log(prev.findIndex( p => p === predicate )); 
+      return [...prev.filter( p => p === predicate ), newPredicateFunc]; 
+    }); 
+  } 
+  
+  const args = { 
+    _value: strPredicate, 
+    _defaultValue: GetDefaultValueByType(props.type), 
+    _type:'string', 
+    _onChange, 
+  }; 
+
+  return <div> 
+    {strPredicate} <br/> 
+    <Input {...args}/> 
+  </div> 
+} 
 
 
 
@@ -230,3 +255,4 @@ export interface IInput {
 
   size?: (value:any) => number; 
 } 
+*/

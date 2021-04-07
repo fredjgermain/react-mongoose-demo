@@ -1,18 +1,22 @@
 import React, {useState} from 'react'; 
-import { InputFilter, FilterBy, useFilters } from './search.component'; 
+import { InputFilters, InputFilter, FilterBy, useFilters } from './inputfilter.component'; 
 
 
 
 function TemplateResearch({...props}:{values:any[]}) { 
-  const _values = [1,2,3,4,5,6,7,8,9]; 
-  const {filteredValues, setPredicates} = useFilters(_values); 
+  const values = [1,2,3,4,5,6,7,8,9]; 
 
-  const even = {handle:'a', predicate: (x:any) => x % 2 ===0} 
+  return <InputFilters {...{values}} > 
+    <InputFilter {...{handle:'', type:'number'}} /> 
+  </InputFilters> 
+
+  //const {filteredValues, setPredicates} = useFilters(_values); 
+  /*const even = {handle:'a', predicate: (x:any) => x % 2 ===0} 
   const odd = {handle:'a', predicate: (x:any) => x % 2 ===1} 
   const greaterthan5 = {handle:'b', predicate: (x:any) => x > 5} 
-  const lessthan5 = {handle:'b', predicate: (x:any) => x <= 5} 
+  const lessthan5 = {handle:'b', predicate: (x:any) => x <= 5} */
 
-  return <div> 
+  /*return <div> 
     {JSON.stringify(filteredValues)} 
     <br/> 
     <button onClick={()=>setPredicates()}>All</button> 
@@ -20,7 +24,7 @@ function TemplateResearch({...props}:{values:any[]}) {
     <button onClick={()=>setPredicates(odd)}>odds</button> 
     <button onClick={()=>setPredicates(greaterthan5)}>{'> 5'}</button> 
     <button onClick={()=>setPredicates(lessthan5)}>{'<= 5'}</button> 
-  </div> 
+  </div> */
 } 
 
 
