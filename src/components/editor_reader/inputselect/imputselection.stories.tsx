@@ -3,13 +3,13 @@ import {IInputSelect, InputSelect, } from './_inputselect';
 
 
 function TestInputSelect({...props}:IInputSelect) { 
-  const [_value, setValue] = useState(props._value); 
-  const _onChange = (newValue:any[]) => setValue(newValue); 
-  const {_options, _multiple, _width} = props; 
+  const [value, setValue] = useState(props.value); 
+  props.value = value; 
+  props.onSetValue = (newValue:any[]) => setValue(newValue); 
 
   return <div> 
-    {JSON.stringify(_value)} <br/> 
-    <InputSelect {...{_value, _onChange, _options, _multiple, _width}} /> 
+    {JSON.stringify(value)} <br/> 
+    <InputSelect {...props} /> 
   </div> 
 } 
 
@@ -23,23 +23,24 @@ const Template = args => <TestInputSelect {...args} />
 
 export const TestInputSelect_single = Template.bind({}) 
 TestInputSelect_single.args = { 
-  _value:0, 
-  _options: [ 
+  value:0, 
+  options: [ 
     {value:0, label:'option 0'}, 
     {value:1, label:'option 1'}, 
     {value:2, label:'option 2'}, 
   ] as IOption[], 
-  _multiple: false, 
+  multiple: false, 
+  placeholder: 'select one'
 } 
 
 
 export const TestInputSelect_multi = Template.bind({}) 
 TestInputSelect_multi.args = { 
-  _value:['a'], 
-  _options: [ 
+  value:['a'], 
+  options: [ 
     {value:'0', label:'option 0'}, 
     {value:'1', label:'option 1'}, 
     {value:'2', label:'option 2'}, 
   ] as IOption[], 
-  _multiple: true, 
+  multiple: true, 
 } 

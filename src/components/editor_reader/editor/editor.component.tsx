@@ -39,21 +39,20 @@ function GetDefaultEditorFunc(ifield:IField, hasOptions:boolean) {
 
 // Edit one
 function EditOne({value, editValue, ifield}:IEditor) { 
-  const _value = value; 
-  const _onChange = editValue; 
-  const _type = ifield.type; 
-  const _defaultValue = ifield.defaultValue; 
-  return <Input {...{_type, _value, _defaultValue, _onChange}} /> 
+  const onSetValue = editValue; 
+  const type = ifield.type; 
+  const defaultValue = ifield.defaultValue; 
+  return <Input {...{type, value, onSetValue, defaultValue}} /> 
 }
 
 
 // Edit many
 function EditMany({value, editValue, options, ifield}:IEditor) { 
-  const _values = value; 
-  const _onChange = editValue; 
-  const _type = ifield.type; 
-  const _defaultValue = ifield.defaultValue; 
-  return <InputArray {...{_type, _values, _defaultValue, _onChange}} /> 
+  const values = value; 
+  const onSetValues = editValue; 
+  const type = ifield.type; 
+  const defaultValue = ifield.defaultValue; 
+  return <InputArray {...{type, values, onSetValues, defaultValue}} /> 
 }
 
 function EditMixed({value, editValue, options, ifield}:IEditor) { 
@@ -76,12 +75,12 @@ function EditSelectSingle({value, editValue, options = [], ifield}:IEditor) {
   const _value = value; 
   const _onChange = editValue; 
   const _options = options; 
-  return <InputSelect {...{_value, _options, _onChange}} /> 
+  return <InputSelect {...{value: _value, options: _options, onSetValue: _onChange}} /> 
 }
 
 function EditSelectMulti({value, editValue, options = [], ifield}:IEditor) { 
   const _value = value; 
   const _onChange = editValue; 
   const _options = options; 
-  return <InputSelect {...{_value, _options, _onChange, _multiple:true}} /> 
+  return <InputSelect {...{value: _value, options: _options, onSetValue: _onChange, multiple:true}} /> 
 }

@@ -12,7 +12,7 @@ export function InputArray({...props}:IInputArray) {
       return <div key={i} > 
         [{i}]: <UpdateElement index={i} /> <DeleteElement index={i}/> 
       </div> 
-    })}
+    })} 
     [+]: <CreateElement/> 
   </InputArrayContext.Provider> 
 }
@@ -44,7 +44,7 @@ function UpdateElement({index}:{index:number}) {
   useEffect(() => { 
     setValue(elementArgs.value); 
   }, [JSON.stringify(elementArgs.value)]); 
-  
+
   return <Input {...elementArgs}  /> 
 }
 

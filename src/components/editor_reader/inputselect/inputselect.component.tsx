@@ -13,7 +13,7 @@ export function InputSelect({...props}:IInputSelect) {
   const {toggle, ToggleBtnAction, toggleTarget, Toggle} = useToggle<HTMLDivElement>(true); 
 
   const CloseToggle = () => { 
-    if(!context._multiple) 
+    if(!context.multiple) 
       Toggle(); 
   }
 
@@ -31,12 +31,12 @@ export function InputSelect({...props}:IInputSelect) {
 
 
 function Selection() {
-  const {SelectValue, GetSelection} = useContext(SelectContext); 
+  const {SelectValue, GetSelection, placeholder} = useContext(SelectContext); 
   const selection = GetSelection(); 
 
   return <div className={'select-header'}> 
 
-    {IsEmpty(selection) && <div className={'select-placeholder'}> --- Empty --- </div>} 
+    {IsEmpty(selection) && <div className={'select-placeholder'}> {placeholder} </div>} 
 
     {selection.map( (option, i) => { 
       const onClick = () => SelectValue(option?.value); 
@@ -51,7 +51,7 @@ function Selection() {
 
 
 function Options() { 
-  const {_options, SelectValue, GetSelection} = useContext(SelectContext); 
+  const {options: _options, SelectValue, GetSelection} = useContext(SelectContext); 
   const selection = GetSelection(); 
   const IsSelected = (option:IOption) => selection.some(o => o?.value === option?.value); 
 

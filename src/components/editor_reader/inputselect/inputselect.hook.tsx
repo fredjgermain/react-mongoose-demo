@@ -3,11 +3,12 @@ import { GetSelectedValuesFromOptions, IsEmpty } from '../../../reusable/_utils'
 
 
 export interface IInputSelect { 
-  _value:any; 
-  _onChange: (newValues:any[]) => void; 
-  _options: IOption[]; 
-  _multiple?: boolean; 
-  _width?: (value:any) => number; 
+  value:any; 
+  placeholder?:string; 
+  onSetValue: (newValues:any[]) => void; 
+  options: IOption[]; 
+  multiple?: boolean; 
+  sizeFunc?: (value:any) => number; 
 } 
 
 
@@ -17,24 +18,27 @@ export interface IUseSelect extends IInputSelect {
   GetSelection: () => IOption[]; 
   //Toggle:IUseToggle<HTMLDivElement>; 
 } 
-export function useInputSelect({_value, _options = [], _onChange, _multiple = false, _width}:IInputSelect):IUseSelect {   
+export function useInputSelect({...props}:IInputSelect):IUseSelect { 
+  props.multiple = props.multiple ?? false; 
+  props.options = props.options ?? []; 
+  props.placeholder = props.placeholder ?? "--- Empty ---"; 
 
   // SelectValue ................................
   function SelectValue (newValue:any) { 
-    const [inclusion, exclusion] = Filter(ToArray(_value), e => e === newValue); 
-    if(IsEmpty(inclusion) && _multiple) 
+    const [inclusion, exclusion] = Filter(ToArray(props.value), e => e === newValue); 
+    if(IsEmpty(inclusion) && props.multiple) 
       exclusion.push(newValue); 
-    if(IsEmpty(inclusion) && !_multiple) 
+    if(IsEmpty(inclusion) && !props.multiple) 
       exclusion[0] = newValue; 
-    const selectionFromOptions = GetSelectedValuesFromOptions(exclusion, _options).map( o => o.value); 
-    const selection = _multiple ? selectionFromOptions: selectionFromOptions.shift(); 
+    const selectionFromOptions = GetSelectedValuesFromOptions(exclusion, props.options).map( o => o.value); 
+    const selection = props.multiple ? selectionFromOptions: selectionFromOptions.shift(); 
     //const selection = _multiple ? exclusion: exclusion.shift(); 
-    _onChange(selection); 
+    props.onSetValue(selection); 
   } 
 
   function GetSelection() { 
-    return GetSelectedValuesFromOptions(_value, _options); 
+    return GetSelectedValuesFromOptions(props.value, props.options); 
   }
 
-  return {_value, _onChange, _options, _multiple, _width, SelectValue, GetSelection}; 
+  return {...props, SelectValue, GetSelection}; 
 } 
