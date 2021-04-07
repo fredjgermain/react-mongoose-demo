@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'; 
-import { Filter, Predicate } from '../../reusable/_arrayutils'; 
+import { Filter, Filters, Predicate } from '../../reusable/_arrayutils'; 
 import { IsEmpty, GetDefaultValueByType } from '../../reusable/_utils'; 
 import { Input } from '../editor_reader/input/_input'; 
 import { InputSelect } from '../editor_reader/inputselect/_inputselect'; 
@@ -17,80 +17,162 @@ InputFiltor
   date => range? 
 */ 
 
+type _Predicate = (x:any) => boolean; 
 
-export interface IInput { 
-  type: string; 
-  value: any; 
-  defaultValue: any; 
-  onChange: (newValue:any) => void; 
-  onEnter?: () => void; 
+/*
+<FilterContext> 
+  foreach key 
+    <InputFilter ... modifies FilterContext 
+<FilterContext> 
 
-  onBlur?: () => void; 
-  onFocus?: () => void; 
+<table ... > 
 
-  size?: (value:any) => number; 
+
+*/
+
+
+type KeyPredicate = {key:string, predicate:(x:any) => boolean} 
+
+export function useFilter(values:any[]) { 
+  const [_predicates, _setPredicates] = useState<KeyPredicate[]>([]); 
+  const [filteredValues] = Filters(values, _predicates.map(p => p.predicate)); 
+
+  const setPredicates = (keyPredicate?:KeyPredicate) => { 
+    if(!keyPredicate) 
+      _setPredicates([]); 
+    else 
+      _setPredicates( (prev:KeyPredicate[]) => { 
+        const copy = [...prev.filter( kp => kp.key !== keyPredicate.key ), keyPredicate]; 
+        return copy; 
+      }); 
+  } 
+
+  return {filteredValues, setPredicates}; 
 } 
 
-export function InputFilter({...props}:{type:string, onChange:(newValue:string) => void}) { 
-  const [strPredicate, setStrPredicate] = useState(''); 
 
-  const _onChange = (newValue:string) => setStrPredicate(newValue); 
+
+
+
+
+
+
+
+
+
+
+
+
+
+export function FilterBy({...props}:{k?:string, type:string, setPredicates:any} ) { 
+  const [strPredicate, setStrPredicate] = useState(''); 
+  const _predicate = FilterPredicate(strPredicate, props.type); 
+  const [predicate, setPredicate] = useState(  {_predicate} ); 
+
+  useEffect(() => { 
+    props.setPredicates( (prev:any[]) => { 
+      console.log(prev.findIndex( p => p === predicate )); 
+      return [...prev.filter( p => p === predicate ), predicate]; 
+    }); 
+  },[]); 
+
+  const _onChange = (newStrPredicate:string) => { 
+    const newPredicateFunc = FilterPredicate(newStrPredicate, props.type); 
+    setStrPredicate(newStrPredicate); 
+    setPredicate({_predicate:newPredicateFunc}); 
+
+    props.setPredicates( (prev:any[]) => { 
+      console.log(prev.findIndex( p => p === predicate )); 
+      return [...prev.filter( p => p === predicate ), newPredicateFunc]; 
+    }); 
+  } 
+  
   const args = { 
     _value: strPredicate, 
     _defaultValue: GetDefaultValueByType(props.type), 
-    _type:props.type, 
+    _type:'string', 
     _onChange, 
   }; 
 
-
-
-  /*let predicates:((x:string|number) => boolean)[]; 
-  /*if(props.type === 'string') 
-    predicates = (s:string) => s.match(strPredicate); 
-  //if(props.type === 'number') 
-  predicates === ParseNumericPredicate(strPredicate, 0); */
-  //values.forEach( v => console.log([v, predicates.every( p => p(v) ) ])) 
-  
   return <div> 
     {strPredicate} <br/> 
     <Input {...args}/> 
   </div> 
 } 
 
-type FilterPredicate = (x:string|number|boolean) => boolean; 
 
-function BooleanPredicate(value:boolean):FilterPredicate { 
-  return (x:string|number|boolean) => { 
-    return x === value; 
+function FilterPredicate(strPredicate:string, type:string, key?:string): (x:any) => boolean { 
+  let predicate = (x:any) => true; 
+  if(IsEmpty(strPredicate)) 
+    return predicate; 
+  
+  if(type === 'boolean') 
+    predicate = EqualPredicate(strPredicate); 
+  if(type === 'string') 
+    predicate = StringMatchPredicate(strPredicate); 
+  predicate = LambdaPredicate(strPredicate); 
+
+  return key ? 
+    (x:any) => { return predicate(x.key); } : 
+    predicate; 
+} 
+
+function EqualPredicate(strPredicate:string):(x:any) => boolean { 
+  return (x:string) => { 
+    return x === strPredicate; 
+  } 
+} 
+
+function StringMatchPredicate(strPredicate:string):(x:any) => boolean { 
+  return (x:string) => { 
+    return !!strPredicate.match(x); 
   } 
 }
 
-function StringPredicate(value:string):FilterPredicate { 
-  return (x:string|number|boolean) => { 
-    return !!value.match((x as string)); 
-  } 
-}
-
-function NumericPredicate(value:string):FilterPredicate { 
+function LambdaPredicate(strPredicate:string): (x:any) => boolean { 
   /*const operator =  /[(>=)|(<=)|(>)|(<)|(=)]/ 
   const operand =  /[(>=)|(<=)|(>)|(<)|(=)]/ */ 
   const seperator = /[(&&)]/ 
-  const strPredicates = value.split(seperator).filter(s => s!==''); 
-  const predicates:((x:number) => boolean)[] = []; 
+  const strPredicates = strPredicate.split(seperator).filter(s => s!==''); 
+  const predicates:((x:any) => boolean)[] = []; 
   strPredicates.forEach( p => { 
     try{ 
-      const func = (x:number):boolean => eval(x.toString() + p); 
+      const func = (x:any):boolean => eval(x.toString() + p); 
       func(0); 
       predicates.push(func); 
     }catch(error) { 
-      return (x:number) => true; 
+      return (x:any) => true; 
     }; 
   }) 
-  return (x:string|number|boolean) => predicates.every( predicate => predicate(x as number) ); 
+  return (x:any) => predicates.every( predicate => predicate(x) ); 
 }
 
 
 
+
+
+
+export function InputFilter({...props}:{type:string, onChangePredicate:(newPredicate:_Predicate)=>void}) { 
+  const [strPredicate, setStrPredicate] = useState(''); 
+
+  const _onChange = (newPredicate:string) => { 
+    setStrPredicate(newPredicate); 
+    const predicateFunc = FilterPredicate(newPredicate, props.type); 
+    props.onChangePredicate(predicateFunc); 
+  } 
+  
+  const args = { 
+    _value: strPredicate, 
+    _defaultValue: GetDefaultValueByType(props.type), 
+    _type:'string', 
+    _onChange, 
+  }; 
+
+  return <div> 
+    {strPredicate} <br/> 
+    <Input {...args}/> 
+  </div> 
+} 
 
 
 export function Search({selection, setSelection, field}:{selection:any[], setSelection:(newValues:any[]) => void, field?:string}) { 
@@ -117,3 +199,16 @@ export function Search({selection, setSelection, field}:{selection:any[], setSel
 } 
 
 
+
+export interface IInput { 
+  type: string; 
+  value: any; 
+  defaultValue: any; 
+  onChange: (newValue:any) => void; 
+  onEnter?: () => void; 
+
+  onBlur?: () => void; 
+  onFocus?: () => void; 
+
+  size?: (value:any) => number; 
+} 
