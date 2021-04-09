@@ -1,8 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'; 
-import { Filter, Filters, Predicate } from '../../reusable/_arrayutils'; 
+//import { Filter, Predicate } from '../../reusable/_arrayutils'; 
 import { IsEmpty, GetDefaultValueByType } from '../../reusable/_utils'; 
 import { Input } from '../editor_reader/input/_input'; 
-import { InputSelect } from '../editor_reader/inputselect/_inputselect'; 
 
 
 type _Predicate = (x:any) => boolean; 
@@ -20,7 +19,7 @@ export function InputFilters({values, children}:React.PropsWithChildren<{values:
     {JSON.stringify(context.filteredValues)}
     {children} 
   </FilterPredicatesContext.Provider> 
-}
+} 
 
 export function InputFilter({handle, type}:{handle:string, type:string}) { 
   const {setPredicates} = useContext(FilterPredicatesContext); 
@@ -37,14 +36,14 @@ export function InputFilter({handle, type}:{handle:string, type:string}) {
 
 
 
-
 interface IUseFilters { 
   filteredValues: any[]; 
   setPredicates: (keyPredicate?: KeyPredicate) => void; 
 } 
 export function useFilters(values:any[]):IUseFilters { 
   const [_predicates, _setPredicates] = useState<KeyPredicate[]>([]); 
-  const [filteredValues] = Filters(values, _predicates.map(p => p.predicate)); 
+  const predicate = (x:any) => _predicates.map(p => p.predicate).every( p => p(x) ); 
+  const filteredValues = values.filter( x => predicate(x) ); 
 
   const setPredicates = (keyPredicate?:KeyPredicate) => { 
     if(!keyPredicate) 

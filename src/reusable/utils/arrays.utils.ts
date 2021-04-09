@@ -65,7 +65,8 @@ export function Pick<T, U>(array:T[] = [], pickingOrder:U[], compare:Comparator<
 
 
 /* GROUPS =======================================
-Successively use Group on previous 
+Groups elements using multiple predicates. 
+returns an array of grouped elements. 
 */
 export function Groups<T>(array:T[] = [], predicates:Predicate<T>[]):T[][] { 
   const [predicate, ..._predicates] = predicates; 
@@ -84,8 +85,7 @@ export function Groups<T>(array:T[] = [], predicates:Predicate<T>[]):T[][] {
 
 
 /* GROUP ======================================== 
-Successively use Filter on previous 'Negatives' until there's nothing left to filter. 
-After each Filter, 'Positive' are added as a group. 
+Groups elements using predicate. 
 returns an array of grouped elements. 
 */
 export function Group<T>(array:T[] = [], predicate:Predicate<T>):T[][] { 
@@ -137,7 +137,19 @@ export function Filter<T>(values:T[] = [], predicate:Predicate<T>):[T[], T[]] {
   return [positive, negative]; 
 }
 
-export function Filters<T>(values:T[] = [], predicates:Predicate<T>[]):[T[], T[]] { 
+/* FILTERS =======================================
+Return 2 lists, 
+  - 'positive' the list of elements matching all predicates. 
+  - 'negative' the list of elements not matching any predicates. 
+
+Same as FILTER but its applies recursively multiple predicates to a list. 
+*/
+/*export function Filters<T>(values:T[] = [], predicates:Predicate<T>[]):[T[], T[]] { 
+  const predicate = predicates 
+}*/
+
+
+/*export function Filters<T>(values:T[] = [], predicates:Predicate<T>[]):[T[], T[]] { 
   const [predicate, ..._predicates] = predicates; 
   if(!predicate) 
     return [values, []]; 
@@ -148,7 +160,7 @@ export function Filters<T>(values:T[] = [], predicates:Predicate<T>[]):[T[], T[]
   
   const [_positive, _negative] = Filters(positive, _predicates); 
   return [_positive, [...negative, ..._negative]]; 
-} 
+} */
 
 
 
