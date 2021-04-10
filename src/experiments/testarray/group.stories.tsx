@@ -1,5 +1,5 @@
 import React, {useState} from 'react'; 
-import { Group, Sorter } from './arrays.utils'; 
+import { Group, Sorter } from '../../reusable/utils/arrays.utils'; 
 
 
 function TemplateArray({values, sorters}:{values:Item[], sorters:Sorter<Item>}) { 

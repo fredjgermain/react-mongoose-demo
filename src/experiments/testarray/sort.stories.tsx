@@ -1,5 +1,5 @@
 import React, {useState} from 'react'; 
-import { Group, Groups, Sorts, Sort, Sorter } from './arrays.utils'; 
+import { Group, Groups, Sorts, Sort, Sorter } from '../../reusable/utils/arrays.utils'; 
 
 
 function TemplateArray({values, sorters}:{values:Item[], sorters:Sorter<Item>[]}) { 
@@ -81,7 +81,7 @@ SortByStr.args = {
   ], 
   sorters: [ 
     (x:Item, pivot:Item) => x.str < pivot.str, 
-  ]
+  ] 
 } 
 
 export const SortByIdNumStr = Template.bind({}) 

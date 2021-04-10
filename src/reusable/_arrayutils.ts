@@ -1,7 +1,7 @@
-import {ToArray, HeadMidTail, Filter, Filters, Intersect, Pick, Groups, Group, Sort, Union} 
+import {ToArray, Pick,  Filter, Groups, Group, Sort, Concatenate} 
   from './utils/arrays.utils'; 
-import {Comparator, Predicate, Sorter} 
+import {Predicate, Sorter} 
   from './utils/arrays.utils'; 
 
-export type {Comparator, Predicate, Sorter} 
-export {ToArray, HeadMidTail, Filter, Filters, Intersect, Pick, Groups, Group, Sort, Union} 
+export type {Predicate, Sorter} 
+export {ToArray, Pick, Filter, Groups, Group, Sort, Concatenate} 
