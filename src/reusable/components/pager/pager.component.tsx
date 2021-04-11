@@ -12,10 +12,10 @@ export function PagerBtn<T>({paging:{pageIndex, setPageIndex, page, pages}}:{pag
 
   return <div> 
     {indexes.map( (index, i) => { 
-      return <div key={index}> 
+      return <span key={index}> 
         <button onClick={() => setPageIndex(index)} disabled={index===pageIndex}>{index+1}</button> 
         {index + 1 !== indexes[i+1] && i < indexes.length-1 && '...'} 
-      </div> 
+      </span> 
     })} 
   </div> 
 } 
