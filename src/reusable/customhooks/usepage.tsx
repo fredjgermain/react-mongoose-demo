@@ -1,5 +1,5 @@
 import {useState} from 'react'; 
-import { Groups, Predicate } from '../_arrayutils'; 
+import { Groups, Sorter, BreakAt, Predicate } from '../_arrayutils'; 
 
 // PAGE HOOK ====================================
 type I<T> = {i:number, t:T} 
@@ -10,29 +10,29 @@ export interface IPageHook<T> {
   pages:I<T>[][]; 
 } 
 
-export function usePage<T>(Ts:T[] = [], predicates:Predicate<T>[]|number):IPageHook<T> { 
-  const iTs = Ts?.map( (t,i) => {return {i,t}}); 
-
-  const PageCapSizePredicate = (predicates:number):Predicate<I<T>>[] => { 
-    const pagecapsize = predicates > 0 ? predicates: 1; 
-    return [(it:I<T>, As:I<T>[]) => As.length < pagecapsize]; 
-  } 
-  const PageBreakPredicates = (predicates:Predicate<T>[]):Predicate<I<T>>[] => { 
-    return predicates.map( predicate => { 
-      return (it:I<T>, As:I<T>[], Bs:I<T>[], Cs:I<T>[]) => { 
-        return predicate(it.t, As.map( a => a.t), Bs.map( b => b.t), Cs.map( c => c.t)); 
-      } 
-    }) 
-  } 
-
-  const PageBreak = (typeof predicates === 'number') ? PageCapSizePredicate(predicates): PageBreakPredicates(predicates); 
-  const pages = Groups(iTs, PageBreak); 
+export function usePage<T>(Ts:T[] = [], pageCap:number, grouping?:Sorter<T>[]):IPageHook<T> { 
+  const pages = Paging(Ts, pageCap, grouping); 
   const [pageIndex, setPageIndex] = useRange(0, pages.length-1); 
   const page:I<T>[] = pages[pageIndex] ?? []; 
-
   return {pageIndex, setPageIndex, page, pages}; 
 }
 
+function Paging<T>(Ts:T[], pageCap:number, grouping?:Sorter<T>[]): I<T>[][] {
+  const groups = Grouping(Ts, grouping); 
+  let pages = [] as I<T>[][]; 
+  const predicate:Predicate<I<T>> = (it, i) => i >= 5; 
+  groups.forEach( group => { 
+    pages = [...pages, ...BreakAt(group, predicate)]; 
+  }) 
+  return pages; 
+}
+
+function Grouping<T>(Ts:T[], grouping?:Sorter<T>[]): I<T>[][] { 
+  const iTs:I<T>[] = Ts?.map( (t,i) => {return {i,t}}); 
+  const _grouping:Sorter<I<T>>[] = grouping ? 
+    grouping?.map( group => { return (it:I<T>, pivot:I<T>) => group(it.t, pivot.t)}): []; 
+  return Groups<I<T>>(iTs, _grouping); 
+}
 
 
 export function useRange(from:number, to:number):[number, (newIndex:number)=>void] { 

@@ -1,9 +1,8 @@
-import React, {useState} from 'react'; 
-import { Group, Groups, Sorts, Sort, Sorter } from '../../reusable/utils/arrays.utils'; 
+import { Group, Predicate } from './arrays.utils'; 
 
 
-function TemplateArray({values, sorters}:{values:Item[], sorters:Sorter<Item>[]}) { 
-  const results = Sorts(values, sorters); 
+function TemplateArray({values, predicate}:{values:Item[], predicate:Predicate<Item>}) { 
+  const results = Group(values, predicate); 
 
   return <div> 
     <div>{JSON.stringify(values)}</div> 
@@ -15,9 +14,8 @@ function TemplateArray({values, sorters}:{values:Item[], sorters:Sorter<Item>[]}
   </div> 
 } 
 
-
 export default { 
-  title: 'utils/sort', 
+  title: 'utils/group', 
   component: TemplateArray 
 } 
 
@@ -25,9 +23,8 @@ const Template = args => <TemplateArray {...args} />
 
 type Item = {id:string, num:number, str:string}; 
 
-
-export const SortById = Template.bind({}) 
-SortById.args = { 
+export const GroupById = Template.bind({}) 
+GroupById.args = { 
   values: [ 
     {id:'a', num:3, str: 'l'}, 
     {id:'a', num:1, str: 'b'}, 
@@ -40,13 +37,16 @@ SortById.args = {
     {id:'a', num:3, str: 'z'}, 
     {id:'c', num:1, str: 'd'}, 
   ], 
-  sorters: [ 
-    (x:Item, pivot:Item) => x.id < pivot.id, 
-  ]
+  predicate: (x:Item, i:number, a:Item[]) => {
+    const [pivot] = a; 
+    return x.id === pivot?.id; 
+  }, 
 } 
 
-export const SortByNum = Template.bind({}) 
-SortByNum.args = { 
+
+
+export const GroupByIdNum = Template.bind({}) 
+GroupByIdNum.args = { 
   values: [ 
     {id:'a', num:3, str: 'l'}, 
     {id:'a', num:1, str: 'b'}, 
@@ -59,14 +59,15 @@ SortByNum.args = {
     {id:'a', num:3, str: 'z'}, 
     {id:'c', num:1, str: 'd'}, 
   ], 
-  sorters: [ 
-    (x:Item, pivot:Item) => x.num < pivot.num, 
-  ]
+  predicate: (x:Item, i:number, a:Item[]) => { 
+    const [pivot] = a; 
+    return x.id === pivot?.id && x.num === pivot.num; 
+  }, 
 } 
 
 
-export const SortByStr = Template.bind({}) 
-SortByStr.args = { 
+export const GroupBy3 = Template.bind({}) 
+GroupBy3.args = { 
   values: [ 
     {id:'a', num:3, str: 'l'}, 
     {id:'a', num:1, str: 'b'}, 
@@ -79,13 +80,15 @@ SortByStr.args = {
     {id:'a', num:3, str: 'z'}, 
     {id:'c', num:1, str: 'd'}, 
   ], 
-  sorters: [ 
-    (x:Item, pivot:Item) => x.str < pivot.str, 
-  ] 
+  predicate: (x:Item, i:number, a:Item[], positive:Item[] ) => { 
+    const [pivot] = a; 
+    return x.id === pivot.id && positive.length < 3; 
+  }, 
 } 
 
-export const SortByIdNumStr = Template.bind({}) 
-SortByIdNumStr.args = { 
+/*
+export const GroupById = Template.bind({}) 
+GroupById.args = { 
   values: [ 
     {id:'a', num:3, str: 'l'}, 
     {id:'a', num:1, str: 'b'}, 
@@ -98,11 +101,5 @@ SortByIdNumStr.args = {
     {id:'a', num:3, str: 'z'}, 
     {id:'c', num:1, str: 'd'}, 
   ], 
-  sorters: [ 
-    (x:Item, pivot:Item) => x.id < pivot.id, 
-    (x:Item, pivot:Item) => x.num < pivot.num, 
-    (x:Item, pivot:Item) => x.str < pivot.str, 
-  ]
-} 
-
-
+  sorters: (x:Item, pivot:Item) => x.id === pivot.id, 
+} */
