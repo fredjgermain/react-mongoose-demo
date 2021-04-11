@@ -1,5 +1,5 @@
-import React, {useState} from 'react'; 
-import { Group, Groups, Sorts, Sort, Sorter } from './arrays.utils'; 
+import { Story } from '@storybook/react'; 
+import { Sorts, Sorter } from './arrays.utils'; 
 
 
 function TemplateArray({values, sorters}:{values:Item[], sorters:Sorter<Item>[]}) { 
@@ -21,7 +21,7 @@ export default {
   component: TemplateArray 
 } 
 
-const Template = args => <TemplateArray {...args} /> 
+const Template:Story<{values:Item[], sorters:Sorter<Item>[]}> = args => <TemplateArray {...args} /> 
 
 type Item = {id:string, num:number, str:string}; 
 

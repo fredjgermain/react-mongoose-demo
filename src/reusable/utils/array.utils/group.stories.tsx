@@ -1,3 +1,4 @@
+import { Story } from '@storybook/react'; 
 import { Group, Predicate } from './arrays.utils'; 
 
 
@@ -19,7 +20,7 @@ export default {
   component: TemplateArray 
 } 
 
-const Template = args => <TemplateArray {...args} /> 
+const Template:Story<{values:Item[], predicate:Predicate<Item>}> = args => <TemplateArray {...args} /> 
 
 type Item = {id:string, num:number, str:string}; 
 

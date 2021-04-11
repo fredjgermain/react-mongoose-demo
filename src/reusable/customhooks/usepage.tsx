@@ -1,5 +1,5 @@
 import {useState} from 'react'; 
-import { Groups, Sorter, BreakAt, Predicate } from '../_arrayutils'; 
+import { Group, Predicate } from '../_arrayutils'; 
 
 // PAGE HOOK ====================================
 type I<T> = {i:number, t:T} 
@@ -10,30 +10,29 @@ export interface IPageHook<T> {
   pages:I<T>[][]; 
 } 
 
-export function usePage<T>(Ts:T[] = [], pageCap:number, grouping?:Sorter<T>[]):IPageHook<T> { 
-  const pages = Paging(Ts, pageCap, grouping); 
+export function usePage<T>(Ts:T[] = [], grouping:Predicate<T>|number):IPageHook<T> { 
+  const pages = Paging(Ts, grouping); 
   const [pageIndex, setPageIndex] = useRange(0, pages.length-1); 
   const page:I<T>[] = pages[pageIndex] ?? []; 
   return {pageIndex, setPageIndex, page, pages}; 
 }
 
-function Paging<T>(Ts:T[], pageCap:number, grouping?:Sorter<T>[]): I<T>[][] {
-  const groups = Grouping(Ts, grouping); 
-  let pages = [] as I<T>[][]; 
-  const predicate:Predicate<I<T>> = (it, i) => i >= 5; 
-  groups.forEach( group => { 
-    pages = [...pages, ...BreakAt(group, predicate)]; 
-  }) 
-  return pages; 
+function Paging<T>(Ts:T[] = [], grouping:Predicate<T>|number) { 
+  const iTs = Ts.map( (t, i) => { 
+    return {i, t} as I<T>; 
+  }); 
+  const predicate = PagingPredicate(grouping); 
+  return Group(iTs, predicate); 
 }
 
-function Grouping<T>(Ts:T[], grouping?:Sorter<T>[]): I<T>[][] { 
-  const iTs:I<T>[] = Ts?.map( (t,i) => {return {i,t}}); 
-  const _grouping:Sorter<I<T>>[] = grouping ? 
-    grouping?.map( group => { return (it:I<T>, pivot:I<T>) => group(it.t, pivot.t)}): []; 
-  return Groups<I<T>>(iTs, _grouping); 
-}
-
+function PagingPredicate<T>(grouping:Predicate<T>|number): Predicate<I<T>> { 
+  if(typeof grouping === 'number') 
+    return PagingPredicate( (t:T, i, a:T[], positive:T[]) => positive.length < grouping); 
+  const GetT = (e:I<T>) => e.t; 
+  return (it:I<T>, i:number, a:I<T>[], positive:I<T>[], negative:I<T>[]) => { 
+    return grouping(it.t, i, a.map(GetT), positive.map(GetT), negative.map(GetT)); 
+  } 
+} 
 
 export function useRange(from:number, to:number):[number, (newIndex:number)=>void] { 
   const [index, setIndex] = useState(from); 

@@ -1,9 +1,6 @@
 import { IPageHook } from '../../../reusable/_customhooks'; 
-import {Filter, HeadMidTail} from '../../../reusable/_arrayutils';
-import { IsNull } from '../../../reusable/_utils';
-import {usePage} from '../../_customhooks'; 
-
-
+import {Filter} from '../../../reusable/_arrayutils'; 
+import { IsNull } from '../../../reusable/_utils'; 
 
 /* Pager Btn
 Display buttons to change pages. 
@@ -49,6 +46,17 @@ export function PageOfPages<T>({paging:{pageIndex, setPageIndex, page, pages}}:{
 
 
 
+/* GetHeadMidTail ==================================
+*/
+function HeadMidTail<T>(array:T[] = []): [T, T[], T, T[], T] { 
+  const [firstHalf, secondHalf] = Filter(array, (t:T, i:number, a:T[], firstHalf:T[]) => firstHalf.length < a.length/2); 
+  const [head, ...remainder] = firstHalf ?? []; 
+  const [mid, ...firstRemainder] = remainder.reverse() ?? []; 
+  const [tail, ...secondRemainder] = secondHalf?.reverse() ?? []; 
+
+  return [head, firstRemainder?.reverse() ?? [], mid ?? head, secondRemainder?.reverse() ?? [], tail ?? head]; 
+} 
+
 function IndexesWindow(index:number, min:number, max:number, length:number) { 
   const window = []; 
   let i = index-2; 
@@ -62,68 +70,9 @@ function IndexesWindow(index:number, min:number, max:number, length:number) {
 
 function AbbrevIndexes(index:number, indexes:number[]) { 
   const window = IndexesWindow(index, 0, indexes.length-1, 5); 
-  const [abbrev] = Filter(indexes, (i:number, positive:number[], negative:number[], remainder:number[]) => { 
+  const [abbrev] = Filter(indexes, (i:number) => { 
     const t = Math.floor(indexes.length/5); 
     return [0, ...window, indexes.length-1].includes(i) || (i % t) === 0; 
   }) 
   return abbrev; 
-}
-
-function AbbrevIndexes2(index:number, indexes:number[]) { 
-  const [firstHalf, remainder] = Filter(indexes, (n:number, firstHalf:number[]) => firstHalf.length < index); 
-  const [current, ...secondHalf] = remainder; 
-
-  const [first, fistLeft, firstQuart, firstRight, prev] = HeadMidTail(firstHalf); 
-  const [next, secondLeft, secondQuart, secondRight, last] = HeadMidTail(secondHalf); 
-  
-  const abbrevIndexes = [ 
-    first, first+1, firstQuart, 
-    prev-1, prev, current, next, next+1, 
-    secondQuart, last-1, last]; 
-  const [abbrev] = Filter(abbrevIndexes, (i:number, positive:number[]) => { 
-    return !IsNull(i) && !positive.includes(i) && i>=0 && i < indexes.length; 
-  }) 
-  return abbrev; 
-}
-
-
-
-
-export function TestPagerBtn<T>() { 
-  let items = [] as number[]; 
-  while(items.length < 98) 
-    items.push(items.length); 
-
-  const paging = usePage(items, 5); 
-
-  
-  let i = 0;
-  while(i<11) {
-    console.log([i, IndexesWindow(i++, 0, 10, 5)]);
-  }
-
-  /*TestAbbrev(10);
-  TestAbbrev(50);
-  TestAbbrev(98);
-  TestAbbrev(99);
-  TestAbbrev(100);*/
-
-  return <div> 
-    {JSON.stringify(paging.page)} <br/> 
-    <PagerBtn {...{paging}}/> 
-  </div> 
-} 
-
-
-function TestAbbrev(length:number) {
-  let items = [] as number[]; 
-  while(items.length < length) 
-    items.push(items.length); 
-
-  AbbrevIndexes(0, items); 
-  AbbrevIndexes(1, items); 
-  AbbrevIndexes(2, items); 
-  AbbrevIndexes(length-3, items); 
-  AbbrevIndexes(length-2, items); 
-  AbbrevIndexes(length-1, items); 
 }

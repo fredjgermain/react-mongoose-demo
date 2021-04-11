@@ -40,7 +40,7 @@ export function useQuestionnaire(patient:IEntry):IUseQuestionnaire {
   const setQuestionnaire = (newValue:any, keys:any[] = []) => sessionQuestionnaire.Set(newValue, [...keys]); 
 
   // Paging -----------------------------------------------
-  const paging = usePage(questionnaire, 4, PageGrouping()); 
+  const paging = usePage(questionnaire, PageGrouping()); 
 
 
   
@@ -89,44 +89,16 @@ export function useQuestionnaire(patient:IEntry):IUseQuestionnaire {
   Groups questions. 
   */ 
   function PageGrouping() { 
-    const GroupByForm = (a:IAnswer, pivot:IAnswer) => { 
-      const q = GetQuestion(a); 
+    return (t:IAnswer, i:number, a:IAnswer[], positive:IAnswer[]) => { 
+      const [pivot] = a; 
+      const q = GetQuestion(t); 
       const qPivot = GetQuestion(pivot); 
-      return JSON.stringify(q?.form) === JSON.stringify(qPivot?.form); 
+      const byForm = JSON.stringify(q?.form) === JSON.stringify(qPivot?.form); 
+      const byInstruction = JSON.stringify(q?.instructions) === JSON.stringify(qPivot?.instructions); 
+      const pageCap = positive.length < 4; 
+      return byForm && byInstruction && pageCap; 
     } 
-
-    const GroupByInstruction = (a:IAnswer, pivot:IAnswer) => { 
-      const q = GetQuestion(a); 
-      const qPivot = GetQuestion(pivot); 
-      return JSON.stringify(q?.instructions) === JSON.stringify(qPivot?.instructions);  
-    } 
-
-    return [GroupByForm, GroupByInstruction]; 
   } 
-    /*
-    function GetQuestionAndPivot(answer:IAnswer, As:IAnswer[]) { 
-      const question = GetQuestion(answer); 
-      const pivot = GetQuestion(As[0]); 
-      return {question, pivot}; 
-    } 
-
-    // group by form
-    const GroupByForm = (a:IAnswer, As:IAnswer[], Bs:IAnswer[], Cs:IAnswer[]) => { 
-      const {question, pivot} = GetQuestionAndPivot(a, As);
-      return JSON.stringify(question?.form) === JSON.stringify(pivot?.form) || IsEmpty(As); 
-    } 
-
-    // group by instructions set
-    const GroupByInstruction = (a:IAnswer, As:IAnswer[], Bs:IAnswer[], Cs:IAnswer[]) => { 
-      const {question, pivot} = GetQuestionAndPivot(a, As);
-      return JSON.stringify(question?.instructions) === JSON.stringify(pivot?.instructions) || IsEmpty(As); 
-    } 
-
-    // max 4 items
-    const GroupBy4 = (a:IAnswer, As:IAnswer[], Bs:IAnswer[], Cs:IAnswer[]) => { 
-      return As.length < 4; 
-    } */
-
 
   const TestResetSession = () => { 
     sessionQuestionnaire.Reset(); 
