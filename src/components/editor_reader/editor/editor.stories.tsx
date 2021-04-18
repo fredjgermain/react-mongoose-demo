@@ -1,5 +1,4 @@
 import React, {useState} from 'react'; 
-import { IsEmpty } from '../../../libs/_utils';
 import {Editor, IEditor} from './editor.component'; 
 
 

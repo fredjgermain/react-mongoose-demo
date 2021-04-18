@@ -1,5 +1,5 @@
 import { useState, useContext, useEffect } from 'react'; 
-import { IUseFilters, KeyPredicate, _Predicate } from './inputfilter.type';
+import { IUseFilters, KeyPredicate } from './inputfilter.type';
 import { FilterPredicatesContext } from './inputfilter.component'; 
 import { FilterPredicate } from './inputfilter.utils'; 
 
@@ -25,10 +25,12 @@ export function useFilters(values:any[]):IUseFilters {
 export function useFilter(handle:string, type:string) { 
   const {filteredValues, setPredicates} = useContext(FilterPredicatesContext); 
   const [strPredicate, setStrPredicate] = useState(''); 
-  const predicate = FilterPredicate(strPredicate, type, handle); 
+  const keyPredicate = {handle, 
+    predicate:FilterPredicate(strPredicate, type, handle)
+  }; 
 
   useEffect(()=>{ 
-    setPredicates({handle, predicate}); 
+    setPredicates(keyPredicate); 
   }, [strPredicate]); 
   
   return [strPredicate, setStrPredicate]; 

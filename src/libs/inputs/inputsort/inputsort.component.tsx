@@ -1,28 +1,4 @@
-import {useState} from 'react';
-import { Group } from '../../libs/_arrayutils'; 
 
-
-
-
-type KeyPredicate = {handle:string, predicate:(x:any) => boolean} 
-
-
-export function useSorter(values:any[]) { 
-  const [_predicates, _setPredicates] = useState<KeyPredicate[]>([]); 
-  const [groupedValues] = Groups(values, _predicates.map(p => p.predicate)); 
-
-  const setPredicates = (keyPredicate?:KeyPredicate) => { 
-    if(!keyPredicate) 
-      _setPredicates([]); 
-    else 
-      _setPredicates( (prev:KeyPredicate[]) => { 
-        const copy = [...prev.filter( kp => kp.handle !== keyPredicate.handle ), keyPredicate]; 
-        return copy; 
-      }); 
-  } 
-
-  return {groupedValues, setPredicates}; 
-}
 
 /*
 3 possible positions per sorter 

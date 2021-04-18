@@ -1,4 +1,4 @@
-import { ValidatorArrayLength, ValidatorMinMaxNumber, ValidatorRegex, ValidatorRequired } from '../validators';
+import { ValidatorArrayLength, ValidatorMinMaxNumber, ValidatorRegex, ValidatorRequired } from '../utils/validators';
 
 // QUESTIONS 
 const questions:ICollection = {accessor:'questions', label:'Questions', 

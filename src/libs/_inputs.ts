@@ -4,6 +4,10 @@ export type { IInput } from './inputs/input/_input';
 
 
 // InputArray 
-export { InputArray, InputArrayContext } from './inputs/inputarray/inputarray.component'; 
-export type {IInputArray, IUseInputArray} from './inputs/inputarray/inputarray.hook'; 
-export { useInputArray } from './inputs/inputarray/inputarray.hook'; 
+export { InputArray } from './inputs/inputarray/_inputarray'; 
+export type { IInputArray } from './inputs/inputarray/_inputarray'; 
+
+
+// InputSelect
+export { InputSelect } from './inputs/inputselect/_inputselect'; 
+export type { IInputSelect } from './inputs/inputselect/_inputselect'; 

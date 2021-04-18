@@ -1,4 +1,4 @@
-import { IsEmpty, IsInRange, IsNull } from '../_utils'; 
+import { IsEmpty, IsInRange, IsNull } from '../../_utils'; 
 
 console.log(new RegExp("^[a-zA-Z]{4}[0-9]{8}$").test('JEAF23118301')); 
 

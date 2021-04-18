@@ -26,13 +26,11 @@ export function useStateAt<T>(value:T):
   } 
 
   function Set(newValue:any, keys?:TKey[]) { 
-    const prev = Value; 
-    if(JSON.stringify(prev) === JSON.stringify(newValue)) 
+    if(JSON.stringify(Value) === JSON.stringify(newValue)) 
       return; 
     SetValue((prev:T) => { 
       return SetValueAt(prev, newValue, keys); 
     }) 
-    return; 
   } 
 
   return [Get, Set]; 
