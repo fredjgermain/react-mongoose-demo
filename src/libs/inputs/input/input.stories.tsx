@@ -1,4 +1,5 @@
 import React, {useState} from 'react'; 
+import { Story } from '@storybook/react'; 
 //import { IInput, Input } from './_input'; 
 import { IInput, Input } from './_input'; 
 import { GetInputType } from '../../../libs/_utils'; 
@@ -22,7 +23,7 @@ export default {
   component: TestInput, 
 } 
 
-const Template = args => <TestInput {...args} /> 
+const Template:Story<IInput> = args => <TestInput {...args} /> 
 
 export const TestInput_String = Template.bind({}) 
 TestInput_String.args = { 

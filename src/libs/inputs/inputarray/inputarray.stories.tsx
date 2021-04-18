@@ -1,4 +1,5 @@
 import React, { useState } from 'react'; 
+import { Story } from '@storybook/react'; 
 import {InputArray, IInputArray} from './_inputarray'; 
 
 
@@ -22,7 +23,7 @@ export default {
   component: TestInputArray, 
 } 
 
-const Template = args => <TestInputArray {...args} /> 
+const Template:Story<IInputArray> = args => <TestInputArray {...args} /> 
 
 export const TestInput_StringS = Template.bind({}) 
 TestInput_StringS.args = { 

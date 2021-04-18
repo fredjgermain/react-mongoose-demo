@@ -1,5 +1,5 @@
-import {useState} from 'react'; 
 import { Group, Predicate } from '../../_arrayutils'; 
+import {useRange} from '../../_customhooks'; 
 
 // PAGE HOOK ====================================
 type I<T> = {i:number, t:T} 
@@ -34,16 +34,3 @@ function PagingPredicate<T>(grouping:Predicate<T>|number): Predicate<I<T>> {
   } 
 } 
 
-export function useRange(from:number, to:number):[number, (newIndex:number)=>void] { 
-  const [index, setIndex] = useState(from); 
-
-  const min = Math.min(from, to); 
-  const max = Math.max(from, to); 
-
-  function SetIndex(newIndex:number) { 
-    if(max >= newIndex && min <= newIndex && newIndex !== index) 
-      setIndex(newIndex); 
-  } 
-
-  return [index, SetIndex]; 
-}

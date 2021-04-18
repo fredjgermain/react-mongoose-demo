@@ -6,6 +6,13 @@ export interface IEvent extends React.ChangeEvent<HTMLInputElement> {
   [key:string]:any, 
 } 
 
+
+/** ONPRESS
+ * test if a any of the given 'keys' have been pressed. If so then execute 'Func'
+ * @param event event object to get key event from. 
+ * @param keys keys to test. 
+ * @param Func Func to execute when given keys are pressed. 
+ */
 export function OnPress(event:any, keys:string[], Func:()=>void)  { 
   const {code} = (event as IEvent); 
   if(keys.includes(code)) 
@@ -22,15 +29,17 @@ export function OnTab(event:any, Func:()=>void) {
 
 
 
-// Get Value From Input -------------------------
+/** GET VALUE FROM  INPUT 
+ * Helps retrieval of value from  input field according to their type. 
+ * @param event 
+ * @returns a value 
+ */
 export function GetValueFromInput(event:IEvent) { 
   const target = event.target; 
   const type = target.type; 
   if(type === 'number') 
     return target.valueAsNumber as number; 
   if(type === 'date') { 
-    //console.log([target.value, target.valueAsDate]); 
-    //return target.valueAsDate; 
     return target.value; 
   }
   if(type === 'checkbox') 
@@ -38,13 +47,14 @@ export function GetValueFromInput(event:IEvent) {
   return target.value; 
 } 
 
-
-/* GetInputType ---------------------------------
-List of acceptable types;
+/** GET INPUT TYPE 
+ * Map a type to acceptable type for an input field.  
+ * List of acceptable types;
 button, checkbox, color, date, datetime-local, email, image, hidden, number, password, range, reset, tel, text, time, url, week
-
-List of excluded types; file, 
-*/
+ * List of excluded types; file
+ * @param type 
+ * @returns returns an acceptable type for an input field, type 'text' as  default.
+ */
 export function GetInputType(type:string) { 
   const acceptableTypes = ['button', 'checkbox', 'color', 'date', 'datetime-local', 'email', 'image', 'hidden', 'number', 'password', 'range', 'reset', 'tel', 'text', 'time', 'url', 'week']; 
   

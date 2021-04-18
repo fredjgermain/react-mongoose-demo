@@ -1,4 +1,5 @@
 import React, {useState} from 'react'; 
+import { Story } from '@storybook/react'; 
 import {IInputSelect, InputSelect, } from './_inputselect'; 
 
 
@@ -19,7 +20,7 @@ export default {
   component: TestInputSelect, 
 } 
 
-const Template = args => <TestInputSelect {...args} /> 
+const Template:Story<IInputSelect> = args => <TestInputSelect {...args} /> 
 
 export const TestInputSelect_single = Template.bind({}) 
 TestInputSelect_single.args = { 

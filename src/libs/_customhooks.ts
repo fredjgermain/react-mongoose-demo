@@ -14,3 +14,4 @@ export {useIEntry} from './customhooks/useientry.hook';
 export type {IUseIEntry} from './customhooks/useientry.hook'; 
 
 export {useTimer} from './customhooks/useTimer.hook'; 
+export {useRange} from './customhooks/useRange.hook'; 
