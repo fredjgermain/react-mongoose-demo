@@ -1,3 +1,2 @@
-export type { IUseFilters } from './inputfilter.type'; 
-export { useFilter, useFilters } from './inputfilter.hook'; 
-export { FilterPredicatesContext, InputFilter, InputFilters } from './inputfilter.component'; 
+export { InputFilter } from './inputfilter.component'; 
+export { useFilter } from './inputfilter.hook'; 

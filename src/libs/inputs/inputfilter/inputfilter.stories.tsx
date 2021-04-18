@@ -1,16 +1,29 @@
 import { Story } from '@storybook/react'; 
-import { InputFilters, InputFilter } from './_inputfilter'; 
-
+import { InputFilter, useFilter } from './_inputfilter'; 
 
 
 function TemplateResearch({values, filters}:{values:any[], filters:{handle:string, type:string}[]}) { 
-  
-  return <InputFilters {...{values}} > 
-    {filters.map( f => { 
-      return <InputFilter key={f.handle} {...f} /> 
-    })}
-  </InputFilters> 
+  const {filteredValues, SetFilters} = useFilter(values); 
+  return <div> 
+    Original <br/> 
+    {values.map( (value,i) => { 
+      return <div key={i}>{JSON.stringify(value)}</div> 
+    })} 
+    <br/>Filters <br/> 
+    {filters.map( ({handle, type}, i) => { 
+      return <span>
+        {handle}: 
+        <InputFilter key={i} {...{ type, handle, SetFilters }} /> 
+      </span>
+    })} 
+    <br/>Filtered <br/> 
+    {filteredValues.map( (value,i) => { 
+      return <div key={i}>{JSON.stringify(value)}</div> 
+    })} 
+  </div> 
 } 
+
+
 
 const str = "ajjaaj"; 
 console.log( str.match('aa')); 
@@ -18,7 +31,7 @@ console.log( str.match('aa'));
 
 
 export default { 
-  title: 'input/Filter', 
+  title: 'input/Filter2', 
   component: TemplateResearch 
 } 
 
@@ -43,8 +56,8 @@ LambdaFilter.args = {
   filters:[{handle:'', type:'number'}] 
 } 
   
-export const StringMatch = Template.bind({}) 
-StringMatch.args = { 
+export const MultipleFieldFilter = Template.bind({}) 
+MultipleFieldFilter.args = { 
   values:[ 
     {a:'aa', v:1, bool:false}, 
     {a:'aa', v:2, bool:true}, 

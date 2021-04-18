@@ -1,6 +1,5 @@
-export type KeyPredicate = {handle:string, predicate:(x:any) => boolean} 
-
-export interface IUseFilters { 
-  filteredValues: any[]; 
-  setPredicates: (keyPredicate?: KeyPredicate) => void; 
-} 
+export interface IInputFilter { 
+  handle:string, 
+  type:string, 
+  SetFilters: (newValue: any, keys?: TKey[] | undefined) => void
+}
