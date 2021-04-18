@@ -1,5 +1,5 @@
 import React from 'react';
-import {useToggle} from './usetoggle.hook';
+import {useToggle} from '../hooks/usetoggle.hook';
 
 
 export function TestToggle () { 

@@ -1,12 +1,12 @@
 import {useState} from 'react'; 
-import { Filters, Predicate } from '../../reusable/_arrayutils'; 
+import { Filter, Predicate } from '../../libs/_arrayutils'; 
 
 type I<T> = {i:number, t:T} 
 
 export function useSearch<T>(Ts:T[]) { 
   const [predicates, setPredicates] = useState([] as Predicate<T>[]); 
   const iTs = Ts?.map( (t,i) => {return {i,t}}); 
-  const [results] = Filters(iTs, MapPredicates(predicates)); 
+  const [results] = Filter(iTs, MapPredicates(predicates)); 
   return {results, setPredicates}; 
 } 
 

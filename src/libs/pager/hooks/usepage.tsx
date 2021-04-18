@@ -1,5 +1,5 @@
 import {useState} from 'react'; 
-import { Group, Predicate } from '../_arrayutils'; 
+import { Group, Predicate } from '../../_arrayutils'; 
 
 // PAGE HOOK ====================================
 type I<T> = {i:number, t:T} 

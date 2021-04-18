@@ -1,6 +1,6 @@
 import { Fetcher } from '../../_mongooseparser';
-import {Collection} from '../collection.class'; 
-import {ICrud} from '../dao.class'; 
+import {Collection} from '../utils/collection.class'; 
+//import {ICrud} from '../utils/dao.class'; 
 import {mockDb} from './mockdb'; 
 
 

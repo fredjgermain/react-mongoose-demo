@@ -1,5 +1,4 @@
 import React, {useState} from 'react'; 
-import { Filters } from '../../reusable/_arrayutils';
 import { InputFilters, InputFilter, useFilters } from './inputfilter.component'; 
 
 

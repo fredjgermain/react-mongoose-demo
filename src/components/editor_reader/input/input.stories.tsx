@@ -1,7 +1,7 @@
 import React, {useState} from 'react'; 
 //import { IInput, Input } from './_input'; 
 import { IInput, Input } from './_input'; 
-import { GetInputType } from '../../../reusable/_utils'; 
+import { GetInputType } from '../../../libs/_utils'; 
 
 
 

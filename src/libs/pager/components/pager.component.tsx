@@ -1,4 +1,4 @@
-import { IPageHook } from '../../_customhooks'; 
+import { IPageHook } from '../hooks/usepage'; 
 import { Filter } from '../../_arrayutils'; 
 import { IsNull } from '../../_utils'; 
 

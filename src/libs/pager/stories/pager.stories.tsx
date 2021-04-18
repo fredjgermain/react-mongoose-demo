@@ -1,6 +1,6 @@
 import { Story } from '@storybook/react'; 
-import { PageOfPages, PagerBtn, PagerFromTo } from './pager.component'; 
-import { usePage } from '../../_customhooks'; 
+import { PageOfPages, PagerBtn, PagerFromTo } from '../components/pager.component'; 
+import { usePage } from '../hooks/usepage'; 
 
 import { Sorts, Sorter, Predicate } from '../../_arrayutils';
 

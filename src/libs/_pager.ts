@@ -1,3 +1,3 @@
-import {PageOfPages, PagerBtn, PagerFromTo} from './components/pager/pager.component'; 
+import {PageOfPages, PagerBtn, PagerFromTo} from './pager/components/pager.component'; 
 
 export {PageOfPages, PagerBtn, PagerFromTo} 

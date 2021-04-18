@@ -1,6 +1,6 @@
 import React, {useMemo, useEffect, useContext} from 'react'; 
-import {ICrud, IDao, DAO} from './dao.class'; 
-import { useLoader } from '../_customhooks'; 
+import {ICrud, IDao, DAO} from '../utils/dao.class'; 
+import { useLoader } from '../../_customhooks'; 
 
 // -------------------------------------------------------
 export function useLoadCollection(accessors:string[]) { 
