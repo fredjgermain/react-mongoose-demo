@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'; 
 import { Input } from '../input/_input'; 
-import { useInputArray, IInputArray, IUseInputArray } from './inputarray.hook'; 
+import { useInputArray } from './inputarray.hook'; 
+import { IInputArray, IUseInputArray } from './inputarray.type'; 
 
 //interface IProps extends IInputArray, React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> {} 
 export const InputArrayContext = React.createContext({} as IUseInputArray); 

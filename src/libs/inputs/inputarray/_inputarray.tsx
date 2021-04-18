@@ -1,5 +1,3 @@
-import { InputArray } from './inputarray.component'; 
-import { IInputArray } from './inputarray.hook'; 
+export { InputArray } from './inputarray.component'; 
+export type { IInputArray } from './inputarray.type'; 
 
-export {InputArray} 
-export type {IInputArray} 

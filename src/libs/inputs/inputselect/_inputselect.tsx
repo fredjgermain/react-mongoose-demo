@@ -1,5 +1,3 @@
-import {SelectContext, InputSelect} from './inputselect.component'; 
-import {IInputSelect, IUseSelect, useInputSelect} from './inputselect.hook'; 
-
-export {SelectContext, InputSelect, useInputSelect}; 
-export type {IInputSelect, IUseSelect} 
+export { InputSelect } from './inputselect.component'; 
+export type {IInputSelect, IUseSelect} from './inputselect.type'; 
+export { useInputSelect } from './inputselect.hook'; 

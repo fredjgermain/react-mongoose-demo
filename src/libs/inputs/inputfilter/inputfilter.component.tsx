@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'; 
 //import { Filter, Predicate } from '../../reusable/_arrayutils'; 
-import { IsEmpty, GetDefaultValueByType } from '../../libs/_utils'; 
-import { Input } from '../editor_reader/input/_input'; 
+import { IsEmpty, GetDefaultValueByType } from '../../_utils'; 
+import { Input } from '../input/_input'; 
 
 
 type _Predicate = (x:any) => boolean; 

@@ -1,23 +1,7 @@
 import { Filter, ToArray } from '../../../libs/_arrayutils';
 import { GetSelectedValuesFromOptions, IsEmpty } from '../../../libs/_utils';
+import { IInputSelect, IUseSelect } from './inputselect.type';
 
-
-export interface IInputSelect { 
-  value:any; 
-  placeholder?:string; 
-  onSetValue: (newValues:any[]) => void; 
-  options: IOption[]; 
-  multiple?: boolean; 
-  sizeFunc?: (value:any) => number; 
-} 
-
-
-// USE SELECT ====================================
-export interface IUseSelect extends IInputSelect { 
-  SelectValue:(newValue:any) => void; 
-  GetSelection: () => IOption[]; 
-  //Toggle:IUseToggle<HTMLDivElement>; 
-} 
 export function useInputSelect({...props}:IInputSelect):IUseSelect { 
   props.multiple = props.multiple ?? false; 
   props.options = props.options ?? []; 

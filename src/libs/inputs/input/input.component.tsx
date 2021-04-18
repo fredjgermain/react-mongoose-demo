@@ -1,22 +1,14 @@
 import React from 'react';
 import {IEvent, IsNull, OnEnter, DefaultWidth, 
   GetValueFromInput, GetInputType, GetDefaultValueByType} from '../../../libs/_utils'; 
+import { IInput } from './input.type'; 
 
 
-export interface IInput{ 
-  type: string; 
-  value: any; 
-  defaultValue?: any; 
-
-  placeholder?: string; 
-
-  onSetValue: (newValue:any) => void; 
-  onPressEnter?: () => void; 
-
-  sizeFunc?: (value:any) => number; 
-  inputAttribute?: React.InputHTMLAttributes<HTMLInputElement>; 
-}
-
+/**
+ * 
+ * @param param0 
+ * @returns 
+ */
 export function Input({...props}:IInput) { 
   const {width, ...args} = PrepArgs(props); 
   // Concatenate width defined above with inputAttribute.style if any other style has been defined. 

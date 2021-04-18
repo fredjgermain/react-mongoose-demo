@@ -1,5 +1,5 @@
 import {useState} from 'react'; 
-import { Filter, Predicate } from '../../libs/_arrayutils'; 
+import { Filter, Predicate } from '../../_arrayutils'; 
 
 type I<T> = {i:number, t:T} 
 

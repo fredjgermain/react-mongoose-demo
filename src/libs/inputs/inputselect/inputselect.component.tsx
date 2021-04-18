@@ -1,5 +1,6 @@
 import React, {useContext} from 'react'; 
-import { IInputSelect, IUseSelect, useInputSelect } from './inputselect.hook'; 
+import { useInputSelect } from './inputselect.hook'; 
+import { IInputSelect, IUseSelect } from './inputselect.type'; 
 import { useToggle } from '../../../libs/_toggle'; 
 import { IsEmpty } from '../../../libs/_utils';
 
