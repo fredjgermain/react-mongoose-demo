@@ -1,5 +1,5 @@
-import { Filter, ToArray } from '../../../reusable/_arrayutils';
-import { GetSelectedValuesFromOptions, IsEmpty } from '../../../reusable/_utils';
+import { Filter, ToArray } from '../../../libs/_arrayutils';
+import { GetSelectedValuesFromOptions, IsEmpty } from '../../../libs/_utils';
 
 
 export interface IInputSelect { 

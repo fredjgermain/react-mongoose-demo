@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'; 
-import { IsEmpty, GetDefaultValueFromIField } from '../../../reusable/_utils'; 
+import { IsEmpty, GetDefaultValueFromIField } from '../../../libs/_utils'; 
 import { GetReadValue, IReader } from '../reader/_reader'; 
 import { Input } from '../input/_input'; 
 import { InputArray } from '../inputarray/_inputarray'; 
@@ -10,6 +10,10 @@ export type IEditorFunc = ({...props}:IEditor) => JSX.Element;
 export interface IEditor extends IReader { 
   editValue: (newValue:any) => void; 
   validation?: (newValue:any) => boolean; 
+  
+  placeholder?: string; 
+  sizeFunc?: (value:any) => number; 
+  inputAttribute?: React.InputHTMLAttributes<HTMLInputElement>; 
 } 
 
 interface IProps extends IEditor{ 
@@ -21,7 +25,6 @@ interface IProps extends IEditor{
 export function Editor({options = [], validation = () => true, ...props}:IProps) { 
   const value = IsEmpty(props.value) ? GetDefaultValueFromIField(props.ifield): props.value; 
   const args = {...props, value, options, validation}; 
-
   props.func = props.func ?? GetDefaultEditorFunc(props.ifield, !IsEmpty(options)); 
   return <props.func {...args} /> 
 } 
@@ -38,21 +41,21 @@ function GetDefaultEditorFunc(ifield:IField, hasOptions:boolean) {
 } 
 
 // Edit one
-function EditOne({value, editValue, ifield}:IEditor) { 
+function EditOne({value, editValue, ifield, ...props}:IEditor) { 
   const onSetValue = editValue; 
   const type = ifield.type; 
   const defaultValue = ifield.defaultValue; 
-  return <Input {...{type, value, onSetValue, defaultValue}} /> 
+  return <Input {...{...props, type, value, onSetValue, defaultValue}} /> 
 }
 
 
 // Edit many
-function EditMany({value, editValue, options, ifield}:IEditor) { 
+function EditMany({value, editValue, options, ifield, ...props}:IEditor) { 
   const values = value; 
   const onSetValues = editValue; 
   const type = ifield.type; 
   const defaultValue = ifield.defaultValue; 
-  return <InputArray {...{type, values, onSetValues, defaultValue}} /> 
+  return <InputArray {...{...props, type, values, onSetValues, defaultValue}} /> 
 }
 
 function EditMixed({value, editValue, options, ifield}:IEditor) { 
@@ -71,16 +74,12 @@ function EditSelection(ifield:IField) {
     EditSelectSingle; 
 }
 
-function EditSelectSingle({value, editValue, options = [], ifield}:IEditor) { 
-  const _value = value; 
-  const _onChange = editValue; 
-  const _options = options; 
-  return <InputSelect {...{value: _value, options: _options, onSetValue: _onChange}} /> 
+function EditSelectSingle({editValue, options = [], ifield, ...props}:IEditor) { 
+  const onSetValue = editValue; 
+  return <InputSelect {...{...props, onSetValue, options}} /> 
 }
 
-function EditSelectMulti({value, editValue, options = [], ifield}:IEditor) { 
-  const _value = value; 
-  const _onChange = editValue; 
-  const _options = options; 
-  return <InputSelect {...{value: _value, options: _options, onSetValue: _onChange, multiple:true}} /> 
+function EditSelectMulti({editValue, options = [], ifield, ...props}:IEditor) { 
+  const onSetValue = editValue; 
+  return <InputSelect {...{...props, onSetValue, options, multiple:true}} /> 
 }

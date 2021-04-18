@@ -1,7 +1,7 @@
 import { useContext } from 'react'; 
 //import { DaoContext } from '../../../reusable/_dao'; 
 import { AdminContext } from '../admin.page'; 
-import { useIEntry, IUseIEntry } from '../../../reusable/_customhooks'; 
+import { useIEntry, IUseIEntry } from '../../../libs/_customhooks'; 
 import { IEditor } from '../../../components/editor_reader/_editor_reader'; 
 
 

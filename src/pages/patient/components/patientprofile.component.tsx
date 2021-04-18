@@ -1,9 +1,9 @@
 import { useContext } from 'react'; 
-import { Editor } from '../../../components/editor_reader/_editor_reader'; 
+import { Editor, IEditor } from '../../../components/editor_reader/_editor_reader'; 
 import { PatientContext } from '../patient.page'; 
 
-import { DaoContext } from '../../../reusable/_dao'; 
-import { useStateAt } from '../../../reusable/_customhooks'; 
+import { DaoContext } from '../../../libs/_dao'; 
+import { useStateAt } from '../../../libs/_customhooks'; 
 
 
 export function PatientProfile() { 
@@ -13,9 +13,9 @@ export function PatientProfile() {
   const {ramq, firstName, lastName} = CollectArgs(['ramq', 'firstName', 'lastName'], Get, Set); 
 
   return <div className={'borderedform'}> 
-    <div><label>Ramq:</label><Editor {...ramq} /></div> 
-    <div><label>First name:</label><Editor {...firstName} /></div> 
-    <div><label>Last name:</label><Editor {...lastName} /></div> 
+    <div><label>Ramq:</label><Editor {...{...ramq, sizeFunc:() => 13}} /></div> 
+    <div><label>First name:</label><Editor {...{...firstName, sizeFunc:() => 20}} /></div> 
+    <div><label>Last name:</label><Editor {...{...lastName, sizeFunc:() => 20}} /></div> 
     <br/> 
     <button onClick={() => CreateUpdateProfile(Get())}>Save</button> 
   </div> 

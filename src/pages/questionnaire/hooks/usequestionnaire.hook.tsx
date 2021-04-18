@@ -1,9 +1,10 @@
 import { useContext } from 'react'; 
-import { DaoContext } from '../../../reusable/_dao'; 
-import { useSession } from '../../../reusable/_session'; 
-import { IsEmpty } from '../../../reusable/_utils'; 
-import { usePage, IPageHook } from '../../../reusable/_customhooks'; 
+import { DaoContext } from '../../../libs/_dao'; 
+import { useSession } from '../../../libs/_session'; 
+import { IsEmpty } from '../../../libs/_utils'; 
+import { usePage, IPageHook } from '../../../libs/_customhooks'; 
 import { QuestionnaireFeedBackRef, useQuestionnaireFeedbackRef } from '../components/questionnaire.feedback'; 
+import { Sorts } from '../../../libs/_arrayutils'; 
 
 
 export interface IUseQuestionnaire { 
@@ -29,41 +30,39 @@ export interface IUseQuestionnaire {
 
 export function useQuestionnaire(patient:IEntry):IUseQuestionnaire { 
   //console.log('questionnaire'); 
+  
   const dao = useContext(DaoContext); 
   const date = new Date(); 
   const feedbackRef = useQuestionnaireFeedbackRef(); 
   //const profile = Session.Get('profile') as IEntry; 
 
   // Questionnaire session --------------------------------
+  //const blankQuestionnaire = BlankQuestionnaire(); 
   const sessionQuestionnaire = useSession('questionnaire', LoadQuestionnaire()); 
   const questionnaire:IAnswer[] = sessionQuestionnaire.Get(); 
   const setQuestionnaire = (newValue:any, keys:any[] = []) => sessionQuestionnaire.Set(newValue, [...keys]); 
 
   // Paging -----------------------------------------------
   const paging = usePage(questionnaire, PageGrouping()); 
-
-
   
   function GetQuestion(answer:IAnswer) { 
     const [question] = dao.GetIEntries('questions', [answer?.question]) as IQuestion[]; 
     return question; 
-  }
+  } 
 
   // LoadQuestionnaire -----------------------------------
   function LoadQuestionnaire() { 
     const loadQuestionnaire = [] as any[]; 
-    /*(GetIEntries('answers') as IAnswer[]).filter( a => { 
-      return a.patient === profile._id && IsToday(a.date); 
-    }) */
-    return IsEmpty(loadQuestionnaire) ? BlankQuestionnaire() : loadQuestionnaire; 
+    const questions = IsEmpty(loadQuestionnaire) ? BlankQuestionnaire() : loadQuestionnaire; 
+    return questions // Sorts(questions, [QuestionSorting()]); 
   } 
 
   // BlankQuestionnaire ----------------------------------- 
   function BlankQuestionnaire():IAnswer[] { 
     const entries = dao.GetIEntries('questions'); 
+    const patientId = patient?._id ?? ''; 
     return entries.map( q => { 
-      //const appointment:IAppointment = {patient._id, date:Date.now()} 
-      return {_id:'', patient:patient?._id ?? '', date, question:q._id, answer:-1} as IAnswer; 
+      return {_id:'', patient:patientId, date, question:q._id, answer:-1} as IAnswer; 
     }); 
   } 
 
@@ -74,7 +73,6 @@ export function useQuestionnaire(patient:IEntry):IUseQuestionnaire {
     return responses; 
   } 
 
-
   function AnswersAreComplete(answers?:IAnswer[]) { 
     const _answers = answers ?? questionnaire; 
     return _answers.every( answer => {
@@ -83,18 +81,30 @@ export function useQuestionnaire(patient:IEntry):IUseQuestionnaire {
     }); 
   } 
 
+  function QuestionSorting() { 
+    return (t:IAnswer, pivot:IAnswer) => { 
+      const q = GetQuestion(t); 
+      const qPivot = GetQuestion(pivot); 
+      // Regroup question by form. 
+      const byForm = JSON.stringify(q?.form) === JSON.stringify(qPivot?.form); 
+      // Regroup question by instruction. 
+      const byInstruction = JSON.stringify(q?.instructions) === JSON.stringify(qPivot?.instructions); 
+      return byForm && byInstruction; 
+    } 
+  } 
 
   // Page Break Predicates ============================================= 
-  /* 
-  Groups questions. 
-  */ 
   function PageGrouping() { 
     return (t:IAnswer, i:number, a:IAnswer[], positive:IAnswer[]) => { 
       const [pivot] = a; 
       const q = GetQuestion(t); 
       const qPivot = GetQuestion(pivot); 
+      
+      // Regroup question by form. 
       const byForm = JSON.stringify(q?.form) === JSON.stringify(qPivot?.form); 
+      // Regroup question by instruction. 
       const byInstruction = JSON.stringify(q?.instructions) === JSON.stringify(qPivot?.instructions); 
+      // Max 4 question per page. 
       const pageCap = positive.length < 4; 
       return byForm && byInstruction && pageCap; 
     } 

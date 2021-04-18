@@ -1,8 +1,8 @@
 import Nav from './components/nav/nav.component'; 
 import { Switch, Route } from 'react-router-dom'; 
-import { DaoContexter, ICrud } from './reusable/_dao'; 
+import { DaoContexter, ICrud } from './libs/_dao'; 
 //import { SessionsDebug } from './components/sessiondebug/sessiondebug.component'; 
-import { Fetcher } from './reusable/_mongooseparser'; 
+import { Fetcher } from './libs/_mongooseparser'; 
 
 import './css/main.css'; 
 

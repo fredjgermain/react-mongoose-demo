@@ -1,6 +1,6 @@
 import React, {useContext} from 'react'; 
 import { IUseAdmin, useAdmin } from './hooks/useadmin.hook'; 
-import { IsEmpty } from '../../reusable/_utils'; 
+import { IsEmpty } from '../../libs/_utils'; 
 
 import { CollectionSelector } from './components/collectionselector.component'; 
 import { AdminTable } from './components/admintable.component'; 

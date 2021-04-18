@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'; 
 import { QuestionnaireContext } from '../questionnaire.page'; 
-import {PageOfPages, PagerBtn, PagerFromTo} from '../../../reusable/_pager';
+import {PageOfPages, PagerBtn, PagerFromTo} from '../../../libs/_pager';
 
 
 

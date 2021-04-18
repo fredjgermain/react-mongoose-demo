@@ -1,7 +1,7 @@
 import { useContext } from 'react'; 
-import { Editor } from '../../../reusable/_input'; 
-import {QuestionnaireContext} from '../questionnaire.page'; 
-import { useQuestionnaireItem } from '../hooks/usequestionnaireitem.hook';
+import { Editor } from '../../../components/editor_reader/_editor_reader'; 
+import { QuestionnaireContext } from '../questionnaire.page'; 
+import { useQuestionnaireItem } from '../hooks/usequestionnaireitem.hook'; 
 
 import '../../../css/feedback.css'; 
 
@@ -16,9 +16,9 @@ export function QuestionItem({index}:{index:number}) {
   const display = AnswersAreComplete([answer]) ? success: failure; 
 
   return <div className={'questionItem'}> 
-    <div>{label} : </div> 
-    <div><Editor {...IEditorArgs} /></div> 
-    <div className={display.className}> {display.symbol} {question?.optional && '?'}</div> 
+    <span>{label} : </span> 
+    <span><Editor {...IEditorArgs} /></span> 
+    <span className={display.className}> {display.symbol} {question?.optional && '?'}</span> 
   </div>
 }
 

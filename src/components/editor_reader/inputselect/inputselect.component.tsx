@@ -1,7 +1,7 @@
 import React, {useContext} from 'react'; 
 import { IInputSelect, IUseSelect, useInputSelect } from './inputselect.hook'; 
-import { useToggle } from '../../../reusable/_customhooks'; 
-import { IsEmpty } from '../../../reusable/_utils';
+import { useToggle } from '../../../libs/_customhooks'; 
+import { IsEmpty } from '../../../libs/_utils';
 
 import './select.style.css'; 
 
@@ -39,9 +39,9 @@ function Selection() {
     {IsEmpty(selection) && <div className={'select-placeholder'}> {placeholder} </div>} 
 
     {selection.map( (option, i) => { 
-      const onClick = () => SelectValue(option?.value); 
-      const className = 'select-option'; 
-      return <div key={i} {...{onClick, className}}> 
+      //const onClick = () => SelectValue(option?.value); 
+      const className = ''; 
+      return <div key={i} {...{className}}> 
         {option?.label}{(i < selection.length-1) ? ', ':''}
       </div> 
     })} 

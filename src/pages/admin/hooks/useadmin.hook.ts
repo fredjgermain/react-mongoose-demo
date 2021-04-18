@@ -1,12 +1,12 @@
-import { useContext, useEffect, useState } from 'react'; 
-import { DaoContext, IDao } from '../../../reusable/_dao'; 
-import { usePage, IPageHook } from '../../../reusable/_customhooks'; 
+import { useContext, useState } from 'react'; 
+import { DaoContext, IDao } from '../../../libs/_dao'; 
+import { usePage, IPageHook } from '../../../libs/_customhooks'; 
 import { IUseEditState, useEditState } from './useeditstate.hook'; 
 import { useAdminFeedbackRef, AdminFeedBackRef } from '../components/admin.feedback'; 
 
 
 
-export interface IUseAdmin extends IUseEditState {
+export interface IUseAdmin extends IUseEditState { 
   dao:IDao; 
   paging: IPageHook<IEntry>; 
   collectionAccessor: string; 
@@ -46,7 +46,7 @@ export function useAdmin() {
     if(!!collectionAccessor) { 
       /*console.log(columns); 
       setColumns((prev) => columns); */
-    }
+    } 
   } 
 
   // GetCollectionOptions ................................. 

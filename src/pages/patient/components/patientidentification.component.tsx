@@ -2,8 +2,8 @@ import { useContext } from 'react';
 import { Editor } from '../../../components/editor_reader/_editor_reader'; 
 import { PatientContext } from '../patient.page'; 
 
-import { DaoContext } from '../../../reusable/_dao'; 
-import { useStateAt } from '../../../reusable/_customhooks';
+import { DaoContext } from '../../../libs/_dao'; 
+import { useStateAt } from '../../../libs/_customhooks';
 
 
 

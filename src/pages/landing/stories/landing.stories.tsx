@@ -1,6 +1,6 @@
 import { Story } from '@storybook/react'; 
-import { crud } from '../../../reusable/dao/stories/mockcrud'; 
-import { DaoContexter, ICrud } from '../../../reusable/_dao'; 
+import { crud } from '../../../libs/dao/stories/mockcrud'; 
+import { DaoContexter, ICrud } from '../../../libs/_dao'; 
 
 import LandingPage from '../landing.page'; 
 

@@ -1,7 +1,7 @@
 import React, { useRef } from 'react'; 
-import { Filter, ToArray } from '../../../reusable/_arrayutils'; 
+import { Filter, ToArray } from '../../../libs/_arrayutils'; 
 import { useRefGetSet, GetSet } from '../../../components/feedback/feedback.component'; 
-import { IsEmpty } from '../../../reusable/_utils'; 
+import { IsEmpty } from '../../../libs/_utils'; 
 
 
 
@@ -38,11 +38,14 @@ function SuccessesFeedback(actionType:string, n:number) {
     `${n} item has been ${actionType}d`; 
 } 
 
+
 function FailuresFeedback(actionType:string, n:number) { 
   return n > 1 ? 
     `${n} items have failed to ${actionType}d`: 
     `${n} item has failed to ${actionType}d`; 
 } 
+
+
 
 function ListErrMsgs(failures:ICrudResponse[]) {
   let errMsg:string[] = []; 
@@ -50,6 +53,6 @@ function ListErrMsgs(failures:ICrudResponse[]) {
     const errs = f.err.map(e => JSON.stringify(e)); 
     errMsg = [...errMsg, ...(errs ?? [])]; 
   }) 
-  const [filtered] = Filter(errMsg, (e, msg) => !msg.includes(e)); 
+  const [filtered] = Filter(errMsg, (e, i, a, msg) => !msg.includes(e)); 
   return filtered; 
 } 

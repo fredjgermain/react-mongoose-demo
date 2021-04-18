@@ -1,4 +1,4 @@
-import { GetDefaultValueFromIField, GetSelectedValuesFromOptions, IsEmpty } from "../../../reusable/_utils";
+import { GetDefaultValueFromIField, GetSelectedValuesFromOptions, IsEmpty } from "../../../libs/_utils";
 
 
 export type IReaderFunc = ({...props}:IReader) => JSX.Element; 
@@ -46,7 +46,7 @@ function ReadMany({value, options, ifield}:IReader) {
 
   if(isShort) { 
     return <div>[{value.map( (e, i) => { 
-        return <div key={i}>{i!==0 && ', '}{JSON.stringify(e)}</div> 
+        return <span key={i}>{i!==0 && ', '}{JSON.stringify(e)}</span> 
     })}]</div> 
   } 
   return <div> 

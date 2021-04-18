@@ -3,15 +3,16 @@ import { useQuestionnaire, IUseQuestionnaire } from './hooks/usequestionnaire.ho
 import { QuestionItem } from './components/questionitem.component'; 
 import { useQuestionnaireItem } from './hooks/usequestionnaireitem.hook'; 
 import { Pager } from './components/pager.component'; 
-import { QuestionnaireFeedback }  from './components/questionnaire.feedback';
-import { Session } from '../../reusable/_session';
-import { IsEmpty } from '../../reusable/_utils'; 
+import { QuestionnaireFeedback }  from './components/questionnaire.feedback'; 
+import { Session } from '../../libs/_session'; 
+import { IsEmpty } from '../../libs/_utils'; 
 import { Redirection } from '../../components/redirector/redicrector.component'; 
 
 
 export const QuestionnaireContext = React.createContext({} as IUseQuestionnaire); 
 export default function QuestionnairePage() { 
   const patient = Session.Get('profile') as IEntry; 
+
   const patientNull = IsEmpty(patient?._id); 
 
   const context = useQuestionnaire(patient); 
@@ -27,14 +28,6 @@ export default function QuestionnairePage() {
     <QuestionMap {...{page}} /> 
     <Redirection {...{condition:patientNull, destination:'patient'}}/> 
   </QuestionnaireContext.Provider> 
-} 
-
-
-function FormTitle({page}:{page:{i:number, t:IAnswer}[]}) { 
-  const {form} = useQuestionnaireItem(page[0]?.i); 
-  return <div> 
-    <h2>{form && form.titles[0]}</h2> 
-  </div> 
 } 
 
 

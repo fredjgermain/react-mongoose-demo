@@ -11,13 +11,13 @@ function TemplateComponent({items, sorter, grouping}:ITemplate) {
   const paging = usePage(sorted, grouping); 
 
   return <div> 
-    <div>
+    <div> 
       {sorted.map( (e,i) => { 
         return <div>[{i}] {JSON.stringify(e)}</div> 
       })} 
     </div> 
-    <br/>
-    <div>
+    <br/> 
+    <div> 
       {paging.page.map( e => { 
         return <div>[{e.i}] {JSON.stringify(e.t)}</div> 
       })} 

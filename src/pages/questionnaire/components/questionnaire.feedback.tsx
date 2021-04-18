@@ -1,6 +1,6 @@
 import React, { useRef } from 'react'; 
 import { useRefGetSet, GetSet } from '../../../components/feedback/feedback.component'; 
-import { IsEmpty } from '../../../reusable/_utils'; 
+import { IsEmpty } from '../../../libs/_utils'; 
 import { Redirection } from '../../../components/redirector/redicrector.component'; 
 
 
@@ -25,7 +25,10 @@ function SubmittedResponses({responses}:{responses:ICrudResponse[]}) {
 
   return <div> 
     {completed ? 
-      <Redirection {...{condition:completed, destination:'thankyou'}}/> : 
+      <div className={'success'}> 
+        Thank you ... 
+        <Redirection {...{condition:completed, destination:'thankyou'}}/> 
+      </div> : 
       <div className={'failure'}> An errors happened. </div> } 
   </div> 
 } 

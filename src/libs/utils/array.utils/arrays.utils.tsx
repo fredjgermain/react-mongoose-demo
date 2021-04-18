@@ -60,7 +60,7 @@ export function ToArray(toArray:any|any[]):any[] {
  * @param picker 
  * @returns 
  */ 
-export function Pick<T, U>(toPickFrom:T[], pickingOrder:U[] = [], picker:(t:T, u:U) => boolean):T[] { 
+export function Pick<T, U>(toPickFrom:T[] = [], pickingOrder:U[] = [], picker:(t:T, u:U) => boolean):T[] { 
   let picked = [] as T[]; 
   pickingOrder.forEach( p => { 
     const found = toPickFrom.filter( t => picker(t, p) ) 

@@ -1,6 +1,6 @@
-import { IPageHook } from '../../../reusable/_customhooks'; 
-import {Filter} from '../../../reusable/_arrayutils'; 
-import { IsNull } from '../../../reusable/_utils'; 
+import { IPageHook } from '../../_customhooks'; 
+import { Filter } from '../../_arrayutils'; 
+import { IsNull } from '../../_utils'; 
 
 /* Pager Btn
 Display buttons to change pages. 
