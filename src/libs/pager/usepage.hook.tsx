@@ -1,14 +1,8 @@
-import { Group, Predicate } from '../../_arrayutils'; 
-import {useRange} from '../../_customhooks'; 
+import { Group, Predicate } from '../_arrayutils'; 
+import {useRange} from '../_customhooks'; 
+import { I, IPageHook } from './pager.type'; 
 
 // PAGE HOOK ====================================
-type I<T> = {i:number, t:T} 
-export interface IPageHook<T> { 
-  pageIndex:number; 
-  setPageIndex:(newIndex:number)=>void; 
-  page:I<T>[]; 
-  pages:I<T>[][]; 
-} 
 
 export function usePage<T>(Ts:T[] = [], grouping:Predicate<T>|number):IPageHook<T> { 
   const pages = Paging(Ts, grouping); 

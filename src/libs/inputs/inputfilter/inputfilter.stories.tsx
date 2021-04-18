@@ -1,5 +1,5 @@
-import React, {useState} from 'react'; 
-import { InputFilters, InputFilter, useFilters } from './inputfilter.component'; 
+import { Story } from '@storybook/react'; 
+import { InputFilters, InputFilter } from './_inputfilter'; 
 
 
 
@@ -12,7 +12,6 @@ function TemplateResearch({values, filters}:{values:any[], filters:{handle:strin
   </InputFilters> 
 } 
 
-
 const str = "ajjaaj"; 
 console.log( str.match('aa')); 
 
@@ -23,7 +22,7 @@ export default {
   component: TemplateResearch 
 } 
 
-const Template = args => <TemplateResearch {...args} /> 
+const Template:Story<any> = args => <TemplateResearch {...args} /> 
 
 
 

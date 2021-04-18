@@ -1,8 +1,8 @@
 import { Story } from '@storybook/react'; 
-import { PageOfPages, PagerBtn, PagerFromTo } from '../components/pager.component'; 
-import { usePage } from '../hooks/usepage'; 
+import { PageOfPages, PagerBtn, PagerFromTo } from './pager.component'; 
+import { usePage } from './usepage.hook'; 
 
-import { Sorts, Sorter, Predicate } from '../../_arrayutils';
+import { Sorts, Sorter, Predicate } from '../_arrayutils';
 
 
 interface ITemplate {items:Item[], sorter:Sorter<Item>[], grouping:Predicate<Item>} 

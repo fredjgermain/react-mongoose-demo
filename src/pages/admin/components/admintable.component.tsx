@@ -2,7 +2,7 @@ import { useContext } from 'react';
 import { AdminRow } from './adminrow.component'; 
 import { Header } from './header.component'; 
 import { AdminFeedback } from './admin.feedback'; 
-import { PagerFromTo, PageOfPages, PagerBtn } from '../../../libs/_pager'; 
+import { PagerFromTo, PageOfPages, PagerBtn } from '../../../libs/pager/_pager'; 
 import { AdminContext } from '../admin.page'; 
 
 

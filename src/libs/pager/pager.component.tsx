@@ -1,6 +1,7 @@
-import { IPageHook } from '../hooks/usepage'; 
-import { Filter } from '../../_arrayutils'; 
-import { IsNull } from '../../_utils'; 
+import { Filter } from '../_arrayutils'; 
+import { IsNull } from '../_utils'; 
+
+import { IPageHook } from './pager.type'; 
 
 /* Pager Btn
 Display buttons to change pages. 
