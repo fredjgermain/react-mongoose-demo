@@ -31,7 +31,7 @@ console.log( str.match('aa'));
 
 
 export default { 
-  title: 'input/Filter2', 
+  title: 'input/Filter', 
   component: TemplateResearch 
 } 
 

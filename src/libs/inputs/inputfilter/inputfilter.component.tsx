@@ -3,6 +3,14 @@ import { FilterPredicate } from './inputfilter.utils';
 import { Input } from '../input/_input'; 
 import { IInputFilter } from './inputfilter.type'; 
 
+
+/** INPUT FILTER 
+ * 
+ * @param handle 
+ * @param type 
+ * @param SetFilters 
+ * @returns 
+ */
 export function InputFilter({handle, type, SetFilters}:IInputFilter) { 
   const [strFilter, setStrFilter] = useState(''); 
   const value = strFilter; 
