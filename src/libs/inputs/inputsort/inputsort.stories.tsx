@@ -1,20 +1,21 @@
 import { Story } from '@storybook/react'; 
 import { InputSorter, useSorter } from './_inputsort'; 
+import { Sorts } from '../../_arrayutils'; 
 
 
 function TemplateResearch({values, filters}:{values:any[], filters:{handle:string, type:string}[]}) { 
   const {sortedValues, SetSorters} = useSorter(values); 
+
   return <div> 
-    Original <br/> 
-    {values.map( (value,i) => { 
+    Original : {values.map( (value, i) => { 
       return <div key={i}>{JSON.stringify(value)}</div> 
-    })} 
+    })} <br/> 
     <br/>Filters <br/> 
     {filters.map( ({handle, type}, i) => { 
-      return <span>
+      return <span> 
         {handle}: 
         <InputSorter key={i} {...{ type, handle, SetSorters }} /> 
-      </span>
+      </span> 
     })} 
     <br/>Filtered <br/> 
     {sortedValues.map( (value,i) => { 
@@ -48,7 +49,7 @@ TestFilters.args = {
 
 export const LambdaFilter = Template.bind({}) 
 LambdaFilter.args = { 
-  values:[1,2,3,4,6,8,9], 
+  values:[1,2,8,6,3,9,4], 
   filters:[{handle:'', type:'number'}] 
 } 
   

@@ -5,9 +5,29 @@ import { SorterPredicate } from './inputsorter.utils';
 
 
 
-/*
-▴ &#9652;
-▾ &#9662;
+/* 
+﹀
+︿
+
+⏫   9195
+⏬   9196
+
+🔺
+🔻
+
+🔼	128316	1F53C
+🔽	128317	1F53D
+
+▲
+△
+▼
+▽
+
+▴ &#9652; 
+▵ &#9653; 
+
+▾ &#9662; 
+▿ &#9663; 
 */
 /** INPUT SORT 
  * 
@@ -20,19 +40,14 @@ export function InputSorter({handle, type, SetSorters}:IInputSorter) {
   const [sorterValue, setSorterValue] = useState(0); 
 
   const Sort = (newValue:number) => { 
-    if(newValue === sorterValue) 
-      setSorterValue(0); 
-    else 
-      setSorterValue(newValue); 
-    const newSorter = SorterPredicate(sorterValue, type, handle); 
+    const value = newValue === sorterValue ? 0 : newValue; 
+    setSorterValue(value); 
+    const newSorter = SorterPredicate(value, type, handle); 
     SetSorters(newSorter, [handle]); 
   }
 
-  return <div> 
-    {sorterValue}
-    <br/>
-    <button onClick={() => Sort(1)}> {sorterValue === 1 ? `&#9653;`: '&#9652;'} </button> 
-    <br/>
-    <button onClick={() => Sort(-1)}> {sorterValue === -1 ? '&#9663;': '&#9662;'} </button> 
-  </div> 
+  return <span> 
+    <button onClick={() => Sort(1)} >🔺 {sorterValue === 1 && '*'}</button> 
+    <button onClick={() => Sort(-1)} >🔻 {sorterValue === -1 && '*'}</button> 
+  </span> 
 }
