@@ -3,8 +3,6 @@ import { Editor } from '../../../components/editor_reader/_editor_reader';
 import { QuestionnaireContext } from '../questionnaire.page'; 
 import { useQuestionnaireItem } from '../hooks/usequestionnaireitem.hook'; 
 
-import '../../../css/feedback.css'; 
-
 
 export function QuestionItem({index}:{index:number}) { 
   const {AnswersAreComplete} = useContext(QuestionnaireContext); 

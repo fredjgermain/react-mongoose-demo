@@ -23,7 +23,6 @@ export function AdminTable() {
   <h2>Collection: {label}</h2> 
   <br/>
   <table>
-    <caption>You may read, update, delete and create new entries in the collection {label}</caption>
     <Header/> 
     {Tbody} 
     <tfoot> 

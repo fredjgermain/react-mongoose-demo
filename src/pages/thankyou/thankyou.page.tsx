@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { setInterval, setTimeout, clearInterval } from "timers"; 
 import { Redirection } from '../../components/redirector/redirector.component'; 
 
+import '../../css/main.css'; 
 
 export default function ThankYouPage() { 
   const [redirection, setRedirection] = useState(false); 
@@ -12,7 +13,7 @@ export default function ThankYouPage() {
 
   return <div> 
     {redirection} 
-    <h3 className='thankyou success'>Thank you for your time and for completing this questionnaire!</h3> 
+    <h3 className='thankyou success'>Thank you for completing this questionnaire!</h3> 
     <Redirection {...{condition:redirection, destination:''}}/> 
   </div> 
 } 

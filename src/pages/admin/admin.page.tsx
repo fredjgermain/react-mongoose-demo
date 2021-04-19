@@ -5,8 +5,8 @@ import { IsEmpty } from '../../libs/_utils';
 import { CollectionSelector } from './components/collectionselector.component'; 
 import { AdminTable } from './components/admintable.component'; 
 
-import '../../css/table.css'; 
-//import { Feedback } from '../../components/feedback/feedback.component'; 
+import '../../css/main.css'; 
+
 
 
 /* Admin Pages ============================================
@@ -19,9 +19,13 @@ export default function AdminPage() {
   const context = useAdmin(); 
   return <AdminContext.Provider value={context}> 
     <h1>Admin section</h1> 
-    Select a data collection you wish to read or edit. 
     <br/> 
     <CollectionSelector/> 
+    <ul> 
+      <li>Use the selector aboce to select a collection you wish to read and/or edit.</li> 
+      <li>In the table below use the "Create", "Update" and "Delete" button.</li> 
+    </ul> 
+
     {!IsEmpty(context.GetEditState(['collection'])) && <AdminTable/>} 
   </AdminContext.Provider> 
 } 

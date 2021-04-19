@@ -1,10 +1,10 @@
-import React, { useContext } from 'react'; 
-import  { Redirect, useHistory } from 'react-router-dom'; 
+import React from 'react'; 
 import { usePatient, IUsePatient } from './hooks/usepatient.hook'; 
-
 import { PatientProfile } from './components/patientprofile.component'; 
 import { PatientFeedback } from './components/patient.feedback'; 
-import { Redirection } from '../../components/redirector/redirector.component';
+import { RedirectBtn } from '../../components/redirector/redirectbtn.component';
+
+import '../../css/main.css'; 
 
 
 
@@ -20,21 +20,8 @@ export default function PatientPage() {
 
     <PatientFeedback {...{feedbackRef}}/> 
     <PatientProfile/> 
-    <Redirection {...{condition:ready, destination:'questionnaire'}}/> 
+    <RedirectBtn {...{condition:!ready, target:"questionnaire"}} /> 
   </PatientContext.Provider> 
 } 
-
-function QuestionnaireRedirection() { 
-  const {ready} = useContext(PatientContext); 
-  let history = useHistory(); 
-  //<button onClick={() => history.push('/questionnaire')}>Redirect</button>: 
-  return <div> 
-    <div>{JSON.stringify(history)}</div> 
-    {ready ? 
-      <Redirect to={"/questionnaire"} />: 
-      <p>Not ready ... </p>} 
-  </div> 
-}
-
 
 

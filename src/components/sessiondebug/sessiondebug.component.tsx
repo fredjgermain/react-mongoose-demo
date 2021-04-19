@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Session } from '../../reusable/_session'; 
+import { Session } from '../../libs/_session'; 
 
 
 export function SessionDebug({sessionName}:{sessionName:string}) {

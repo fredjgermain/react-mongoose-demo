@@ -6,7 +6,11 @@ import { Pager } from './components/pager.component';
 import { QuestionnaireFeedback }  from './components/questionnaire.feedback'; 
 import { Session } from '../../libs/_session'; 
 import { IsEmpty } from '../../libs/_utils'; 
-import { Redirection } from '../../components/redirector/redirector.component'; 
+import { RedirectBtn } from '../../components/redirector/redirectbtn.component'; 
+
+
+import '../../css/main.css'; 
+
 
 
 export const QuestionnaireContext = React.createContext({} as IUseQuestionnaire); 
@@ -26,7 +30,7 @@ export default function QuestionnairePage() {
     <FormTitleInstructions/> 
     <br/> 
     <QuestionMap {...{page}} /> 
-    <Redirection {...{condition:patientNull, destination:'patient'}}/> 
+    <RedirectBtn {...{condition:patientNull, target:'patient'}}/> 
   </QuestionnaireContext.Provider> 
 } 
 

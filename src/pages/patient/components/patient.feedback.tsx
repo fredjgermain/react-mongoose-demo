@@ -21,7 +21,7 @@ export function PatientFeedback({feedbackRef}:{feedbackRef:React.MutableRefObjec
 
 function Success({response}:{response:ICrudResponse}) { 
   const {firstName, lastName} = response?.data as IPatient; 
-  return <div> 
+  return <div className={'optional'}> 
     Welcome {firstName} {lastName}. 
   </div> 
 } 

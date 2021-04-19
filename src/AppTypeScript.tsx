@@ -14,6 +14,7 @@ import PatientPage from './pages/patient/patient.page';
 import QuestionnairePage from './pages/questionnaire/questionnaire.page'; 
 import ThankYouPage from './pages/thankyou/thankyou.page'; 
 
+import './css/main.css'; 
 
 
 const baseUrl = `https://fjg-mongoose-heroku.herokuapp.com/api/`; 

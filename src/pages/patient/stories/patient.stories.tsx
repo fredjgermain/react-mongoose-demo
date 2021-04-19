@@ -5,10 +5,8 @@ import { crud } from '../../../libs/dao/stories/mockcrud';
 import { DaoContexter, ICrud } from '../../../libs/_dao'; 
 import PatientPage from '../patient.page'; 
 import QuestionnairePage from '../../questionnaire/questionnaire.page'; 
-
-
-import '../../../css/table.css'; 
 import { BrowserRouter } from 'react-router-dom'; 
+
 
 
 function TemplateComponent({accessors}:{accessors:string[]}) { 
