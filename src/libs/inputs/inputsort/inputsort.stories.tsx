@@ -1,6 +1,5 @@
 import { Story } from '@storybook/react'; 
 import { InputSorter, useSorter } from './_inputsort'; 
-import { Sorts } from '../../_arrayutils'; 
 
 
 function TemplateResearch({values, filters}:{values:any[], filters:{handle:string, type:string}[]}) { 
@@ -24,9 +23,6 @@ function TemplateResearch({values, filters}:{values:any[], filters:{handle:strin
   </div> 
 } 
 
-const str = "ajjaaj"; 
-console.log( str.match('aa')); 
-
 export default { 
   title: 'input/Sorter', 
   component: TemplateResearch 
@@ -47,14 +43,14 @@ TestFilters.args = {
   predicates: predicates, 
 }*/
 
-export const LambdaFilter = Template.bind({}) 
-LambdaFilter.args = { 
+export const SortNumbers = Template.bind({}) 
+SortNumbers.args = { 
   values:[1,2,8,6,3,9,4], 
   filters:[{handle:'', type:'number'}] 
 } 
   
-export const MultipleFieldFilter = Template.bind({}) 
-MultipleFieldFilter.args = { 
+export const MultipleFieldSorter = Template.bind({}) 
+MultipleFieldSorter.args = { 
   values:[ 
     {a:'aa', v:1, bool:false}, 
     {a:'aa', v:2, bool:true}, 

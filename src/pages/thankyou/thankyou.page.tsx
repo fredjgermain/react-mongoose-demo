@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"; 
 import { setInterval, setTimeout, clearInterval } from "timers"; 
-import { Redirection } from '../../components/redirector/redicrector.component'; 
+import { Redirection } from '../../components/redirector/redirector.component'; 
 
 
 export default function ThankYouPage() { 

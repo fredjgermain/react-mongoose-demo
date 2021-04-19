@@ -24,12 +24,6 @@ function TemplateResearch({values, filters}:{values:any[], filters:{handle:strin
 } 
 
 
-
-const str = "ajjaaj"; 
-console.log( str.match('aa')); 
-
-
-
 export default { 
   title: 'input/Filter', 
   component: TemplateResearch 

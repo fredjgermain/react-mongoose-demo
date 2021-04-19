@@ -1,6 +1,6 @@
 import { useContext, useState } from 'react'; 
 import { DaoContext, IDao } from '../../../libs/_dao'; 
-import { usePage, IPageHook } from '../../../libs/_customhooks'; 
+import { usePage, IPageHook } from '../../../libs/pager/_pager'; 
 import { IUseEditState, useEditState } from './useeditstate.hook'; 
 import { useAdminFeedbackRef, AdminFeedBackRef } from '../components/admin.feedback'; 
 

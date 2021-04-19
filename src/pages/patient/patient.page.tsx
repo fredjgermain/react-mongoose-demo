@@ -4,7 +4,7 @@ import { usePatient, IUsePatient } from './hooks/usepatient.hook';
 
 import { PatientProfile } from './components/patientprofile.component'; 
 import { PatientFeedback } from './components/patient.feedback'; 
-import { Redirection } from '../../components/redirector/redicrector.component';
+import { Redirection } from '../../components/redirector/redirector.component';
 
 
 

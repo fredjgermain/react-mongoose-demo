@@ -6,7 +6,7 @@ import { Pager } from './components/pager.component';
 import { QuestionnaireFeedback }  from './components/questionnaire.feedback'; 
 import { Session } from '../../libs/_session'; 
 import { IsEmpty } from '../../libs/_utils'; 
-import { Redirection } from '../../components/redirector/redicrector.component'; 
+import { Redirection } from '../../components/redirector/redirector.component'; 
 
 
 export const QuestionnaireContext = React.createContext({} as IUseQuestionnaire); 

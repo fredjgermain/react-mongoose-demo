@@ -1,7 +1,7 @@
 import React, { useRef } from 'react'; 
 import { useRefGetSet, GetSet } from '../../../components/feedback/feedback.component'; 
 import { IsEmpty } from '../../../libs/_utils'; 
-import { Redirection } from '../../../components/redirector/redicrector.component'; 
+import { Redirection } from '../../../components/redirector/redirector.component'; 
 
 
 export type QuestionnaireFeedBackRef = React.MutableRefObject<GetSet>; 
