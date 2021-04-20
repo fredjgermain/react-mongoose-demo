@@ -1,8 +1,6 @@
 import React, {useContext, useState} from 'react'; 
 import { DaoContext, IDao } from '../../../libs/_dao'; 
 
-//import { IUseAnswers } from ''; 
-
 
 export interface IUseAnswers { 
   
@@ -10,9 +8,7 @@ export interface IUseAnswers {
 
 export function useAnswers():IUseAnswers { 
   const dao = useContext(DaoContext); 
-  const [patient, setPatient] = useState(); 
-  const [date, setDate] = useState(); 
-
+  const answers = dao.GetICollections(['patient']); 
 
   return {} as IUseAnswers; 
 } 

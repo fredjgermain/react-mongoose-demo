@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react'; 
+import { useContext, useEffect, useState } from 'react'; 
 import { DaoContext, IDao } from '../../../libs/_dao'; 
 import { usePage, IPageHook } from '../../../libs/pager/_pager'; 
 import { IUseEditState, useEditState } from './useeditstate.hook'; 
@@ -32,6 +32,10 @@ export function useAdmin() {
   const columns = GetFields().filter(f => !!f.label).map( f => f.accessor ); 
 
   // Reset Columns on collection change
+  useEffect(() => { 
+    paging.setPageIndex(0); 
+  }, [collectionAccessor]); 
+
   /*useEffect(() => { 
       IniColumns(); 
       paging.setPageIndex(0); 

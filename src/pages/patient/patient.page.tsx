@@ -6,7 +6,7 @@ import { RedirectBtn } from '../../components/redirector/redirectbtn.component';
 
 import '../../css/main.css'; 
 
-
+import { SessionsDebug } from '../../components/sessiondebug/sessiondebug.component'; 
 
 export const PatientContext = React.createContext({} as IUsePatient); 
 export default function PatientPage() { 
@@ -21,6 +21,7 @@ export default function PatientPage() {
     <PatientFeedback {...{feedbackRef}}/> 
     <PatientProfile/> 
     <RedirectBtn {...{condition:!ready, target:"questionnaire"}} /> 
+    <SessionsDebug {...{sessionNames:['profile', 'questionnaire']}} /> 
   </PatientContext.Provider> 
 } 
 

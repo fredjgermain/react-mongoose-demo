@@ -22,7 +22,7 @@ export default function AdminPage() {
     <br/> 
     <CollectionSelector/> 
     <ul> 
-      <li>Use the selector aboce to select a collection you wish to read and/or edit.</li> 
+      <li>Use the selector above to select a collection you wish to read and/or edit.</li> 
       <li>In the table below use the "Create", "Update" and "Delete" button.</li> 
     </ul> 
 
