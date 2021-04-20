@@ -25,6 +25,17 @@ export default {
 
 const Template:Story<IInput> = args => <TestInput {...args} /> 
 
+
+export const TestInput_DefaultValueNull = Template.bind({}) 
+TestInput_DefaultValueNull.args = { 
+  type: 'string', 
+  value: undefined, 
+  defaultValue: undefined, 
+  onSetValue: (newValue:any) => console.log(newValue), 
+  onPressEnter: () => console.log('on Press Enter'), 
+  //_width: , 
+} 
+
 export const TestInput_String = Template.bind({}) 
 TestInput_String.args = { 
   type: 'string', 

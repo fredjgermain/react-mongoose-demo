@@ -1,11 +1,6 @@
 import { Story } from '@storybook/react'; 
-import { crud } from '../../../libs/dao/stories/mockcrud'; 
-import { DaoContexter, ICrud } from '../../../libs/_dao'; 
-
 import LandingPage from '../landing.page'; 
 
-
-import '../../../css/table.css'; 
 
 function TemplateComponent({accessors}:{accessors:string[]}) { 
   //const loadingComponent = <LandingPage/>; 

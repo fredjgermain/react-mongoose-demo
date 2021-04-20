@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { setInterval, setTimeout, clearInterval } from "timers"; 
 import { Redirection } from '../../components/redirector/redirector.component'; 
 
-import '../../css/main.css'; 
 
 export default function ThankYouPage() { 
   const [redirection, setRedirection] = useState(false); 

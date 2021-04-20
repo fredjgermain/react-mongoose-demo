@@ -7,7 +7,6 @@ import { IInputArray, IUseInputArray } from './inputarray.type';
 // USE INPUT ARRAY ========================================
 export function useInputArray({...props}:IInputArray):IUseInputArray { 
   props.values = IsNull(props.values) ? []: props.values; 
-  props.type = GetInputType(props.type); 
   props.defaultValue = IsNull(props.defaultValue) ? 
     GetDefaultValueByType(props.type) : 
     props.defaultValue; 

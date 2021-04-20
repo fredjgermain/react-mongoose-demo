@@ -13,6 +13,7 @@ function Nav({history}:INav) {
       <div><Link to=''>Home Page</Link></div> 
       <div><Link to='/patient'>Patient Section</Link></div> 
       <div><Link to='/admin'>Admin Section</Link></div> 
+      <div><Link to='/answers'>Answers Section</Link></div> 
     </div> 
   </nav> 
 } 

@@ -25,6 +25,13 @@ export default {
 
 const Template:Story<IInputArray> = args => <TestInputArray {...args} /> 
 
+export const TestInput_StringsError = Template.bind({}) 
+TestInput_StringsError.args = { 
+  type: 'string', 
+  values:['a string']
+} 
+
+
 export const TestInput_StringS = Template.bind({}) 
 TestInput_StringS.args = { 
   type: 'string', 

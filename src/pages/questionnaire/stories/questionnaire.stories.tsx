@@ -8,7 +8,6 @@ import { useSession, Session } from '../../../libs/_session';
 import QuestionnairePage from '../questionnaire.page'; 
 
 
-import '../../../css/table.css'; 
 import { IsEmpty } from '../../../libs/_utils';
 import { useContext } from 'react';
 

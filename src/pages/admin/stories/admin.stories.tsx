@@ -3,8 +3,6 @@ import { crud } from '../../../libs/dao/stories/mockcrud';
 import { DaoContexter, ICrud } from '../../../libs/_dao'; 
 import AdminPage from '../admin.page'; 
 
-import '../../../css/table.css'; 
-
 
 function TemplateComponent({...props}:{accessors:string[]}) { 
   return <DaoContexter {...{crud:crud as ICrud, accessors:props.accessors}}> 
