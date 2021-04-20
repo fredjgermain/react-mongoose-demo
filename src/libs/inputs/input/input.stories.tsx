@@ -30,7 +30,7 @@ export const TestInput_DefaultValueNull = Template.bind({})
 TestInput_DefaultValueNull.args = { 
   type: 'string', 
   value: undefined, 
-  defaultValue: undefined, 
+  defaultValue: null, 
   onSetValue: (newValue:any) => console.log(newValue), 
   onPressEnter: () => console.log('on Press Enter'), 
   //_width: , 

@@ -1,5 +1,5 @@
-import React from 'react';
-import {IEvent, IsNull, OnEnter, DefaultWidth, 
+import React from 'react'; 
+import {IEvent, IsNull, OnEnter, OnTab, DefaultWidth, 
   GetValueFromInput, GetInputType, GetDefaultValueByType} from '../../../libs/_utils'; 
 import { IInput } from './input.type'; 
 
@@ -24,8 +24,9 @@ export function Input({...props}:IInput) {
 
 
 function PrepArgs({...props}:IInput) { 
+
   const type = GetInputType(props.type); 
-  const defaultValue = IsNull(props.defaultValue) ? GetDefaultValueByType(props.type) : props.defaultValue; 
+  const defaultValue = IsNull(props.defaultValue) ? GetDefaultValueByType(props.type) ?? '': props.defaultValue; 
   const value = IsNull(props.value) ? defaultValue : props.value; 
   const placeholder = props.placeholder ?? ''; 
 
@@ -37,7 +38,9 @@ function PrepArgs({...props}:IInput) {
       props.onSetValue(newValue); 
   } 
 
-  // Function called on KeyUp. 
+  // Tab Function called on KeyDown. 
+  const onKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => OnTab(event, props.onPressEnter); 
+  // Enter Function called on KeyUp. 
   const onKeyUp = (event: React.KeyboardEvent<HTMLInputElement>) => OnEnter(event, props.onPressEnter); 
 
   // Calculate input width 
@@ -46,5 +49,5 @@ function PrepArgs({...props}:IInput) {
     {width: `${DefaultWidth(value, type)}ch`}; 
   
   // Regroups to arguments to pass to input tag
-  return {type, value, placeholder, onChange, onKeyUp, width} 
+  return {type, value, placeholder, onChange, onKeyUp, onKeyDown, width} 
 }

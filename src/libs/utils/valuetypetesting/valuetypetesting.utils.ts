@@ -1,4 +1,4 @@
-import { Pick, ToArray } from "../_arrayutils";
+import { Pick, ToArray } from "../../_arrayutils";
 
 // TYPE VALUE TESTING ###########################
 export function GetDefaultIEntry(ifields:IField[]) { 

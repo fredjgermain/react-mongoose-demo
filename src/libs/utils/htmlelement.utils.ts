@@ -19,11 +19,15 @@ export function OnPress(event:any, keys:string[], Func:()=>void)  {
     Func(); 
 } 
 
+export function OnEnterOrTab(event:any, Func:()=>void = ()=>{}) { 
+  OnPress(event, ['Enter', 'NumpadEnter', 'Tab'], Func); 
+} 
+
 export function OnEnter(event:any, Func:()=>void = ()=>{}) { 
   OnPress(event, ['Enter', 'NumpadEnter'], Func); 
 } 
 
-export function OnTab(event:any, Func:()=>void) { 
+export function OnTab(event:any, Func:()=>void = ()=>{}) { 
   OnPress(event, ['Tab'], Func); 
 } 
 

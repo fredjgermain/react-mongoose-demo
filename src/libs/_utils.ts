@@ -1,13 +1,13 @@
-export {IsNull, IsEmpty, Copy, GetValueAt, SetValueAt, HasKey} from './utils/value.utils'; 
+export {IsNull, IsEmpty, Copy, GetValueAt, SetValueAt, HasKey} from './utils/valuetypetesting/value.utils'; 
 
-export {DefaultWidth, OnPress, OnTab, OnEnter, GetInputType, GetValueFromInput} 
+export {DefaultWidth, OnPress, OnTab, OnEnter, OnEnterOrTab, GetInputType, GetValueFromInput} 
   from './utils/htmlelement.utils'; 
 export type {IEvent} from './utils/htmlelement.utils'; 
 
 export {IsInRange, GetDefaultValueByType, GetTypeByValue, GetSelectedValuesFromOptions, GetDefaultValueFromIField, GetDefaultIEntry} 
-  from './utils/valuetypetesting.utils'; 
+  from './utils/valuetypetesting/valuetypetesting.utils'; 
 
 export {ParseDate, DaysPerMonth, IsLeapYear, IsToday} 
-  from './utils/date.utils'; 
+  from './utils/date/date.utils'; 
 
 

@@ -45,10 +45,11 @@ export function ParseFields(fields:any):IField[] {
 export function ParseField(field:IMongooseField):IField { 
   const {path, instance, options, $embeddedSchemaType} = field; 
   const ifield:IField = {} as IField; 
+  const type = options?.ref ?? $embeddedSchemaType?.instance ?? field.instance ?? ''; 
 
   ifield.accessor = path ?? ''; 
   ifield.label = options.label ?? ''; 
-  ifield.type = options?.ref ?? $embeddedSchemaType?.instance ?? field.instance.toLowerCase(); 
+  ifield.type = type.toLowerCase(); 
   ifield.isMixed = instance.toLowerCase() === 'mixed'; 
   ifield.isEnum = !!options?.enum; 
   ifield.isArray = instance.toLowerCase() === 'array'; 
