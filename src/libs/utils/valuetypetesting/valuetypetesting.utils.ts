@@ -1,3 +1,4 @@
+import { YMD } from '../date/ymd.class'; 
 import { Pick, ToArray } from "../../_arrayutils";
 
 // TYPE VALUE TESTING ###########################
@@ -44,7 +45,7 @@ export function GetTypeByValue(value:any) {
     return 'array'; 
   if(typeof value === 'object') 
     return 'object'; 
-}
+} 
 
 export function GetDefaultValueByType(type:string) { 
   if(type==='boolean') 
