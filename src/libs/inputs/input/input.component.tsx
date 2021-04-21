@@ -24,7 +24,6 @@ export function Input({...props}:IInput) {
 
 
 function PrepArgs({...props}:IInput) { 
-
   const type = GetInputType(props.type); 
   const defaultValue = IsNull(props.defaultValue) ? GetDefaultValueByType(props.type) ?? '': props.defaultValue; 
   const value = IsNull(props.value) ? defaultValue : props.value; 
