@@ -1,7 +1,7 @@
 import { useContext } from 'react'; 
 import { DaoContext } from '../_dao'; 
 import { useStateAt } from '../_customhooks'; 
-import { IEditor } from '../../components/editor_reader/_editor_reader'; 
+import { IEditor } from '../editor_reader/_editor_reader'; 
 
 
 // IENTRY =================================================

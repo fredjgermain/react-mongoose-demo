@@ -1,6 +1,6 @@
 import React from 'react'; 
 import { IUseRow, useRow } from '../hooks/userow.hook'; 
-import { Editor, Reader, IReader } from '../../../components/editor_reader/_editor_reader'; 
+import { Editor, Reader, IReader } from '../../../libs/editor_reader/_editor_reader'; 
 import { InlineCreateBtn, InlineUpdateDeleteBtn } from './inlinenbtn.component'; 
 
 

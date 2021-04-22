@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'; 
-import { IsEmpty, GetDefaultValueFromIField } from '../../../libs/_utils'; 
+import { IsEmpty, GetDefaultValueFromIField } from '../../_utils'; 
 import { GetReadValue, IReader } from '../reader/_reader'; 
-import { Input, InputArray, InputSelect } from '../../../libs/_inputs'; 
+import { Input, InputArray, InputSelect } from '../../_inputs'; 
 
 
 export type IEditorFunc = ({...props}:IEditor) => JSX.Element; 

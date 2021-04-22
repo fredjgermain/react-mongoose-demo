@@ -2,7 +2,10 @@ import { Story } from '@storybook/react';
 import React, { useContext, useState } from 'react'; 
 import { THeader, THead, THeads, THeadContext} from '../components/header.components'; 
 import { TRows, TRow, TCols, TCol, GetRowCol } from '../components/rowcol.components'; 
-import { useInline, IUseInline } from '../hooks/useInline.hook';
+import { useDataTabler, IUseDataTabler } from '../hooks/usedatatabler.hook'; 
+import { useCrudState, IUseCrudState } from '../hooks/usecrudstate.hook'; 
+import { Reader } from '../../editor_reader/_editor_reader'; 
+
 
 import { crud } from '../../dao/stories/mockcrud'; 
 import { DaoContexter, ICrud } from '../../_dao'; 
@@ -15,23 +18,25 @@ function Head() {
 } 
 
 function Cell() { 
-  const {columns, editState} = useContext(TableContext); 
+  const {columns, crudState, GetEntry, GetFields, GetOptions} = useContext(TableContext); 
   const {row, col} = GetRowCol(); 
-  const isSelected = row === editState.editState.row; 
-  const colAccessor = columns.columns[col]; 
+  const isSelected = row === crudState.row; 
+  const accessor = columns.columns[col]; 
+  const entry = GetEntry(row); 
+  const [ifield] = GetFields([accessor]); 
+  const value = entry[accessor]; 
+  const options = GetOptions(ifield); 
   
-  return <span>{row} - {col}{isSelected && '*'}</span> 
+  return <span><Reader {...{value, ifield, options}} />{isSelected && '*'}</span> 
 } 
 
 function InlineBtn() { 
   const {row, col} = GetRowCol(); 
-  const {editState} = useContext(TableContext); 
-  const isSelected = row === editState.editState.row; 
+  const {crudState, SetCrudState} = useContext(TableContext); 
+  const isSelected = row === crudState.row; 
 
   const SelectRow = () => { 
-    const newEditState = {...editState.editState}; 
-    newEditState.row = isSelected ? null: row; 
-    editState.SetEditState(newEditState); 
+    SetCrudState({row}); 
   }
 
   return <button onClick={SelectRow}>{isSelected ? 'Unselect': 'Select'} row:{row}</button>
@@ -46,13 +51,14 @@ interface ITemplate {
 
 
 
-const TableContext = React.createContext({} as IUseInline); 
+const TableContext = React.createContext({} as IUseDataTabler & IUseCrudState); 
 function Tabler() { 
-  const inline = useInline('questions'); 
-  const cols = inline.columns.columns.map((c,i) => i); 
-  const rows = inline.paging.page.map( e => e.i); 
+  const dataTabler = useDataTabler('questions'); 
+  const crudState = useCrudState(); 
+  const cols = dataTabler.columns.columns.map((c,i) => i); 
+  const rows = dataTabler.paging.page.map( e => e.i); 
 
-  return <TableContext.Provider value={inline} > 
+  return <TableContext.Provider value={{...dataTabler, ...crudState}} > 
     <table> 
       <thead><tr>
           <THeads {...{cols}}> 
@@ -73,6 +79,11 @@ function Tabler() {
   </TableContext.Provider> 
 } 
 
+
+export default { 
+  title: 'Tabler/Tabler', 
+  component: TemplateComponent, 
+} 
 
 function TemplateComponent({...props}:{accessors:string[]}) { 
   return <DaoContexter {...{crud:crud as ICrud, accessors:props.accessors}}> 

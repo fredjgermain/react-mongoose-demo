@@ -1,4 +1,4 @@
-import { GetDefaultValueFromIField, GetSelectedValuesFromOptions, IsEmpty } from "../../../libs/_utils";
+import { GetDefaultValueFromIField, GetSelectedValuesFromOptions, IsEmpty } from "../../_utils";
 
 
 export type IReaderFunc = ({...props}:IReader) => JSX.Element; 

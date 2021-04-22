@@ -1,6 +1,6 @@
 import { useContext } from 'react'; 
 import { DaoContext } from '../../../libs/_dao'; 
-import { IEditor } from '../../../components/editor_reader/_editor_reader'; 
+import { IEditor } from '../../../libs/editor_reader/_editor_reader'; 
 import { QuestionnaireContext } from '../questionnaire.page'; 
 
 export interface IUseQuestionnaireItem { 

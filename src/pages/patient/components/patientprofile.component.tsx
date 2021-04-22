@@ -1,5 +1,5 @@
 import { useContext } from 'react'; 
-import { Editor, IEditor } from '../../../components/editor_reader/_editor_reader'; 
+import { Editor, IEditor } from '../../../libs/editor_reader/_editor_reader'; 
 import { PatientContext } from '../patient.page'; 
 
 import { DaoContext } from '../../../libs/_dao'; 

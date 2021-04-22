@@ -1,5 +1,5 @@
 import { useContext } from 'react'; 
-import { Editor } from '../../../components/editor_reader/_editor_reader'; 
+import { Editor } from '../../../libs/editor_reader/_editor_reader'; 
 import { QuestionnaireContext } from '../questionnaire.page'; 
 import { useQuestionnaireItem } from '../hooks/usequestionnaireitem.hook'; 
 
