@@ -9,11 +9,13 @@ export interface IEditState {
 export interface IUseEditState {
   editState: IEditState;
   SetEditState: (newValue: IEditState) => void;
+  ResetEditState: () => void; 
 }
 
 export function useEditState():IUseEditState{ 
   const initState = {row:null, mode:'read'} as IEditState; 
   const [editState, setEditState] = useState(initState); 
   const SetEditState = (newValue:IEditState) => setEditState(newValue); 
-  return {editState, SetEditState}; 
+  const ResetEditState = () => setEditState(initState); 
+  return {editState, SetEditState, ResetEditState}; 
 }
