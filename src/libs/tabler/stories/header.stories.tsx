@@ -1,19 +1,16 @@
 import { Story } from '@storybook/react'; 
-import { useContext } from 'react';
-import { THeader, THead, THeads, THeadContext, TCell, TCells, TCellContext, TRowContext, TRow, TRows } 
-  from './header.components'
+import { useContext } from 'react'; 
+import { THeader, THead, THeads, THeadContext} from '../components/header.components'; 
+import { TRows, TRow, TCols, TCol, GetRowCol } from '../components/rowcol.components'; 
 
-function ColumnHead({colHeads}:{colHeads:string[]}) { 
+function Head({colHeads}:{colHeads:string[]}) { 
   const {col} = useContext(THeadContext); 
   return <span>{colHeads[col]}</span> 
 } 
 
-function CellRowCol({matrix}:{matrix:any[][]}) { 
-  const {row} = useContext(TRowContext); 
-  const {col} = useContext(TCellContext); 
-  return <span> 
-    {row} - {col} 
-  </span> 
+function Cell({matrix}:{matrix:any[][]}) { 
+  const {row, col} = GetRowCol(); 
+  return <span>{row} - {col}</span> 
 } 
 
 
@@ -24,30 +21,30 @@ interface ITemplate {
 } 
 
 function TemplateComponent({colHeads, matrix}:ITemplate) { 
-
   const rows = matrix.map((row,i) => i); 
   const cols = colHeads.map((col,i) => i); 
-  return <div> 
-    Test ### 
-    <table> 
-      <THeader {...{cols:colHeads.map((c,i) => i)}}> 
-        <ColumnHead {...{colHeads}}/> 
-      </THeader> 
+  return <table> 
+      <thead><tr>
+        <THeads {...{cols}}> 
+          <Head {...{colHeads}}/> 
+        </THeads> 
+        <th>Btn</th> 
+      </tr>
+      </thead> 
+
       <tbody> 
         <TRows {...{rows}} > 
-          <TCells {...{cols}} > 
-            <CellRowCol {...{matrix}} /> 
-          </TCells>
-          <td> InlineBtn ...</td>
+          <TCols {...{cols}} > 
+            <Cell {...{matrix}} /> 
+          </TCols> 
+          <td> InlineBtn ...</td> 
         </TRows> 
-      </tbody>
+      </tbody> 
     </table> 
-    ###
-  </div>
 } 
 
 export default { 
-  title: 'Header/Header', 
+  title: 'Tabler/Header', 
   component: TemplateComponent, 
 } 
 
