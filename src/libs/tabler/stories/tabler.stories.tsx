@@ -2,29 +2,36 @@ import { Story } from '@storybook/react';
 import React, { useContext, useState } from 'react'; 
 import { THeader, THead, THeads, THeadContext} from '../components/header.components'; 
 import { TRows, TRow, TCols, TCol, GetRowCol } from '../components/rowcol.components'; 
-import { useEditState, IEditState, IUseEditState } from '../hooks/useeditstate.hook'; 
+import { useInline, IUseInline } from '../hooks/useInline.hook';
 
-function Head({colHeads}:{colHeads:string[]}) { 
+import { crud } from '../../dao/stories/mockcrud'; 
+import { DaoContexter, ICrud } from '../../_dao'; 
+
+
+function Head() { 
+  const {columns} = useContext(TableContext); 
   const {col} = useContext(THeadContext); 
-  return <span>{colHeads[col]}</span> 
+  return <span>{columns.columns[col]}</span> 
 } 
 
-function Cell({matrix}:{matrix:any[][]}) { 
+function Cell() { 
+  const {columns, editState} = useContext(TableContext); 
   const {row, col} = GetRowCol(); 
-  const {editState, SetEditState} = useContext(TableContext); 
-  const isSelected = row === editState.row; 
+  const isSelected = row === editState.editState.row; 
+  const colAccessor = columns.columns[col]; 
+  
   return <span>{row} - {col}{isSelected && '*'}</span> 
 } 
 
 function InlineBtn() { 
   const {row, col} = GetRowCol(); 
-  const {editState, SetEditState} = useContext(TableContext); 
-  const isSelected = row === editState.row; 
+  const {editState} = useContext(TableContext); 
+  const isSelected = row === editState.editState.row; 
 
   const SelectRow = () => { 
-    const newEditState = {...editState}; 
+    const newEditState = {...editState.editState}; 
     newEditState.row = isSelected ? null: row; 
-    SetEditState(newEditState); 
+    editState.SetEditState(newEditState); 
   }
 
   return <button onClick={SelectRow}>{isSelected ? 'Unselect': 'Select'} row:{row}</button>
@@ -39,17 +46,17 @@ interface ITemplate {
 
 
 
-const TableContext = React.createContext({} as IUseEditState); 
-function Tabler({colHeads, matrix}:ITemplate) { 
-  const rows = matrix.map((row,i) => i); 
-  const cols = colHeads.map((col,i) => i); 
-  const editState = useEditState(); 
+const TableContext = React.createContext({} as IUseInline); 
+function Tabler() { 
+  const inline = useInline('questions'); 
+  const cols = inline.columns.columns.map((c,i) => i); 
+  const rows = inline.paging.page.map( e => e.i); 
 
-  return <TableContext.Provider value={editState} > 
+  return <TableContext.Provider value={inline} > 
     <table> 
       <thead><tr>
           <THeads {...{cols}}> 
-            <Head {...{colHeads}}/> 
+            <Head/> 
           </THeads> 
           <th>Btn</th> 
       </tr></thead> 
@@ -57,7 +64,7 @@ function Tabler({colHeads, matrix}:ITemplate) {
       <tbody> 
         <TRows {...{rows}} > 
           <TCols {...{cols}} > 
-            <Cell {...{matrix}} /> 
+            <Cell/> 
           </TCols> 
           <td><InlineBtn/></td> 
         </TRows> 
@@ -67,27 +74,15 @@ function Tabler({colHeads, matrix}:ITemplate) {
 } 
 
 
-function TemplateComponent({colHeads, matrix}:ITemplate) { 
-  return <Tabler {...{colHeads, matrix}} />
-}
-
-
-export default { 
-  title: 'Tabler/Tabler', 
-  component: TemplateComponent, 
+function TemplateComponent({...props}:{accessors:string[]}) { 
+  return <DaoContexter {...{crud:crud as ICrud, accessors:props.accessors}}> 
+    <Tabler/> 
+  </DaoContexter> 
 } 
 
-const Template:Story<ITemplate> = args => <TemplateComponent {...args} /> 
+const Template:Story<{accessors:string[]}> = (args) => <TemplateComponent {...args} /> 
 
-
-export const GroupById = Template.bind({}) 
-GroupById.args = { 
-  colHeads: ['a', 'b', 'c'],  
-  matrix: [ 
-    [1,2,3], 
-    [4,5,6], 
-    [7,8,9] 
-  ] 
+export const TestTabler = Template.bind({}) 
+TestTabler.args = { 
+  accessors: ['questions', 'patients', 'responses', 'answers', 'forms', 'instructions'], 
 } 
-
-
