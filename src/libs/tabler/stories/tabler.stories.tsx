@@ -1,83 +1,47 @@
+import React, { useContext } from 'react'; 
 import { Story } from '@storybook/react'; 
-import React, { useContext, useState } from 'react'; 
-import { THeader, THead, THeads, THeadContext} from '../components/header.components'; 
-import { TRows, TRow, TCols, TCol, GetRowCol } from '../components/rowcol.components'; 
-import { useDataTabler, IUseDataTabler } from '../hooks/usedatatabler.hook'; 
-import { useCrudState, IUseCrudState } from '../hooks/usecrudstate.hook'; 
-import { Reader } from '../../editor_reader/_editor_reader'; 
+
+import { THeads, THeadContext } from '../components/header.components'; 
+import { TRows, TCols } from '../components/rowcol.components'; 
+import { useTable, TableContext } from '../hooks/usetable.hook'; 
 
 
-import { crud } from '../../dao/stories/mockcrud'; 
-import { DaoContexter, ICrud } from '../../_dao'; 
 
-
-function Head() { 
+export function HeaderCell() { 
   const {columns} = useContext(TableContext); 
   const {col} = useContext(THeadContext); 
   return <span>{columns.columns[col]}</span> 
 } 
 
-function Cell() { 
-  const {columns, crudState, GetEntry, GetFields, GetOptions} = useContext(TableContext); 
+export function Cell() { 
+  const {datas, GetRowCol} = useContext(TableContext); 
   const {row, col} = GetRowCol(); 
-  const isSelected = row === crudState.row; 
-  const accessor = columns.columns[col]; 
-  const entry = GetEntry(row); 
-  const [ifield] = GetFields([accessor]); 
-  const value = entry[accessor]; 
-  const options = GetOptions(ifield); 
-  
-  return <span><Reader {...{value, ifield, options}} />{isSelected && '*'}</span> 
-} 
-
-function InlineBtn() { 
-  const {row, col} = GetRowCol(); 
-  const {crudState, SetCrudState} = useContext(TableContext); 
-  const isSelected = row === crudState.row; 
-
-  const SelectRow = () => { 
-    SetCrudState({row}); 
-  }
-
-  return <button onClick={SelectRow}>{isSelected ? 'Unselect': 'Select'} row:{row}</button>
+  const column = Object.keys(datas[row])[col]; 
+  return <span>{datas[row][column]}</span> 
 }
 
 
-//<THeader ids={ids} ><DisplayHeadId/></THeader> 
-interface ITemplate { 
-  colHeads:string[], 
-  matrix:any[][], 
-} 
-
-
-
-const TableContext = React.createContext({} as IUseDataTabler & IUseCrudState); 
-function Tabler() { 
-  const dataTabler = useDataTabler('questions'); 
-  const crudState = useCrudState(); 
-  const cols = dataTabler.columns.columns.map((c,i) => i); 
-  const rows = dataTabler.paging.page.map( e => e.i); 
-
-  return <TableContext.Provider value={{...dataTabler, ...crudState}} > 
+interface ITable {datas:any[], defaultCols:string[]} 
+function Table({datas, defaultCols}:ITable) { 
+  const table = useTable(datas, {defaultCols} ); 
+  const {rows, cols} = table; 
+  
+  return <TableContext.Provider value={table} > 
     <table> 
-      <thead><tr>
-          <THeads {...{cols}}> 
-            <Head/> 
-          </THeads> 
-          <th>Btn</th> 
+      <thead><tr> 
+          <THeads {...{cols}}><HeaderCell/></THeads> 
       </tr></thead> 
 
       <tbody> 
-        <TRows {...{rows}} > 
-          <TCols {...{cols}} > 
-            <Cell/> 
-          </TCols> 
-          <td><InlineBtn/></td> 
+        <TRows {...{rows}}> 
+          <TCols {...{cols}}><Cell /></TCols> 
         </TRows> 
       </tbody> 
     </table> 
-  </TableContext.Provider> 
+    </TableContext.Provider> 
 } 
+
+
 
 
 export default { 
@@ -85,15 +49,39 @@ export default {
   component: TemplateComponent, 
 } 
 
-function TemplateComponent({...props}:{accessors:string[]}) { 
-  return <DaoContexter {...{crud:crud as ICrud, accessors:props.accessors}}> 
-    <Tabler/> 
-  </DaoContexter> 
+function TemplateComponent({datas, defaultCols}:ITable) { 
+  return <Table {...{datas, defaultCols}} /> 
 } 
 
-const Template:Story<{accessors:string[]}> = (args) => <TemplateComponent {...args} /> 
+const Template:Story<ITable> = (args) => <TemplateComponent {...args} /> 
 
+interface Item {
+  id: number;
+  value: string; 
+  value2: string; 
+}
 export const TestTabler = Template.bind({}) 
 TestTabler.args = { 
-  accessors: ['questions', 'patients', 'responses', 'answers', 'forms', 'instructions'], 
+  datas: [ 
+    {id:1, value:'asd', value2:'fgsf'}, 
+    {id:2, value:'asd', value2:'fgaf'}, 
+    {id:3, value:'asd', value2:'fgf'}, 
+    {id:4, value:'fg', value2:'fgdff'}, 
+    {id:5, value:'h', value2:'fgnf'}, 
+    {id:6, value:'asd', value2:'ggf'}, 
+    {id:7, value:'j', value2:'fgf'}, 
+    {id:8, value:'k', value2:'fhgf'}, 
+    {id:9, value:'asd', value2:'fhgf'}, 
+    {id:10, value:'ll', value2:'fgf'}, 
+    {id:11, value:'aa', value2:'fgf'}, 
+    {id:12, value:'asd', value2:'fhgf'}, 
+    {id:13, value:'gg', value2:'fgf'}, 
+    {id:14, value:'asd', value2:'fhgf'}, 
+    {id:15, value:'cc', value2:'fghf'}, 
+    {id:16, value:'asd', value2:'h'}, 
+    {id:17, value:'g', value2:'fgf'}, 
+    {id:18, value:'asd', value2:'fgf'}, 
+    {id:19, value:'g', value2:'fgf'}, 
+  ] as Item[], 
+  defaultCols: ['Value1', 'Value2']
 } 
