@@ -3,7 +3,6 @@ import {useRange} from '../_customhooks';
 import { I, IPageHook } from './pager.type'; 
 
 // PAGE HOOK ====================================
-
 export function usePage<T>(Ts:T[] = [], pageBreak:Predicate<T>|number):IPageHook<T> { 
   const pages = Paging(Ts, pageBreak); 
   const [pageIndex, setPageIndex] = useRange(0, pages.length-1); 

@@ -6,7 +6,6 @@ import { TRows, TCols } from '../components/rowcol.components';
 import { useTable, TableContext } from '../hooks/usetable.hook'; 
 
 
-
 export function HeaderCell() { 
   const {columns} = useContext(TableContext); 
   const {col} = useContext(THeadContext); 
@@ -40,8 +39,6 @@ function Table({datas, defaultCols}:ITable) {
     </table> 
     </TableContext.Provider> 
 } 
-
-
 
 
 export default { 

@@ -27,7 +27,7 @@ export function Cell({collectionAccessor}:{collectionAccessor:string}) {
   const [ifield] = dao.GetIFields(collectionAccessor, [column]); 
   const options = dao.GetIOptions(ifield); 
   return <Reader {...{value, ifield, options}} /> 
-}
+} 
 
 
 function Table({collectionAccessor}:{collectionAccessor:string}) { 
