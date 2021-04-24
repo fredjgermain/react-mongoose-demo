@@ -4,26 +4,34 @@ import { Story } from '@storybook/react';
 import { THeads, THeadContext } from '../components/header.components'; 
 import { TRows, TCols } from '../components/rowcol.components'; 
 import { useTable, TableContext } from '../hooks/usetable.hook'; 
+import { InputFilter } from '../../_inputs'; 
 
+import { PagerBtn, PagerFromTo } from '../../pager/_pager'; 
 
-export function HeaderCell() { 
-  const {columns} = useContext(TableContext); 
+function HeaderCell() { 
+  const {columns, SetFilters} = useContext(TableContext); 
   const {col} = useContext(THeadContext); 
-  return <span>{columns.columns[col]}</span> 
+  const handle = columns.columns[col]; 
+  console.log(handle); 
+
+  return <span>
+    {handle} <br/> 
+    <InputFilter {...{handle, type:'string', SetFilters}} /> 
+  </span> 
 } 
 
-export function Cell() { 
-  const {datas, GetRowCol} = useContext(TableContext); 
+function Cell() { 
+  const {datas, GetRowCol, columns} = useContext(TableContext); 
   const {row, col} = GetRowCol(); 
-  const column = Object.keys(datas[row])[col]; 
+  const column = columns.columns[col]; 
   return <span>{datas[row][column]}</span> 
 }
 
 
 interface ITable {datas:any[], defaultCols:string[]} 
 function Table({datas, defaultCols}:ITable) { 
-  const table = useTable(datas, {defaultCols} ); 
-  const {rows, cols} = table; 
+  const table = useTable<any>(datas, {defaultCols} ); 
+  const {rows, cols, paging} = table; 
   
   return <TableContext.Provider value={table} > 
     <table> 
@@ -37,12 +45,14 @@ function Table({datas, defaultCols}:ITable) {
         </TRows> 
       </tbody> 
     </table> 
+    <PagerBtn {...{paging}} /> 
+    <PagerFromTo {...{paging}} /> 
     </TableContext.Provider> 
 } 
 
 
 export default { 
-  title: 'Tabler/Tabler', 
+  title: 'Table/Table', 
   component: TemplateComponent, 
 } 
 
@@ -80,5 +90,5 @@ TestTabler.args = {
     {id:18, value:'asd', value2:'fgf'}, 
     {id:19, value:'g', value2:'fgf'}, 
   ] as Item[], 
-  defaultCols: ['Value1', 'Value2']
+  defaultCols: ['value', 'value2']
 } 

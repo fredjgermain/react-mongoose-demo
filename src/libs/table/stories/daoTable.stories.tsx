@@ -8,8 +8,10 @@ import { crud } from '../../dao/stories/mockcrud';
 import { DaoContext, DaoContexter, ICrud } from '../../_dao'; 
 import { Reader } from '../../editor_reader/_editor_reader'; 
 
+import { PagerBtn, PagerFromTo } from '../../pager/_pager'; 
 
-export function HeaderCell({collectionAccessor}:{collectionAccessor:string}) { 
+
+function HeaderCell({collectionAccessor}:{collectionAccessor:string}) { 
   const {columns} = useContext(TableContext); 
   const dao = useContext(DaoContext); 
   const {col} = useContext(THeadContext); 
@@ -18,7 +20,7 @@ export function HeaderCell({collectionAccessor}:{collectionAccessor:string}) {
   return <span>{ifield.label}</span> 
 } 
 
-export function Cell({collectionAccessor}:{collectionAccessor:string}) { 
+function Cell({collectionAccessor}:{collectionAccessor:string}) { 
   const {datas, GetRowCol} = useContext(TableContext); 
   const dao = useContext(DaoContext); 
   const {row, col} = GetRowCol(); 
@@ -36,7 +38,7 @@ function Table({collectionAccessor}:{collectionAccessor:string}) {
   const defaultCols = dao.GetIFields(collectionAccessor).filter(f => !!f.label).map( f => f.accessor ); 
 
   const table = useTable(datas, {defaultCols} ); 
-  const {rows, cols} = table; 
+  const {rows, cols, paging} = table; 
   
   return <TableContext.Provider value={table} > 
     <table> 
@@ -50,6 +52,8 @@ function Table({collectionAccessor}:{collectionAccessor:string}) {
         </TRows> 
       </tbody> 
     </table> 
+    <PagerBtn {...{paging}} /> 
+    <PagerFromTo {...{paging}} /> 
     </TableContext.Provider> 
 } 
 
@@ -57,12 +61,12 @@ function Table({collectionAccessor}:{collectionAccessor:string}) {
 
 
 export default { 
-  title: 'Tabler/DaoTabler', 
+  title: 'Table/DaoTable', 
   component: TemplateComponent, 
 } 
 
 function TemplateComponent() { 
-  const accessors = ['questions', 'patients', 'responses', 'answers', 'forms', 'instructions'];  
+  const accessors = ['questions', 'patients', 'responses', 'answers', 'forms', 'instructions']; 
   const collectionAccessor = 'questions'; 
   return <DaoContexter {...{crud:crud as ICrud, accessors}}> 
     <Table {...{collectionAccessor}} /> 
@@ -71,8 +75,8 @@ function TemplateComponent() {
 
 const Template:Story<{}> = (args) => <TemplateComponent {...args} /> 
 
-interface Item {
-  id: number;
+interface Item { 
+  id: number; 
   value: string; 
   value2: string; 
 }
