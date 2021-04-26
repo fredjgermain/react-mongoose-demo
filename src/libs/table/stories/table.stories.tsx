@@ -12,7 +12,6 @@ function HeaderCell() {
   const {columns, SetFilters} = useContext(TableContext); 
   const {col} = useContext(THeadContext); 
   const handle = columns.columns[col]; 
-  console.log(handle); 
 
   return <span>
     {handle} <br/> 
@@ -21,10 +20,10 @@ function HeaderCell() {
 } 
 
 function Cell() { 
-  const {datas, GetRowCol, columns} = useContext(TableContext); 
+  const {filteredValues, GetRowCol, columns} = useContext(TableContext); 
   const {row, col} = GetRowCol(); 
   const column = columns.columns[col]; 
-  return <span>{datas[row][column]}</span> 
+  return <span>{filteredValues[row][column]}</span> 
 }
 
 

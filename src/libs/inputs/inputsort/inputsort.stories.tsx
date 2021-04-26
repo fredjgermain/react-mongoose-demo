@@ -5,20 +5,22 @@ import { InputSorter, useSorter } from './_inputsort';
 function TemplateResearch({values, filters}:{values:any[], filters:{handle:string, type:string}[]}) { 
   const {sortedValues, SetSorters} = useSorter(values); 
 
+  const original = <div>Original : {values.map( (value, i) => { 
+    return <div key={i}>{JSON.stringify(value)}</div> 
+  })} <br/> </div>
+
   return <div> 
-    Original : {values.map( (value, i) => { 
-      return <div key={i}>{JSON.stringify(value)}</div> 
-    })} <br/> 
+    {original} 
     <br/>Filters <br/> 
     {filters.map( ({handle, type}, i) => { 
-      return <span> 
+      return <span key={i}> 
         {handle}: 
-        <InputSorter key={i} {...{ type, handle, SetSorters }} /> 
+        <InputSorter {...{ type, handle, SetSorters }} /> 
       </span> 
     })} 
     <br/>Filtered <br/> 
-    {sortedValues.map( (value,i) => { 
-      return <div key={i}>{JSON.stringify(value)}</div> 
+    {sortedValues.map( value => { 
+      return <div key={value.i}>{JSON.stringify(value.t)}</div> 
     })} 
   </div> 
 } 

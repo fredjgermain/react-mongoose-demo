@@ -15,6 +15,7 @@ export interface IUseTable<T> {
   rows: number[]; 
   cols: number[]; 
   paging: IPageHook<T>; 
+  filteredValues: any[]; 
   SetFilters: (newValue: any, keys?: TKey[] | undefined) => void; 
   GetRowCol: () => {row: number, col: number}; 
 }
@@ -22,10 +23,10 @@ export interface IUseTable<T> {
 export function useTable<T>(datas:T[], options?:{pageBreak?:Predicate<T>|number, defaultCols?:string[]}):IUseTable<T> { 
   const {filteredValues, SetFilters} = useFilter(datas); 
   const paging = usePage(filteredValues, options?.pageBreak ?? 10); 
+
   const columns = useColumn(options?.defaultCols ?? []); 
   const cols = columns.columns.map( (c,i) => i ); 
   const rows = paging.page.map( e => e.i ); 
-
   
   function GetRowCol() { 
     const {row} = useContext(TRowContext); 
@@ -33,5 +34,5 @@ export function useTable<T>(datas:T[], options?:{pageBreak?:Predicate<T>|number,
     return {row, col}; 
   }
 
-  return {datas, columns, rows, cols, GetRowCol, paging, SetFilters} 
+  return {datas, columns, rows, cols, paging, filteredValues, SetFilters, GetRowCol} 
 } 

@@ -54,7 +54,7 @@ function Table({collectionAccessor}:{collectionAccessor:string}) {
     </table> 
     <PagerBtn {...{paging}} /> 
     <PagerFromTo {...{paging}} /> 
-    </TableContext.Provider> 
+  </TableContext.Provider> 
 } 
 
 

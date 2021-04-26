@@ -1,5 +1,5 @@
 import { Group, Predicate } from '../_arrayutils'; 
-import {useRange} from '../_customhooks'; 
+import { useRange } from '../_customhooks'; 
 import { I, IPageHook } from './pager.type'; 
 
 // PAGE HOOK ====================================

@@ -43,7 +43,7 @@ export function InputSorter({handle, type, SetSorters}:IInputSorter) {
     const value = newValue === sorterValue ? 0 : newValue; 
     setSorterValue(value); 
     const newSorter = SorterPredicate(value, type, handle); 
-    SetSorters(newSorter, [handle]); 
+    SetSorters(newSorter, handle); 
   }
 
   return <span> 
