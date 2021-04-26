@@ -20,6 +20,13 @@ export type Sorter<T> = (t:T, pivot:T) => boolean;
 
 
 
+export interface Indexed<T> { 
+  i:number; 
+  t:T; 
+}
+
+
+
 /** TOARRAY ================= 
  * Converts an object into a array if it is not already an array. Returns the array itself it is already an array, or returns an empty array if it is empty. 
  * @param toArray value to be converted into an array. 
@@ -29,6 +36,17 @@ export function ToArray(toArray:any|any[]):any[] {
   return toArray !== undefined ? [toArray].flat() : [] as any[]; 
 } 
 
+
+/** IndexArray 
+ * Wrap each element of an array to help keep track of their original order even after an array transformation. 
+ * @param toIndex 
+ * @returns 
+ */
+export function IndexArray<T>(toIndex:T[] = []):Indexed<T>[] { 
+  return toIndex.map( (t,i) => { 
+    return {i, t} as Indexed<T>; 
+  }); 
+} 
 
 /**
  * 

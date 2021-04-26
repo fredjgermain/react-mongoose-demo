@@ -1,4 +1,4 @@
-export {ToArray, Pick, Filter, Group, Sort, Sorts, Concatenate} 
+export {ToArray, Pick, Filter, Group, Sort, Sorts, Concatenate, IndexArray} 
   from './utils/array/arrays.utils'; 
-export type {Predicate, Sorter} 
+export type {Predicate, Sorter, Indexed} 
   from './utils/array/arrays.utils'; 
