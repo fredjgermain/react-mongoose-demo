@@ -3,28 +3,36 @@ import { useContext } from 'react';
 import { THeads, THeadContext } from '../components/header.components'; 
 import { TRows, TCols } from '../components/rowcol.components'; 
 import { useTable, TableContext } from '../hooks/usetable.hook'; 
+import { InputFilter } from '../../_inputs'; 
 
 import { crud } from '../../dao/stories/mockcrud'; 
 import { DaoContext, DaoContexter, ICrud } from '../../_dao'; 
 import { Reader } from '../../editor_reader/_editor_reader'; 
 
-import { PagerBtn, PagerFromTo } from '../../pager/_pager'; 
+import { PagerBtn } from '../../pager/_pager'; 
 
 
 function HeaderCell({collectionAccessor}:{collectionAccessor:string}) { 
-  const {columns} = useContext(TableContext); 
+  const {columns, SetFilters} = useContext(TableContext); 
   const dao = useContext(DaoContext); 
   const {col} = useContext(THeadContext); 
   const column = columns.columns[col]; 
   const [ifield] = dao.GetIFields(collectionAccessor, [column]); 
-  return <span>{ifield.label}</span> 
+  const keys = ['t', column]; 
+
+  if(ifield.label === "Response type") 
+    console.log(ifield) 
+  return <span> 
+    {ifield.label} <br/> 
+    {!ifield.isArray && !ifield.isMixed && !ifield.isModel && <InputFilter {...{keys, type:ifield.type, SetFilters}} />} 
+  </span> 
 } 
 
 function Cell({collectionAccessor}:{collectionAccessor:string}) { 
-  const {datas, GetRowCol} = useContext(TableContext); 
+  const {datas, GetRowCol, columns} = useContext(TableContext); 
   const dao = useContext(DaoContext); 
   const {row, col} = GetRowCol(); 
-  const column = Object.keys(datas[row])[col]; 
+  const column = columns.columns[col]; 
   const value = datas[row][column]; 
   const [ifield] = dao.GetIFields(collectionAccessor, [column]); 
   const options = dao.GetIOptions(ifield); 
@@ -37,7 +45,7 @@ function Table({collectionAccessor}:{collectionAccessor:string}) {
   const datas = dao.GetIEntries(collectionAccessor); 
   const defaultCols = dao.GetIFields(collectionAccessor).filter(f => !!f.label).map( f => f.accessor ); 
 
-  const table = useTable(datas, {defaultCols} ); 
+  const table = useTable<any>(datas, {defaultCols} ); 
   const {rows, cols, paging} = table; 
   
   return <TableContext.Provider value={table} > 
@@ -48,13 +56,12 @@ function Table({collectionAccessor}:{collectionAccessor:string}) {
 
       <tbody> 
         <TRows {...{rows}}> 
-          <TCols {...{cols}}><Cell {...{collectionAccessor}}/></TCols> 
+          <TCols {...{cols}}><Cell {...{collectionAccessor}} /></TCols> 
         </TRows> 
       </tbody> 
     </table> 
     <PagerBtn {...{paging}} /> 
-    <PagerFromTo {...{paging}} /> 
-  </TableContext.Provider> 
+    </TableContext.Provider> 
 } 
 
 
@@ -75,10 +82,5 @@ function TemplateComponent() {
 
 const Template:Story<{}> = (args) => <TemplateComponent {...args} /> 
 
-interface Item { 
-  id: number; 
-  value: string; 
-  value2: string; 
-}
 export const TestTabler = Template.bind({}) 
 TestTabler.args = {} 
