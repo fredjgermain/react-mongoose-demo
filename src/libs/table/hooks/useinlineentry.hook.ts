@@ -17,9 +17,7 @@ export function useInlineEntry(row?:number) {
 
   const [entry, setEntry] = useState(GetEntry(row)); 
   const SetEntry = (newEntry:any) => { 
-    setEntry(prev => { 
-      return {...prev, ...newEntry} 
-    }) 
+    setEntry(newEntry); 
   } 
 
   const editingModes = ['update', 'create']; 
