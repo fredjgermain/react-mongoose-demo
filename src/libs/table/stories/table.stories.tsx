@@ -12,10 +12,11 @@ function HeaderCell() {
   const {columns, SetFilters} = useContext(TableContext); 
   const {col} = useContext(THeadContext); 
   const handle = columns.columns[col]; 
+  const keys = ['t', handle]; 
 
-  return <span>
+  return <span> 
     {handle} <br/> 
-    <InputFilter {...{handle, type:'string', SetFilters}} /> 
+    <InputFilter {...{keys, type:'string', SetFilters}} /> 
   </span> 
 } 
 

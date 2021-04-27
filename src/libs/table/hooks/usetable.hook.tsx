@@ -4,7 +4,7 @@ import { TRowContext, TColContext } from '../components/rowcol.components';
 import { usePage, IPageHook } from '../../pager/_pager'; 
 import { useColumn, IUseColumn } from './usecolumns.hook'; 
 import { useFilter } from '../../inputs/inputfilter/inputfilter.hook'; 
-import { Predicate } from '../../_arrayutils'; 
+import { Predicate, IndexArray } from '../../_arrayutils'; 
 
 
 export const TableContext = React.createContext({} as IUseTable<IEntry>); 
@@ -21,7 +21,9 @@ export interface IUseTable<T> {
 }
 // At table lvl 
 export function useTable<T>(datas:T[], options?:{pageBreak?:Predicate<T>|number, defaultCols?:string[]}):IUseTable<T> { 
-  const {filteredValues, SetFilters} = useFilter(datas); 
+  const indexedDatas = IndexArray(datas); 
+  const {filteredValues, SetFilters} = useFilter(indexedDatas); 
+  
   console.log(filteredValues); 
   const paging = usePage(filteredValues.map( e => e.t ), options?.pageBreak ?? 10); 
   console.log(paging.page); 
