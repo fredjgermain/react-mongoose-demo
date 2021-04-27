@@ -4,7 +4,7 @@ interface Filters {
   [key:string]: (x:any, i:number, a:any[]) => boolean; 
 } 
 
-export function useFilter(values:any[]) { 
+export function useFilter<T>(values:T[]) { 
   const [Getfilters, SetFilters] = useStateAt({} as Filters); 
   const filtersobject = Getfilters(); 
   
@@ -14,17 +14,3 @@ export function useFilter(values:any[]) {
 
   return {filteredValues, SetFilters}; 
 } 
-
-/*
-export function useFilter(values:any[]) { 
-  //const indexdValues = IndexArray(values); 
-  const [Getfilters, SetFilters] = useStateAt({} as Filters); 
-  const filtersobject = Getfilters(); 
-  
-  const predicate = (x:Indexed<any>) => Object.keys(filtersobject as Filters) 
-    .map( p => filtersobject[p] ).every( p => p(x.t) ); 
-  
-  const filteredValues = values.filter( x => predicate(x)); 
-  return {filteredValues, SetFilters}; 
-} 
-*/

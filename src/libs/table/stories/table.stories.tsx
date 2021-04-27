@@ -6,7 +6,7 @@ import { TRows, TCols } from '../components/rowcol.components';
 import { useTable, TableContext } from '../hooks/usetable.hook'; 
 import { InputFilter } from '../../_inputs'; 
 
-import { PagerBtn, PagerFromTo } from '../../pager/_pager'; 
+import { PagerBtn } from '../../pager/_pager'; 
 
 function HeaderCell() { 
   const {columns, SetFilters} = useContext(TableContext); 
@@ -46,7 +46,6 @@ function Table({datas, defaultCols}:ITable) {
       </tbody> 
     </table> 
     <PagerBtn {...{paging}} /> 
-    <PagerFromTo {...{paging}} /> 
     </TableContext.Provider> 
 } 
 
