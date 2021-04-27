@@ -1,28 +1,27 @@
 import { Story } from '@storybook/react'; 
-import { PageOfPages, PagerBtn, PagerFromTo } from './pager.component'; 
-import { usePage } from './usepage.hook'; 
+import { PageOfPages, PagerBtn } from './pager.component'; 
+import { usePager } from './pager.hook'; 
 
 import { Sorts, Sorter, Predicate } from '../_arrayutils';
 
 
 interface ITemplate {items:Item[], sorter:Sorter<Item>[], grouping:Predicate<Item>} 
 function TemplateComponent({items, sorter, grouping}:ITemplate) { 
-  const sorted = Sorts(items, sorter); 
-  const paging = usePage(sorted, grouping); 
+  //const sorted = Sorts(items, sorter); 
+  const paging = usePager(items, grouping); 
 
   return <div> 
     <div> 
-      {sorted.map( (e,i) => { 
+      {items.map( (e,i) => { 
         return <div>[{i}] {JSON.stringify(e)}</div> 
       })} 
     </div> 
     <br/> 
     <div> 
-      {paging.page.map( e => { 
-        return <div>[{e.i}] {JSON.stringify(e.t)}</div> 
+      {paging.page.map( (e,i) => { 
+        return <div>[{i}] {JSON.stringify(e)}</div> 
       })} 
     </div> 
-    <PagerFromTo {...{paging}} /> 
     <PageOfPages {...{paging}} /> 
     <PagerBtn {...{paging}} /> 
   </div>

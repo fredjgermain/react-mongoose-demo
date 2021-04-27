@@ -1,3 +1,3 @@
-export {PageOfPages, PagerBtn, PagerFromTo} from './pager.component'; 
-export { usePage } from './usepage.hook'; 
-export type { I, IPageHook } from './pager.type'; 
+export {PageOfPages, PagerBtn} from './pager.component'; 
+export { usePager } from './pager.hook'; 
+export type { IPageHook } from './pager.type'; 

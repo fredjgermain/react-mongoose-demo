@@ -4,8 +4,7 @@ import { IsNull } from '../_utils';
 import { IPageHook } from './pager.type'; 
 
 /* Pager Btn
-Display buttons to change pages. 
-*/
+Display buttons to change pages. */
 export function PagerBtn<T>({paging:{pageIndex, setPageIndex, page, pages}}:{paging:IPageHook<T>}) { 
   let indexes = pages.map( (p,i) => i); 
   if(indexes.length > 10) 
@@ -24,8 +23,8 @@ export function PagerBtn<T>({paging:{pageIndex, setPageIndex, page, pages}}:{pag
 /* Pager From To
 Display the range of element being represented on a given page. 
 */
-export function PagerFromTo<T>({paging:{pageIndex, setPageIndex, page, pages}}:{paging:IPageHook<T>}) { 
-  const indexes = page?.map(p=>p.i) ?? []; 
+/*export function PagerFromTo<T>({paging:{pageIndex, setPageIndex, page, pages}}:{paging:IPageHook<T>}) { 
+  const indexes = page?.map(p=>p) ?? []; 
   let [from, a, mid, b, to] = HeadMidTail(indexes); 
   from = !IsNull(from) ? from+1: 0; 
   to = !IsNull(to) ? to+1: from; 
@@ -35,7 +34,7 @@ export function PagerFromTo<T>({paging:{pageIndex, setPageIndex, page, pages}}:{
       <div>Item #{from}</div>: 
       <div>Items #{from} to {to}</div>} 
   </div> 
-} 
+} */
 
 
 /* PageOfPages 
