@@ -20,11 +20,11 @@ function HeaderCell() {
 } 
 
 function Cell() { 
-  const {filteredValues, GetRowCol, columns} = useContext(TableContext); 
+  const {datas, GetRowCol, columns} = useContext(TableContext); 
   const {row, col} = GetRowCol(); 
   const column = columns.columns[col]; 
-  return <span>{filteredValues[row][column]}</span> 
-}
+  return <span>{row} {col}  {datas[row][column]}</span> 
+} 
 
 
 interface ITable {datas:any[], defaultCols:string[]} 

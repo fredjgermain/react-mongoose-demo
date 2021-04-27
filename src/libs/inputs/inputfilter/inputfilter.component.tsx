@@ -6,12 +6,14 @@ import { IInputFilter } from './inputfilter.type';
 
 /** INPUT FILTER 
  * 
- * @param handle 
+ * @param keys 
  * @param type 
  * @param SetFilters 
  * @returns 
  */
-export function InputFilter({handle, type, SetFilters}:IInputFilter) { 
+export function InputFilter({keys, type, SetFilters}:IInputFilter) { 
+  const filterId = keys.reduce((prev, current) => prev+current); 
+
   const [strFilter, setStrFilter] = useState(''); 
   const value = strFilter; 
   const onSetValue = (newValue:string) => { 
@@ -19,8 +21,8 @@ export function InputFilter({handle, type, SetFilters}:IInputFilter) {
   }; 
 
   const onPressEnter = () => { 
-    const newFilter = FilterPredicate(strFilter, type, handle); 
-    SetFilters(newFilter, [handle]); 
+    const newFilter = FilterPredicate(strFilter, type, keys); 
+    SetFilters(newFilter, [filterId]); 
   }; 
 
   return <Input {...{type:'string', value, onSetValue, onPressEnter}} /> 

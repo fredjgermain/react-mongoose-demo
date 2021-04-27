@@ -1,9 +1,11 @@
 import { Story } from '@storybook/react'; 
 import { InputSorter, useSorter } from './_inputsort'; 
+import { IndexArray } from '../../_arrayutils'; 
 
 
 function TemplateResearch({values, filters}:{values:any[], filters:{handle:string, type:string}[]}) { 
-  const {sortedValues, SetSorters} = useSorter(values); 
+  const indexedValues = IndexArray(values); 
+  const {sortedValues, SetSorters} = useSorter(indexedValues); 
 
   const original = <div>Original : {values.map( (value, i) => { 
     return <div key={i}>{JSON.stringify(value)}</div> 
@@ -13,9 +15,10 @@ function TemplateResearch({values, filters}:{values:any[], filters:{handle:strin
     {original} 
     <br/>Filters <br/> 
     {filters.map( ({handle, type}, i) => { 
+      const keys = handle ? ['t', handle]: ['t']; 
       return <span key={i}> 
         {handle}: 
-        <InputSorter {...{ type, handle, SetSorters }} /> 
+        <InputSorter {...{ type, keys, SetSorters }} /> 
       </span> 
     })} 
     <br/>Filtered <br/> 

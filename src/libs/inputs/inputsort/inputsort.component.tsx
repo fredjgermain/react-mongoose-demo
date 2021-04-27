@@ -36,14 +36,15 @@ import { SorterPredicate } from './inputsorter.utils';
  * @param SetSorters
  * @returns 
  */
-export function InputSorter({handle, type, SetSorters}:IInputSorter) { 
+export function InputSorter({keys, type, SetSorters}:IInputSorter) { 
+  const filterId = keys.reduce((prev, current) => prev+current); 
   const [sorterValue, setSorterValue] = useState(0); 
 
   const Sort = (newValue:number) => { 
     const value = newValue === sorterValue ? 0 : newValue; 
     setSorterValue(value); 
-    const newSorter = SorterPredicate(value, type, handle); 
-    SetSorters(newSorter, handle); 
+    const newSorter = SorterPredicate(value, type, keys); 
+    SetSorters(newSorter, [filterId]); 
   }
 
   return <span> 

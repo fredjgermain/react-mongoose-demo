@@ -1,20 +1,27 @@
 import { Story } from '@storybook/react'; 
 import { InputFilter, useFilter } from './_inputfilter'; 
+import { IndexArray, Indexed } from '../../_arrayutils'; 
 
 
 function TemplateResearch({values, filters}:{values:any[], filters:{handle:string, type:string}[]}) { 
-  const {filteredValues, SetFilters} = useFilter(values); 
+  const indexedValues = IndexArray(values); 
+  const {filteredValues, SetFilters} = useFilter(indexedValues); 
+
   return <div> 
-    Original <br/> 
-    {values.map( (value,i) => { 
-      return <div key={i}>{JSON.stringify(value)}</div> 
-    })} 
+    <div> Original <br/> 
+      {indexedValues.map( (value) => { 
+        return <div key={value.i}> 
+          {JSON.stringify(value.t)} 
+        </div> 
+      })} </div> 
+
     <br/>Filters <br/> 
     {filters.map( ({handle, type}, i) => { 
-      return <span>
+      const keys = handle ? ['t', handle]: ['t']; 
+      return <span key={i}> 
         {handle}: 
-        <InputFilter key={i} {...{ type, handle, SetFilters }} /> 
-      </span>
+        <InputFilter {...{ type, keys, SetFilters }} /> 
+      </span> 
     })} 
     <br/>Filtered <br/> 
     {filteredValues.map( (value,i) => { 

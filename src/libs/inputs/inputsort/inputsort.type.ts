@@ -1,5 +1,5 @@
 export interface IInputSorter { 
-  handle:string, 
+  keys:string[], 
   type:string, 
-  SetSorters: (newValue: any, handle:string) => void 
+  SetSorters: (newValue: any, keys?:string[]) => void 
 }

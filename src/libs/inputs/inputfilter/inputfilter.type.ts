@@ -1,5 +1,5 @@
 export interface IInputFilter { 
-  handle:string, 
+  keys:string[], 
   type:string, 
-  SetFilters: (newValue: any, keys?: TKey[] | undefined) => void
+  SetFilters: (newValue: any, keys?:string[]) => void 
 }

@@ -22,7 +22,9 @@ export interface IUseTable<T> {
 // At table lvl 
 export function useTable<T>(datas:T[], options?:{pageBreak?:Predicate<T>|number, defaultCols?:string[]}):IUseTable<T> { 
   const {filteredValues, SetFilters} = useFilter(datas); 
-  const paging = usePage(filteredValues, options?.pageBreak ?? 10); 
+  console.log(filteredValues); 
+  const paging = usePage(filteredValues.map( e => e.t ), options?.pageBreak ?? 10); 
+  console.log(paging.page); 
 
   const columns = useColumn(options?.defaultCols ?? []); 
   const cols = columns.columns.map( (c,i) => i ); 

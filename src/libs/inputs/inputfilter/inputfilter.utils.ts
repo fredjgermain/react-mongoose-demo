@@ -1,7 +1,7 @@
-import { IsEmpty } from '../../_utils'; 
+import { IsEmpty, GetValueAt } from '../../_utils'; 
 
 
-export function FilterPredicate(strPredicate:string, type:string, key?:string): (x:any) => boolean { 
+export function FilterPredicate(strPredicate:string, type:string, keys?:string[]): (x:any) => boolean { 
   let predicate = (x:any) => true; 
   if(IsEmpty(strPredicate)) 
     return predicate; 
@@ -13,9 +13,10 @@ export function FilterPredicate(strPredicate:string, type:string, key?:string): 
   else 
     predicate = LambdaPredicate(strPredicate); 
 
-  return key ? 
-    (x:any) => { return predicate(x[key])} : 
-    predicate; 
+  return !IsEmpty(keys) ? 
+    (x:any) => 
+      predicate(GetValueAt(x, keys)): 
+      predicate; 
 } 
 
 function EqualPredicate(strPredicate:string):(x:any) => boolean { 
@@ -26,6 +27,7 @@ function EqualPredicate(strPredicate:string):(x:any) => boolean {
 
 function StringMatchPredicate(strPredicate:string):(x:any) => boolean { 
   return (x:string) => { 
+    console.log(x); 
     return !!x.match(strPredicate); 
   } 
 }
