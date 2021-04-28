@@ -15,3 +15,5 @@ export type {IUseIEntry} from './customhooks/useientry.hook';
 
 export {useTimer} from './customhooks/useTimer.hook'; 
 export {useRange} from './customhooks/useRange.hook'; 
+
+export { useStateReset } from './usestatereset/useStateReset.hook'; 

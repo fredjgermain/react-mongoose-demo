@@ -2,6 +2,7 @@ import React, { useState, useContext, useEffect } from 'react';
 import { DaoContext } from '../../dao/components/dao.contexter'; 
 
 
+
 export const InlineTableContext = React.createContext({} as IUseInlineTable); 
 
 export interface IInlineTableState { 
@@ -20,13 +21,6 @@ export interface IUseInlineTable {
   // Feedback
   inlineFeedback: ICrudResponse; 
   SetInlineFeedback: (newFeedback: ICrudResponse) => void; 
-
-  // Utils methods ... 
-  GetEntries(): IEntry[]; 
-  GetEntry: (row?: number | undefined) => IEntry; 
-  GetDefaultColumns: () => string[]; 
-  GetFields: (accessors: string[]) => IField[]; 
-  GetOptions: (ifield: IField) => IOption[]; 
 
   // Crud methods ... 
   Create(entry: IEntry): Promise<ICrudResponse>
@@ -55,29 +49,6 @@ export function useInlineTable(collectionAccessor:string): IUseInlineTable {
   useEffect(() => { 
     ResetInlineTableState(); 
   }, [collectionAccessor]); 
-
-  // GetEntry .............................................
-  function GetEntries() { 
-    return dao.GetIEntries(collectionAccessor); 
-  } 
-
-  function GetEntry(row?:number) { 
-    return dao.GetIEntries(collectionAccessor).find( (e,i) => i === row) 
-      ?? dao.GetDefaultIEntry(collectionAccessor) 
-      ?? {} as IEntry; 
-  } 
-
-  function GetDefaultColumns() { 
-    return dao.GetIFields(collectionAccessor).filter(f => !!f.label).map( f => f.accessor ); 
-  } 
-
-  function GetFields(accessors:string[]) { 
-    return dao.GetIFields(collectionAccessor, accessors); 
-  } 
-
-  function GetOptions(ifield:IField) { 
-    return dao.GetIOptions(ifield); 
-  } 
 
   // CRUD FUNCTIONS -----------------------------------
   // Create ..........................................
@@ -110,7 +81,32 @@ export function useInlineTable(collectionAccessor:string): IUseInlineTable {
   return { collectionAccessor, 
     inlineTableState, SetInlineTableState, ResetInlineTableState, 
     inlineFeedback, SetInlineFeedback, 
-    GetEntries, GetEntry, GetDefaultColumns, GetFields, GetOptions, 
+    /*GetEntries, GetEntry, GetDefaultColumns, GetFields, GetOptions, */
     Create, Update, Delete }; 
 }
 
+
+
+
+  // GetEntry .............................................
+  /*function GetEntries() { 
+    return dao.GetIEntries(collectionAccessor); 
+  } 
+
+  function GetEntry(row?:number) { 
+    return dao.GetIEntries(collectionAccessor).find( (e,i) => i === row) 
+      ?? dao.GetDefaultIEntry(collectionAccessor) 
+      ?? {} as IEntry; 
+  } 
+
+  function GetDefaultColumns() { 
+    return dao.GetIFields(collectionAccessor).filter(f => !!f.label).map( f => f.accessor ); 
+  } 
+
+  function GetFields(accessors:string[]) { 
+    return dao.GetIFields(collectionAccessor, accessors); 
+  } 
+
+  function GetOptions(ifield:IField) { 
+    return dao.GetIOptions(ifield); 
+  } */

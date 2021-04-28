@@ -45,7 +45,7 @@ function Table({collectionAccessor}:{collectionAccessor:string}) {
   const datas = dao.GetIEntries(collectionAccessor); 
   const defaultCols = dao.GetIFields(collectionAccessor).filter(f => !!f.label).map( f => f.accessor ); 
 
-  const table = useTable<any>(datas, {defaultCols} ); 
+  const table = useTable(datas, {defaultCols} ); 
   const {rows, cols, paging} = table; 
   
   return <TableContext.Provider value={table} > 

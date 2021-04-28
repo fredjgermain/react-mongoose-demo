@@ -107,8 +107,11 @@ function CrudRow({collectionAccessor}:{collectionAccessor:string}) {
 function Table({collectionAccessor}:{collectionAccessor:string}) { 
   console.log('Table'); 
   const inlineTable = useInlineTable(collectionAccessor); 
-  const entries = inlineTable.GetEntries(); 
-  const table = useTable(entries, {defaultCols:inlineTable.GetDefaultColumns()} ); 
+
+  const dao = useContext(DaoContext); 
+  const entries = dao.GetIEntries(collectionAccessor); 
+  const defaultCols = dao.GetIFields(collectionAccessor).filter(f => !!f.label).map( f => f.accessor ); 
+  const table = useTable(entries, {defaultCols} ); 
   const {rows, cols} = table; 
   
   return <InlineTableContext.Provider value={inlineTable} > 

@@ -33,6 +33,15 @@ export function HasKey(value:any, keys?:any[]):boolean {
 }
 
 
+export function UpdateValue<T>(initValue:T, newValue:T) { 
+  if(Array.isArray(newValue)) 
+    return newValue; 
+  if(typeof initValue === 'object') 
+    return {...initValue, ...newValue}; 
+  return newValue; 
+} 
+
+
 /* SetValueAt =====================================
 Assign a newValue in object or array value at the index/key defined by keys. 
 Can assign a newValue to object with multiple levels. 
