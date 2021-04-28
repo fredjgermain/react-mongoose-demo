@@ -1,6 +1,6 @@
 export {DAO} from './dao/utils/dao.class'; 
-export type {ICrud, IDao} from './dao/utils/dao.class'; 
-export {DaoContexter, DaoContext, useLoadCollection, Preloader} from './dao/components/dao.contexter'; 
+export type {ICrud, IDao} from './dao/dao.type'; 
+export { DaoContexter, DaoContext } from './dao/components/dao.contexter'; 
 
 //export {DAO} 
 //export {DaoContexter, DaoContext, useLoadCollection, Preloader} 
