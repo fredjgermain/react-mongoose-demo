@@ -18,7 +18,7 @@ export function Input({...props}:IInput) {
   const inputArgs = {...props.inputAttribute, ...args, style}; 
 
   if(args.type==='checkbox') 
-    return <input {...inputArgs} {...{checked:args.value} } /> 
+    return <input {...inputArgs} {...{checked:args.value} }  /> 
   return <input {...inputArgs} /> 
 } 
 
@@ -38,7 +38,8 @@ function PrepArgs({...props}:IInput) {
   } 
 
   // Tab Function called on KeyDown. 
-  const onKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => OnTab(event, props.onPressEnter); 
+  //const onKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => OnTab(event, props.onPressEnter); 
+  const onBlur = () => props.onPressEnter && props.onPressEnter(); 
   // Enter Function called on KeyUp. 
   const onKeyUp = (event: React.KeyboardEvent<HTMLInputElement>) => OnEnter(event, props.onPressEnter); 
 
@@ -48,5 +49,5 @@ function PrepArgs({...props}:IInput) {
     {width: `${DefaultWidth(value, type)}ch`}; 
   
   // Regroups to arguments to pass to input tag
-  return {type, value, placeholder, onChange, onKeyUp, onKeyDown, width} 
+  return {type, value, placeholder, onChange, onKeyUp, width, onBlur} 
 }
