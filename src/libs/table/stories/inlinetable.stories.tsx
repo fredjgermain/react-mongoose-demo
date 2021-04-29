@@ -1,67 +1,44 @@
 import { Story } from '@storybook/react'; 
-import React, { useContext, useState } from 'react'; 
-import { THeads, THeadContext } from '../components/header.components'; 
-import { TRows, TCols } from '../components/rowcol.components'; 
-
+import { useContext, useState } from 'react'; 
+import { THeads } from '../components/header.components'; 
+import { TRows, TRow, TCols } from '../components/rowcol.components'; 
+import { InlineCreateBtn, InlineUpdateDeleteBtn } from '../components/inlinebtn.component'; 
 
 import { useTable, TableContext } from '../hooks/usetable.hook'; 
+import { InlineEntryContext, useInlineEntry } from '../hooks/useinlineentry.hook'; 
+import { InlineTableContext, useInlineTable } from '../hooks/useinlinetable.hook'; 
+import { InlineTableFeedback } from '../components/inlinetablefeedback.component'; 
+
 import { InputFilter } from '../../_inputs'; 
+import { IsNull } from '../../_utils'; 
 import { Editor, Reader } from '../../editor_reader/_editor_reader'; 
-
-import { IUseInlineEntry, InlineEntryContext, useInlineEntry } from '../hooks/useinlineentry.hook'; 
-import { IInlineTableState, IUseInlineTable, InlineTableContext, useInlineTable } from '../hooks/useinlinetable.hook'; 
-
+import { PagerBtn } from '../../pager/_pager'; 
 
 import { crud } from '../../dao/stories/mockcrud'; 
 import { DaoContext, DaoContexter, ICrud } from '../../_dao'; 
 
 
+function GetDaoCell(collectionAccessor:string) { 
+  const dao = useContext(DaoContext); 
+  const {datas, columns, GetRowCol} = useContext(TableContext); 
+  const {row, col} = GetRowCol(); 
+  const column = columns[col]; 
+  const [ifield] = dao.GetIFields(collectionAccessor, [column]); 
+  const options = dao.GetIOptions(ifield); 
+  const defaultValue = ifield.defaultValue; 
+  const value = !IsNull(datas[row]) ? datas[row][column]: defaultValue; 
+  return {row, col, column, value, ifield, options}; 
+} 
 
 function HeaderCell({collectionAccessor}:{collectionAccessor:string}) { 
-  const {columns, SetFilters} = useContext(TableContext); 
-  const dao = useContext(DaoContext); 
-  const {col} = useContext(THeadContext); 
-  const column = columns.columns[col]; 
-  const [ifield] = dao.GetIFields(collectionAccessor, [column]); 
+  const {SetFilters} = useContext(TableContext); 
+  const {column, ifield} = GetDaoCell(collectionAccessor); 
   const keys = ['t', column]; 
 
   return <span> 
     {ifield.label} <br/> 
-    {!ifield.isArray && !ifield.isMixed && !ifield.isModel 
-      && <InputFilter {...{keys, type:ifield.type, SetFilters}} />} 
+    {!ifield.isArray && !ifield.isMixed && !ifield.isModel && <InputFilter {...{keys, type:ifield.type, SetFilters}} />} 
   </span> 
-} 
-
-
-function CellRead({collectionAccessor}:{collectionAccessor:string}) { 
-  const {datas, GetRowCol, columns} = useContext(TableContext); 
-  const dao = useContext(DaoContext); 
-  const {row, col} = GetRowCol(); 
-  const column = columns.columns[col]; 
-  const value = datas[row][column]; 
-  const [ifield] = dao.GetIFields(collectionAccessor, [column]); 
-  const options = dao.GetIOptions(ifield); 
-  return <Reader {...{value, ifield, options}} /> 
-} 
-
-function CellEdit({collectionAccessor}:{collectionAccessor:string}) { 
-  const {datas, GetRowCol, columns} = useContext(TableContext); 
-  const {entry, SetEntry, isSelected, isEditing} = useContext(InlineEntryContext); 
-  const dao = useContext(DaoContext); 
-  const {row, col} = GetRowCol(); 
-  const column = columns.columns[col]; 
-  const [value, setValue] = useState(entry[column]); 
-  const [ifield] = dao.GetIFields(collectionAccessor, [column]); 
-  const options = dao.GetIOptions(ifield); 
-
-  const editValue = (newValue:any) => { 
-    setValue(newValue); 
-    const copy = {...entry}; 
-    copy['column'] = newValue; 
-    SetEntry(copy); 
-  } 
-
-  return <Editor {...{value, ifield, options, editValue}} /> 
 } 
 
 function Cell({collectionAccessor}:{collectionAccessor:string}) { 
@@ -73,50 +50,59 @@ function Cell({collectionAccessor}:{collectionAccessor:string}) {
   </span> 
 } 
 
+function CellRead({collectionAccessor}:{collectionAccessor:string}) { 
+  const {value, ifield, options} = GetDaoCell(collectionAccessor); 
+  return <Reader {...{value, ifield, options}} /> 
+} 
 
-function InlineBtn() { 
-  const {GetRowCol} = useContext(TableContext); 
-  const {entry, SetEntry, isSelected, isEditing} = useContext(InlineEntryContext); 
-  const {inlineTableState, SetInlineTableState} = useContext(InlineTableContext); 
-  const {row, col} = GetRowCol(); 
+function CellEdit({collectionAccessor}:{collectionAccessor:string}) { 
+  const {ifield, options, column} = GetDaoCell(collectionAccessor); 
+  const {entry, SetEntry} = useContext(InlineEntryContext); 
+  const [value, setValue] = useState(entry[column]); 
 
-  const SelectRow = (mode:string) => { 
-    SetInlineTableState({row, mode}); 
+  const editValue = (newValue:any) => { 
+    setValue(newValue); 
+    const copy = {...entry}; 
+    copy[column] = newValue; 
+    SetEntry(copy); 
   } 
 
-  return <span> 
-    <button onClick={() => SelectRow('update')}>Update</button> 
-    <button onClick={() => SelectRow('delete')}>Delete</button> 
-  </span> 
+  return <Editor {...{value, ifield, options, editValue}} /> 
 } 
 
 
 function CrudRow({collectionAccessor}:{collectionAccessor:string}) { 
-  console.log('CrudRow'); 
-  const {rows, cols, GetRowCol} = useContext(TableContext); 
+  const {cols, GetRowCol} = useContext(TableContext); 
   const {row} = GetRowCol(); 
   const crudEntry = useInlineEntry(row); 
 
   return <InlineEntryContext.Provider value={crudEntry}> 
     <TCols cols={cols}><Cell {...{collectionAccessor}} /></TCols> 
-    <td><InlineBtn/></td> 
+    <td>{row === -1 ? 
+      <InlineCreateBtn /> : 
+      <InlineUpdateDeleteBtn />}</td> 
   </InlineEntryContext.Provider> 
 }
 
 
 function Table({collectionAccessor}:{collectionAccessor:string}) { 
-  console.log('Table'); 
-  const inlineTable = useInlineTable(collectionAccessor); 
-
   const dao = useContext(DaoContext); 
   const entries = dao.GetIEntries(collectionAccessor); 
   const defaultCols = dao.GetIFields(collectionAccessor).filter(f => !!f.label).map( f => f.accessor ); 
   const table = useTable(entries, {defaultCols} ); 
-  const {rows, cols} = table; 
   
+  return <TableContext.Provider value={table} > 
+    <InlineTable {...{collectionAccessor}} /> 
+  </TableContext.Provider> 
+} 
+
+function InlineTable({collectionAccessor}:{collectionAccessor:string}) {
+  const table = useContext(TableContext); 
+  const {rows, cols, paging} = table; 
+  const inlineTable = useInlineTable(collectionAccessor); 
+
   return <InlineTableContext.Provider value={inlineTable} > 
-    <TableContext.Provider value={table} > 
-    {JSON.stringify(inlineTable.inlineTableState)}
+    <InlineTableFeedback {...{collectionAccessor}} /> 
     <table> 
       <thead><tr> 
           <THeads {...{cols}}><HeaderCell {...{collectionAccessor}} /></THeads> 
@@ -125,11 +111,12 @@ function Table({collectionAccessor}:{collectionAccessor:string}) {
 
       <tbody> 
         <TRows {...{rows}}><CrudRow {...{collectionAccessor}} /></TRows> 
+        <TRow {...{row:-1}}><CrudRow {...{collectionAccessor}} /></TRow> 
       </tbody> 
     </table> 
-    </TableContext.Provider> 
+    <PagerBtn {...{paging}} /> 
   </InlineTableContext.Provider> 
-} 
+}
 
 
 interface ITemplate { 

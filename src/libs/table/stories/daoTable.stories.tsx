@@ -1,9 +1,10 @@
 import { Story } from '@storybook/react'; 
 import { useContext } from 'react'; 
-import { THeads, THeadContext } from '../components/header.components'; 
+import { THeads } from '../components/header.components'; 
 import { TRows, TCols } from '../components/rowcol.components'; 
 import { useTable, TableContext } from '../hooks/usetable.hook'; 
 import { InputFilter } from '../../_inputs'; 
+import { IsNull } from '../../_utils';
 
 import { crud } from '../../dao/stories/mockcrud'; 
 import { DaoContext, DaoContexter, ICrud } from '../../_dao'; 
@@ -12,16 +13,23 @@ import { Reader } from '../../editor_reader/_editor_reader';
 import { PagerBtn } from '../../pager/_pager'; 
 
 
-function HeaderCell({collectionAccessor}:{collectionAccessor:string}) { 
-  const {columns, SetFilters} = useContext(TableContext); 
+function GetDaoCell(collectionAccessor:string) { 
   const dao = useContext(DaoContext); 
-  const {col} = useContext(THeadContext); 
-  const column = columns.columns[col]; 
+  const {datas, columns, GetRowCol} = useContext(TableContext); 
+  const {row, col} = GetRowCol(); 
+  const column = columns[col]; 
   const [ifield] = dao.GetIFields(collectionAccessor, [column]); 
+  const options = dao.GetIOptions(ifield); 
+  const defaultValue = ifield.defaultValue; 
+  const value = !IsNull(datas[row]) ? datas[row][column]: defaultValue; 
+  return {row, col, column, value, ifield, options}; 
+} 
+
+function HeaderCell({collectionAccessor}:{collectionAccessor:string}) { 
+  const {SetFilters} = useContext(TableContext); 
+  const {column, ifield} = GetDaoCell(collectionAccessor); 
   const keys = ['t', column]; 
 
-  if(ifield.label === "Response type") 
-    console.log(ifield) 
   return <span> 
     {ifield.label} <br/> 
     {!ifield.isArray && !ifield.isMixed && !ifield.isModel && <InputFilter {...{keys, type:ifield.type, SetFilters}} />} 
@@ -29,13 +37,7 @@ function HeaderCell({collectionAccessor}:{collectionAccessor:string}) {
 } 
 
 function Cell({collectionAccessor}:{collectionAccessor:string}) { 
-  const {datas, GetRowCol, columns} = useContext(TableContext); 
-  const dao = useContext(DaoContext); 
-  const {row, col} = GetRowCol(); 
-  const column = columns.columns[col]; 
-  const value = datas[row][column]; 
-  const [ifield] = dao.GetIFields(collectionAccessor, [column]); 
-  const options = dao.GetIOptions(ifield); 
+  const {value, ifield, options} = GetDaoCell(collectionAccessor); 
   return <Reader {...{value, ifield, options}} /> 
 } 
 

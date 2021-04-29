@@ -1,17 +1,18 @@
 import React, { useContext } from 'react'; 
 import { Story } from '@storybook/react'; 
 
-import { THeads, THeadContext } from '../components/header.components'; 
+import { THeads } from '../components/header.components'; 
 import { TRows, TCols } from '../components/rowcol.components'; 
 import { useTable, TableContext } from '../hooks/usetable.hook'; 
 import { InputFilter } from '../../_inputs'; 
 
 import { PagerBtn } from '../../pager/_pager'; 
 
+
 function HeaderCell() { 
-  const {columns, SetFilters} = useContext(TableContext); 
-  const {col} = useContext(THeadContext); 
-  const handle = columns.columns[col]; 
+  const {columns, GetRowCol, SetFilters} = useContext(TableContext); 
+  const {col} = GetRowCol(); 
+  const handle = columns[col]; 
   const keys = ['t', handle]; 
 
   return <span> 
@@ -23,7 +24,7 @@ function HeaderCell() {
 function Cell() { 
   const {datas, GetRowCol, columns} = useContext(TableContext); 
   const {row, col} = GetRowCol(); 
-  const column = columns.columns[col]; 
+  const column = columns[col]; 
   return <span>{row} {col}  {datas[row][column]}</span> 
 } 
 

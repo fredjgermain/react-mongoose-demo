@@ -49,7 +49,9 @@ export class Fetcher {
       const {_id, _v, ...data} = e; 
       return data; 
     }); 
-    return (await axios.put(this.baseUrl+'create/'+accessor, toCreate)).data; 
+    const response = (await axios.put(this.baseUrl+'create/'+accessor, toCreate)).data; 
+    console.log(response); 
+    return response; 
   } 
 
   // ICrudResponse ?? or IEntry ??

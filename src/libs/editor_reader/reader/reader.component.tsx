@@ -12,9 +12,10 @@ interface IProps extends IReader {
 } 
 
 export function GetReadValue(value:any, options:IOption[], ifield:IField) { 
-  return IsEmpty(options) ? 
-    value ?? GetDefaultValueFromIField(ifield): 
-    GetSelectedValuesFromOptions(value, options).map(o=>o.label); 
+  if(IsEmpty(options))
+    return value ?? GetDefaultValueFromIField(ifield); 
+  const values = GetSelectedValuesFromOptions(value, options).map(o=>o.label); 
+  return ifield.isArray ? values: values[0]; 
 } 
 
 export function GetDefaultReaderFunc(ifield:IField) { 
@@ -49,7 +50,7 @@ function ReadMany({value, options, ifield}:IReader) {
         return <span key={i}>{i!==0 && ', '}{JSON.stringify(e)}</span> 
     })}]</div> 
   } 
-  return <div> 
+  return <div>
     <div className={'readmany-long'}> 
       {value.map( (e, i) => { 
         return <div key={i}>{i}. {JSON.stringify(e)}</div> 

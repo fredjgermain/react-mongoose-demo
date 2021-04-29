@@ -41,3 +41,9 @@ IniObj.args = {
   initValue:{row:0, mode:'read'}, 
   change:{row:1} 
 } 
+
+export const IniObj2 = Template.bind({}) 
+IniObj2.args = { 
+  initValue:{}, 
+  change:{row:1} 
+} 

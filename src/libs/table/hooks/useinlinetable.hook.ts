@@ -1,6 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react'; 
 import { DaoContext } from '../../dao/components/dao.contexter'; 
-
+import { useStateReset } from '../../_customhooks'; 
+import { TableContext } from './usetable.hook'; 
 
 
 export const InlineTableContext = React.createContext({} as IUseInlineTable); 
@@ -21,6 +22,7 @@ export interface IUseInlineTable {
   // Feedback
   inlineFeedback: ICrudResponse; 
   SetInlineFeedback: (newFeedback: ICrudResponse) => void; 
+  ResetInlineFeedback: () => void; 
 
   // Crud methods ... 
   Create(entry: IEntry): Promise<ICrudResponse>
@@ -30,6 +32,9 @@ export interface IUseInlineTable {
 
 export function useInlineTable(collectionAccessor:string): IUseInlineTable { 
   const dao = useContext(DaoContext); 
+  const table = useContext(TableContext); 
+  //console.log(table);
+  const {paging} = table; 
   
   // InlineTableState ..................................
   const initState = {row:null, mode:'read'} as IInlineTableState; 
@@ -41,14 +46,15 @@ export function useInlineTable(collectionAccessor:string): IUseInlineTable {
   const ResetInlineTableState = () => SetInlineTableState(initState); 
 
   // FeedBack .............................................
-  const [inlineFeedback, setInlineFeedback] = useState({} as ICrudResponse); 
-  
-  const SetInlineFeedback = (newFeedback:ICrudResponse) => setInlineFeedback(newFeedback); 
+  const [inlineFeedback, SetInlineFeedback, ResetInlineFeedback] = useStateReset({} as ICrudResponse); 
+  //const SetInlineFeedback = (newFeedback:ICrudResponse) => setInlineFeedback(newFeedback); 
 
   // 
   useEffect(() => { 
     ResetInlineTableState(); 
-  }, [collectionAccessor]); 
+    ResetInlineFeedback(); 
+  }, [collectionAccessor, paging.pageIndex]); 
+
 
   // CRUD FUNCTIONS -----------------------------------
   // Create ..........................................
@@ -80,7 +86,7 @@ export function useInlineTable(collectionAccessor:string): IUseInlineTable {
 
   return { collectionAccessor, 
     inlineTableState, SetInlineTableState, ResetInlineTableState, 
-    inlineFeedback, SetInlineFeedback, 
+    inlineFeedback, SetInlineFeedback, ResetInlineFeedback,
     /*GetEntries, GetEntry, GetDefaultColumns, GetFields, GetOptions, */
     Create, Update, Delete }; 
 }
