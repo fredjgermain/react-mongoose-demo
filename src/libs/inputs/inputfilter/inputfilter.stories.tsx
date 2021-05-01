@@ -1,6 +1,6 @@
 import { Story } from '@storybook/react'; 
 import { InputFilter, useFilter } from './_inputfilter'; 
-import { IndexArray, Indexed } from '../../_arrayutils'; 
+import { IndexArray } from '../../_arrayutils'; 
 
 
 function TemplateResearch({values, filters}:{values:any[], filters:{handle:string, type:string}[]}) { 
