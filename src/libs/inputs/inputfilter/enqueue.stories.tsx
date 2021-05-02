@@ -1,71 +1,16 @@
-import { useState } from 'react';
 import { Story } from '@storybook/react'; 
-import { InputFilter } from './_inputfilter'; 
-import { IndexArray, Sorts, Filter, Predicate, Sorter } from '../../_arrayutils'; 
-import { InputSorter } from '../inputsort/_inputsort'; 
-
-
-
-function usePredicates<K, P>(): [ 
-    [K, P][], 
-    (key:K, newPredicate?:P) => void, 
-    () => void, 
-  ] { 
-  const [predicates, setPredicates] = useState([] as [K, P][]); 
-  
-  function SetPredicates(key:K, newPredicate?:P) { 
-    setPredicates( prev => { 
-      const rest = prev.filter(kp => key != kp[0]); 
-      return newPredicate ? 
-        [...rest, [key, newPredicate]]: 
-        [...rest]; 
-    }) 
-  } 
-
-  function ResetPredicates() { 
-    setPredicates([] as [K, P][]) 
-  }; 
-
-  return [predicates, SetPredicates, ResetPredicates]; 
-}
-
-
-function useSorters<T>(values:T[]) { 
-  const [keySorters, SetSorters, ResetSorters] = usePredicates<string, Sorter<T>>(); 
-  const sorters = keySorters.map( s => s[1] ); 
-  const sortedValues = Sorts(values, sorters); 
-  return {sortedValues, keySorters, SetSorters, ResetSorters} 
-}
-
-function useFilters<T>(values:T[]) { 
-  const [keyFilters, SetFilters, ResetFilters] = usePredicates<string, Predicate<T>>(); 
-
-  const filters = (t: T, i: number, a: T[], positive: T[], negative: T[]) => { 
-    return keyFilters.map( f => f[1] ).every( f => f(t, i, a, positive, negative) ); 
-  } 
-  const [matchValues, unmatchValues] = Filter(values, filters); 
-  return {matchValues, unmatchValues, SetFilters, ResetFilters} 
-}
-
-
+import { InputFilter, useFilter } from './_inputfilter'; 
+import { InputSorter, useSorter } from '../inputsort/_inputsort'; 
 
 
 function TemplateResearch({values, filters}:{values:any[], filters:{handle:string, type:string}[]}) { 
-  const {matchValues, SetFilters} = useFilters(values); 
-  const {sortedValues, SetSorters} = useSorters(matchValues); 
-
-  /*const lessThen5 = () => SetFilters('test', (x:any) => x < 5); 
-  const moreThen5 = () => SetFilters('test', (x:any) => x > 5); 
-  const all = () => SetFilters('test'); 
-
-  const ascending = () => SetSorters('test', (x:any, pivot:any) => x < pivot); 
-  const descending = () => SetSorters('test', (x:any, pivot:any) => x > pivot); 
-  const unsort = () => SetSorters('test'); */
+  const {matchValues, SetFilters} = useFilter(values); 
+  const {sortedValues, SetSorters} = useSorter(matchValues); 
 
   return <div> 
     <div> 
       {sortedValues.map( (v,i) => { 
-        return <span key={i}>{v}</span> 
+        return <div key={i}>{JSON.stringify(v)}</div> 
       })} 
     </div> 
     <div> 
