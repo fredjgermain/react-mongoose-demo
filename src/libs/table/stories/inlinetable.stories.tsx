@@ -1,3 +1,4 @@
+import React from 'react'; 
 import { Story } from '@storybook/react'; 
 import { useContext, useState } from 'react'; 
 import { THeads } from '../components/header.components'; 
@@ -5,7 +6,7 @@ import { TRows, TRow, TCols } from '../components/rowcol.components';
 import { InlineCreateBtn, InlineUpdateDeleteBtn } from '../components/inlinebtn.component'; 
 
 import { useTable, TableContext } from '../hooks/usetable.hook'; 
-import { InlineEntryContext, useInlineEntry } from '../hooks/useinlineentry.hook'; 
+import { InlineEntryContext, InlineEntryContext as RowReadContext, useInlineEntry } from '../hooks/useinlineentry.hook'; 
 import { InlineTableContext, useInlineTable } from '../hooks/useinlinetable.hook'; 
 import { InlineTableFeedback } from '../components/inlinetablefeedback.component'; 
 
@@ -20,7 +21,7 @@ import { DaoContext, DaoContexter, ICrud } from '../../_dao';
 
 function GetDaoCell(collectionAccessor:string) { 
   const dao = useContext(DaoContext); 
-  const {datas, columns:{columns}, GetRowCol} = useContext(TableContext); 
+  const {datas, columns:{columns}, GetRowCol} = useContext(InlineTableContext); 
   const {row, col} = GetRowCol(); 
   const column = columns[col]; 
   const [ifield] = dao.GetIFields(collectionAccessor, [column]); 
@@ -31,7 +32,7 @@ function GetDaoCell(collectionAccessor:string) {
 } 
 
 function HeaderCell({collectionAccessor}:{collectionAccessor:string}) { 
-  const {filter:{SetFilters}} = useContext(TableContext); 
+  const {filter:{SetFilters}} = useContext(InlineTableContext); 
   const {column, ifield} = GetDaoCell(collectionAccessor); 
   const keys = ['t', column]; 
 
@@ -42,9 +43,9 @@ function HeaderCell({collectionAccessor}:{collectionAccessor:string}) {
 } 
 
 function Cell({collectionAccessor}:{collectionAccessor:string}) { 
-  const {isSelected, isEditing} = useContext(InlineEntryContext); 
+  const {IsSelected, IsEditing} = useContext(InlineTableContext); 
   return <span> 
-  {isSelected && isEditing ? 
+  {IsSelected() && IsEditing() ? 
     <CellEdit {...{collectionAccessor}} />: 
     <CellRead {...{collectionAccessor}} />} 
   </span> 
@@ -57,7 +58,7 @@ function CellRead({collectionAccessor}:{collectionAccessor:string}) {
 
 function CellEdit({collectionAccessor}:{collectionAccessor:string}) { 
   const {ifield, options, column} = GetDaoCell(collectionAccessor); 
-  const {entry, SetEntry} = useContext(InlineEntryContext); 
+  const {entry, SetEntry} = useContext(RowReadContext); 
   const [value, setValue] = useState(entry[column]); 
 
   const editValue = (newValue:any) => { 
@@ -70,48 +71,64 @@ function CellEdit({collectionAccessor}:{collectionAccessor:string}) {
   return <Editor {...{value, ifield, options, editValue}} /> 
 } 
 
-
-function CrudRow({collectionAccessor}:{collectionAccessor:string}) { 
-  const {cols, GetRowCol} = useContext(TableContext); 
+const ReadEntryContext = React.createContext(null); 
+function RowRead({collectionAccessor}:{collectionAccessor:string}) { 
+  const {cols, GetRowCol} = useContext(InlineTableContext); 
   const {row} = GetRowCol(); 
-  const crudEntry = useInlineEntry(row); 
+  return <ReadEntryContext.Provider value={null} >
+    <td>{row}</td>
+    <TCols cols={cols}>
+      <Cell {...{collectionAccessor}} />
+    </TCols> 
+    <InlineBtn/>
+  </ReadEntryContext.Provider>
+}
 
-  return <InlineEntryContext.Provider value={crudEntry}> 
-    <TCols cols={cols}><Cell {...{collectionAccessor}} /></TCols> 
-    <td>{row === -1 ? 
-      <InlineCreateBtn /> : 
-      <InlineUpdateDeleteBtn />}</td> 
+function RowSelected({collectionAccessor}:{collectionAccessor:string}) { 
+  const {cols, GetRowCol} = useContext(InlineTableContext); 
+  const {row} = GetRowCol(); 
+  const inlineEntry = useInlineEntry(row); 
+  return <InlineEntryContext.Provider value={inlineEntry}> 
+    <td>{row}</td>
+    <TCols cols={cols}>
+      <Cell {...{collectionAccessor}} />
+    </TCols> 
+    <InlineBtn/>
   </InlineEntryContext.Provider> 
 }
 
+function InlineBtn() { 
+  const {GetRowCol} = useContext(InlineTableContext); 
+  const {row} = GetRowCol(); 
 
-function Table({collectionAccessor}:{collectionAccessor:string}) { 
-  const dao = useContext(DaoContext); 
-  const entries = dao.GetIEntries(collectionAccessor); 
-  const defaultCols = dao.GetIFields(collectionAccessor).filter(f => !!f.label).map( f => f.accessor ); 
-  const table = useTable(entries, {defaultCols} ); 
-  
-  return <TableContext.Provider value={table} > 
-    <InlineTable {...{collectionAccessor}} /> 
-  </TableContext.Provider> 
-} 
+  return <td>{row === -1 ? <InlineCreateBtn />: <InlineUpdateDeleteBtn/>}</td>
+}
+
+
+function Row({collectionAccessor}:{collectionAccessor:string}) { 
+  const {IsSelected} = useContext(InlineTableContext); 
+  if(IsSelected()) 
+    return <RowSelected {...{collectionAccessor}} /> 
+  return <RowRead {...{collectionAccessor}} /> 
+}
+
 
 function InlineTable({collectionAccessor}:{collectionAccessor:string}) {
-  const table = useContext(TableContext); 
-  const {rows, cols, paging} = table; 
   const inlineTable = useInlineTable(collectionAccessor); 
+  const {rows, cols, paging} = inlineTable; 
 
   return <InlineTableContext.Provider value={inlineTable} > 
     <InlineTableFeedback {...{collectionAccessor}} /> 
     <table> 
       <thead><tr> 
-          <THeads {...{cols}}><HeaderCell {...{collectionAccessor}} /></THeads> 
-          <th>Btn</th> 
+        <th>Row</th> 
+        <THeads {...{cols}}><HeaderCell {...{collectionAccessor}} /></THeads> 
+        <th>Btn</th> 
       </tr></thead> 
 
       <tbody> 
-        <TRows {...{rows}}><CrudRow {...{collectionAccessor}} /></TRows> 
-        <TRow {...{row:-1}}><CrudRow {...{collectionAccessor}} /></TRow> 
+        <TRows {...{rows}}><Row {...{collectionAccessor}} /></TRows> 
+        <TRow {...{row:-1}}><Row {...{collectionAccessor}} /></TRow> 
       </tbody> 
     </table> 
     <PagerBtn {...{paging}} /> 
@@ -133,7 +150,7 @@ function TemplateComponent() {
   const accessors = ['questions', 'patients', 'responses', 'answers', 'forms', 'instructions']; 
   const collectionAccessor = 'questions'; 
   return <DaoContexter {...{crud:crud as ICrud, accessors}}> 
-    <Table {...{collectionAccessor}} /> 
+    <InlineTable {...{collectionAccessor}} /> 
   </DaoContexter> 
 } 
 

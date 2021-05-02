@@ -58,8 +58,7 @@ interface IInlineBtn {
   action:()=>Promise<ICrudResponse>, 
 } 
 export function InlineBtn({mode, labels, action}:IInlineBtn) { 
-  const {GetRowCol} = useContext(TableContext); 
-  const {inlineTableState, SetInlineTableState, ResetInlineTableState} = useContext(InlineTableContext); 
+  const {inlineTableState, GetRowCol, SetInlineTableState, ResetInlineTableState} = useContext(InlineTableContext); 
   const {row, col} = GetRowCol(); 
 
   if(inlineTableState.mode === 'read') 

@@ -11,6 +11,7 @@ import { IUseFilter, IUseSorter, useFilter, useSorter } from '../../_inputs';
 
 export const TableContext = React.createContext({} as IUseTable<IEntry>); 
 
+
 export interface IUseTable<T> { 
   datas: T[]; 
   rows: number[]; 
@@ -28,6 +29,7 @@ export interface IUseTable<T> {
 }
 // At table lvl 
 export function useTable<T>(datas:T[], options?:{defaultCols?:string[]}):IUseTable<T> { 
+  console.log('Table'); 
   // index datas to keep track of any filtering, sorting and paging on datas. 
   const indexedDatas = IndexArray(datas); 
   const filter = useFilter(indexedDatas); 

@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react'; 
 import { DaoContext } from '../../dao/components/dao.contexter'; 
 import { useStateReset } from '../../_customhooks'; 
-import { TableContext } from './usetable.hook'; 
+import { useTable, IUseTable } from './usetable.hook'; 
 
 
 export const InlineTableContext = React.createContext({} as IUseInlineTable); 
@@ -11,13 +11,15 @@ export interface IInlineTableState {
   mode:string; 
 }; 
 
-export interface IUseInlineTable { 
+export interface IUseInlineTable extends IUseTable<IEntry> { 
   collectionAccessor:string; 
 
   // inline table state
   inlineTableState: IInlineTableState; 
   SetInlineTableState: (newValue: any) => void; 
   ResetInlineTableState: () => void; 
+  IsSelected: () => boolean; 
+  IsEditing: () => boolean; 
 
   // Feedback
   inlineFeedback: ICrudResponse; 
@@ -32,18 +34,20 @@ export interface IUseInlineTable {
 
 export function useInlineTable(collectionAccessor:string): IUseInlineTable { 
   const dao = useContext(DaoContext); 
-  const table = useContext(TableContext); 
+  const entries = dao.GetIEntries(collectionAccessor); 
+  const defaultCols = dao.GetIFields(collectionAccessor).filter(f => !!f.label).map( f => f.accessor ); 
+  const table = useTable(entries, {defaultCols}); 
   //console.log(table);
   const {paging} = table; 
   
   // InlineTableState ..................................
-  const initState = {row:null, mode:'read'} as IInlineTableState; 
-  const [inlineTableState, setInlineTableState] = useState(initState); 
-  
-  const SetInlineTableState = (newValue:any) => setInlineTableState( prev => { 
-    return {...prev, ...(newValue as IInlineTableState)}; 
-  }); 
-  const ResetInlineTableState = () => SetInlineTableState(initState); 
+  const [inlineTableState, SetInlineTableState, ResetInlineTableState] = 
+    useStateReset({row:null, mode:'read'} as IInlineTableState); 
+
+  const editingModes = ['update', 'create']; 
+  const IsSelected = () => table.GetRowCol().row === inlineTableState.row; 
+  const IsEditing = () => editingModes.includes(inlineTableState.mode); 
+
 
   // FeedBack .............................................
   const [inlineFeedback, SetInlineFeedback, ResetInlineFeedback] = useStateReset({} as ICrudResponse); 
@@ -84,35 +88,9 @@ export function useInlineTable(collectionAccessor:string): IUseInlineTable {
     return response; 
   } 
 
-  return { collectionAccessor, 
+  return { ...table, collectionAccessor, 
     inlineTableState, SetInlineTableState, ResetInlineTableState, 
+    IsSelected, IsEditing, 
     inlineFeedback, SetInlineFeedback, ResetInlineFeedback,
-    /*GetEntries, GetEntry, GetDefaultColumns, GetFields, GetOptions, */
     Create, Update, Delete }; 
 }
-
-
-
-
-  // GetEntry .............................................
-  /*function GetEntries() { 
-    return dao.GetIEntries(collectionAccessor); 
-  } 
-
-  function GetEntry(row?:number) { 
-    return dao.GetIEntries(collectionAccessor).find( (e,i) => i === row) 
-      ?? dao.GetDefaultIEntry(collectionAccessor) 
-      ?? {} as IEntry; 
-  } 
-
-  function GetDefaultColumns() { 
-    return dao.GetIFields(collectionAccessor).filter(f => !!f.label).map( f => f.accessor ); 
-  } 
-
-  function GetFields(accessors:string[]) { 
-    return dao.GetIFields(collectionAccessor, accessors); 
-  } 
-
-  function GetOptions(ifield:IField) { 
-    return dao.GetIOptions(ifield); 
-  } */
