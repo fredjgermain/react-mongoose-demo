@@ -1,6 +1,6 @@
 import { useState } from 'react'; 
 import { Filter, Predicate } from '../../_arrayutils'; 
-
+import { IUseFilter } from './inputfilter.type'; 
 
 
 export function usePredicates<K, P>(): [ 
@@ -27,7 +27,7 @@ export function usePredicates<K, P>(): [
 }
 
 
-export function useFilter<T>(values:T[]) { 
+export function useFilter<T>(values:T[]): IUseFilter<T> { 
   const [keyFilters, SetFilters, ResetFilters] = usePredicates<string, Predicate<T>>(); 
 
   const filters = (t: T, i: number, a: T[], positive: T[], negative: T[]) => { 

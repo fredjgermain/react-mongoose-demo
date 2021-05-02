@@ -16,9 +16,9 @@ export type { IInputSelect } from './inputs/inputselect/_inputselect';
 // InputFilter
 export { InputFilter } from './inputs/inputfilter/inputfilter.component';
 export { useFilter } from './inputs/inputfilter/inputfilter.hook';
-export type { IInputFilter } from './inputs/inputfilter/inputfilter.type';
+export type { IInputFilter, IUseFilter } from './inputs/inputfilter/inputfilter.type';
 
 // InputSorter
 export { InputSorter } from './inputs/inputsort/inputsort.component'; 
 export { useSorter } from './inputs/inputsort/inputsort.hook'; 
-export type { IInputSorter } from './inputs/inputsort/inputsort.type';
+export type { IInputSorter, IUseSorter } from './inputs/inputsort/inputsort.type';

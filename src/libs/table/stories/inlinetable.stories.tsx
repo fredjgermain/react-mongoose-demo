@@ -20,7 +20,7 @@ import { DaoContext, DaoContexter, ICrud } from '../../_dao';
 
 function GetDaoCell(collectionAccessor:string) { 
   const dao = useContext(DaoContext); 
-  const {datas, columns, GetRowCol} = useContext(TableContext); 
+  const {datas, columns:{columns}, GetRowCol} = useContext(TableContext); 
   const {row, col} = GetRowCol(); 
   const column = columns[col]; 
   const [ifield] = dao.GetIFields(collectionAccessor, [column]); 
@@ -31,7 +31,7 @@ function GetDaoCell(collectionAccessor:string) {
 } 
 
 function HeaderCell({collectionAccessor}:{collectionAccessor:string}) { 
-  const {SetFilters} = useContext(TableContext); 
+  const {filter:{SetFilters}} = useContext(TableContext); 
   const {column, ifield} = GetDaoCell(collectionAccessor); 
   const keys = ['t', column]; 
 

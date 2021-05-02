@@ -29,14 +29,3 @@ export default function AdminPage() {
     {!IsEmpty(context.GetEditState(['collection'])) && <AdminTable/>} 
   </AdminContext.Provider> 
 } 
-
-function EditingState() { 
-  const {GetEditState} = useContext(AdminContext); 
-  const {collection, index, mode} = GetEditState(); 
-
-  return <div> 
-    Collection: {collection} <br/> 
-    index: {JSON.stringify(index)} <br/> 
-    Mode: {mode} <br/> 
-  </div>
-}

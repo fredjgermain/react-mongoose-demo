@@ -1,8 +1,9 @@
 import { Sorts, Sorter } from '../../_arrayutils'; 
 import { usePredicates } from '../inputfilter/inputfilter.hook'; 
+import { IUseSorter } from './inputsort.type';
 
 
-export function useSorter<T>(values:T[]) { 
+export function useSorter<T>(values:T[]):IUseSorter<T> { 
   const [keySorters, SetSorters, ResetSorters] = usePredicates<string, Sorter<T>>(); 
   const sorters = keySorters.map( s => s[1] ); 
   const sortedValues = Sorts(values, sorters); 

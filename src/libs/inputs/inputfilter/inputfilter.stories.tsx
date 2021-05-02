@@ -49,11 +49,10 @@ MultipleFieldFilter.args = {
     {a:'bb', v:4, bool:true}, 
     {a:'ee', v:2, bool:false}, 
     {a:'bbb', v:3, bool:false}, 
-  ],
+  ], 
   filters:[ 
     {handle:'a', type:'string'}, 
     {handle:'v', type:'number'}, 
     {handle:'bool', type:'boolean'}, 
   ] 
 }
-  

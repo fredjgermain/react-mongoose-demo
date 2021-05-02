@@ -11,7 +11,7 @@ import { IInputFilter } from './inputfilter.type';
  * @param SetFilters 
  * @returns 
  */
-export function InputFilter({keys, type, SetFilters}:IInputFilter) { 
+export function InputFilter<T>({keys, type, SetFilters}:IInputFilter<T>) { 
   const Key = keys.reduce((prev, current) => prev+current); 
 
   const [strFilter, setStrFilter] = useState(''); 

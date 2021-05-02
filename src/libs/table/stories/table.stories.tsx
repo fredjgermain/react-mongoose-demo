@@ -10,7 +10,7 @@ import { PagerBtn } from '../../pager/_pager';
 
 
 function HeaderCell() { 
-  const {columns, GetRowCol, SetFilters} = useContext(TableContext); 
+  const {GetRowCol, columns:{columns}, filter:{SetFilters}} = useContext(TableContext); 
   const {col} = GetRowCol(); 
   const handle = columns[col]; 
   const keys = ['t', handle]; 
@@ -22,7 +22,7 @@ function HeaderCell() {
 } 
 
 function Cell() { 
-  const {datas, GetRowCol, columns} = useContext(TableContext); 
+  const {datas, GetRowCol, columns:{columns}} = useContext(TableContext); 
   const {row, col} = GetRowCol(); 
   const column = columns[col]; 
   return <span>{row} {col}  {datas[row][column]}</span> 
