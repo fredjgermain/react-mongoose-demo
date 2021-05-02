@@ -19,6 +19,7 @@ export function FilterPredicate(strPredicate:string, type:string, keys?:string[]
       predicate; 
 } 
 
+
 function EqualPredicate(strPredicate:string):(x:any) => boolean { 
   return (x:string) => { 
     return String(x) === strPredicate; 

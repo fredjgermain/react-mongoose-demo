@@ -12,7 +12,7 @@ import { IInputFilter } from './inputfilter.type';
  * @returns 
  */
 export function InputFilter({keys, type, SetFilters}:IInputFilter) { 
-  const filterId = keys.reduce((prev, current) => prev+current); 
+  const Key = keys.reduce((prev, current) => prev+current); 
 
   const [strFilter, setStrFilter] = useState(''); 
   const value = strFilter; 
@@ -22,7 +22,7 @@ export function InputFilter({keys, type, SetFilters}:IInputFilter) {
 
   const onPressEnter = () => { 
     const newFilter = FilterPredicate(strFilter, type, keys); 
-    SetFilters(newFilter, [filterId]); 
+    SetFilters(Key, newFilter); 
   }; 
 
   return <Input {...{type:'string', value, onSetValue, onPressEnter}} /> 

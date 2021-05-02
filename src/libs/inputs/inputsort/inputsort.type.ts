@@ -1,5 +1,7 @@
+import { Sorter } from '../../_arrayutils'; 
+
 export interface IInputSorter { 
   keys:string[], 
   type:string, 
-  SetSorters: (newValue: any, keys?:string[]) => void 
+  SetSorters: (key:string, newFilter?:Sorter<any>) => void 
 }

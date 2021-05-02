@@ -64,6 +64,8 @@ export function GetValueAt(value:any, keys?:TKey[]):any {
   if(IsEmpty(value) || !keys || IsEmpty(keys)) 
     return value; 
   const [key, ...remainingKeys] = keys; 
+  if(IsEmpty(key)) 
+    return value; 
   return GetValueAt(value[key], remainingKeys); 
 } 
 
