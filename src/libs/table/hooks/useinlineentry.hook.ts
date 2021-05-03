@@ -1,13 +1,8 @@
 import React, { useState, useContext, useEffect } from 'react'; 
 import { DaoContext } from '../../dao/components/dao.contexter'; 
-import { InlineTableContext } from './useinlinetable.hook'; 
+import { IUseInlineEntry, InlineTableContext } from '../_table'; 
 
 export const InlineEntryContext = React.createContext({} as IUseInlineEntry); 
-
-export interface IUseInlineEntry { 
-  entry: IEntry; 
-  SetEntry: (newEntry: any) => void; 
-} 
 
 export function useInlineEntry(row?:number):IUseInlineEntry { 
   const dao = useContext(DaoContext); 

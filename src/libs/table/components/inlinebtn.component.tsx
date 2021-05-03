@@ -1,5 +1,4 @@
 import { useContext } from 'react'; 
-import { TableContext } from '../hooks/usetable.hook'; 
 import { InlineEntryContext } from '../hooks/useinlineentry.hook'; 
 import { InlineTableContext } from '../hooks/useinlinetable.hook'; 
 

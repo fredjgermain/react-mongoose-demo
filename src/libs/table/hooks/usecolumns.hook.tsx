@@ -1,10 +1,6 @@
 import { useState } from 'react'; 
+import { IUseColumn } from '../_table'; 
 
-
-export interface IUseColumn { 
-  columns: string[]; 
-  SetColumns: (fields: string[]) => void; 
-} 
 
 export function useColumn(defaultColumns:string[]):IUseColumn { 
   const [columns, setColumns] = useState(defaultColumns); 

@@ -1,16 +1,13 @@
 import { Story } from '@storybook/react'; 
 import { useContext } from 'react'; 
-import { THeads } from '../components/header.components'; 
-import { TRows, TCols } from '../components/rowcol.components'; 
-import { useTable, TableContext } from '../hooks/usetable.hook'; 
 import { InputFilter } from '../../_inputs'; 
 import { IsNull } from '../../_utils';
-
 import { crud } from '../../dao/stories/mockcrud'; 
 import { DaoContext, DaoContexter, ICrud } from '../../_dao'; 
 import { Reader } from '../../editor_reader/_editor_reader'; 
-
 import { PagerBtn } from '../../pager/_pager'; 
+
+import { THeads, TRows, TCols, useTable, TableContext } from '../_table'; 
 
 
 function GetDaoCell(collectionAccessor:string) { 

@@ -1,6 +1,5 @@
 import { useContext } from 'react'; 
 import { DaoContext } from '../../dao/components/dao.contexter'; 
-import { InlineEntryContext } from '../hooks/useinlineentry.hook'; 
 import { InlineTableContext } from '../hooks/useinlinetable.hook'; 
 
 

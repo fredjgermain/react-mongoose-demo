@@ -1,15 +1,11 @@
-import React, { useState, useContext, useEffect } from 'react'; 
+import React, { useContext, useEffect } from 'react'; 
 import { DaoContext } from '../../dao/components/dao.contexter'; 
 import { useStateReset } from '../../_customhooks'; 
-import { useTable, IUseTable } from './usetable.hook'; 
+import { useTable, IUseTable, IInlineTableState } from '../_table'; 
 
 
 export const InlineTableContext = React.createContext({} as IUseInlineTable); 
 
-export interface IInlineTableState { 
-  row:number|null; 
-  mode:string; 
-}; 
 
 export interface IUseInlineTable extends IUseTable<IEntry> { 
   collectionAccessor:string; 

@@ -1,12 +1,9 @@
-import React, { useContext } from 'react'; 
+import { useContext } from 'react'; 
 import { Story } from '@storybook/react'; 
-
-import { THeads } from '../components/header.components'; 
-import { TRows, TCols } from '../components/rowcol.components'; 
-import { useTable, TableContext } from '../hooks/usetable.hook'; 
 import { InputFilter } from '../../_inputs'; 
-
 import { PagerBtn } from '../../pager/_pager'; 
+
+import { THeads, TRows, TCols, useTable, TableContext } from '../_table'; 
 
 
 function HeaderCell() { 

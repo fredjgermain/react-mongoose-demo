@@ -1,14 +1,5 @@
-import React from 'react'; 
+import React, { useContext, useState } from 'react'; 
 import { Story } from '@storybook/react'; 
-import { useContext, useState } from 'react'; 
-import { THeads } from '../components/header.components'; 
-import { TRows, TRow, TCols } from '../components/rowcol.components'; 
-import { InlineCreateBtn, InlineUpdateDeleteBtn } from '../components/inlinebtn.component'; 
-
-import { useTable, TableContext } from '../hooks/usetable.hook'; 
-import { InlineEntryContext, InlineEntryContext as RowReadContext, useInlineEntry } from '../hooks/useinlineentry.hook'; 
-import { InlineTableContext, useInlineTable } from '../hooks/useinlinetable.hook'; 
-import { InlineTableFeedback } from '../components/inlinetablefeedback.component'; 
 
 import { InputFilter } from '../../_inputs'; 
 import { IsNull } from '../../_utils'; 
@@ -17,6 +8,12 @@ import { PagerBtn } from '../../pager/_pager';
 
 import { crud } from '../../dao/stories/mockcrud'; 
 import { DaoContext, DaoContexter, ICrud } from '../../_dao'; 
+
+import { THeads, TRows, TRow, TCols, 
+  InlineCreateBtn, InlineUpdateDeleteBtn, 
+  InlineEntryContext, InlineTableContext, 
+  useInlineEntry, useInlineTable, InlineTableFeedback } 
+  from '../_table'; 
 
 
 function GetDaoCell(collectionAccessor:string) { 
@@ -58,7 +55,7 @@ function CellRead({collectionAccessor}:{collectionAccessor:string}) {
 
 function CellEdit({collectionAccessor}:{collectionAccessor:string}) { 
   const {ifield, options, column} = GetDaoCell(collectionAccessor); 
-  const {entry, SetEntry} = useContext(RowReadContext); 
+  const {entry, SetEntry} = useContext(InlineEntryContext); 
   const [value, setValue] = useState(entry[column]); 
 
   const editValue = (newValue:any) => { 
