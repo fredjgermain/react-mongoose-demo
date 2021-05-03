@@ -6,27 +6,34 @@ import { InlineEntryContext, InlineTableContext, TCols, useInlineEntry,
   from '../../../libs/table/_table'; 
 
 
+
+
+export function Row() { 
+  const {IsSelected} = useContext(InlineTableContext); 
+  if(IsSelected()) 
+    return <RowSelected/> 
+  return <RowRead/> 
+}
+
 const ReadEntryContext = React.createContext(null); 
-function RowRead({collectionAccessor}:{collectionAccessor:string}) { 
+function RowRead() { 
   const {cols, GetRowCol} = useContext(InlineTableContext); 
   const {row} = GetRowCol(); 
   return <ReadEntryContext.Provider value={null} >
-    <td>{row}</td>
-    <TCols cols={cols}>
-      <Cell {...{collectionAccessor}} />
+    <TCols cols={cols}> 
+      <Cell/>
     </TCols> 
     <InlineBtn/>
   </ReadEntryContext.Provider>
 }
 
-function RowSelected({collectionAccessor}:{collectionAccessor:string}) { 
+function RowSelected() { 
   const {cols, GetRowCol} = useContext(InlineTableContext); 
   const {row} = GetRowCol(); 
   const inlineEntry = useInlineEntry(row); 
   return <InlineEntryContext.Provider value={inlineEntry}> 
-    <td>{row}</td>
     <TCols cols={cols}>
-      <Cell {...{collectionAccessor}} />
+      <Cell/>
     </TCols> 
     <InlineBtn/>
   </InlineEntryContext.Provider> 
@@ -37,12 +44,4 @@ function InlineBtn() {
   const {row} = GetRowCol(); 
 
   return <td>{row === -1 ? <InlineCreateBtn />: <InlineUpdateDeleteBtn/>}</td>
-}
-
-
-export function Row({collectionAccessor}:{collectionAccessor:string}) { 
-  const {IsSelected} = useContext(InlineTableContext); 
-  if(IsSelected()) 
-    return <RowSelected {...{collectionAccessor}} /> 
-  return <RowRead {...{collectionAccessor}} /> 
 }

@@ -3,13 +3,14 @@ import { DaoContext } from '../../../libs/_dao';
 import { InputFilter } from '../../../libs/_inputs'; 
 import { IsNull } from '../../../libs/_utils'; 
 import { Editor, Reader } from '../../../libs/editor_reader/_editor_reader'; 
-
 import { InlineEntryContext, InlineTableContext } from '../../../libs/table/_table'; 
 
+import { AdminContext } from '../admin.hook'; 
 
-export function HeaderCell({collectionAccessor}:{collectionAccessor:string}) { 
+
+export function HeaderCell() { 
   const {filter:{SetFilters}} = useContext(InlineTableContext); 
-  const {column, ifield} = GetDaoCell(collectionAccessor); 
+  const {column, ifield} = GetDaoCell(); 
   const keys = ['t', column]; 
 
   return <span> 
@@ -18,22 +19,22 @@ export function HeaderCell({collectionAccessor}:{collectionAccessor:string}) {
   </span> 
 } 
 
-export function Cell({collectionAccessor}:{collectionAccessor:string}) { 
+export function Cell() { 
   const {IsSelected, IsEditing} = useContext(InlineTableContext); 
   return <span> 
   {IsSelected() && IsEditing() ? 
-    <CellEdit {...{collectionAccessor}} />: 
-    <CellRead {...{collectionAccessor}} />} 
+    <CellEdit/>: 
+    <CellRead/>} 
   </span> 
 } 
 
-function CellRead({collectionAccessor}:{collectionAccessor:string}) { 
-  const {value, ifield, options} = GetDaoCell(collectionAccessor); 
+function CellRead() { 
+  const {value, ifield, options} = GetDaoCell(); 
   return <Reader {...{value, ifield, options}} /> 
 } 
 
-function CellEdit({collectionAccessor}:{collectionAccessor:string}) { 
-  const {ifield, options, column} = GetDaoCell(collectionAccessor); 
+function CellEdit() { 
+  const {ifield, options, column} = GetDaoCell(); 
   const {entry, SetEntry} = useContext(InlineEntryContext); 
   const [value, setValue] = useState(entry[column]); 
 
@@ -48,7 +49,8 @@ function CellEdit({collectionAccessor}:{collectionAccessor:string}) {
 } 
 
 
-function GetDaoCell(collectionAccessor:string) { 
+function GetDaoCell() { 
+  const {collectionAccessor} = useContext(AdminContext); 
   const dao = useContext(DaoContext); 
   const {datas, columns:{columns}, GetRowCol} = useContext(InlineTableContext); 
   const {row, col} = GetRowCol(); 
