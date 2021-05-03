@@ -1,20 +1,10 @@
-import React, {useContext} from 'react'; 
-import { IUseAdmin, useAdmin } from './hooks/useadmin.hook'; 
 import { IsEmpty } from '../../libs/_utils'; 
-
+import { AdminContext, useAdmin } from './admin.hook'; 
 import { CollectionSelector } from './components/collectionselector.component'; 
-import { AdminTable } from './components/admintable.component'; 
+import { InlineTable } from './components/inlineadmintable.component'; 
 
 import '../../css/main.css'; 
 
-
-
-/* Admin Pages ============================================
-- title 
-- CollectionSelector. 
-- AdminTablr once a collection has been selected. 
-*/ 
-export const AdminContext = React.createContext({} as IUseAdmin); 
 export default function AdminPage() { 
   const context = useAdmin(); 
   return <AdminContext.Provider value={context}> 
@@ -26,6 +16,6 @@ export default function AdminPage() {
       <li>In the table below use the "Create", "Update" and "Delete" button.</li> 
     </ul> 
 
-    {!IsEmpty(context.GetEditState(['collection'])) && <AdminTable/>} 
+    {!IsEmpty(context.collectionAccessor) && <InlineTable/>} 
   </AdminContext.Provider> 
 } 

@@ -1,13 +1,13 @@
 import { useContext } from 'react'; 
 import { Editor } from '../../../libs/editor_reader/_editor_reader'; 
-import { AdminContext } from '../admin.page'; 
+import { AdminContext } from '../admin.hook'; 
 
 
 // Collection Selector ====================================
 export function CollectionSelector() { 
-  const {GetEditState, SetEditState, GetCollectionOptions} = useContext(AdminContext); 
-  const value = GetEditState(['collection']); 
-  const editValue = (newValue:string) => SetEditState(newValue, ['collection']); 
+  const {collectionAccessor, SetCollectionAccessor, GetCollectionOptions} = useContext(AdminContext); 
+  const value = collectionAccessor; 
+  const editValue = (newValue:string) => SetCollectionAccessor(newValue); 
   const ifield:IField = {accessor:'', label:'', defaultValue:'', type:'string'}; 
   const options = GetCollectionOptions(); 
 
