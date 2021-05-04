@@ -21,7 +21,7 @@ export const TColsContext = React.createContext({} as {cols:number[]});
 export function TCols({cols, children}:React.PropsWithChildren<{cols:number[]}>) { 
   return <TColsContext.Provider value={{cols}} > 
     {cols.map( col => { 
-      return <TCol {...{key:col, col}}>{children}</TCol> 
+      return <TCol key={col} col={col}>{children}</TCol> 
     })} 
   </TColsContext.Provider> 
 }

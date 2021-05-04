@@ -1,6 +1,7 @@
 import React, { useContext, useEffect } from 'react'; 
 import { DaoContext } from '../../dao/components/dao.contexter'; 
 import { useStateReset } from '../../_customhooks'; 
+import { IsEmpty } from '../../_utils'; 
 import { useTable, IUseTable, IInlineTableState } from '../_table'; 
 
 
@@ -33,7 +34,6 @@ export function useInlineTable(collectionAccessor:string): IUseInlineTable {
   const entries = dao.GetIEntries(collectionAccessor); 
   const defaultCols = dao.GetIFields(collectionAccessor).filter(f => !!f.label).map( f => f.accessor ); 
   const table = useTable(entries, {defaultCols}); 
-  //console.log(table);
   const {paging} = table; 
   
   // InlineTableState ..................................
@@ -47,14 +47,12 @@ export function useInlineTable(collectionAccessor:string): IUseInlineTable {
 
   // FeedBack .............................................
   const [inlineFeedback, SetInlineFeedback, ResetInlineFeedback] = useStateReset({} as ICrudResponse); 
-  //const SetInlineFeedback = (newFeedback:ICrudResponse) => setInlineFeedback(newFeedback); 
 
-  // 
+  // on page changed
   useEffect(() => { 
     ResetInlineTableState(); 
     ResetInlineFeedback(); 
-  }, [collectionAccessor, paging.pageIndex]); 
-
+  }, [paging.pageIndex]); 
 
   // CRUD FUNCTIONS -----------------------------------
   // Create ..........................................

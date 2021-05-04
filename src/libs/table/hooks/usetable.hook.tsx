@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'; 
+import React, { useContext, useEffect } from 'react'; 
 import { TRowContext, TColContext, THeadContext, useColumn, IUseTable } from '../_table'; 
 import { usePager } from '../../pager/_pager'; 
 import { IndexArray, Indexed } from '../../_arrayutils'; 
@@ -28,6 +28,10 @@ export function useTable<T>(datas:T[], options?:{defaultCols?:string[]}):IUseTab
     const col = (colContext?.col ?? headContext?.col); 
     return {row, col}; 
   } 
+
+  useEffect(() => { 
+    columns.SetColumns(options?.defaultCols ?? []); 
+  }, [JSON.stringify(options?.defaultCols)]); 
 
   return {datas, rows, cols, GetRowCol, filter, sorter, columns, paging} 
 } 

@@ -21,6 +21,7 @@ export function HeaderCell() {
 
 export function Cell() { 
   const {IsSelected, IsEditing} = useContext(InlineTableContext); 
+
   return <span> 
   {IsSelected() && IsEditing() ? 
     <CellEdit/>: 
@@ -51,10 +52,12 @@ function CellEdit() {
 
 function GetDaoCell() { 
   const {collectionAccessor} = useContext(AdminContext); 
+  //console.log(collectionAccessor); 
   const dao = useContext(DaoContext); 
   const {datas, columns:{columns}, GetRowCol} = useContext(InlineTableContext); 
   const {row, col} = GetRowCol(); 
   const column = columns[col]; 
+  //console.log(column); 
   const [ifield] = dao.GetIFields(collectionAccessor, [column]); 
   const options = dao.GetIOptions(ifield); 
   const defaultValue = ifield.defaultValue; 

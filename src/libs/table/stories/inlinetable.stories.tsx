@@ -147,7 +147,7 @@ function TemplateComponent() {
   const accessors = ['questions', 'patients', 'responses', 'answers', 'forms', 'instructions']; 
   const collectionAccessor = 'questions'; 
   return <DaoContexter {...{crud:crud as ICrud, accessors}}> 
-    <InlineTable {...{collectionAccessor}} /> 
+    <InlineTable key={collectionAccessor} {...{collectionAccessor}} /> 
   </DaoContexter> 
 } 
 

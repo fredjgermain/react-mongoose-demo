@@ -16,6 +16,6 @@ export default function AdminPage() {
       <li>In the table below use the "Create", "Update" and "Delete" button.</li> 
     </ul> 
 
-    {!IsEmpty(context.collectionAccessor) && <InlineTable/>} 
+    {!IsEmpty(context.collectionAccessor) && <InlineTable key={context.collectionAccessor} />} 
   </AdminContext.Provider> 
 } 

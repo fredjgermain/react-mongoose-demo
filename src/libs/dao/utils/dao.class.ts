@@ -57,8 +57,10 @@ export class DAO implements IDao {
 
   // Get Options ----------------------------------------
   public GetIOptions(ifield:IField):IOption[] { 
-    if(ifield.isEnum)
-      return ifield.enums?.map(e => {return {value:e, label:e}}) ?? [] as IOption[];  
+    if(IsEmpty(ifield)) 
+      return []; 
+    if(ifield.isEnum) 
+      return ifield.enums?.map(e => {return {value:e, label:e}}) ?? [] as IOption[]; 
     if(!ifield.isModel) 
       return [] as IOption[]; 
     const {foreignCollection, abbrevField} = this.GetForeignElements(ifield); 
