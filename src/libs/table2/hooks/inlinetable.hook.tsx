@@ -1,17 +1,24 @@
-import React, {useContext} from 'react'; 
+import React from 'react'; 
 import { useStateReset } from '../../_customhooks'; 
-import { IsEmpty } from '../../_utils'; 
-
-import { DaoContext, } from '../../_dao'; 
 import { InlineState, IUseInlineTable } from '../_table'; 
 
 
 export const InlineTableContext = React.createContext({} as IUseInlineTable) 
 
-export function useInlineTable(datas:IEntry[], collection:string) { 
-  const dao = useContext(DaoContext); 
+type InlineCrudMethod = (entry: IEntry) => Promise<ICrudResponse>; 
+
+interface IProps { 
+  collection:string, 
+  datas:IEntry[], 
+  cols:string[], 
+  defaultEntry:IEntry, 
+  Create:InlineCrudMethod, 
+  Update:InlineCrudMethod, 
+  Delete:InlineCrudMethod
+}
+
+export function useInlineTable({collection, datas, cols, defaultEntry, ...inlineCrudMethods}:IProps) : IUseInlineTable { 
   const rows = datas.map( (e,i) => i); 
-  const cols = dao.GetIFields(collection).filter(f => !IsEmpty(f.label)).map(f => f.accessor); 
 
   // InlineState .........................................
   const initInlineState = {row:undefined,mode:'read'} as InlineState; 
@@ -21,9 +28,14 @@ export function useInlineTable(datas:IEntry[], collection:string) {
   const [inlineFeedback, SetInlineFeedback, ResetInlineFeedback] = useStateReset({} as ICrudResponse); 
 
   // CRUD FUNCTIONS -----------------------------------
+  // GetEntry ........................................
+  function GetEntry(row?:number) { 
+    return datas[row ?? -1] ?? defaultEntry; 
+  } 
+
   // Create ..........................................
   async function Create(entry:IEntry) { 
-    const [response] = await dao.Create(collection, [entry]); 
+    const response = await inlineCrudMethods.Create(entry); 
     if(response.success) 
       ResetInlineState(); 
     //SetInlineFeedback(response); 
@@ -32,7 +44,7 @@ export function useInlineTable(datas:IEntry[], collection:string) {
 
   // Update ..........................................
   async function Update(entry:IEntry) { 
-    const [response] = await dao.Update(collection, [entry]); 
+    const response = await inlineCrudMethods.Update(entry); 
     if(response.success) 
       ResetInlineState(); 
     //SetInlineFeedback(response); 
@@ -41,17 +53,16 @@ export function useInlineTable(datas:IEntry[], collection:string) {
 
   // Delete .......................................... 
   async function Delete(entry:IEntry) { 
-    const [response] = await dao.Delete(collection, [entry]); 
+    const response = await inlineCrudMethods.Delete(entry); 
     if(response.success) 
       ResetInlineState(); 
     //SetInlineFeedback(response); 
     return response; 
   } 
 
-  return {collection, datas, rows, cols, 
+  return {collection, datas, rows, cols, GetEntry, 
     inlineState, SetInlineState, ResetInlineState, 
     inlineFeedback, SetInlineFeedback, ResetInlineFeedback, 
-    Create, Update, Delete
-  } 
+    Create, Update, Delete} 
 
 }

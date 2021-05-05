@@ -28,7 +28,6 @@ function EqualPredicate(strPredicate:string):(x:any) => boolean {
 
 function StringMatchPredicate(strPredicate:string):(x:any) => boolean { 
   return (x:string) => { 
-    console.log(x); 
     return !!x.match(strPredicate); 
   } 
 }

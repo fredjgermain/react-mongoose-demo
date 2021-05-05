@@ -4,6 +4,8 @@ export { THead, THeadContext, THeads, THeadsContext,
     Cols, ColsContext, Col, ColContext} 
   from './components/table.component'; 
 
+export { Cell, HeadCell, GetDaoCell, GetDaoHeadCell } from './components/inlinecell.component'; 
+
 export { InlineBtn, InlineCreateBtn, InlineUpdateDeleteBtn } 
   from './components/inlinebtn.component'; 
 

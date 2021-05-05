@@ -1,11 +1,11 @@
 
 export type InlineState = {row?:number, mode:string}; 
 export interface IUseInlineTable { 
-  collection: string; 
+  collection:string; 
   datas:IEntry[]; 
-
   rows: number[]; 
   cols: string[]; 
+  GetEntry:(row?: number | undefined) => IEntry; 
 
   inlineState: InlineState; 
   SetInlineState: (newValue: InlineState) => void; 
@@ -23,4 +23,7 @@ export interface IUseInlineTable {
 export interface IUseInlineEntry { 
   entry: IEntry; 
   SetEntry: (newEntry: any) => void; 
+  ResetEntry: () => void; 
+  isSelected:boolean; 
+  isEditing:boolean; 
 }
