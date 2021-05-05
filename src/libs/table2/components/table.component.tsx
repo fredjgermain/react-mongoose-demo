@@ -51,7 +51,7 @@ export function Col({col, children}:React.PropsWithChildren<{col:string}>) {
 } 
 
 
-interface ITable {unicKey:string, datas:any[], cols:string[]} 
+interface ITable {unicKey?:string, datas:any[], cols:string[]} 
 export const TableContext = React.createContext({} as ITable); 
 export function Table({unicKey, datas, cols, children}:React.PropsWithChildren<ITable>) { 
   return <TableContext.Provider key={unicKey} value={{unicKey, datas, cols}}> 
