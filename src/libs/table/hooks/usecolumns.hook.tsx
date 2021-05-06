@@ -1,5 +1,5 @@
 import { useState } from 'react'; 
-import { IUseColumn } from '../_table'; 
+import { IUseColumn } from '../table.type'; 
 
 
 export function useColumn(defaultColumns:string[]):IUseColumn { 

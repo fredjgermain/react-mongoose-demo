@@ -44,6 +44,9 @@ export function HeadCell<T>({sorterFilter}:{sorterFilter:IUseSorter<T> & IUseFil
   const {col, ifield, options} = GetDaoHeadCell(); 
   const {SetFilters, SetSorters} = sorterFilter; 
 
+  if(!SetFilters || !SetSorters)
+    return <span>{ifield.label}</span> 
+
   return <span>{ifield.label} 
     <InputFilter {...{keys:[col], type:'string', SetFilters}} /> 
     <InputSorter {...{keys:[col], type:'string', SetSorters}} /> 
@@ -51,8 +54,6 @@ export function HeadCell<T>({sorterFilter}:{sorterFilter:IUseSorter<T> & IUseFil
 } 
 
 export function Cell() { 
-  const {value, editValue, ifield, options, isEditing, isSelected} = GetDaoCell(); 
-  if(isSelected && isEditing) 
-    return <Editor {...{value, ifield, options, editValue}} /> 
+  const {value, editValue, ifield, options} = GetDaoCell(); 
   return <Reader {...{value, ifield, options}} /> 
 } 

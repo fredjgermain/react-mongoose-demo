@@ -29,9 +29,9 @@ export function Rows({rows, children}:React.PropsWithChildren<{rows:number[]}>) 
 
 export const RowContext = React.createContext({row:0} as {row:number});
 export function Row({row, children}:React.PropsWithChildren<{row:number}>) { 
-  return <tr><RowContext.Provider value={{row}}> 
-    {children} 
-  </RowContext.Provider></tr> 
+  return <RowContext.Provider value={{row}}>
+    <tr>{children}</tr>
+  </RowContext.Provider> 
 }
 
 export const ColsContext = React.createContext({} as {cols:string[]}); 

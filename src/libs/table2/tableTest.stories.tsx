@@ -1,38 +1,41 @@
-import { useContext } from 'react'; 
+import React, { useContext } from 'react'; 
 import { Story } from '@storybook/react'; 
-import { usePager, PagerBtn, PageOfPages } from '../pager/_pager'; 
-
-import { useFilter, useSorter } 
-  from '../_inputs'; 
 
 import { crud } from '../dao/stories/mockcrud'; 
 import { DaoContext, DaoContexter, ICrud } from '../_dao'; 
 
-import { Cell, HeadCell, InlineTableContext, 
-  RowContext, 
-  Rows, Row, Cols, THeads, 
-  InlineEntryContext, useInlineEntry, 
-  useInlineTable, InlineCreateBtn, InlineUpdateDeleteBtn} from './_table'; 
+import { useFilter, useSorter } 
+  from '../_inputs'; 
+import { usePager, PagerBtn, PageOfPages } from '../pager/_pager'; 
+
+import { useTable, TableContext } from './hooktest/useTable.hook'; 
+import { Head, Row } from './componentstest/rowcol.components'; 
 
 
-
+/*
 function InlineRow() { 
-  const context = useInlineEntry(); 
-  const {cols}  = useContext(InlineTableContext); 
-  return <InlineEntryContext.Provider value={context}> 
-    <Cols {...{cols}}> 
-      <Cell/> 
-    </Cols> 
+  //const {row} = useContext(RowContext); 
+  const {cols} = useContext(InlineTableContext); 
+  const inlineEntry = useInlineEntry(); 
+  const {entry} = inlineEntry; 
+
+  return <InlineEntryContext.Provider key={entry._id} value={inlineEntry} > 
+    {cols.map( col => {
+      return <td key={col}><ColContext.Provider value={{col}} >
+        <Cell/> 
+      </ColContext.Provider></td>
+    })}
     <InlineBtn/> 
   </InlineEntryContext.Provider> 
-} 
+}
+*/
 
-
+/*
 function InlineBtn() { 
   const {row} = useContext(RowContext); 
   return <td>{row === -1 ? <InlineCreateBtn />: <InlineUpdateDeleteBtn/>}</td> 
 } 
-
+*/
 
 
 function PrepInlineTable(collection:string) { 
@@ -43,6 +46,8 @@ function PrepInlineTable(collection:string) {
   const paging = usePager(sorters.sortedValues, 10); 
   const datas = paging.page; 
   const defaultEntry = dao.GetDefaultIEntry(collection); 
+
+  const rows = datas.map((d,i) => i); 
   const cols = dao.GetIFields(collection).filter(f => f.label).map(f => f.accessor); 
 
   async function Create(entry:IEntry) { 
@@ -60,36 +65,39 @@ function PrepInlineTable(collection:string) {
     return response; 
   } 
 
-  return {datas, cols, defaultEntry, filters, sorters, paging, Create, Update, Delete} 
+  return {collection, datas, rows, cols, defaultEntry, filters, sorters, paging, Create, Update, Delete} 
 }
 
+
 function TableTest({collection}:{collection:string}) { 
-  const {filters, sorters, paging, ...prepInlineTable} = PrepInlineTable(collection); 
-  const inlineTable = useInlineTable({collection, ...prepInlineTable}); 
-  const {rows, cols} = inlineTable; 
+  const {filters, sorters, paging, rows, cols, ...inlineTable} = PrepInlineTable(collection); 
+  const context = useTable({rows, cols, ...inlineTable}); 
 
-  const key = collection + paging.pageIndex; 
+  
+  return <TableContext.Provider value={context}>
+    Test: {collection}
+    <table>
+      <thead><tr>
+        {cols.map(col => { 
+          return <Head key={col} {...{col}}/> 
+        })} 
+        <th>Btn</th>
+      </tr></thead>
 
-  return <InlineTableContext.Provider key={key} value={inlineTable} > 
-      <table>
-      <thead><tr> 
-        <THeads {...{cols}}><HeadCell {...{sorterFilter:{...filters, ...sorters}}} /></THeads> 
-        <th>btn</th> 
-      </tr></thead> 
-
-      <tbody> 
-        <Rows {...{rows}}><InlineRow/></Rows> 
-        <Row {...{row:-1}}><InlineRow/></Row> 
-      </tbody> 
-    </table> 
-    <PagerBtn {...{paging}} /> 
-  </InlineTableContext.Provider>
+      <tbody>
+        {rows.map(row => { 
+          return <Row key={row} {...{row, cols}}/> 
+        })} 
+      </tbody>
+    </table>
+    <PagerBtn {...{paging}}/>
+    </TableContext.Provider>
 }  
 
 //
 
 export default { 
-  title: 'Table/table2', 
+  title: 'Table/table3', 
   component: TemplateComponent, 
 } 
 
@@ -100,6 +108,7 @@ function TemplateComponent() {
   return <DaoContexter {...{crud:crud as ICrud, accessors}}> 
     <TableTest {...{collection}} /> 
   </DaoContexter> 
+    
 } 
 
 const Template:Story<{}> = (args) => <TemplateComponent {...args} /> 

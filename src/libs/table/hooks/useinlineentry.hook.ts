@@ -7,7 +7,7 @@ export const InlineEntryContext = React.createContext({} as IUseInlineEntry);
 export function useInlineEntry(row?:number):IUseInlineEntry { 
   const dao = useContext(DaoContext); 
   const {collectionAccessor, inlineTableState} = useContext(InlineTableContext); 
-  
+
   const [entry, setEntry] = useState(GetEntry(row)); 
   const SetEntry = (newEntry:any) => { 
     setEntry(newEntry); 

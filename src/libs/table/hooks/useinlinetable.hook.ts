@@ -35,7 +35,8 @@ export function useInlineTable(collectionAccessor:string): IUseInlineTable {
   const defaultCols = dao.GetIFields(collectionAccessor).filter(f => !!f.label).map( f => f.accessor ); 
   const table = useTable(entries, {defaultCols}); 
   const {paging} = table; 
-  
+
+
   // InlineTableState ..................................
   const [inlineTableState, SetInlineTableState, ResetInlineTableState] = 
     useStateReset({row:null, mode:'read'} as IInlineTableState); 
@@ -44,6 +45,7 @@ export function useInlineTable(collectionAccessor:string): IUseInlineTable {
   const IsSelected = () => table.GetRowCol().row === inlineTableState.row; 
   const IsEditing = () => editingModes.includes(inlineTableState.mode); 
 
+  
 
   // FeedBack .............................................
   const [inlineFeedback, SetInlineFeedback, ResetInlineFeedback] = useStateReset({} as ICrudResponse); 

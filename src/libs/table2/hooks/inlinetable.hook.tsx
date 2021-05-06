@@ -1,6 +1,6 @@
-import React from 'react'; 
-import { useStateReset } from '../../_customhooks'; 
-import { InlineState, IUseInlineTable } from '../_table'; 
+import React, { useState } from 'react'; 
+//import { useStateReset } from '../../_customhooks'; 
+import { InlineState, IUseInlineTable } from '../table.types'; 
 
 
 export const InlineTableContext = React.createContext({} as IUseInlineTable) 
@@ -22,10 +22,16 @@ export function useInlineTable({collection, datas, cols, defaultEntry, ...inline
 
   // InlineState .........................................
   const initInlineState = {row:undefined,mode:'read'} as InlineState; 
-  const [inlineState, SetInlineState, ResetInlineState] = useStateReset(initInlineState); 
+  const [inlineState, setInlineState] = useState(initInlineState); 
+  const SetInlineState = (newState:InlineState) => setInlineState(newState); 
+  const ResetInlineState = () => setInlineState(initInlineState); 
 
   // FeedBack .............................................
-  const [inlineFeedback, SetInlineFeedback, ResetInlineFeedback] = useStateReset({} as ICrudResponse); 
+  const [inlineFeedback, setInlineFeedback] = useState({} as ICrudResponse); 
+  const SetInlineFeedback = (newFeedBack:ICrudResponse) => setInlineFeedback(newFeedBack); 
+  const ResetInlineFeedback = () => setInlineFeedback({} as ICrudResponse); 
+  
+  
 
   // CRUD FUNCTIONS -----------------------------------
   // GetEntry ........................................
