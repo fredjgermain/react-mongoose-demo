@@ -1,13 +1,17 @@
 import React, { useContext } from 'react'; 
 import { DaoContext } from '../../_dao'; 
 import { RowContext, ColContext } from './rowcol.components'; 
-import { InlineEntryContext } from '../hooktest/useInlineEntry.hook'; 
-import { InlineTableContext } from '../hooktest/useTable.hook'; 
+import { InlineEntryContext } from '../hook/inlineentry.hook'; 
+import { InlineTableContext } from '../hook/inlinetable.hook'; 
 import { Reader, Editor } from '../../editor_reader/_editor_reader'; 
+
 
 export function Cell() { 
   const {row, col, value, editValue, ifield, options} = GetDaoCell(); 
+  const {isEditing, isSelected} = useContext(InlineEntryContext); 
 
+  if(isEditing && isSelected) 
+    return <Editor {...{value, editValue, ifield, options}} /> 
   return <Reader {...{value, ifield, options}} /> 
 }
 
@@ -15,6 +19,7 @@ export function HeadCell() {
   const {col} = useContext(ColContext); 
   return <span>{col}</span> 
 } 
+
 
 
 export function GetDaoHeadCell() { 
@@ -42,6 +47,7 @@ export function GetDaoCell() {
   const editValue = (newValue:any) => { 
     const copy = {...entry}; 
     copy[col] = newValue; 
+    SetEntry(copy); 
   }; 
 
   return {row, col, value, editValue, ifield, options, isSelected, isEditing}; 

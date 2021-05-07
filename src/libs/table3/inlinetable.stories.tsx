@@ -8,9 +8,9 @@ import { useFilter, useSorter }
   from '../_inputs'; 
 import { usePager, PagerBtn, PageOfPages } from '../pager/_pager'; 
 
-import { useInlineTable, InlineTableContext } from './hooktest/useTable.hook'; 
-import { Head, Row } from './componentstest/rowcol.components'; 
-import { InlineEntry } from './componentstest/inlineentry.component'; 
+import { useInlineTable, InlineTableContext } from './hook/inlinetable.hook'; 
+import { Head, Row } from './components/rowcol.components'; 
+import { InlineEntry } from './components/inlineentry.component'; 
 
 
 /*
@@ -71,8 +71,10 @@ function PrepInlineTable(collection:string) {
 
 
 function TableTest({collection}:{collection:string}) { 
+
   const {filters, sorters, paging, rows, cols, ...inlineTable} = PrepInlineTable(collection); 
   const context = useInlineTable({rows, cols, ...inlineTable}); 
+  const datas = inlineTable.datas; 
 
   
   return <InlineTableContext.Provider value={context}>
@@ -89,6 +91,7 @@ function TableTest({collection}:{collection:string}) {
         {rows.map(row => { 
           return <InlineEntry key={row} {...{row, cols}}/> 
         })} 
+        <InlineEntry {...{row:-1, cols}}/> 
       </tbody>
     </table>
     <PagerBtn {...{paging}}/>
@@ -98,7 +101,7 @@ function TableTest({collection}:{collection:string}) {
 //
 
 export default { 
-  title: 'Table/table21', 
+  title: 'Table/table3', 
   component: TemplateComponent, 
 } 
 

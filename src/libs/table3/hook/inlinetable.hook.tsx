@@ -23,8 +23,7 @@ export interface IUseTable extends propsTable {
   ResetInlineFeedback: () => void; 
 } 
 export const InlineTableContext = React.createContext({} as IUseTable); 
-export function useInlineTable({collection, datas, rows, cols, defaultEntry, Create, Update, Delete}:propsTable) { 
-
+export function useInlineTable({collection, datas, rows, cols, defaultEntry, ...methods}:propsTable) { 
   // InlineState .........................................
   const initInlineState = {row:undefined,mode:'read'} as InlineState; 
   const [inlineState, setInlineState] = useState(initInlineState); 
@@ -36,7 +35,26 @@ export function useInlineTable({collection, datas, rows, cols, defaultEntry, Cre
   const SetInlineFeedback = (newFeedBack:ICrudResponse) => setInlineFeedback(newFeedBack); 
   const ResetInlineFeedback = () => setInlineFeedback({} as ICrudResponse); 
 
-  
+  async function Create(entry:IEntry) {
+    const response = await methods.Create(entry); 
+    if(response.success) 
+      ResetInlineState(); 
+    return response; 
+  }
+
+  async function Update(entry:IEntry) {
+    const response = await methods.Update(entry); 
+    if(response.success) 
+      ResetInlineState(); 
+    return response; 
+  }
+
+  async function Delete(entry:IEntry) { 
+    const response = await methods.Delete(entry); 
+    if(response.success) 
+      ResetInlineState(); 
+    return response; 
+  }
 
   return { 
     collection, datas, rows, cols, defaultEntry, 
