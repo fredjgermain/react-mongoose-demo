@@ -25,7 +25,7 @@ export function THeadSorter({sorters}:{sorters:IUseSorter<IEntry>}) {
   const keys = [col]; 
   const type = 'string'; 
   return <InputSorter {...{keys, type, SetSorters:sorters.SetSorters}} /> 
-}
+} 
 
 export function Cell() { 
   const {row} = useContext(RowContext); 
@@ -35,7 +35,7 @@ export function Cell() {
   return <span> 
     {indexedDatas[row][col]} 
   </span> 
-}
+} 
 
 export function InlineCell() { 
   const {row} = useContext(RowContext); 

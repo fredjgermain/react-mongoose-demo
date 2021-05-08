@@ -12,7 +12,7 @@ import { usePager, PagerBtn, PageOfPages } from '../pager/_pager';
 
 
 export default { 
-  title: 'Table/statictable4', 
+  title: 'Table/statictable', 
   component: TemplateComponent, 
 } 
 

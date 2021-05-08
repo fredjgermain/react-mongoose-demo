@@ -1,28 +1,25 @@
 import { useContext } from 'react'; 
-import { DaoContext } from '../../dao/components/dao.contexter'; 
-import { InlineTableContext } from '../hooks/useinlinetable.hook'; 
+import { InlineTableContext } from './inlinetable.component'; 
 
 
-export function InlineTableFeedback({collectionAccessor}:{collectionAccessor:string}) { 
-  const {inlineFeedback} = useContext(InlineTableContext); 
-  const dao = useContext(DaoContext); 
+export function InlineTableFeedback() { 
+  const {feedback} = useContext(InlineTableContext); 
 
-  if(!inlineFeedback?.data) 
+  if(!feedback?.data) 
     return <div></div> 
 
-  const abbrevField = dao.GetIFields(collectionAccessor).find(f=>f.isAbbrev); 
-  const abbrev = abbrevField ? inlineFeedback.data[abbrevField?.accessor]: ''; 
+  const abbrev = (feedback.data as IEntry)._id; 
   const label:any = {create:'created', update:'updated', delete:'deleted'}; 
-  const actionType = inlineFeedback.actionType as string; 
+  const actionType = feedback.actionType as string; 
 
-  if(inlineFeedback.success) 
+  if(feedback.success) 
     return <div className={'success'}> 
       {abbrev} was successfully {label[actionType]}. 
     </div> 
   return <div className={'failure'}> 
     {abbrev} could not be {label[actionType]}. <br/> 
     <ul className={'warning'}> 
-      {inlineFeedback.err.map( (err,i) => { 
+      {feedback.err.map( (err,i) => { 
         return <li key={i}> 
           {err} 
         </li> 

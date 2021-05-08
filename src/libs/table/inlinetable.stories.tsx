@@ -17,7 +17,7 @@ import { usePager, PagerBtn, PageOfPages } from '../pager/_pager';
 
 
 export default { 
-  title: 'Table/inlinetable4', 
+  title: 'Table/inlinetable', 
   component: TemplateComponent, 
 } 
 
