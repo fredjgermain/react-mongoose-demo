@@ -8,6 +8,7 @@ import { Rows, Row } from './components/rows.components';
 import { Cols } from './components/cols.components'; 
 import { THeadCell, THeadFilter, THeadSorter, Cell, InlineCell } from './components/cell.components'; 
 import { IndexDatasByKey } from './utils/utils'; 
+import { ColumnSelector, useColumnsSelector } from './components/columnselector.component'; 
 
 
 import { useFilter, useSorter } 
@@ -66,14 +67,15 @@ function CrudMethods(SetEntries:React.Dispatch<React.SetStateAction<IEntry[]>>) 
   return {Create, Update, Delete}; 
 }
 
-
-function MockInlineTable({datas, defaultEntry, cols}:{datas:IEntry[], defaultEntry:IEntry, cols:string[]}) { 
+function MockInlineTable({datas, defaultEntry, cols:_Cols}:{datas:IEntry[], defaultEntry:IEntry, cols:string[]}) { 
   const [entries, SetEntries] = useState(datas); 
   const {indexedDatas, rows, filters, sorters, paging} = usePrepTable(entries); 
   const {Create, Update, Delete} = CrudMethods(SetEntries); 
-
+  const Columns = useColumnsSelector(_Cols); 
+  const cols = Columns.columns; 
 
   return <div>
+    <ColumnSelector {...{...Columns, _columns:_Cols}} /> 
     <InlineTable key={paging.pageIndex} {...{indexedDatas, defaultEntry, Create, Delete, Update}}>
       <InlineTableFeedback/>
       <table> 
