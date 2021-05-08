@@ -4,7 +4,6 @@ import { InlineTableContext } from './inlinetable.component';
 
 export function InlineTableFeedback() { 
   const {feedback} = useContext(InlineTableContext); 
-  console.log(feedback); 
 
   if(!feedback?.data) 
     return <div></div> 

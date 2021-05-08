@@ -5,7 +5,6 @@ import { IInlineState, IInlineTable, IUseInlineTable } from '../table.types';
 export function useInlineTable({indexedDatas, defaultEntry, ...props}:IInlineTable) : IUseInlineTable { 
   const [inlineState, SetInlineState, ResetInlineState] = useStateReset({row:'',mode:'read'} as IInlineState); 
   const [feedback, SetFeedback, ResetFeedback] = useStateReset({} as ICrudResponse); 
-  console.log(feedback); 
 
   function GetEntry(row?:string) { 
     return row ? indexedDatas[row] ?? defaultEntry: defaultEntry; 

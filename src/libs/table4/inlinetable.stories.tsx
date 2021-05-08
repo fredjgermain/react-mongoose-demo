@@ -76,7 +76,7 @@ function MockInlineTable({datas, defaultEntry, cols:_Cols}:{datas:IEntry[], defa
 
   return <div>
     <ColumnSelector {...{...Columns, _columns:_Cols}} /> 
-    <InlineTable key={paging.pageIndex} {...{indexedDatas, defaultEntry, Create, Delete, Update}}>
+    <InlineTable {...{indexedDatas, defaultEntry, Create, Delete, Update}}>
       <InlineTableFeedback/>
       <table> 
       <thead> 

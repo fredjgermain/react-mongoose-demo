@@ -16,8 +16,6 @@ export function ColumnSelector({_columns, columns, SetColumns, ResetColumns}:{
   const options:IOption[] = _columns.map( col => { 
     return {label:col, value:col} as IOption; 
   }); 
-
-  console.log(_columns); 
   
   return <InputSelect {...{value:columns, onSetValue:SetColumns, options, multiple:true}} /> 
 } 
