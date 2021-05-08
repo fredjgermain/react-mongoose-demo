@@ -7,8 +7,7 @@ import { THeadCell, Cell } from './components/cell.components';
 import { IndexDatasByKey } from './utils/utils'; 
 
 
-import { useFilter, useSorter } 
-  from '../_inputs'; 
+import { useFilter, useSorter } from '../_inputs'; 
 import { usePager, PagerBtn, PageOfPages } from '../pager/_pager'; 
 
 
@@ -18,7 +17,7 @@ export default {
 } 
 
 
-function usePrepTable<T extends IEntry>(entries:T[]) { 
+function usePrepTable(entries:IEntry[]) { 
   const filters = useFilter(entries); 
   const sorters = useSorter(filters.matchValues); 
   const paging = usePager(sorters.sortedValues, 10); 
@@ -29,12 +28,12 @@ function usePrepTable<T extends IEntry>(entries:T[]) {
 } 
 
 
-function MockInlineTable<T extends IEntry>({datas, cols}:{datas:T[], cols:string[]}) { 
+function MockInlineTable({datas, cols}:{datas:IEntry[], cols:string[]}) { 
   const {indexedDatas, rows, filters, sorters, paging} = usePrepTable(datas); 
 
 
-  return <div>
-    <Table {...{indexedDatas}}> 
+  return <div> 
+    <Table {...{indexedDatas}}><table>
       <thead><tr> 
         <THeads {...{cols}} ><THeadCell/></THeads> 
       </tr></thead> 
@@ -45,7 +44,7 @@ function MockInlineTable<T extends IEntry>({datas, cols}:{datas:T[], cols:string
         </Cols> 
       </Rows> 
       </tbody> 
-    </Table> 
+    </table></Table> 
     <PagerBtn {...{paging}} /> 
   </div>
 } 
@@ -53,9 +52,6 @@ function MockInlineTable<T extends IEntry>({datas, cols}:{datas:T[], cols:string
 
 function TemplateComponent({datas, cols, defaultItem}:{datas:Item[], cols:string[], defaultItem:Item}) { 
   return <div>
-    {datas.map( d => { 
-      return <div key={d._id}>{JSON.stringify(d)}</div> 
-    })} 
     <MockInlineTable  {...{datas, cols}} /> 
   </div> 
 } 

@@ -1,12 +1,14 @@
 import React, { useState } from 'react'; 
 import { Story } from '@storybook/react'; 
 import { InlineTable } from './components/inlinetable.component'; 
+import { InlineEntry } from './components/inlineentry.components'; 
+import { InlineTableFeedback } from './components/inlinetablefeedback.component'; 
 import { THeads } from './components/thead.components'; 
-import { Rows } from './components/rows.components'; 
+import { Rows, Row } from './components/rows.components'; 
 import { Cols } from './components/cols.components'; 
-import { THeadCell, Cell } from './components/cell.components'; 
-import { useInlineTable } from './hooks/inlinetable.hook'; 
+import { THeadCell, THeadFilter, THeadSorter, Cell, InlineCell } from './components/cell.components'; 
 import { IndexDatasByKey } from './utils/utils'; 
+
 
 import { useFilter, useSorter } 
   from '../_inputs'; 
@@ -55,9 +57,10 @@ function CrudMethods(SetEntries:React.Dispatch<React.SetStateAction<IEntry[]>>) 
     SetEntries( prev => { 
       const copy = [...prev]; 
       const index = copy.findIndex( e => e._id === entry._id ); 
-      copy.splice(index); 
+      copy.splice(index, 1); 
       return copy; 
     }) 
+    console.log(response); 
     return response; 
   } 
   return {Create, Update, Delete}; 
@@ -71,28 +74,43 @@ function MockInlineTable({datas, defaultEntry, cols}:{datas:IEntry[], defaultEnt
 
 
   return <div>
-    <InlineTable {...{indexedDatas, defaultEntry, Create, Delete, Update}}> 
-      <thead><tr> 
-        <THeads {...{cols}} ><THeadCell/></THeads> 
-      </tr></thead> 
+    <InlineTable key={paging.pageIndex} {...{indexedDatas, defaultEntry, Create, Delete, Update}}>
+      <InlineTableFeedback/>
+      <table> 
+      <thead> 
+        <tr><THeads {...{cols}} > 
+          <THeadCell/> 
+          <THeadSorter {...{sorters}} /> 
+          <br/> 
+          <THeadFilter {...{filters}} /> 
+        </THeads><th>Btn</th></tr> 
+      </thead> 
+
       <tbody> 
       <Rows {...{rows}}> 
-        <Cols {...{cols}} > 
-          <Cell/> 
-        </Cols> 
+        <InlineEntry> 
+          <Cols {...{cols}} > 
+            <InlineCell/> 
+          </Cols> 
+        </InlineEntry> 
       </Rows> 
+      <Row {...{row:'create'}}> 
+        <InlineEntry> 
+          <Cols {...{cols}} > 
+            <InlineCell/> 
+          </Cols> 
+        </InlineEntry> 
+      </Row>
       </tbody> 
-    </InlineTable> 
+
+    </table></InlineTable> 
     <PagerBtn {...{paging}} /> 
   </div>
 } 
 
 
 function TemplateComponent({datas, cols, defaultEntry}:{datas:Item[], cols:string[], defaultEntry:Item}) { 
-  return <div>
-    {datas.map( d => { 
-      return <div key={d._id}>{JSON.stringify(d)}</div> 
-    })} 
+  return <div> 
     <MockInlineTable  {...{datas, defaultEntry, cols}} /> 
   </div> 
 } 

@@ -12,7 +12,7 @@ import { SorterPredicate } from './inputsorter.utils';
  * @param SetSorters
  * @returns 
  */
-export function InputSorter({keys, type, SetSorters}:IInputSorter) { 
+export function InputSorter<T>({keys, type, SetSorters}:IInputSorter<T>) { 
   const Key = keys.reduce((prev, current) => prev+current); 
   const [sorterValue, setSorterValue] = useState(0); 
 
@@ -23,10 +23,11 @@ export function InputSorter({keys, type, SetSorters}:IInputSorter) {
     SetSorters(Key, newSorter); 
   }
 
-  return <span> 
-    <button onClick={() => Sort(1)} >🔺 {sorterValue === 1 && '*'}</button> 
-    <button onClick={() => Sort(-1)} >🔻 {sorterValue === -1 && '*'}</button> 
-  </span> 
+  if(sorterValue === 1) 
+    return <button onClick={() => Sort(-1)}>🔺</button> 
+  if(sorterValue === -1) 
+    return <button onClick={() => Sort(0)}>🔻</button> 
+  return <button onClick={() => Sort(1)}>--</button> 
 }
 
 
