@@ -4,7 +4,7 @@ import { Story } from '@storybook/react';
 import { InlineTableContext, useInlineTable, InlineEntry, InlineEntryContext,
   InlineCell,
   Cols, ColContext, Rows, Row, 
-  THeads, THeadCell, THeadFilter, THeadSorter, 
+  THeads, THeadCell, THeadFilter, THeadSorter, THeadContext, 
   InlineTableFeedback, 
   ColumnSelector, useColumnsSelector, IndexDatasByKey
  } from './_table'; 
@@ -76,10 +76,17 @@ function GetCellArgs() {
     copy[col] = newValue; 
     SetEntry(copy); 
   } 
-  const ifield:IField = {accessor:col, defaultValue:'', label:'', type:'string'} 
+  const ifield:IField = {accessor:col, defaultValue:'', label:col, type:'string'} 
   const options = [] as IOption[]; 
   return {value, editValue, ifield, options} 
 }
+
+function GetHeadArgs() {
+  const {col} = useContext(THeadContext); 
+  const ifield:IField = {accessor:col, defaultValue:'', label:col, type:'string'} 
+  return {ifield}; 
+}
+
 
 function MockInlineTable({datas, defaultEntry, cols:_Cols}:{datas:IEntry[], defaultEntry:IEntry, cols:string[]}) { 
   const [entries, SetEntries] = useState(datas); 
@@ -96,7 +103,7 @@ function MockInlineTable({datas, defaultEntry, cols:_Cols}:{datas:IEntry[], defa
       <table> 
         <thead> 
           <tr><THeads {...{cols}} > 
-            <THeadCell/> 
+            <THeadCell {...{GetHeadArgs}} /> 
             <THeadSorter {...{sorters}} /> 
             <br/> 
             <THeadFilter {...{filters}} /> 

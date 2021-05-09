@@ -3,7 +3,7 @@ import { Story } from '@storybook/react';
 
 import { Cell,
   Cols, ColContext, Rows, RowContext, 
-  THeads, THeadCell, IndexDatasByKey 
+  THeads, THeadCell, THeadContext, IndexDatasByKey 
  } from './_table'; 
 
 
@@ -46,11 +46,17 @@ function MockInlineTable({datas, cols}:{datas:IEntry[], cols:string[]}) {
     return {value, editValue, ifield, options} 
   }
 
+  const GetHeadArgs = () => { 
+    const {col} = useContext(THeadContext); 
+    const ifield:IField = {accessor:col, defaultValue:'', label:col, type:'string'} 
+    return {ifield}; 
+  }
+
 
   return <div> 
     <table> 
       <thead><tr> 
-        <THeads {...{cols}} ><THeadCell/></THeads> 
+        <THeads {...{cols}} ><THeadCell {...{GetHeadArgs}}/></THeads> 
       </tr></thead> 
       <tbody> 
       <Rows {...{rows}}> 

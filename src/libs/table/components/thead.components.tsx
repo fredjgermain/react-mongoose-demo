@@ -18,18 +18,18 @@ export function THead({col, children}:React.PropsWithChildren<{col:string}>) {
   </THeadContext.Provider></th> 
 }
 
-
-export function THeadCell() { 
-  const {col} = useContext(THeadContext); 
-  return <span>{col}</span> 
-}
+type IGetHeadArgs = () => { ifield: IField; } 
+export function THeadCell({...props}:{GetHeadArgs:IGetHeadArgs}) { 
+  const {ifield} = props.GetHeadArgs(); 
+  return <span>{ifield.label}</span> 
+} 
 
 export function THeadFilter({filters}:{filters:IUseFilter<IEntry>}) { 
   const {col} = useContext(THeadContext); 
   const keys = [col]; 
   const type = 'string'; 
   return <InputFilter {...{keys, type, SetFilters:filters.SetFilters}} /> 
-}
+} 
 
 export function THeadSorter({sorters}:{sorters:IUseSorter<IEntry>}) { 
   const {col} = useContext(THeadContext); 

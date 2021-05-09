@@ -4,7 +4,7 @@ import { Story } from '@storybook/react';
 import { InlineTableContext, useInlineTable, InlineEntry, InlineEntryContext,
   InlineCell,
   Cols, ColContext, Rows, Row, 
-  THeads, THeadCell, THeadFilter, THeadSorter, 
+  THeads, THeadCell, THeadFilter, THeadSorter, THeadContext, 
   InlineTableFeedback, 
   ColumnSelector, useColumnsSelector, IndexDatasByKey
  } from './_table'; 
@@ -62,8 +62,6 @@ function CrudMethods() {
   return {Create, Update, Delete}; 
 }
 
-
-
 function GetCellArgs() { 
   const dao = useContext(DaoContext); 
   const {col} = useContext(ColContext); 
@@ -80,7 +78,16 @@ function GetCellArgs() {
   const options = dao.GetIOptions(ifield); 
 
   return {value, editValue, ifield, options} 
-} 
+}
+
+function GetHeadArgs() {
+  const dao = useContext(DaoContext); 
+  const {col} = useContext(THeadContext); 
+  const {collection} = useContext(CollectionContext); 
+  const [ifield] = dao.GetIFields(collection, [col]); 
+  return {ifield}; 
+}
+
 
 
 const CollectionContext = React.createContext({} as {collection:string}); 
@@ -98,7 +105,7 @@ function DaoInlineTable() {
       <table> 
       <thead> 
         <tr><THeads {...{cols}} > 
-          <THeadCell/> 
+          <THeadCell {...{GetHeadArgs}}/> 
           <THeadSorter {...{sorters}} /> 
           <br/> 
           <THeadFilter {...{filters}} /> 
