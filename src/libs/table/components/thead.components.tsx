@@ -1,4 +1,6 @@
-import React from 'react'; 
+import React, { useContext } from 'react'; 
+import { InputFilter, InputSorter, IUseFilter, IUseSorter } from '../../_inputs'; 
+
 
 export const THeadsContext = React.createContext({} as {cols:string[]}) 
 export function THeads({cols, children}:React.PropsWithChildren<{cols:string[]}>) { 
@@ -15,3 +17,23 @@ export function THead({col, children}:React.PropsWithChildren<{col:string}>) {
     {children} 
   </THeadContext.Provider></th> 
 }
+
+
+export function THeadCell() { 
+  const {col} = useContext(THeadContext); 
+  return <span>{col}</span> 
+}
+
+export function THeadFilter({filters}:{filters:IUseFilter<IEntry>}) { 
+  const {col} = useContext(THeadContext); 
+  const keys = [col]; 
+  const type = 'string'; 
+  return <InputFilter {...{keys, type, SetFilters:filters.SetFilters}} /> 
+}
+
+export function THeadSorter({sorters}:{sorters:IUseSorter<IEntry>}) { 
+  const {col} = useContext(THeadContext); 
+  const keys = [col]; 
+  const type = 'string'; 
+  return <InputSorter {...{keys, type, SetSorters:sorters.SetSorters}} /> 
+} 

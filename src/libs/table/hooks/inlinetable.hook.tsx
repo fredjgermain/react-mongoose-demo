@@ -1,7 +1,9 @@
+import React from 'react'; 
 import { useStateReset } from '../../_customhooks'; 
 import { IInlineState, IInlineTable, IUseInlineTable } from '../table.types'; 
 
 
+export const InlineTableContext = React.createContext({} as IUseInlineTable) 
 export function useInlineTable({indexedDatas, defaultEntry, ...props}:IInlineTable) : IUseInlineTable { 
   const [inlineState, SetInlineState, ResetInlineState] = useStateReset({row:'',mode:'read'} as IInlineState); 
   const [feedback, SetFeedback, ResetFeedback] = useStateReset({} as ICrudResponse); 

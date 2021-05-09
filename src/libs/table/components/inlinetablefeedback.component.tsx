@@ -1,5 +1,5 @@
 import { useContext } from 'react'; 
-import { InlineTableContext } from './inlinetable.component'; 
+import { InlineTableContext } from '../hooks/inlinetable.hook'; 
 
 
 export function InlineTableFeedback() { 

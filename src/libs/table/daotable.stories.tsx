@@ -1,15 +1,14 @@
-import React, { useState, useContext } from 'react'; 
+import React, { useContext } from 'react'; 
 import { Story } from '@storybook/react'; 
-import { InlineTable } from './components/inlinetable.component'; 
-import { InlineEntry, InlineEntryContext } from './components/inlineentry.components'; 
-import { InlineTableFeedback } from './components/inlinetablefeedback.component'; 
-import { THeads } from './components/thead.components'; 
-import { Rows, Row } from './components/rows.components'; 
-import { ColContext, Cols } from './components/cols.components'; 
-import { THeadCell, THeadFilter, THeadSorter, Cell, InlineCell } from './components/cell.components'; 
-import { IndexDatasByKey } from './utils/utils'; 
-import { ColumnSelector, useColumnsSelector } from './components/columnselector.component'; 
-import { Reader, Editor } from '../editor_reader/_editor_reader';
+
+import { InlineTableContext, useInlineTable, InlineEntry, InlineEntryContext,
+  InlineCell,
+  Cols, ColContext, Rows, Row, 
+  THeads, THeadCell, THeadFilter, THeadSorter, 
+  InlineTableFeedback, 
+  ColumnSelector, useColumnsSelector, IndexDatasByKey
+ } from './_table'; 
+
 
 import { useFilter, useSorter } 
   from '../_inputs'; 
@@ -64,12 +63,6 @@ function CrudMethods() {
 }
 
 
-type IGetCellArgs = () => { 
-  value: any; 
-  editValue: (newValue: any) => void; 
-  ifield: IField; 
-  options: IOption[]; 
-} 
 
 function GetCellArgs() { 
   const dao = useContext(DaoContext); 
@@ -89,18 +82,6 @@ function GetCellArgs() {
   return {value, editValue, ifield, options} 
 } 
 
-function DaoCell({...props}:{GetCellArgs:IGetCellArgs}) { 
-  const {value, editValue, ifield, options} = props.GetCellArgs(); 
-  const {isEditing, isSelected} = useContext(InlineEntryContext); 
-
-  return <span>
-    {isEditing && isSelected ? 
-      <Editor {...{value, editValue, ifield, options}} />: 
-      <Reader {...{value, ifield, options}} /> 
-    } 
-  </span> 
-} 
-
 
 const CollectionContext = React.createContext({} as {collection:string}); 
 function DaoInlineTable() { 
@@ -108,11 +89,12 @@ function DaoInlineTable() {
   const {Create, Update, Delete} = CrudMethods(); 
   const Columns = useColumnsSelector(_cols); 
   const cols = Columns.columns; 
+  const useinlinetable = useInlineTable({indexedDatas, defaultEntry, Create, Update, Delete}); 
 
   return <div>
     <ColumnSelector {...{...Columns, _columns:_cols}} /> 
-    <InlineTable {...{indexedDatas, defaultEntry, Create, Delete, Update}}>
-      <InlineTableFeedback/>
+    <InlineTableContext.Provider value={useinlinetable}> 
+      <InlineTableFeedback/>  
       <table> 
       <thead> 
         <tr><THeads {...{cols}} > 
@@ -127,20 +109,20 @@ function DaoInlineTable() {
       <Rows {...{rows}}> 
         <InlineEntry> 
           <Cols {...{cols}} > 
-            <DaoCell {...{GetCellArgs}} /> 
+            <InlineCell {...{GetCellArgs}} /> 
           </Cols> 
         </InlineEntry> 
       </Rows> 
       <Row {...{row:'create'}}> 
         <InlineEntry> 
           <Cols {...{cols}} > 
-            <DaoCell {...{GetCellArgs}} /> 
+            <InlineCell {...{GetCellArgs}} /> 
           </Cols> 
         </InlineEntry> 
       </Row>
       </tbody> 
-
-    </table></InlineTable> 
+      </table>
+    </InlineTableContext.Provider>
     <PagerBtn {...{paging}} /> 
   </div> 
 } 

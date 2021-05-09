@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from 'react'; 
 //import { useStateReset } from '../../_customhooks'; 
-import { InlineTableContext } from '../components/inlinetable.component'; 
+import { InlineTableContext } from './inlinetable.hook'; 
 import { RowContext } from '../components/rows.components'; 
 import { IUseInlineEntry } from '../table.types'; 
 

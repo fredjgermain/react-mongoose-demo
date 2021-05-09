@@ -1,7 +1,4 @@
-export { Table, TableContext } 
-  from './components/table.components'; 
-
-export { THeads, THeadsContext, THead, THeadContext } 
+export { THeads, THeadsContext, THead, THeadContext, THeadCell, THeadFilter, THeadSorter } 
   from './components/thead.components'; 
 
 export { Rows, RowsContext, Row, RowContext } 
@@ -10,14 +7,11 @@ export { Rows, RowsContext, Row, RowContext }
 export { Cols, ColsContext, Col, ColContext } 
   from './components/cols.components'; 
 
-export { Cell, InlineCell, THeadCell, THeadFilter, THeadSorter } 
+export { Cell, InlineCell } 
   from './components/cell.components'; 
 
 export { ColumnSelector, useColumnsSelector } 
   from './components/columnselector.component'; 
-
-export { InlineTable, InlineTableContext } 
-  from './components/inlinetable.component'; 
 
 export { InlineEntry, InlineEntryContext } 
   from './components/inlineentry.components'; 
@@ -28,3 +22,11 @@ export { InlineBtn, InlineCreateBtn, InlineUpdateDeleteBtn }
 export { InlineTableFeedback } 
   from './components/inlinetablefeedback.component'; 
 
+export { useInlineEntry } 
+  from './hooks/inlineentry.hook'; 
+
+export { InlineTableContext, useInlineTable } 
+  from './hooks/inlinetable.hook'; 
+
+export { IndexDatasByKey } from './utils/utils'; 
+export type { Indexed } from './utils/utils'; 

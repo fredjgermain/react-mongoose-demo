@@ -1,10 +1,10 @@
+import React, { useContext } from 'react'; 
 import { Story } from '@storybook/react'; 
-import { Table } from './components/table.components'; 
-import { THeads } from './components/thead.components'; 
-import { Rows } from './components/rows.components'; 
-import { Cols } from './components/cols.components'; 
-import { THeadCell, Cell } from './components/cell.components'; 
-import { IndexDatasByKey } from './utils/utils'; 
+
+import { Cell,
+  Cols, ColContext, Rows, RowContext, 
+  THeads, THeadCell, IndexDatasByKey 
+ } from './_table'; 
 
 
 import { useFilter, useSorter } from '../_inputs'; 
@@ -28,30 +28,45 @@ function usePrepTable(entries:IEntry[]) {
 } 
 
 
+
+
 function MockInlineTable({datas, cols}:{datas:IEntry[], cols:string[]}) { 
   const {indexedDatas, rows, filters, sorters, paging} = usePrepTable(datas); 
 
+  const GetCellArgs = () => { 
+    const {row} = useContext(RowContext); 
+    const {col} = useContext(ColContext); 
+    const entry = indexedDatas[row]; 
+
+    const value = entry ? entry[col]: ''; 
+    const editValue = (newValue:any) => {return;}
+
+    const ifield:IField = {accessor:col, defaultValue:'', label:'', type:'string'} 
+    const options = [] as IOption[]; 
+    return {value, editValue, ifield, options} 
+  }
+
 
   return <div> 
-    <Table {...{indexedDatas}}><table>
+    <table> 
       <thead><tr> 
         <THeads {...{cols}} ><THeadCell/></THeads> 
       </tr></thead> 
       <tbody> 
       <Rows {...{rows}}> 
         <Cols {...{cols}} > 
-          <Cell/> 
+          <Cell {...{GetCellArgs}} /> 
         </Cols> 
       </Rows> 
       </tbody> 
-    </table></Table> 
+    </table> 
     <PagerBtn {...{paging}} /> 
-  </div>
+  </div> 
 } 
 
 
 function TemplateComponent({datas, cols, defaultItem}:{datas:Item[], cols:string[], defaultItem:Item}) { 
-  return <div>
+  return <div> 
     <MockInlineTable  {...{datas, cols}} /> 
   </div> 
 } 

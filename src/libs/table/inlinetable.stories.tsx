@@ -1,15 +1,13 @@
-import React, { useState } from 'react'; 
+import React, { useContext, useState } from 'react'; 
 import { Story } from '@storybook/react'; 
-import { InlineTable } from './components/inlinetable.component'; 
-import { InlineEntry } from './components/inlineentry.components'; 
-import { InlineTableFeedback } from './components/inlinetablefeedback.component'; 
-import { THeads } from './components/thead.components'; 
-import { Rows, Row } from './components/rows.components'; 
-import { Cols } from './components/cols.components'; 
-import { THeadCell, THeadFilter, THeadSorter, Cell, InlineCell } from './components/cell.components'; 
-import { IndexDatasByKey } from './utils/utils'; 
-import { ColumnSelector, useColumnsSelector } from './components/columnselector.component'; 
 
+import { InlineTableContext, useInlineTable, InlineEntry, InlineEntryContext,
+  InlineCell,
+  Cols, ColContext, Rows, Row, 
+  THeads, THeadCell, THeadFilter, THeadSorter, 
+  InlineTableFeedback, 
+  ColumnSelector, useColumnsSelector, IndexDatasByKey
+ } from './_table'; 
 
 import { useFilter, useSorter } 
   from '../_inputs'; 
@@ -67,45 +65,62 @@ function CrudMethods(SetEntries:React.Dispatch<React.SetStateAction<IEntry[]>>) 
   return {Create, Update, Delete}; 
 }
 
+
+function GetCellArgs() {
+  const {col} = useContext(ColContext); 
+  const {entry, SetEntry} = useContext(InlineEntryContext); 
+
+  const value = entry[col]; 
+  const editValue = (newValue:any) => { 
+    const copy = {...entry}; 
+    copy[col] = newValue; 
+    SetEntry(copy); 
+  } 
+  const ifield:IField = {accessor:col, defaultValue:'', label:'', type:'string'} 
+  const options = [] as IOption[]; 
+  return {value, editValue, ifield, options} 
+}
+
 function MockInlineTable({datas, defaultEntry, cols:_Cols}:{datas:IEntry[], defaultEntry:IEntry, cols:string[]}) { 
   const [entries, SetEntries] = useState(datas); 
   const {indexedDatas, rows, filters, sorters, paging} = usePrepTable(entries); 
   const {Create, Update, Delete} = CrudMethods(SetEntries); 
   const Columns = useColumnsSelector(_Cols); 
   const cols = Columns.columns; 
+  const useinlinetable = useInlineTable({indexedDatas, defaultEntry, Create, Update, Delete}); 
 
   return <div>
     <ColumnSelector {...{...Columns, _columns:_Cols}} /> 
-    <InlineTable {...{indexedDatas, defaultEntry, Create, Delete, Update}}>
-      <InlineTableFeedback/>
+    <InlineTableContext.Provider value={useinlinetable}> 
+      <InlineTableFeedback/> 
       <table> 
-      <thead> 
-        <tr><THeads {...{cols}} > 
-          <THeadCell/> 
-          <THeadSorter {...{sorters}} /> 
-          <br/> 
-          <THeadFilter {...{filters}} /> 
-        </THeads><th>Btn</th></tr> 
-      </thead> 
+        <thead> 
+          <tr><THeads {...{cols}} > 
+            <THeadCell/> 
+            <THeadSorter {...{sorters}} /> 
+            <br/> 
+            <THeadFilter {...{filters}} /> 
+          </THeads><th>Btn</th></tr> 
+        </thead> 
 
-      <tbody> 
-      <Rows {...{rows}}> 
-        <InlineEntry> 
-          <Cols {...{cols}} > 
-            <InlineCell/> 
-          </Cols> 
-        </InlineEntry> 
-      </Rows> 
-      <Row {...{row:'create'}}> 
-        <InlineEntry> 
-          <Cols {...{cols}} > 
-            <InlineCell/> 
-          </Cols> 
-        </InlineEntry> 
-      </Row>
-      </tbody> 
-
-    </table></InlineTable> 
+        <tbody> 
+        <Rows {...{rows}}> 
+          <InlineEntry> 
+            <Cols {...{cols}} > 
+              <InlineCell {...{GetCellArgs}} /> 
+            </Cols> 
+          </InlineEntry> 
+        </Rows> 
+        <Row {...{row:'create'}}> 
+          <InlineEntry> 
+            <Cols {...{cols}} > 
+              <InlineCell {...{GetCellArgs}}/> 
+            </Cols> 
+          </InlineEntry> 
+        </Row>
+        </tbody> 
+      </table>
+    </InlineTableContext.Provider>
     <PagerBtn {...{paging}} /> 
   </div>
 } 
