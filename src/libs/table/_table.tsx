@@ -19,9 +19,6 @@ export { InlineEntry, InlineEntryContext }
 export { InlineBtn, InlineCreateBtn, InlineUpdateDeleteBtn } 
   from './components/inlinebtn.component'; 
 
-export { InlineTableFeedback } 
-  from './components/inlinetablefeedback.component'; 
-
 export { useInlineEntry } 
   from './hooks/inlineentry.hook'; 
 

@@ -1,21 +1,22 @@
 import React, { useContext } from 'react'; 
 import { Story } from '@storybook/react'; 
-
-import { InlineTableContext, useInlineTable, InlineEntry, InlineEntryContext,
-  InlineCell,
-  Cols, ColContext, Rows, Row, 
-  THeads, THeadCell, THeadFilter, THeadSorter, THeadContext, 
-  InlineTableFeedback, 
-  ColumnSelector, useColumnsSelector, IndexDatasByKey
- } from './_table'; 
-
+import { useStateReset } from '../../_customhooks'; 
 
 import { useFilter, useSorter } 
-  from '../_inputs'; 
-import { usePager, PagerBtn, PageOfPages } from '../pager/_pager'; 
+  from '../../_inputs'; 
+import { usePager, PagerBtn, PageOfPages } from '../../pager/_pager'; 
 
-import { crud } from '../dao/stories/mockcrud'; 
-import { DaoContext, DaoContexter, ICrud } from '../_dao'; 
+import { crud } from '../../dao/stories/mockcrud'; 
+import { DaoContext, DaoContexter, ICrud } from '../../_dao'; 
+
+import { InlineTableContext, useInlineTable, InlineEntry, InlineEntryContext,
+  InlineCell, 
+  Cols, ColContext, Rows, Row, 
+  THeads, THeadCell, THeadFilter, THeadSorter, THeadContext, 
+  ColumnSelector, useColumnsSelector, IndexDatasByKey
+ } from '../_table'; 
+
+import { InlineTableFeedback } from './inlinetablefeedback.component'; 
 
 
 export default { 
@@ -40,22 +41,25 @@ function usePrepTable() {
   return {indexedDatas, defaultEntry, rows, cols, filters, sorters, paging}; 
 } 
 
-function CrudMethods() { 
+function CrudMethods(SetFeedback: (newValue: ICrudResponse) => void) { 
   const dao = useContext(DaoContext); 
   const {collection} = useContext(CollectionContext); 
 
   async function Create(entry:IEntry) { 
     const [response] = await dao.Create(collection, [entry]); 
+    SetFeedback(response); 
     return response; 
   } 
 
   async function Update(entry:IEntry) { 
     const [response] = await dao.Update(collection, [entry]); 
+    SetFeedback(response); 
     return response; 
   } 
 
   async function Delete(entry:IEntry) { 
     const [response] = await dao.Delete(collection, [entry]); 
+    SetFeedback(response); 
     return response; 
   } 
 
@@ -67,7 +71,7 @@ function GetCellArgs() {
   const {col} = useContext(ColContext); 
   const {collection} = useContext(CollectionContext); 
   const {entry, SetEntry} = useContext(InlineEntryContext); 
-
+  
   const value = entry[col]; 
   const editValue = (newValue:any) => { 
     const copy = {...entry}; 
@@ -92,16 +96,19 @@ function GetHeadArgs() {
 
 const CollectionContext = React.createContext({} as {collection:string}); 
 function DaoInlineTable() { 
+  const {collection} = useContext(CollectionContext); 
   const {indexedDatas, defaultEntry, rows, cols:_cols, filters, sorters, paging} = usePrepTable(); 
-  const {Create, Update, Delete} = CrudMethods(); 
+  const [feedback, SetFeedback, ResetFeedback] = useStateReset({} as ICrudResponse); 
+  const {Create, Update, Delete} = CrudMethods(SetFeedback); 
   const Columns = useColumnsSelector(_cols); 
   const cols = Columns.columns; 
+
   const useinlinetable = useInlineTable({indexedDatas, defaultEntry, Create, Update, Delete}); 
 
   return <div>
     <ColumnSelector {...{...Columns, _columns:_cols}} /> 
     <InlineTableContext.Provider value={useinlinetable}> 
-      <InlineTableFeedback/>  
+      <InlineTableFeedback {...{collection, feedback}}/>  
       <table> 
       <thead> 
         <tr><THeads {...{cols}} > 

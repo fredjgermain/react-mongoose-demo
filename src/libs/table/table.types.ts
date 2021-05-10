@@ -25,8 +25,4 @@ export interface IUseInlineTable extends IInlineTable {
   inlineState: IInlineState; 
   SetInlineState: (newValue: IInlineState) => void; 
   ResetInlineState: () => void; 
-
-  feedback: ICrudResponse; 
-  SetFeedback: (newValue: ICrudResponse) => void; 
-  ResetFeedback: () => void; 
 }

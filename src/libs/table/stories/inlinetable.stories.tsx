@@ -1,17 +1,19 @@
-import React, { useContext, useState } from 'react'; 
+import React, { useState, useContext } from 'react'; 
 import { Story } from '@storybook/react'; 
 
+import { useFilter, useSorter } 
+  from '../../_inputs'; 
+import { usePager, PagerBtn, PageOfPages } from '../../pager/_pager'; 
+
 import { InlineTableContext, useInlineTable, InlineEntry, InlineEntryContext,
-  InlineCell,
+  InlineCell, 
   Cols, ColContext, Rows, Row, 
   THeads, THeadCell, THeadFilter, THeadSorter, THeadContext, 
-  InlineTableFeedback, 
   ColumnSelector, useColumnsSelector, IndexDatasByKey
- } from './_table'; 
+ } from '../_table'; 
 
-import { useFilter, useSorter } 
-  from '../_inputs'; 
-import { usePager, PagerBtn, PageOfPages } from '../pager/_pager'; 
+import { InlineTableFeedback } from './inlinetablefeedback.component'; 
+
 
 
 export default { 
@@ -99,7 +101,6 @@ function MockInlineTable({datas, defaultEntry, cols:_Cols}:{datas:IEntry[], defa
   return <div>
     <ColumnSelector {...{...Columns, _columns:_Cols}} /> 
     <InlineTableContext.Provider value={useinlinetable}> 
-      <InlineTableFeedback/> 
       <table> 
         <thead> 
           <tr><THeads {...{cols}} > 

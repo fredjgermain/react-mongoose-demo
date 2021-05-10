@@ -6,7 +6,6 @@ import { IInlineState, IInlineTable, IUseInlineTable } from '../table.types';
 export const InlineTableContext = React.createContext({} as IUseInlineTable) 
 export function useInlineTable({indexedDatas, defaultEntry, ...props}:IInlineTable) : IUseInlineTable { 
   const [inlineState, SetInlineState, ResetInlineState] = useStateReset({row:'',mode:'read'} as IInlineState); 
-  const [feedback, SetFeedback, ResetFeedback] = useStateReset({} as ICrudResponse); 
 
   function GetEntry(row?:string) { 
     return row ? indexedDatas[row] ?? defaultEntry: defaultEntry; 
@@ -16,7 +15,6 @@ export function useInlineTable({indexedDatas, defaultEntry, ...props}:IInlineTab
     const response = await props.Create(entry); 
     if(response.success) 
       ResetInlineState(); 
-    SetFeedback(response); 
     return response; 
   } 
 
@@ -24,7 +22,6 @@ export function useInlineTable({indexedDatas, defaultEntry, ...props}:IInlineTab
     const response = await props.Update(entry); 
     if(response.success) 
       ResetInlineState(); 
-    SetFeedback(response); 
     return response; 
   } 
 
@@ -32,13 +29,10 @@ export function useInlineTable({indexedDatas, defaultEntry, ...props}:IInlineTab
     const response = await props.Delete(entry); 
     if(response.success) 
       ResetInlineState(); 
-    SetFeedback(response); 
     return response; 
   } 
 
-  return {indexedDatas, defaultEntry, 
-    GetEntry, 
+  return {indexedDatas, defaultEntry, GetEntry, 
     inlineState, SetInlineState, ResetInlineState, 
-    feedback, SetFeedback, ResetFeedback, 
     Create, Update, Delete} 
 }

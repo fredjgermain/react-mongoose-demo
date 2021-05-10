@@ -4,11 +4,11 @@ import { Story } from '@storybook/react';
 import { Cell,
   Cols, ColContext, Rows, RowContext, 
   THeads, THeadCell, THeadContext, IndexDatasByKey 
- } from './_table'; 
+ } from '../_table'; 
 
 
-import { useFilter, useSorter } from '../_inputs'; 
-import { usePager, PagerBtn, PageOfPages } from '../pager/_pager'; 
+import { useFilter, useSorter } from '../../_inputs'; 
+import { usePager, PagerBtn, PageOfPages } from '../../pager/_pager'; 
 
 
 export default { 
