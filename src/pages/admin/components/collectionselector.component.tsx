@@ -1,15 +1,17 @@
-import { useContext } from 'react'; 
+import React, { useContext } from 'react'; 
 import { Editor } from '../../../libs/editor_reader/_editor_reader'; 
-import { AdminContext } from '../admin.hook'; 
+import { DaoContext } from '../../../libs/_dao'; 
+import { AdminContext } from '../hooks/admin.hook'; 
 
 
-// Collection Selector ====================================
 export function CollectionSelector() { 
-  const {collectionAccessor, SetCollectionAccessor, GetCollectionOptions} = useContext(AdminContext); 
-  const value = collectionAccessor; 
-  const editValue = (newValue:string) => SetCollectionAccessor(newValue); 
+  const dao = useContext(DaoContext); 
+  const {collection:value, SetCollection:editValue} = useContext(AdminContext); 
   const ifield:IField = {accessor:'', label:'', defaultValue:'', type:'string'}; 
-  const options = GetCollectionOptions(); 
+  const collections = dao.GetICollections(); 
+  const options:IOption[] = collections.map(c=> { 
+    return {value:c.accessor, label:c.label} 
+  }) 
 
-  return <Editor {...{value, editValue, ifield, options}} />
-}
+  return <Editor {...{value, editValue, ifield, options}} /> 
+} 
