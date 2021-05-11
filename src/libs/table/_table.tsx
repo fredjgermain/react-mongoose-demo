@@ -27,3 +27,6 @@ export { InlineTableContext, useInlineTable }
 
 export { IndexDatasByKey } from './utils/utils'; 
 export type { Indexed } from './utils/utils'; 
+
+export type { IInlineState, IInlineTable, IUseInlineEntry, IUseInlineTable } 
+  from './table.types'; 
