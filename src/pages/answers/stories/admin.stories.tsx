@@ -4,11 +4,11 @@ import { Story } from '@storybook/react';
 import { crud } from '../../../libs/dao/stories/mockcrud'; 
 import { DaoContexter, ICrud } from '../../../libs/_dao'; 
 
-import AdminPage from '../admin.page'; 
+import AnswersPage from '../answers.page'; 
 
 
 export default { 
-  title: 'Admin/admin', 
+  title: 'Answers/Answers', 
   component: TemplateComponent, 
 } 
 
@@ -16,7 +16,7 @@ export default {
 function TemplateComponent() { 
   const accessors = ['questions', 'patients', 'responses', 'answers', 'forms', 'instructions']; 
   return <DaoContexter {...{crud:crud as ICrud, accessors}}> 
-    <AdminPage /> 
+    <AnswersPage /> 
   </DaoContexter> 
     
 } 
