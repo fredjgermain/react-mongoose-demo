@@ -1,6 +1,7 @@
 import { useContext } from 'react'; 
 import { Editor, IEditor } from '../../../libs/editor_reader/_editor_reader'; 
 import { PatientContext } from '../patient.page'; 
+import { RoundBox } from '../../../components/roundbox.component'; 
 
 import { DaoContext } from '../../../libs/_dao'; 
 import { useStateAt } from '../../../libs/_customhooks'; 
@@ -12,13 +13,13 @@ export function PatientProfile() {
   const [Get, Set] = useStateAt({ramq:'', firstName:'', lastName:''}); 
   const {ramq, firstName, lastName} = CollectArgs(['ramq', 'firstName', 'lastName'], Get, Set); 
 
-  return <div className={'borderedform'}> 
+  return <RoundBox> 
     <div><label>Ramq:</label><Editor {...{...ramq, sizeFunc:() => 13}} /></div> 
     <div><label>First name:</label><Editor {...{...firstName, sizeFunc:() => 20}} /></div> 
     <div><label>Last name:</label><Editor {...{...lastName, sizeFunc:() => 20}} /></div> 
     <br/> 
     <button onClick={() => CreateUpdateProfile(Get())}>Save</button> 
-  </div> 
+  </RoundBox> 
 } 
 
 

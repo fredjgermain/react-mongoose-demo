@@ -59,7 +59,7 @@ main {
   padding: 1em; 
 } 
 
-.borderedform { 
+.roundbox { 
   padding: 0.5em; 
   border-radius: 0.5em; 
   border: 1px solid #222831; 
