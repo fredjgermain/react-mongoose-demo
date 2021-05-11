@@ -8,7 +8,7 @@ import { InlineTableContext, useInlineTable,
 
 import { DaoContext } from '../../../libs/_dao'; 
 import { AdminContext } from '../hooks/admin.hook'; 
-import { InlineTableFeedback } from '../components/inlinetablefeedback.component'; 
+import { InlineTableFeedback } from './inlinetablefeedback.component'; 
 
 
 export function AdminInlineTable() { 
