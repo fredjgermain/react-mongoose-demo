@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'; 
-import { PageOfPages, PagerBtn } from '../../../libs/pager/_pager'; 
+import { Pager } from '../../../components/pager.component'; 
 
 import { InlineTableContext, useInlineTable, 
   Rows, Row, Cols, InlineEntry, InlineCell, 
@@ -9,6 +9,7 @@ import { InlineTableContext, useInlineTable,
 import { DaoContext } from '../../../libs/_dao'; 
 import { AdminContext } from '../hooks/admin.hook'; 
 import { InlineTableFeedback } from './inlinetablefeedback.component'; 
+import { RoundBox } from '../../../components/roundbox.component'; 
 
 
 export function AdminInlineTable() { 
@@ -19,12 +20,18 @@ export function AdminInlineTable() {
     Create, Update, Delete, 
     GetCellArgs, GetHeadArgs} = useContext(AdminContext); 
   const defaultEntry = dao.GetDefaultIEntry(collection); 
+  const [collectionLabel] = dao.GetICollections([collection]).map(c=>c.label); 
   const inlineTableContext = useInlineTable({indexedDatas, defaultEntry, Create, Update, Delete}); 
 
   return <InlineTableContext.Provider value={inlineTableContext} > 
-    <InlineTableFeedback /> 
-    <PageOfPages {...{paging}} /> 
-    <PagerBtn {...{paging}} /> 
+    <RoundBox>
+      <InlineTableFeedback /> 
+      <h3>Collection: {collectionLabel}</h3> 
+      <ul>
+        <li>Use the "Create" at the bottom of table to create and add new entry in the selected data collection.</li> 
+        <li>Use "Update" and "Delete" buttons on the right end side of each table row to update or delete the corresponding entry.</li> 
+      </ul>
+    <Pager {...{paging}} /> 
     <table> 
       <thead> 
         <tr><THeads {...{cols}} > 
@@ -50,7 +57,7 @@ export function AdminInlineTable() {
       </Row>
       </tbody> 
     </table>
-    <PageOfPages {...{paging}} /> 
-    <PagerBtn {...{paging}} /> 
+    <Pager {...{paging}} /> 
+    </RoundBox>
   </InlineTableContext.Provider> 
 }

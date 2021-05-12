@@ -48,10 +48,9 @@ export function useAnswers():IUseAnswers {
   const indexedDatas = IndexDatasByKey('_id', paging.page); 
 
   const rows = Object.keys(indexedDatas); 
-  const cols = dao.GetIFields(collection).filter(f=>f.label).map(f => f.accessor); 
+  const cols = dao.GetIFields(collection, ['question', 'date', 'answer']).filter(f=>f.label).map(f => f.accessor); 
 
   function GetCellArgs() { 
-    const dao = useContext(DaoContext); 
     const {row} = useContext(RowContext); 
     const {col} = useContext(ColContext); 
     
@@ -64,9 +63,9 @@ export function useAnswers():IUseAnswers {
   }
 
   function GetHeadArgs() {
-    const dao = useContext(DaoContext); 
     const {col} = useContext(THeadContext); 
     const [ifield] = dao.GetIFields(collection, [col]); 
+    //ifield.label = ifield.accessor; 
     return {ifield}; 
   }
 

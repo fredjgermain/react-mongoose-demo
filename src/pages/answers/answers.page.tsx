@@ -3,16 +3,19 @@ import { IsEmpty } from '../../libs/_utils';
 import { AnswerTable } from './components/answertable.component'; 
 import { AnswersContext, useAnswers } from './hooks/answers.hook'; 
 import { PatientSelector } from './components/patientselector.component'; 
-import { EmailAnswersBtn } from './components/emailanswersbtn.component'; 
-
+import { RoundBox } from '../../components/roundbox.component'; 
 
 export default function AnswersPage() { 
   const answersContext = useAnswers(); 
   return <AnswersContext.Provider value={answersContext}> 
-    <PatientSelector /> 
-    {!IsEmpty(answersContext.patient) && <div>
-      <AnswerTable /> 
-      <EmailAnswersBtn/> 
-    </div>} 
+    <h1>Answers section</h1> 
+    <RoundBox>
+      <PatientSelector /> 
+      <ul> 
+        <li>Select a patient by its RAMQ to display this patients's answers.</li> 
+      </ul> 
+    </RoundBox>
+
+    {!IsEmpty(answersContext.patient) && <AnswerTable />} 
   </AnswersContext.Provider> 
 }
