@@ -16,8 +16,17 @@ import '../../css/main.css';
 export const QuestionnaireContext = React.createContext({} as IUseQuestionnaire); 
 export default function QuestionnairePage() { 
   const patient = Session.Get('profile') as IEntry; 
-
   const patientNull = IsEmpty(patient?._id); 
+  const context = useQuestionnaire(patient); 
+
+
+  return <div> 
+    {JSON.stringify(patient)} 
+    <br/> 
+    {JSON.stringify(patientNull)} 
+  </div> 
+
+  /*const patientNull = IsEmpty(patient?._id); 
 
   const context = useQuestionnaire(patient); 
   const {paging, feedbackRef} = context; 
@@ -31,7 +40,7 @@ export default function QuestionnairePage() {
     <br/> 
     <QuestionMap {...{page}} /> 
     <RedirectBtn {...{condition:patientNull, target:'patient'}}/> 
-  </QuestionnaireContext.Provider> 
+  </QuestionnaireContext.Provider> */
 } 
 
 
