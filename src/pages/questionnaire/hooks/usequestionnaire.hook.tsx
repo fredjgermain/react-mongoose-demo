@@ -4,11 +4,27 @@ import { useStateReset } from '../../../libs/_customhooks';
 import { DaoContext } from '../../../libs/_dao'; 
 import { Session, useSession } from '../../../libs/_session'; 
 import { IsEmpty } from '../../../libs/_utils'; 
+import { usePager, IPageHook } from '../../../libs/pager/_pager'; 
 //import { QuestionnaireFeedBackRef, useQuestionnaireFeedbackRef } from '../components/questionnaire.feedback'; 
 
 
 export interface IUseQuestionnaire {
+  patient: IEntry; 
 
+  feedBack: ICrudResponse[]; 
+  SetFeedback: (newValue: ICrudResponse[]) => void; 
+  ResetFeedback: () => void; 
+  
+  questionnaire: IQItem[]; 
+  SetQuestionnaire: (newValue: IQItem[]) => void; 
+  ResetQuestionnaire: () => void; 
+
+  paging: IPageHook<IQItem>; 
+
+  BlankQuestionnaire(): IQItem[]; 
+  SubmitQuestionnaire(answers?: IQItem[] | undefined): Promise<ICrudResponse[]>; 
+  AnswersAreComplete(answers?: IQItem[] | undefined): boolean; 
+  PageGrouping(): (t: IQItem, i: number, a: IQItem[], positive: IQItem[]) => boolean; 
 }
 
 
@@ -18,7 +34,7 @@ make blank questionnaire.
 
 
 */
-interface IQItem {
+export interface IQItem {
   form: IForm; 
   instructions: IInstruction[]; 
   question: IQuestion; 
@@ -26,13 +42,13 @@ interface IQItem {
   answer: number;
 }
 
-export function useQuestionnaire() { 
+export function useQuestionnaire() : IUseQuestionnaire{ 
   const dao = useContext(DaoContext); 
   const patient = Session.Get('profile') as IEntry; 
   const today = new Date(); // today ... 
-  const [feedBack, SetFeedback] = useStateReset([] as ICrudResponse[]); 
-
+  const [feedBack, SetFeedback, ResetFeedback] = useStateReset([] as ICrudResponse[]); 
   const [questionnaire, SetQuestionnaire, ResetQuestionnaire] = useStateReset(BlankQuestionnaire()); 
+  const paging = usePager(questionnaire, PageGrouping()); 
 
   function BlankQuestionnaire():IQItem[] { 
     const questionsEntries = dao.GetIEntries('questions') as IQuestion[]; 
@@ -81,6 +97,13 @@ export function useQuestionnaire() {
       return byForm && byInstruction && pageCap; 
     } 
   } 
+  return {patient, 
+    feedBack, SetFeedback, ResetFeedback, 
+    questionnaire, SetQuestionnaire, ResetQuestionnaire, 
+    paging, 
+    BlankQuestionnaire, SubmitQuestionnaire, AnswersAreComplete, 
+    PageGrouping
+  }
 } 
 
 
