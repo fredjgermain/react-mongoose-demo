@@ -32,7 +32,7 @@ export function usePatient():IUsePatient {
   const setProfile = (newValue:any) => { 
     Session.Set('profile', newValue); 
     _setProfile(newValue); 
-  }
+  } 
   
   //const sessionReady = useSession('ready', false); 
   const ready = IsReady(); 

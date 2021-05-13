@@ -1,12 +1,12 @@
-import React from 'react'; 
-import {Reader} from './reader.component'; 
+import { Story } from '@storybook/react'; 
+import {Reader, IReader} from './reader.component'; 
 
 export default { 
   title: 'editor/Reader', 
   component: Reader 
 } 
 
-const Template = args => <Reader {...args} /> 
+const Template:Story<IReader> = args => <Reader {...args} /> 
 
 // Reader One Value ===========================================
 export const ReaderDate = Template.bind({}) 

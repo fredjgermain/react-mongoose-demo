@@ -3,6 +3,7 @@ import { useQuestionnaire, IUseQuestionnaire, IQItem } from './hooks/usequestion
 import { Pager } from './components/pager.component'; 
 import { RoundBox } from '../../components/roundbox.component'; 
 import { Editor } from '../../libs/editor_reader/_editor_reader'; 
+import { RedirectBtn } from '../../components/redirector/redirectbtn.component';
 
 import '../../css/main.css'; 
 
@@ -11,18 +12,19 @@ import '../../css/main.css';
 export const QuestionnaireContext = React.createContext({} as IUseQuestionnaire); 
 export default function QuestionnairePage() { 
   const context = useQuestionnaire(); 
-
+  const success = context.feedBack.every(r => r.success); 
 
   return <QuestionnaireContext.Provider value={context}> 
-    <h1>Questionnaire</h1>
-    <br/>
+    <h1>Questionnaire</h1> 
+    <br/> 
     <RoundBox> 
       <FormTitleInstructions /> 
       <QuestionMap /> 
     </RoundBox> 
     <Pager /> 
+    <RedirectBtn {...{condition:!success, target:"thankyou"}} /> 
   </QuestionnaireContext.Provider> 
-}
+} 
 
 
 

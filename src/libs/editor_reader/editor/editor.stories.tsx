@@ -1,9 +1,11 @@
+import { Story } from '@storybook/react'; 
 import React, {useState} from 'react'; 
-import {Editor, IEditor} from './editor.component'; 
+import { IReader } from '../reader/reader.component'; 
+import { Editor } from './editor.component'; 
 
 
 
-function TemplateEditor({...props}:IEditor) { 
+function TemplateEditor({...props}:IReader) { 
   const [value, setValue] = useState(props.value); 
   const editValue = (newValue:any) => setValue(newValue); 
   const args = {...props, value, editValue}
@@ -21,7 +23,7 @@ export default {
   component: TemplateEditor 
 } 
 
-const Template = args => <TemplateEditor {...args} /> 
+const Template:Story<IReader> = args => <TemplateEditor {...args} /> 
 
 
 // Editor One Value ===========================================
