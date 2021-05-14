@@ -20,7 +20,6 @@
 
 .select-options {
   /*Necessary styles*/
-  display: none;
   position: absolute;
   z-index: 1;
   width: 100%; 
@@ -31,25 +30,3 @@
   background-color: white; 
   padding: 0.5ch; 
 }
-
-.select-main:hover .select-options {
-  /*Necessary*/
-  display: block;
-}
-
-.select-option:hover { 
-  background-color: #d6d6d6; 
-} 
-
-.select-placeholder { 
-  color:#888; 
-} 
-
-.select-option-selected{ 
-  color:#888; 
-} 
-
-.select-option-selected:hover{ 
-  color:#888; 
-  background-color: #d6d6d6; 
-} 

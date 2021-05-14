@@ -4,7 +4,7 @@ import { IInputSelect, IUseSelect } from './inputselect.type';
 import { useToggle } from '../../../libs/_toggle'; 
 import { IsEmpty } from '../../../libs/_utils';
 
-import './select.style.css'; 
+//import './select.style.css'; 
 
 
 export const SelectContext = React.createContext({} as IUseSelect); 
