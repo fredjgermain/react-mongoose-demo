@@ -32,7 +32,7 @@ export function AnswerTable() {
 
       <tbody> 
       <Rows {...{rows}}> 
-        <Cols {...{cols}} > 
+        <Cols {...{cols}}> 
           <Cell {...{GetCellArgs}} /> 
         </Cols> 
       </Rows> 
