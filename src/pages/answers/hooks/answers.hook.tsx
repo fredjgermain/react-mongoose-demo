@@ -41,7 +41,7 @@ export function useAnswers():IUseAnswers {
   const collection = 'answers'; 
   const [patient, SetPatient] = useStateReset({} as string); // id IPatient
 
-  const entries = dao.GetIEntries(collection); 
+  const entries = dao.GetIEntries(collection).filter( a => (a as IAnswer).patient === patient); 
   const filters = useFilter(entries); 
   const sorters = useSorter(filters.matchValues); 
   const paging = usePager(sorters.sortedValues, 10); 

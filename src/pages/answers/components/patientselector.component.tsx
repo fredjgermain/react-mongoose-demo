@@ -17,6 +17,7 @@ export function PatientSelector() {
     const patientLabel = `${patient.ramq}`; 
     return {value:patient._id, label:patientLabel} 
   }) 
+  const placeholder = '-- Select a patient --'; 
 
-  return <Editor {...{value, editValue, ifield, options}} /> 
+  return <Editor {...{value, editValue, ifield, options, placeholder}} /> 
 } 

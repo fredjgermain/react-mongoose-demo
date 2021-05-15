@@ -26,7 +26,7 @@ export function InputSelect({children, ...props}:React.PropsWithChildren<IInputS
       <OptionGroup options={true} /><hr/><OptionGroup options={false} />
     </Options>: 
     <Options>
-      <OptionGroup options={true} /><hr/><OptionGroup options={false} />
+      <OptionGroup options={true} /><hr/><OptionGroup />
     </Options>
 
   return <InputSelectContext.Provider value={context}> 

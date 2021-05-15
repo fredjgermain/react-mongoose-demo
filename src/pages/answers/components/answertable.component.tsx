@@ -17,9 +17,9 @@ export function AnswerTable() {
   return <RoundBox> 
     <h3>Patient: {patientEntry.firstName} {patientEntry.lastName}</h3> 
     <ul> 
-      <li>{patientEntry.ramq}</li> 
-      <li>firstName: {patientEntry.firstName}</li> 
-      <li>{patientEntry.lastName}</li> 
+      <li>RAMQ: {patientEntry.ramq}</li> 
+      <li>First name: {patientEntry.firstName}</li> 
+      <li>Last name: {patientEntry.lastName}</li> 
     </ul> 
     <Pager {...{paging}} /> 
     <table> 
