@@ -14,7 +14,7 @@ export function DisplaySelection() {
   const selection = context.GetSelection(); 
 
   if(IsEmpty(selection)) 
-    return <span>{context.placeholder}</span> 
+    return <span className={'select-placeholder'}>{context.placeholder}</span> 
   return <span> 
     {selection.map( (s,i) => { 
       return <span key={s.value}>{i > 0 && ', '}{s.label}</span> 

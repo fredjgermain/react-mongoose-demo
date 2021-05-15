@@ -4,9 +4,11 @@ import { Rows, Cols, Cell, THeads, THeadCell }
 
 import { DaoContext } from '../../../libs/_dao'; 
 import { AnswersContext } from '../hooks/answers.hook'; 
-import { RoundBox } from '../../../components/roundbox.component';
+import { RoundBox } from '../../../components/roundbox.component'; 
 import { Pager } from '../../../components/pager.component'; 
 import { EmailAnswersBtn } from './emailanswersbtn.component'; 
+import { DownLoadFile } from '../../../libs/writefile/writefile'; 
+
 
 
 export function AnswerTable() { 
@@ -40,5 +42,6 @@ export function AnswerTable() {
     </table>
     <Pager {...{paging}} /> 
     <EmailAnswersBtn /> 
+    <DownLoadFile {...{list:['test1', 'test2']}} /> 
   </RoundBox>
 }

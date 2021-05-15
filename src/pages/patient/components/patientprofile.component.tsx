@@ -1,5 +1,5 @@
 import { useContext } from 'react'; 
-import { Editor, IEditor } from '../../../libs/editor_reader/_editor_reader'; 
+import { Editor } from '../../../libs/editor_reader/_editor_reader'; 
 import { PatientContext } from '../patient.page'; 
 import { RoundBox } from '../../../components/roundbox.component'; 
 
@@ -14,12 +14,12 @@ export function PatientProfile() {
   const {ramq, firstName, lastName} = CollectArgs(['ramq', 'firstName', 'lastName'], Get, Set); 
 
   return <RoundBox> 
-    <p>Please write down your RAMQ number, then your first and last name, then press 'Save profile' before proceding with the questionnaires.</p>
+    <p>Please write down your RAMQ number, your first and last name. Then press 'Save profile' to proceed with the questionnaire.</p>
     <div><label>Ramq:</label><Editor {...{...ramq, sizeFunc:() => 13}} /></div> 
     <div><label>First name:</label><Editor {...{...firstName, sizeFunc:() => 20}} /></div> 
     <div><label>Last name:</label><Editor {...{...lastName, sizeFunc:() => 20}} /></div> 
     <br/> 
-    <button onClick={() => CreateUpdateProfile(Get())}>Save</button> 
+    <button onClick={() => CreateUpdateProfile(Get())}>Save profile</button> 
   </RoundBox> 
 } 
 

@@ -7,7 +7,7 @@ export default function ThankYouPage() {
   const [redirection, setRedirection] = useState(false); 
 
   useEffect(() => { 
-    const timeout = setTimeout(() => setRedirection(true), 7000); 
+    const timeout = setTimeout(() => setRedirection(true), 5000); 
   }, []); 
 
   return <div> 

@@ -38,7 +38,7 @@ function TestInputSelect({...props}:IInputSelect) {
 } 
 
 export default { 
-  title: 'Input/InputSelect2', 
+  title: 'Input/InputSelect', 
   component: TestInputSelect, 
 } 
 

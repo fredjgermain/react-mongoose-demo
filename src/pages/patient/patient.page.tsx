@@ -1,9 +1,7 @@
 import React from 'react'; 
 import { usePatient, IUsePatient } from './hooks/usepatient.hook'; 
 import { PatientProfile } from './components/patientprofile.component'; 
-//import { PatientFeedback } from './components/patient.feedback'; 
 import { RedirectBtn } from '../../components/redirector/redirectbtn.component';
-import { SessionsDebug } from '../../components/sessiondebug/sessiondebug.component'; 
 
 
 import '../../css/main.css'; 
