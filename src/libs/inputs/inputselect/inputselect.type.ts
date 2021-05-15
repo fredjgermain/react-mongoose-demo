@@ -8,10 +8,9 @@ export interface IInputSelect {
   sizeFunc?: (value:any) => number; 
 } 
 
-
-// USE SELECT ====================================
 export interface IUseSelect extends IInputSelect { 
+  toggle: boolean; 
+  SetToggle: (toggle?:boolean) => void; 
   SelectValue:(newValue:any) => void; 
   GetSelection: () => IOption[]; 
-  //Toggle:IUseToggle<HTMLDivElement>; 
 } 
