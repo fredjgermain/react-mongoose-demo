@@ -1,22 +1,10 @@
 import React, { useContext } from 'react'; 
-import { IsEmpty, ReduceToString } from '../../../_utils'; 
-import { Filter, Predicate, ToArray } from '../../../_arrayutils'; 
+import { IsEmpty } from '../../../_utils'; 
+import { AbbrevArray } from '../../../abbrarray/abbrarray.component'; 
+import { ToArray } from '../../../_arrayutils'; 
 import { InputSelectContext } from './inputselect.component'; 
 
 
-
-function AbbrevArray({toAbbrev, maxLength = 20}:{toAbbrev:string[], maxLength:number}) { 
-  const predicate:Predicate<string> = (t, i, a, positive) => { 
-    return ReduceToString([...positive, t]).length < maxLength; 
-  } 
-  const [reducable, remainder] = Filter(toAbbrev, predicate); 
-  const reduced = ReduceToString(reducable); 
-  const full = ReduceToString(toAbbrev.map( (s, i) => `[${i}] ${s}`), '\n'); 
-  const ifLong = remainder.length ? '...': ''; 
-  const nSelected = ` (${toAbbrev.length})`; 
-
-  return <span title={full}>{nSelected + reduced + ifLong}</span>; 
-}
 
 
 
@@ -37,8 +25,8 @@ export function DisplaySelection() {
 
   if(context.multiple)
     return <span className={className}> 
+      <AbbrevArray {...{toAbbrev, maxLength:13}} />
       {IsEmpty(toAbbrev) && context.placeholder} 
-      <AbbrevArray {...{toAbbrev, maxLength:17}} />
     </span> 
   return <span className={className}> 
     {single ?? context.placeholder} 
