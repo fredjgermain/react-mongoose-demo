@@ -1,3 +1,6 @@
+export { ReduceToString } 
+  from './utils/string/string.utils'; 
+
 export {IsNull, IsEmpty, Copy, UpdateValue, IsNaN, GetValueAt, SetValueAt, HasKey} 
   from './utils/valuetypetesting/value.utils'; 
 

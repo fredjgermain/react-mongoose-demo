@@ -1,5 +1,6 @@
 import React, {useState} from 'react'; 
 import { Story } from '@storybook/react'; 
+
 import { InputFilter, useFilter, Input } from '../../_inputs'; 
 import { InputSelect, Selection, Options, DisplaySelection, OptionGroup } from './_inputselect'; 
 import { IInputSelect } from './inputselect.type'; 
@@ -63,11 +64,11 @@ export const TestInputSelect_multi = Template.bind({})
 TestInputSelect_multi.args = { 
   value:['a'], 
   options: [ 
-    {value:'0', label:'option 0'}, 
-    {value:'1', label:'option 1'}, 
-    {value:'2', label:'option 2'}, 
-    {value:'11', label:'option 11'}, 
-    {value:'12', label:'option 12'}, 
+    {value:'0', label:'op 0'}, 
+    {value:'1', label:'op 1'}, 
+    {value:'2', label:'op 2'}, 
+    {value:'11', label:'op 11'}, 
+    {value:'12', label:'op 12'}, 
   ] as IOption[], 
   multiple: true, 
 } 
