@@ -39,6 +39,13 @@ LambdaFilter.args = {
   values:[3,4,1,2,6,8,9], 
   filters:[{handle:'', type:'number'}] 
 } 
+
+
+export const DayFilter = Template.bind({}) 
+DayFilter.args = { 
+  values:['2021-05-10', '2021-05-11', '2021-05-12', '2021-05-13'], 
+  filters:[{handle:'', type:'date'}] 
+} 
   
 export const MultipleFieldFilter = Template.bind({}) 
 MultipleFieldFilter.args = { 

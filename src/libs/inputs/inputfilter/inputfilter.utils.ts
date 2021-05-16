@@ -6,7 +6,7 @@ export function FilterPredicate(strPredicate:string, type:string, keys?:string[]
   if(IsEmpty(strPredicate)) 
     return predicate; 
   
-  if(type === 'boolean') 
+  if(type === 'boolean' || type === 'date') 
     predicate = EqualPredicate(strPredicate); 
   else if(type === 'string') 
     predicate = StringMatchPredicate(strPredicate); 
@@ -18,6 +18,8 @@ export function FilterPredicate(strPredicate:string, type:string, keys?:string[]
       predicate(GetValueAt(x, keys)): 
       predicate; 
 } 
+
+
 
 
 function EqualPredicate(strPredicate:string):(x:any) => boolean { 

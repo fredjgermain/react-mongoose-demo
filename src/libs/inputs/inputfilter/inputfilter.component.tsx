@@ -29,13 +29,11 @@ export function InputFilter<T>({keys, type, SetFilters}:IInputFilter<T>) {
     borderRadius: '0.2em', 
     border: '1px solid black', 
     padding: '0.2em', 
-    paddingBottom: '0.3em'
-  }
+    paddingBottom: '0.3em' 
+  } 
 
-  //U+25BE
-  //U+25B4
-
+  const _type = type === 'date' ? type: 'string'; 
   return <span style={style}> 
-    <Input {...{type:'string', value, onSetValue, onPressEnter}} />🔍
+    <Input {...{type:_type, value, onSetValue, onPressEnter}} />🔍
   </span>
 }
