@@ -1,4 +1,5 @@
-export {IsNull, IsEmpty, Copy, UpdateValue, IsNaN, GetValueAt, SetValueAt, HasKey} from './utils/valuetypetesting/value.utils'; 
+export {IsNull, IsEmpty, Copy, UpdateValue, IsNaN, GetValueAt, SetValueAt, HasKey} 
+  from './utils/valuetypetesting/value.utils'; 
 
 export {DefaultWidth, OnPress, OnTab, OnEnter, OnEnterOrTab, GetInputType, GetValueFromInput} 
   from './utils/htmlelement.utils'; 

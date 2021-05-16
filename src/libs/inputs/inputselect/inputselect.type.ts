@@ -11,6 +11,8 @@ export interface IInputSelect {
 export interface IUseSelect extends IInputSelect { 
   toggle: boolean; 
   SetToggle: (toggle?:boolean) => void; 
+  selection: IOption[]; 
   SelectValue:(newValue:any) => void; 
-  GetSelection: () => IOption[]; 
+  IsSelected: (option:IOption) => boolean; 
+  //GetSelection: () => IOption[]; 
 } 

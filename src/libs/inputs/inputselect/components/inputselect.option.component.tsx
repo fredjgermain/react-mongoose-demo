@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'; 
-import { IsEmpty } from '../../_utils'; 
-import { Predicate, Filter } from '../../_arrayutils'; 
+import { IsEmpty } from '../../../_utils'; 
+import { Predicate, Filter } from '../../../_arrayutils'; 
 import { InputSelectContext } from './inputselect.component'; 
 
 //  tabIndex={0} 
@@ -24,21 +24,20 @@ export function OptionGroup({options}:{options?:IOptionGroup}) {
 
 export function Option({option}:{option:IOption}) { 
   const context = useContext(InputSelectContext); 
-  const selection = context.GetSelection(); 
-  const IsSelected = (option:IOption) => selection.some(o => o?.value === option?.value); 
+  const {selection, multiple, IsSelected} = context; 
   const onClick = () => context.SelectValue(option.value); 
   const className = IsSelected(option) ? 'select-option-selected': 'select-option'; 
+  const addRemSymbol = <span>{IsSelected(option) ? '-': '+'}</span> 
 
-  return <div {...{onClick, className}} > 
-    {option.label} 
+  return <div {...{onClick, className}}> 
+    {multiple && addRemSymbol} {option.label} 
   </div> 
 }
 
 
 function GetOptions(options?:IOptionGroup):IOption[] { 
   const context = useContext(InputSelectContext); 
-  const selection = context.GetSelection(); 
-  const IsSelected = (option:IOption) => selection.some(o => o?.value === option?.value); 
+  const {selection, IsSelected} = context; 
   let _options = context.options; 
 
   if(IsEmpty(options)) 

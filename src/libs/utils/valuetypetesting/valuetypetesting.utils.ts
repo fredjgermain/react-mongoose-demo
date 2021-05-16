@@ -57,9 +57,9 @@ export function GetDefaultValueByType(type:string) {
   if(type==='array') 
     return []; 
   if(type==='date') 
-    return new Date(); 
+    return new YMD().StringYMD(); 
   if(type==='object') 
     return {}; 
   return null; 
-}
+} 
 

@@ -10,7 +10,6 @@ import { EmailAnswersBtn } from './emailanswersbtn.component';
 import { DownLoadFile } from '../../../libs/writefile/writefile'; 
 
 
-
 export function AnswerTable() { 
   const dao = useContext(DaoContext); 
   const { patient, paging, cols, rows, GetCellArgs, GetHeadArgs } = useContext(AnswersContext); 

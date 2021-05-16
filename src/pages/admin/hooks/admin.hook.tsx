@@ -47,7 +47,6 @@ export const AdminContext = React.createContext({} as IUseAdmin);
 export function useAdmin() { 
   const dao = useContext(DaoContext); 
   const [collection, SetCollection]  = useStateReset(''); 
-  
 
   const entries = dao.GetIEntries(collection); 
   const filters = useFilter(entries); 
@@ -58,7 +57,6 @@ export function useAdmin() {
   const rows = Object.keys(indexedDatas); 
   const cols = dao.GetIFields(collection).filter(f=>f.label).map(f => f.accessor); 
   const [feedback, SetFeedback, ResetFeedback] = useStateReset({} as ICrudResponse); 
-  
 
   async function Create(entry:IEntry) { 
     const [response] = await dao.Create(collection, [entry]); 
@@ -67,13 +65,13 @@ export function useAdmin() {
   } 
 
   async function Update(entry:IEntry) { 
-    const [response] = await dao.Create(collection, [entry]); 
+    const [response] = await dao.Update(collection, [entry]); 
     SetFeedback(response); 
     return response; 
   } 
 
   async function Delete(entry:IEntry) {
-    const [response] = await dao.Create(collection, [entry]); 
+    const [response] = await dao.Delete(collection, [entry]); 
     SetFeedback(response); 
     return response; 
   }

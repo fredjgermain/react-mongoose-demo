@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'; 
-import { IsEmpty } from '../../_utils'; 
+import { IsEmpty } from '../../../_utils'; 
 import { InputSelectContext } from './inputselect.component'; 
 
 export function Selection({children}:React.PropsWithChildren<{}>) { 
@@ -11,7 +11,7 @@ export function Selection({children}:React.PropsWithChildren<{}>) {
 
 export function DisplaySelection() { 
   const context = useContext(InputSelectContext); 
-  const selection = context.GetSelection(); 
+  const selection = context.selection; 
 
   if(IsEmpty(selection)) 
     return <span className={'select-placeholder'}>{context.placeholder}</span> 

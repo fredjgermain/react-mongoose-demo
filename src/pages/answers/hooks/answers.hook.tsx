@@ -1,17 +1,23 @@
 import React, { useContext } from 'react'; 
 import { IUseFilter, useFilter, IUseSorter, useSorter } 
   from '../../../libs/_inputs'; 
+import { IsEmpty } from '../../../libs/_utils'; 
 import { usePager } from '../../../libs/pager/_pager'; 
 import { DaoContext } from '../../../libs/_dao'; 
 
 import { RowContext, ColContext, THeadContext, IndexDatasByKey, Indexed } 
   from '../../../libs/table/_table'; 
 import { useStateReset } from '../../../libs/_customhooks';
+import { YMD } from '../../../libs/utils/date/ymd.class';
+
+
 
 
 export interface IUseAnswers { 
   patient: string; 
   SetPatient: (newValue: string) => void; 
+  date: string; 
+  SetDate: (newValue: string) => void; 
 
   indexedDatas: Indexed<IEntry>; 
   rows: string[]; 
@@ -39,9 +45,12 @@ export const AnswersContext = React.createContext({} as IUseAnswers);
 export function useAnswers():IUseAnswers { 
   const dao = useContext(DaoContext); 
   const collection = 'answers'; 
-  const [patient, SetPatient] = useStateReset({} as string); // id IPatient
+  const [patient, SetPatient] = useStateReset({} as string);  // selected IPatient 
+  const [date, SetDate] = useStateReset({} as string);        // selected date 
 
-  const entries = dao.GetIEntries(collection).filter( a => (a as IAnswer).patient === patient); 
+  const entries = dao.GetIEntries(collection) 
+    .filter( a => (a as IAnswer).patient === patient) 
+    .filter( a => IsEmpty(date) ? true: YMD.SameDay((a as IAnswer).date, date)); 
   const filters = useFilter(entries); 
   const sorters = useSorter(filters.matchValues); 
   const paging = usePager(sorters.sortedValues, 10); 
@@ -70,6 +79,7 @@ export function useAnswers():IUseAnswers {
   }
 
   return {patient, SetPatient, 
+    date, SetDate, 
     indexedDatas, rows, cols, 
     filters, sorters, paging, 
     GetCellArgs, GetHeadArgs, 

@@ -38,6 +38,20 @@ export interface Indexed<T> {
 } 
 
 
+/** UNIC ================= 
+ * Takes an array and a criteria of sameness 
+ * returns an array without duplicate using "Sameness" as predicate to identify duplicates. 
+ * @param array 
+ * @param Sameness 
+ * @returns 
+ */
+export function Unic<T>(array:T[], Sameness:Sorter<T>):[T[], T[]] { 
+  const isUnic = (t:T, i:number, a:T[], positive:T[]) => !positive.some( p => Sameness(t, p) ); 
+  return Filter(array, isUnic); 
+} 
+
+
+
 /** TOARRAY ================= 
  * Converts an object into a array if it is not already an array. Returns the array itself it is already an array, or returns an empty array if it is empty. 
  * @param toArray value to be converted into an array. 
