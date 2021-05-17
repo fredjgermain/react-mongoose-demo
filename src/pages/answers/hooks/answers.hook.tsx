@@ -50,7 +50,7 @@ export function useAnswers():IUseAnswers {
 
   const entries = dao.GetIEntries(collection) 
     .filter( a => (a as IAnswer).patient === patient) 
-    .filter( a => IsEmpty(date) ? true: YMD.SameDay((a as IAnswer).date, date)); 
+    .filter( a => IsEmpty(date) ? true: YMD.IsSameDay((a as IAnswer).date, date)); 
   const filters = useFilter(entries); 
   const sorters = useSorter(filters.matchValues); 
   const paging = usePager(sorters.sortedValues, 10); 

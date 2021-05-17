@@ -14,4 +14,4 @@ export {IsInRange, GetDefaultValueByType, GetTypeByValue, GetSelectedValuesFromO
 export {ParseDate, DaysPerMonth, IsLeapYear, IsToday} 
   from './utils/date/date.utils'; 
 
-
+export { YMD } from './utils/date/ymd.class'; 

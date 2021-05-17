@@ -7,7 +7,7 @@
  */
 export function ParseDate(date:any) { 
   const dateObject = new Date(date); 
-  return {year:dateObject.getFullYear(), month:dateObject.getMonth()+1, date:dateObject.getDate()} 
+  return {year:dateObject.getFullYear(), month:dateObject.getMonth()+1, day:dateObject.getDate()} 
 }
 
 
@@ -49,6 +49,6 @@ export function IsLeapYear(year:number) {
  */
 export function IsToday(toTest:any) { 
   const today = ParseDate(new Date()); 
-  const {year, month, date} = ParseDate(toTest); 
-  return today.year === year && today.month === month && today.date === date; 
+  const {year, month, day: date} = ParseDate(toTest); 
+  return today.year === year && today.month === month && today.day === date; 
 }
