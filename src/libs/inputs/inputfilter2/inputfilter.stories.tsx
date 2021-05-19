@@ -9,7 +9,7 @@ function TemplateResearch({values, filters}:{values:any[], filters:{handle:strin
 
 
 export default { 
-  title: 'input/FilterSorter2', 
+  title: 'input/FilterSorter3', 
   component: TemplateResearch 
 } 
 

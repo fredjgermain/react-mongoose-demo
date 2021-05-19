@@ -13,23 +13,26 @@ export function ReduceToString(strArray:string[], delimiter:string = '') {
 
 
 /** SPLIT WITH REGEX ============================
- * Takes a single string and recursively split that string in an array of strings, including the mathching regex pattern. 
+ * Takes a single string and recursively split that string when it matches regexs. 
  * @param src a single string 
- * @param regex a regex 
- * @returns a string[] including the matching pattern 
+ * @param regexs a array of regexs 
+ * @returns an array of pairs [matching substring, matching regex] 
  */
-export function SplitWithRegex(src:string, regex:RegExp):(string|[string, string])[] { 
+export function SplitWithRegex(src:string, regexs:RegExp[]):[string, string][] { 
+  const [regex, ..._regexs] = regexs; 
   if(!src) 
     return []; 
-  let match = src.match(regex) as any; 
-  if(!match) 
-    return [src]; 
+  if(!regex) 
+    return [[src, '']]; 
+  const match = regex.exec(src); 
+  if(!match) { 
+    return SplitWithRegex(src, _regexs); 
+  } 
 
   const before = src.slice(0, match.index); 
-  const found = match[0]; 
-
-  const remain = src.slice(match.index + found.length); 
-  if(before) 
-    return [[before,''], [found, found], ...SplitWithRegex(remain, regex)]; 
-  return [[found, found], ...SplitWithRegex(remain, regex)]; 
+  const found = [match[0], regex.source] as [string, string]; 
+  const after = src.slice(match.index + found[0].length); 
+  const befores = SplitWithRegex(before, _regexs); 
+  const afters = SplitWithRegex(after, regexs); 
+  return [...befores, found, ...afters]; 
 }
