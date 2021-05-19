@@ -1,4 +1,4 @@
-export { ReduceToString } 
+export { ReduceToString, SplitWithRegex } 
   from './utils/string/string.utils'; 
 
 export {IsNull, IsEmpty, Copy, UpdateValue, IsNaN, GetValueAt, SetValueAt, HasKey} 

@@ -1,42 +1,57 @@
-import { IsEmpty, GetValueAt, YMD, ReduceToString } from '../../_utils'; 
+import { IsEmpty, GetValueAt, YMD, ReduceToString, SplitWithRegex } from '../../_utils'; 
 
 /* 
-PredicateFilter [ 
-  [predicate && predicate] || 
-  [predicate && predicate] || ... 
-] 
-
-
-StringFilter  [operand] 
-NumberFilter  [operator, operand] 
-              [operator, operand, operator, operand] 
-
-SelectFilter  [value1, value2, ... valueN] => [[===, operand], ... [===, operand]] 
-DateFilter    [[operator, operand], ... [operator, operand]] 
-*/
-
-const test = ['+', '5', '===', '12']; 
-console.log(LambdaFilter(test)(7)) 
-
-const testdate = ['before', '2021/01/10']; 
-console.log(DateFilter(testdate)('2021/01/11')) 
-
-const teststring = ['be']; 
-console.log(StringFilter(teststring)('before')) 
-
-const testIdentify = ['a', 'b', 'c']; 
-console.log(IdentifyFilter(testIdentify)('d')); 
-
-
+boolean 
+array 
+*/ 
 function IdentifyFilter(splitPredicate:string[]) { 
   return (x:any) => splitPredicate.some( s => s === x); 
 } 
+
+/* 
+number 
+
+single number (decimal or integer)
+((\d+[\.\,]?\d+)|(\d+))
+
+arithmetic operator 
+[+-\/\*%] 
+((\+)|(-)|(\/)|(\*)|(%))
+
+comparator operator 
+((===)|(==)|(!==)|(!=)|(>=)|(<=)|(>)|(<))
+
+*/
+
+//const regexp = new RegExp('foo[a-z]*','g'); 
+
+const REGEXP = { 
+  INTEGER: new RegExp(/(\d+)/), 
+  NUMBER: new RegExp(/((\d+[\.\,]?\d+)|(\d+))/), 
+  COMPARATOR: new RegExp(/((===)|(==)|(!==)|(!=)|(>=)|(<=)|(>)|(<))/), 
+  //ARITHMETIC: new RegExp(/[+-\/\*%]/), 
+  ARITHMETIC: new RegExp(/((\+)|(-)|(\/)|(\*)|(%))/), 
+} 
+
+const regexs = ReduceToString( Object.values(REGEXP).map( regex => regex.source ), '|' ); 
+
+console.log(new RegExp(regexs).source); 
+
+//const regex = '(' + REGEXP.ARITHMETIC.source + REGEXP.NUMBER.source + ')';
+
+const test = '5++++asd== 21222 > asd <=sa2'; 
+console.log(SplitWithRegex(test, new RegExp(regexs))); 
+
+
 
 function LambdaFilter(splitPredicate:string[]) { 
   const reduced = ReduceToString(splitPredicate, ' '); 
   return (x:any) => eval(`${x} ${reduced}`); 
 } 
 
+/* 
+string 
+*/ 
 function StringFilter(splitPredicate:string[]) { 
   const [toMatch] = splitPredicate; 
   return (x:string) => { 
@@ -44,6 +59,10 @@ function StringFilter(splitPredicate:string[]) {
   } 
 } 
 
+
+/* 
+date 
+*/ 
 function DateFilter(splitPredicate:string[]) { 
   const funcs = [] as ((x:any) => boolean)[]; 
   for(let i=0; i<splitPredicate.length; i++) { 
@@ -62,28 +81,20 @@ function DateFilter(splitPredicate:string[]) {
 } 
 
 
-/*function DateFilter(strPredicate:string):(x:any) => boolean {   
-  return (x:any) => { 
-    const x_ymd = new YMD(x as string) 
-    const xymd = new YMD(x as string) 
-    return true; 
-  } 
-}*/
 
-
-
-
-export function FilterPredicate(strPredicate:string, type:string, keys?:string[]): (x:any) => boolean { 
+export function FilterPredicate(splitPredicate:string[], type:string, keys?:string[]): (x:any) => boolean { 
   let predicate = (x:any) => true; 
-  if(IsEmpty(strPredicate)) 
+  if(IsEmpty(splitPredicate)) 
     return predicate; 
   
-  if(type === 'boolean') 
-    predicate = EqualPredicate(strPredicate); 
+  if(type === 'boolean' || type === 'array') 
+    predicate = IdentifyFilter(splitPredicate); 
+  else if(type === 'date') 
+    predicate = DateFilter(splitPredicate); 
   else if(type === 'string') 
-    predicate = StringMatchPredicate(strPredicate); 
+    predicate = StringFilter(splitPredicate); 
   else 
-    predicate = LambdaPredicate(strPredicate); 
+    predicate = LambdaFilter(splitPredicate); 
 
   return !IsEmpty(keys) ? 
     (x:any) => 
@@ -92,34 +103,3 @@ export function FilterPredicate(strPredicate:string, type:string, keys?:string[]
 } 
 
 
-
-
-function EqualPredicate(strPredicate:string):(x:any) => boolean { 
-  return (x:string) => { 
-    return String(x) === strPredicate; 
-  } 
-} 
-
-function StringMatchPredicate(strPredicate:string):(x:any) => boolean { 
-  return (x:string) => { 
-    return !!x.match(strPredicate); 
-  } 
-}
-
-function LambdaPredicate(strPredicate:string): (x:any) => boolean { 
-  /*const operator =  /[(>=)|(<=)|(>)|(<)|(=)]/ 
-  const operand =  /[(>=)|(<=)|(>)|(<)|(=)]/ */ 
-  const seperator = /[(&&)]/ 
-  const strPredicates = strPredicate.split(seperator).filter(s => s!==''); 
-  const predicates:((x:any) => boolean)[] = []; 
-  strPredicates.forEach( p => { 
-    try{ 
-      const func = (x:any):boolean => eval(x.toString() + p); 
-      func(0); 
-      predicates.push(func); 
-    }catch(error) { 
-      return (x:any) => true; 
-    }; 
-  }) 
-  return (x:any) => predicates.every( predicate => predicate(x) ); 
-}

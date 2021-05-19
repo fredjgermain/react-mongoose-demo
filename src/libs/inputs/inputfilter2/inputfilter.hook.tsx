@@ -8,9 +8,9 @@ import { FilterPredicate } from './inputfilter.utils';
 export function useFilter<T>(values:T[]) { 
   const [keyFilters, setFilters, ResetFilters] = usePredicates<string, Predicate<T>>(); 
 
-  const SetFilters = (strFilter:string, type:string, keys:string[]) => {
+  const SetFilters = (splitPredicate:string[], type:string, keys:string[]) => {
     const Key = keys.reduce((prev, current) => prev+current); 
-    const newFilter = FilterPredicate(strFilter, type, keys); 
+    const newFilter = FilterPredicate(splitPredicate, type, keys); 
     setFilters(Key, newFilter); 
   } 
 
