@@ -30,7 +30,6 @@ export function InputSelect({children, ...props}:React.PropsWithChildren<IInputS
         <div tabIndex={0} {...{onClick, onBlur, onFocus, className}}>{children}</div> 
     </InputSelectContext.Provider> 
 
-
   const defaultOptions = props.multiple ? 
     <Options> 
       <OptionGroup options={true} /><hr/><OptionGroup options={false} />

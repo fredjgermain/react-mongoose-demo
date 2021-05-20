@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react'; 
+import { useState } from 'react'; 
 import { IUseFilter } from './inputfilter.type'; 
 import { Input, InputSelect } from '../../_inputs'; 
-import { IsEmpty, ReduceToString, Stringify } from '../../_utils'; 
+import { IsEmpty, ReduceToString } from '../../_utils'; 
 
 
 
@@ -29,8 +29,6 @@ export function InputFilter<T>({ ...props}:IInputFilter<T>) {
     return <FilterSelect {...props} /> 
   if(props.ifield.type === 'boolean') 
     return <FilterBoolean {...props} /> 
-  if(props.ifield.isArray) 
-    return <div>Is Array ... </div> 
   if(props.ifield.type === 'string') 
     return <FilterString {...props} /> 
   if(props.ifield.type === 'number') 
@@ -59,22 +57,23 @@ function FilterString<T>({ filter, ifield, options, ...props}:IInputFilter<T>) {
 function FilterBoolean<T>({ filter, ifield, ...props }:IInputFilter<T>) {
   const type = ifield.type; 
   const keys = [ifield.accessor]; 
-  const [value, setValue] = useState<any>(''); 
-  const onSetValue = (newValue:any[]) => { 
+  const [value, setValue] = useState<any>(undefined); 
+  const onSetValue = (newValue:any) => { 
     setValue(newValue); 
-    filter.SetFilters(ReduceToString(Stringify(newValue)), type, keys); 
+    filter.SetFilters(ReduceToString(newValue), type, keys); 
   } 
   
   const options = [ 
     {value:true, label:'true'}, 
     {value:false, label:'false'} 
   ] as IOption[]; 
+  props.options = options; 
 
   const args = {value, onSetValue, options, ...props}; 
 
   return <div>
     {JSON.stringify(value)} 
-    <InputSelect {...args} />
+    <InputSelect {...args} /> 
   </div>
 }
 
@@ -85,8 +84,7 @@ function FilterSelect<T>({ filter, ifield, options = [], ...props }:IInputFilter
   const [value, setValue] = useState<string[]>([]); 
   const onSetValue = (newValue:string[]) => { 
     setValue(newValue); 
-    const reduced = ReduceToString(newValue, '|'); 
-    filter.SetFilters(reduced, type, keys); 
+    filter.SetFilters(ReduceToString(newValue, '|'), 'array', keys); 
   } 
 
   const args = {value, onSetValue, options, multiple:true, ...props}; 

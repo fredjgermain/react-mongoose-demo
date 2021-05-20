@@ -4,12 +4,13 @@ import { IsEmpty } from '../../_utils';
 
 
 /** STRINGIFY ===================================
- * takes a value or array of values and stringify all of them. 
+ * Takes a single value or an array of values and stringify each. 
  * If a value is already a string, it returns that string value unchanged. 
+ * Else it stringify using 'JSON.stringify' rather than 'ToString'. 
  * @param values 
- * @returns 
+ * @returns Return an array of strings. 
  */
-export function Stringify(values:any):string[]{ 
+export function StringifyEach(values:any):string[] { 
   const array = ToArray(values); 
   if(IsEmpty(array)) 
     return []; 
@@ -20,14 +21,16 @@ export function Stringify(values:any):string[]{
 
 
 /** REDUCETOSTRING ==============================
- * Reduces an array of strings to a single string. 
+ * Takes a single value or an array of values and stringify each. 
+ * If a value is already a string, it returns that string value unchanged. 
+ * Else it stringify using 'JSON.stringify' rather than 'ToString'. 
  * @param strArray 
  * @param delimiter 
  * @returns a single string. 
  */
 export function ReduceToString(values:any, delimiter:string = '') { 
-  const strArray = Stringify(values); 
-  return (strArray ?? []).reduce( (prev, curr, i) => prev + ( i ? `${delimiter}${curr}`: `${curr}` ), ''); 
+  const strArray = StringifyEach(values); 
+  return strArray.join(delimiter); 
 } 
 
 

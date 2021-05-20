@@ -1,4 +1,4 @@
-import { IsEmpty, GetValueAt, YMD, Stringify } from '../../_utils'; 
+import { IsEmpty, GetValueAt, YMD, StringifyEach } from '../../_utils'; 
 
 
 
@@ -26,8 +26,7 @@ export function FilterPredicate(strPredicate:string, type:string, keys?:string[]
   let predicate = (x:any) => true; 
   if(IsEmpty(strPredicate)) 
     return predicate; 
-
-  console.log(type); 
+  
   if(type === 'boolean' || type === 'array') 
     predicate = IdentifyFilter(strPredicate); 
   else if(type === 'date') 
@@ -50,7 +49,7 @@ array
 function IdentifyFilter(strPredicate:string) { 
   const splitPredicate = strPredicate.split('|'); 
   return (x:any) => splitPredicate.some( s => { 
-    const [_s, _x] = Stringify([s, x]); 
+    const [_s, _x] = StringifyEach([s, x]); 
     console.log(_s, _x); 
     return _s === _x; 
   }); 

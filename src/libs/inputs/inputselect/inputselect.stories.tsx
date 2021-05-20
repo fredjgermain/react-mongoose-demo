@@ -6,29 +6,12 @@ import { InputSelect, Selection, Options, DisplaySelection, OptionGroup } from '
 import { IInputSelect } from './inputselect.type'; 
 
 
-// function TestInputSelect({...props}:IInputSelect) { 
-//   const [value, setValue] = useState(props.value); 
-//   const onSetValue = (newValue:any[]) => setValue(newValue); 
-//   const {matchValues:options, SetFilters} = useFilter(props.options); 
-
-//   return <div> 
-//     <Input {...{value:'', type:'string', onSetValue:()=>{}}}/> 
-//     {JSON.stringify(options)} <br/> 
-//     <InputSelect {...{value, onSetValue, options}}> 
-//       <Selection> 
-//         <DisplaySelection/> <br/> 
-//         <InputFilter {...{keys:['label'], SetFilters, type:'string'}} /> 
-//       </Selection> 
-//       <Options> 
-//         <OptionGroup/> 
-//       </Options> 
-//     </InputSelect> 
-//   </div> 
-// } 
-
 function TestInputSelect({...props}:IInputSelect) { 
   const [value, setValue] = useState(props.value); 
-  const onSetValue = (newValue:any[]) => setValue(newValue); 
+  const onSetValue = (newValue:any[]) => { 
+    console.log(newValue); 
+    setValue(newValue); 
+  }; 
   const {matchValues:options, SetFilters} = useFilter(props.options); 
 
   return <div> 

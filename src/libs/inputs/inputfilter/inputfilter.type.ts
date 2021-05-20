@@ -6,12 +6,12 @@ export interface IInputFilter<T> {
   SetFilters: (key:string, newFilter?:Predicate<T>) => void 
 }
 
-export interface IUseFilter<T> {
+export interface IUseFilter<T> { 
   matchValues: T[]; 
   unmatchValues: T[]; 
-  SetFilters: (key: string, newPredicate?: Predicate<T> | undefined) => void;
-  ResetFilters: () => void;
-}
+  SetFilters: (key: string, newPredicate?: Predicate<T> | undefined) => void; 
+  ResetFilters: () => void; 
+} 
 
 // export interface IInputFilter { 
 //   keys:string[], 
