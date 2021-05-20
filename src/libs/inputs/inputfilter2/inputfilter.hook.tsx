@@ -1,16 +1,16 @@
 import { useState } from 'react'; 
 import { Filter, Predicate } from '../../_arrayutils'; 
 import { FilterPredicate } from './inputfilter.utils'; 
-//import { IUseFilter } from './inputfilter.type'; 
+import { IUseFilter } from './inputfilter.type'; 
 
 
 
-export function useFilter<T>(values:T[]) { 
+export function useFilter<T>(values:T[]):IUseFilter<T> { 
   const [keyFilters, setFilters, ResetFilters] = usePredicates<string, Predicate<T>>(); 
 
-  const SetFilters = (splitPredicate:string[], type:string, keys:string[]) => {
+  const SetFilters = (strPredicate:string, type:string, keys:string[]) => {
     const Key = keys.reduce((prev, current) => prev+current); 
-    const newFilter = FilterPredicate(splitPredicate, type, keys); 
+    const newFilter = FilterPredicate(strPredicate, type, keys); 
     setFilters(Key, newFilter); 
   } 
 
@@ -18,7 +18,7 @@ export function useFilter<T>(values:T[]) {
     return keyFilters.map( f => f[1] ).every( f => f(t, i, a, positive, negative) ); 
   } 
   const [matchValues, unmatchValues] = Filter(values, filters); 
-  return {matchValues, unmatchValues, SetFilters, ResetFilters} 
+  return {values, matchValues, unmatchValues, SetFilters, ResetFilters} 
 }
 
 

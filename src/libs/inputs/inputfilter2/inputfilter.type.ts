@@ -1,17 +1,16 @@
-import { Predicate } from '../../_arrayutils'; 
-
 export interface IInputFilter<T> { 
   keys:string[], 
-  type:string, 
-  SetFilters: (strPredicate:string[], type:string, keys:string[]) => void 
+  ifield:IField, 
+  usefilter:IUseFilter<T>, 
 }
 
 export interface IUseFilter<T> {
+  values: T[]; 
   matchValues: T[]; 
   unmatchValues: T[]; 
-  SetFilters: (key: string, newPredicate?: Predicate<T> | undefined) => void;
-  ResetFilters: () => void;
-}
+  SetFilters: (strPredicate: string, type: string, keys: string[]) => void; 
+  ResetFilters: () => void; 
+} 
 
 // export interface IInputFilter { 
 //   keys:string[], 

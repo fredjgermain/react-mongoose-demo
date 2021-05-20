@@ -1,3 +1,22 @@
+import { ToArray } from '../../_arrayutils'; 
+import { IsEmpty } from '../../_utils'; 
+
+
+
+/** STRINGIFY ===================================
+ * takes a value or array of values and stringify all of them. 
+ * If a value is already a string, it returns that string value unchanged. 
+ * @param values 
+ * @returns 
+ */
+export function Stringify(values:any):string[]{ 
+  const array = ToArray(values); 
+  if(IsEmpty(array)) 
+    return []; 
+  return array.map( value => { 
+    return typeof value === 'string' ? value: JSON.stringify(value); 
+  }) 
+} 
 
 
 /** REDUCETOSTRING ==============================
@@ -6,7 +25,8 @@
  * @param delimiter 
  * @returns a single string. 
  */
-export function ReduceToString(strArray:string[], delimiter:string = '') { 
+export function ReduceToString(values:any, delimiter:string = '') { 
+  const strArray = Stringify(values); 
   return (strArray ?? []).reduce( (prev, curr, i) => prev + ( i ? `${delimiter}${curr}`: `${curr}` ), ''); 
 } 
 

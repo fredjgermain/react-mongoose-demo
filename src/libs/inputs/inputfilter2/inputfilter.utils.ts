@@ -1,4 +1,4 @@
-import { IsEmpty, GetValueAt, YMD, ReduceToString, SplitWithRegex } from '../../_utils'; 
+import { IsEmpty, GetValueAt, YMD, Stringify } from '../../_utils'; 
 
 
 
@@ -6,59 +6,36 @@ import { IsEmpty, GetValueAt, YMD, ReduceToString, SplitWithRegex } from '../../
 const REGEXP = { 
   INTEGER: new RegExp(/(\d+)/), 
   DECIMAL: new RegExp(/(\d+[\.\,]\d+)/), 
-  COMPARATOR: new RegExp(/((===)|(==)|(!==)|(!=)|(>=)|(<=)|(>)|(<))/), 
-  //ARITHMETIC: new RegExp(/[+-\/\*%]/), 
+
+  EQUAL: new RegExp(/(===)|(==)/), 
+  NOT_EQUAL: new RegExp(/(!==)|(!=)/), 
+  LESSER_EQUAL: new RegExp(/(<=)/), 
+  LESSER: new RegExp(/(<)/), 
+  GREATER_EQUAL: new RegExp(/(>=)/), 
+  GREATER: new RegExp(/(>)/), 
+
   ARITHMETIC: new RegExp(/((\+)|(-)|(\/)|(\*)|(%))/), 
+
+  CONJUNCTION: new RegExp(/(\&\&)|(\&)/), 
+  DISJUNCTION: new RegExp(/(\|\|)|(\|)/), 
 } 
 
-// Test1 
-function TestSplitWithRegex(title:string, src:string, regexs:RegExp[]) { 
-  console.log(title, SplitWithRegex(src, regexs)); 
-} 
 
 
-// test Integer 
-TestSplitWithRegex('integer', 'asdas12asd', [REGEXP.INTEGER]); 
-TestSplitWithRegex('integer', 'asdas', [REGEXP.INTEGER]); 
-TestSplitWithRegex('integer', 'asdas12.565asd', [REGEXP.INTEGER]); 
-
-TestSplitWithRegex('decimal', 'asdas12asd', [REGEXP.DECIMAL]); 
-TestSplitWithRegex('decimal', 'asdas', [REGEXP.DECIMAL]); 
-TestSplitWithRegex('decimal', 'asdas12.565asd', [REGEXP.DECIMAL]); 
-
-TestSplitWithRegex('decimal integer', 'asdas12asd', [REGEXP.DECIMAL, REGEXP.INTEGER]); 
-TestSplitWithRegex('decimal integer', 'asdas', [REGEXP.DECIMAL, REGEXP.INTEGER]); 
-TestSplitWithRegex('decimal integer', 'asdas12.565asd', [REGEXP.DECIMAL, REGEXP.INTEGER]); 
-
-
-
-/*
-const regexs = ReduceToString( Object.values(REGEXP).map( regex => regex.source ), '|' ); 
-
-console.log(new RegExp(regexs).source); 
-
-//const regex = '(' + REGEXP.ARITHMETIC.source + REGEXP.NUMBER.source + ')';
-
-const test = '5++++asd== 21222 > asd <=sa2'; 
-console.log(SplitWithRegex(test, new RegExp(regexs))); 
-*/
-
-
-
-
-export function FilterPredicate(splitPredicate:string[], type:string, keys?:string[]): (x:any) => boolean { 
+export function FilterPredicate(strPredicate:string, type:string, keys?:string[]): (x:any) => boolean { 
   let predicate = (x:any) => true; 
-  if(IsEmpty(splitPredicate)) 
+  if(IsEmpty(strPredicate)) 
     return predicate; 
-  
+
+  console.log(type); 
   if(type === 'boolean' || type === 'array') 
-    predicate = IdentifyFilter(splitPredicate); 
+    predicate = IdentifyFilter(strPredicate); 
   else if(type === 'date') 
-    predicate = DateFilter(splitPredicate); 
+    predicate = DateFilter(strPredicate); 
   else if(type === 'string') 
-    predicate = StringFilter(splitPredicate); 
-  else 
-    predicate = LambdaFilter(splitPredicate); 
+    predicate = StringFilter(strPredicate); 
+  else if(type === 'number') 
+    predicate = LambdaFilter(strPredicate); 
 
   return !IsEmpty(keys) ? 
     (x:any) => 
@@ -70,23 +47,32 @@ export function FilterPredicate(splitPredicate:string[], type:string, keys?:stri
 boolean 
 array 
 */ 
-function IdentifyFilter(splitPredicate:string[]) { 
-  return (x:any) => splitPredicate.some( s => s === x); 
+function IdentifyFilter(strPredicate:string) { 
+  const splitPredicate = strPredicate.split('|'); 
+  return (x:any) => splitPredicate.some( s => { 
+    const [_s, _x] = Stringify([s, x]); 
+    console.log(_s, _x); 
+    return _s === _x; 
+  }); 
 } 
 
 
-function LambdaFilter(splitPredicate:string[]) { 
-  const reduced = ReduceToString(splitPredicate, ' '); 
-  return (x:any) => eval(`${x} ${reduced}`); 
+function LambdaFilter(strPredicate:string) { 
+  return (x:any) => { 
+    try{ 
+      return eval(`${x} ${strPredicate}`); 
+    } catch(err) { 
+      return true; 
+    } 
+  } 
 } 
 
 /* 
 string 
 */ 
-function StringFilter(splitPredicate:string[]) { 
-  const [toMatch] = splitPredicate; 
+function StringFilter(strPredicate:string) { 
   return (x:string) => { 
-    return !!x.match(toMatch); 
+    return !!x.match(strPredicate); 
   } 
 } 
 
@@ -94,7 +80,8 @@ function StringFilter(splitPredicate:string[]) {
 /* 
 date 
 */ 
-function DateFilter(splitPredicate:string[]) { 
+function DateFilter(strPredicate:string) { 
+  const splitPredicate = strPredicate.split(''); 
   const funcs = [] as ((x:any) => boolean)[]; 
   for(let i=0; i<splitPredicate.length; i++) { 
     const operator = splitPredicate[i]; 

@@ -1,10 +1,39 @@
 import { Story } from '@storybook/react'; 
 import { useFilter } from './inputfilter.hook'; 
-import {} from './inputfilter.utils'; 
+import { InputFilter } from './inputfilter.component'; 
+import { GetDefaultValueByType } from '../../_utils'; 
 
 
 function TemplateResearch({values, filters}:{values:any[], filters:{handle:string, type:string}[]}) { 
-  return <div></div>
+  const filter = useFilter(values); 
+
+  const ifields:IField[] = filters.map( f => {
+    const accessor = f.handle; 
+    const type = f.type; 
+    const defaultValue = GetDefaultValueByType(type); 
+    return {accessor, label:accessor, type, defaultValue} 
+  }) 
+  
+  return <div>
+    Original values <br/>
+    <div>
+      {values.map( (v, i) => { 
+        return <div key={i}>{JSON.stringify(v)}</div> 
+      })} 
+    </div>
+    Filtered values
+    <div>
+      {filter.matchValues.map( (v, i) => { 
+        return <div key={i}>{JSON.stringify(v)}</div> 
+      })} 
+    </div> 
+
+    {ifields.map( ifield => { 
+      return <div key={ifield.accessor}> 
+        <InputFilter {...{filter, ifield}}/> 
+      </div> 
+    })} 
+  </div> 
 } 
 
 
