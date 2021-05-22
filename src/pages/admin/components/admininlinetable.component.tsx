@@ -2,13 +2,13 @@ import React, { useContext } from 'react';
 import { Pager } from '../../../components/pager.component'; 
 
 import { InlineTableContext, useInlineTable, 
-  Rows, Row, Cols, InlineEntry, InlineCell, 
-  THeads, THeadCell } 
+  Rows, Row, Cols, InlineEntry, InlineCell } 
   from '../../../libs/table/_table'; 
 
 import { DaoContext } from '../../../libs/_dao'; 
 import { AdminContext } from '../hooks/admin.hook'; 
 import { InlineTableFeedback } from './inlinetablefeedback.component'; 
+import { AdminHeader } from './admincell.component';
 import { RoundBox } from '../../../components/roundbox.component'; 
 
 
@@ -16,7 +16,7 @@ export function AdminInlineTable() {
   const dao = useContext(DaoContext); 
   const {collection, 
     indexedDatas, rows, cols, 
-    filters, sorters, paging, 
+    sorters, paging, 
     Create, Update, Delete, 
     GetCellArgs, GetHeadArgs} = useContext(AdminContext); 
   const defaultEntry = dao.GetDefaultIEntry(collection); 
@@ -33,13 +33,7 @@ export function AdminInlineTable() {
       </ul>
     <Pager {...{paging}} /> 
     <table> 
-      <thead> 
-        <tr><THeads {...{cols}} > 
-          <THeadCell {...{GetHeadArgs}}/> 
-          <br/> 
-        </THeads><th>Btn</th></tr> 
-      </thead> 
-
+      <AdminHeader/> 
       <tbody> 
       <Rows {...{rows}}> 
         <InlineEntry> 

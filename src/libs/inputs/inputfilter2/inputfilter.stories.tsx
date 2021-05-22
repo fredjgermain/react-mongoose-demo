@@ -31,7 +31,7 @@ function TemplateResearch({values, filters}:{values:any[], filters:{ifield:IFiel
 
 
 export default { 
-  title: 'input/FilterSorter3', 
+  title: 'input/FilterSorter2', 
   component: TemplateResearch 
 } 
 

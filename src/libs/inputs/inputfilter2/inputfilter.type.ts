@@ -7,9 +7,11 @@ export interface IInputFilter<T> {
 export interface IUseFilter<T> {
   values: T[]; 
   matchValues: T[]; 
+  ExpectedResults(strPredicate: string, type: string, keys: string[]): any[]; 
   unmatchValues: T[]; 
   SetFilters: (strPredicate: string, type: string, keys: string[]) => void; 
   ResetFilters: () => void; 
+  
 } 
 
 // export interface IInputFilter { 

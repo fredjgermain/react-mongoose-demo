@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'; 
+import React, { useContext, useEffect } from 'react'; 
 import { useStateReset } from '../../../libs/_customhooks'; 
 import { IUseFilter, useFilter, IUseSorter, useSorter } 
   from '../../../libs/_inputs'; 
@@ -57,6 +57,17 @@ export function useAdmin() {
   const rows = Object.keys(indexedDatas); 
   const cols = dao.GetIFields(collection).filter(f=>f.label).map(f => f.accessor); 
   const [feedback, SetFeedback, ResetFeedback] = useStateReset({} as ICrudResponse); 
+
+  // on collection change
+  useEffect(() => { 
+    ResetFeedback(); 
+    paging.setPageIndex(0); 
+  }, [collection]) 
+
+  // on page change 
+  useEffect(() => { 
+    ResetFeedback() 
+  }, [paging.pageIndex]) 
 
   async function Create(entry:IEntry) { 
     const [response] = await dao.Create(collection, [entry]); 

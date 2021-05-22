@@ -1,5 +1,5 @@
 import { IsEmpty, GetValueAt, YMD, StringifyEach } from '../../_utils'; 
-
+import { Predicate } from '../../_arrayutils'; 
 
 
 
@@ -22,7 +22,7 @@ const REGEXP = {
 
 
 
-export function FilterPredicate(strPredicate:string, type:string, keys?:string[]): (x:any) => boolean { 
+export function FilterPredicate<T>(strPredicate:string, type:string, keys?:string[]):Predicate<T> { 
   let predicate = (x:any) => true; 
   if(IsEmpty(strPredicate)) 
     return predicate; 
@@ -50,7 +50,6 @@ function IdentifyFilter(strPredicate:string) {
   const splitPredicate = strPredicate.split('|'); 
   return (x:any) => splitPredicate.some( s => { 
     const [_s, _x] = StringifyEach([s, x]); 
-    console.log(_s, _x); 
     return _s === _x; 
   }); 
 } 

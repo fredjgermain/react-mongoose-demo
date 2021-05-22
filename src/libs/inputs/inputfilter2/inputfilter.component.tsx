@@ -62,10 +62,15 @@ function FilterBoolean<T>({ filter, ifield, ...props }:IInputFilter<T>) {
     setValue(newValue); 
     filter.SetFilters(ReduceToString(newValue), type, keys); 
   } 
+
+  const ExpectedMatch = (newValue:any) => { 
+    const results = filter.ExpectedResults(ReduceToString(newValue), type, keys); 
+    return results.length; 
+  } 
   
   const options = [ 
-    {value:true, label:'true'}, 
-    {value:false, label:'false'} 
+    {value:true, label:`true (${ExpectedMatch(true)})`}, 
+    {value:false, label:`false (${ExpectedMatch(false)})`} 
   ] as IOption[]; 
   props.options = options; 
 
@@ -74,11 +79,11 @@ function FilterBoolean<T>({ filter, ifield, ...props }:IInputFilter<T>) {
   return <div>
     {JSON.stringify(value)} 
     <InputSelect {...args} /> 
-  </div>
-}
+  </div> 
+} 
 
 
-function FilterSelect<T>({ filter, ifield, options = [], ...props }:IInputFilter<T>) { 
+function FilterSelect<T>({ filter, ifield, ...props }:IInputFilter<T>) { 
   const type = ifield.type; 
   const keys = [ifield.accessor]; 
   const [value, setValue] = useState<string[]>([]); 
@@ -86,6 +91,20 @@ function FilterSelect<T>({ filter, ifield, options = [], ...props }:IInputFilter
     setValue(newValue); 
     filter.SetFilters(ReduceToString(newValue, '|'), 'array', keys); 
   } 
+
+  const ExpectedMatch = (newValue:any) => { 
+    const results = filter.ExpectedResults(ReduceToString(newValue), type, keys); 
+    return results.length; 
+  } 
+
+  const options = props.options ?? []; 
+
+/*  const options = props.options?.map( o => { 
+    const value = o.value; 
+    const label = `${o.label} (${ExpectedMatch(o.value)})`; 
+    return {value, label} as IOption; 
+  }) ?? []; 
+  props.options = options; */
 
   const args = {value, onSetValue, options, multiple:true, ...props}; 
 
@@ -109,38 +128,3 @@ function FilterLambda<T>({ filter, ifield, options, ...props }:IInputFilter<T>) 
   const args = {value, onSetValue, onPressEnter, type:'string', options, ...props}; 
   return <Input {...args} /> 
 } 
-
-/*export function InputFilter<T>({keys, ifield, usefilter}:IInputFilter<T>) { 
-  const [strFilter, setStrFilter] = useState(['']); 
-  const value = strFilter; 
-  const onSetValue = (newValue:string[]) => { 
-    setStrFilter(newValue); 
-  }; 
-  const onPressEnter = () => { 
-    usefilter.SetFilters(strFilter, ifield.type, keys); 
-  } 
-  const options = usefilter.values; 
-} */
-
-/* 
-boolean ... multi select [ true, false ] 
-  display (N) 
-array ... multi select from existing unic values 
-  display (N) 
-
-string ... single input string
-
-lambda ... 
-  or use a single input string with Regex?? 
-
-  Select [ -- , <operator> ] 
-  input <type> 
-  
-  if operator selected is NOT a comparator add an other 
-  Select [ -- , <operator> ] 
-  input <type> 
-
-
-
-
-*/
