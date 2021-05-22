@@ -36,8 +36,8 @@ function FormTitleInstructions() {
   return <div> 
     <h2>{JSON.stringify(title)}</h2> 
     <ul> 
-      {instructions.map( i => { 
-        return <li>{i}</li>; 
+      {instructions.map( (instruction, i) => { 
+        return <li key={i}>{instruction}</li> 
       })} 
     </ul> 
   </div> 
@@ -48,8 +48,8 @@ function QuestionMap() {
   const {paging} = useContext(QuestionnaireContext); 
 
   return <div> 
-    {paging.page.map( qitem => { 
-      return <QuestionItem {...{qitem}} /> 
+    {paging.page.map( (qitem, i) => { 
+      return <QuestionItem key={i} {...{qitem}} /> 
     })} 
   </div> 
 } 
