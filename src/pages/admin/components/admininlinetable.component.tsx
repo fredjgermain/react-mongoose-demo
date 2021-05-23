@@ -8,7 +8,7 @@ import { InlineTableContext, useInlineTable,
 import { DaoContext } from '../../../libs/_dao'; 
 import { AdminContext } from '../hooks/admin.hook'; 
 import { InlineTableFeedback } from './inlinetablefeedback.component'; 
-import { AdminHeader } from './admincell.component';
+import { AdminHeader, AdminInlineEntry } from './admincell.component';
 import { RoundBox } from '../../../components/roundbox.component'; 
 
 
@@ -16,9 +16,9 @@ export function AdminInlineTable() {
   const dao = useContext(DaoContext); 
   const {collection, 
     indexedDatas, rows, cols, 
-    sorters, paging, 
+    paging, 
     Create, Update, Delete, 
-    GetCellArgs, GetHeadArgs} = useContext(AdminContext); 
+    GetCellArgs} = useContext(AdminContext); 
   const defaultEntry = dao.GetDefaultIEntry(collection); 
   const [collectionLabel] = dao.GetICollections([collection]).map(c=>c.label); 
   const inlineTableContext = useInlineTable({indexedDatas, defaultEntry, Create, Update, Delete}); 
@@ -36,18 +36,10 @@ export function AdminInlineTable() {
       <AdminHeader/> 
       <tbody> 
       <Rows {...{rows}}> 
-        <InlineEntry> 
-          <Cols {...{cols}} > 
-            <InlineCell {...{GetCellArgs}} /> 
-          </Cols> 
-        </InlineEntry> 
-      </Rows> 
-      <Row {...{row:'create'}}> 
-        <InlineEntry> 
-          <Cols {...{cols}} > 
-            <InlineCell {...{GetCellArgs}} /> 
-          </Cols> 
-        </InlineEntry> 
+        <AdminInlineEntry/> 
+      </Rows>
+      <Row {...{row:'create'}}>
+        <AdminInlineEntry/>
       </Row>
       </tbody> 
     </table>
