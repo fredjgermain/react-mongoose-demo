@@ -4,7 +4,7 @@ import { CollectionSelector } from './components/collectionselector.component';
 import { useAdmin, AdminContext } from './hooks/admin.hook'; 
 import { AdminInlineTable } from './components/admininlinetable.component'; 
 import { RoundBox } from '../../components/roundbox.component';
-
+import { ColumnsSelector } from './components/colsselector.component'; 
 
 
 export default function AdminPage() { 
@@ -13,11 +13,9 @@ export default function AdminPage() {
     <h1>Admin section</h1> 
     <RoundBox>
       <CollectionSelector/> 
-      <br/> 
-      <ul>
-        <li>Use the selector above to select a data collection you wish to read and/or edit.</li>
-      </ul>
+      <br/>
+      {!IsEmpty(context.collection) && <ColumnsSelector/>} 
     </RoundBox>
-    {!IsEmpty(context.collection) && <AdminInlineTable key={context.collection} />}     
+    {!IsEmpty(context.collection) && <AdminInlineTable key={context.collection} />} 
   </AdminContext.Provider>
 } 

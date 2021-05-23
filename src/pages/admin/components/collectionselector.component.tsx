@@ -13,5 +13,8 @@ export function CollectionSelector() {
     return {value:c.accessor, label:c.label} 
   }) 
 
-  return <Editor {...{value, editValue, ifield, options}} /> 
+  return <div>
+    <h4>Select a data collection you wish to read and/or edit.</h4> 
+    <Editor {...{value, editValue, ifield, options}} /> 
+  </div>    
 } 

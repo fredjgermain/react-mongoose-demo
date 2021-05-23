@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'; 
+import React, { useState, useContext, useEffect } from 'react'; 
 import { useStateReset } from '../../../libs/_customhooks'; 
 import { IUseFilter, useFilter, IUseSorter, useSorter } 
   from '../../../libs/_inputs'; 
@@ -9,13 +9,16 @@ import { ColContext, InlineEntryContext, THeadContext, IndexDatasByKey, Indexed 
   from '../../../libs/table/_table'; 
 
 
+
 export interface IUseAdmin { 
   collection: string; 
   SetCollection: (newCollection: string) => void; 
 
+  cols: string[]; 
+  SetCols: (newCols:string[]) => void; 
+
   indexedDatas: Indexed<IEntry>; 
   rows: string[]; 
-  cols: string[]; 
 
   feedback: ICrudResponse; 
   SetFeedback: (newValue: ICrudResponse) => void; 
@@ -47,6 +50,9 @@ export const AdminContext = React.createContext({} as IUseAdmin);
 export function useAdmin() { 
   const dao = useContext(DaoContext); 
   const [collection, SetCollection]  = useStateReset(''); 
+  const defaultCols = dao.GetIFields(collection).filter(f=>f.label).map(f => f.accessor); 
+  const [columns, SetCols] = useStateReset(defaultCols); 
+  const cols = columns.filter( col => defaultCols.includes(col)); 
 
   const entries = dao.GetIEntries(collection); 
   const filters = useFilter(entries); 
@@ -55,12 +61,13 @@ export function useAdmin() {
   const indexedDatas = IndexDatasByKey('_id', paging.page); 
 
   const rows = Object.keys(indexedDatas); 
-  const cols = dao.GetIFields(collection).filter(f=>f.label).map(f => f.accessor); 
+  
   const [feedback, SetFeedback, ResetFeedback] = useStateReset({} as ICrudResponse); 
 
   // on collection change
   useEffect(() => { 
     ResetFeedback(); 
+    SetCols(defaultCols); 
     paging.setPageIndex(0); 
   }, [collection]) 
 
@@ -112,7 +119,8 @@ export function useAdmin() {
   }
 
   return {collection, SetCollection, 
-    indexedDatas, rows, cols, 
+    cols, SetCols, 
+    indexedDatas, rows, 
     feedback, SetFeedback, ResetFeedback, 
     filters, sorters, paging, 
     Create, Update, Delete, 

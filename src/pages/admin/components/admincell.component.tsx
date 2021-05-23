@@ -18,6 +18,7 @@ export function AdminHeader() {
 export function AdminHeadCell() { 
   const {GetHeadArgs, sorters:{SetSorters}} = useContext(AdminContext); 
   const {ifield} = GetHeadArgs(); 
+
   return <span>{ifield.label}
     <InputSorter {...{type:ifield.type, SetSorters, keys:[ifield.accessor]}} />
   </span>
@@ -25,6 +26,8 @@ export function AdminHeadCell() {
 
 export function AdminInlineEntry() {
   const {GetCellArgs, cols} = useContext(AdminContext); 
+
+  //
   return <InlineEntry> 
     <Cols {...{cols}} > 
       <InlineCell {...{GetCellArgs}} /> 

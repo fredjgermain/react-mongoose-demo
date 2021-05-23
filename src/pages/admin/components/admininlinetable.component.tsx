@@ -15,16 +15,15 @@ import { RoundBox } from '../../../components/roundbox.component';
 export function AdminInlineTable() { 
   const dao = useContext(DaoContext); 
   const {collection, 
-    indexedDatas, rows, cols, 
+    indexedDatas, rows, 
     paging, 
-    Create, Update, Delete, 
-    GetCellArgs} = useContext(AdminContext); 
+    Create, Update, Delete} = useContext(AdminContext); 
   const defaultEntry = dao.GetDefaultIEntry(collection); 
   const [collectionLabel] = dao.GetICollections([collection]).map(c=>c.label); 
   const inlineTableContext = useInlineTable({indexedDatas, defaultEntry, Create, Update, Delete}); 
 
   return <InlineTableContext.Provider value={inlineTableContext} > 
-    <RoundBox>
+    <RoundBox> 
       <InlineTableFeedback /> 
       <h3>Collection: {collectionLabel}</h3> 
       <ul>
